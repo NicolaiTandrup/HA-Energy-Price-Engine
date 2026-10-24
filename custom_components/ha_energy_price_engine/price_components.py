@@ -126,21 +126,32 @@ def compose_dated(slot, tariff):
     if not isfinite(vat) or not 0 <= vat <= 1:
         raise ValueError("Invalid spot/grid VAT")
     spot_ex = slot.price / (1 + vat) if tariff["mode"] == "spot_incl_vat" else slot.price
-    grid = float(tariff.get("grid", 0))
-    if "grid_slots" in tariff:
-        matching = [s for s in tariff["grid_slots"] if s.start <= slot.start and s.end >= slot.end]
-        if len(matching) != 1:
-            raise ValueError("Missing/overlapping grid tariff")
-        grid += matching[0].price
-    if not isfinite(grid) or grid < 0:
-        raise ValueError("Invalid grid component")
+    manual_dso = active.get("dso")
+    if not manual_dso or (not manual_dso["locked"] and "grid_slots" in tariff):
+        if "grid" not in tariff and "grid_slots" not in tariff:
+            raise ValueError("Missing verified DSO component")
+        grid = float(tariff.get("grid", 0))
+        if "grid_slots" in tariff:
+            matching = [
+                s for s in tariff["grid_slots"] if s.start <= slot.start and s.end >= slot.end
+            ]
+            if len(matching) != 1:
+                raise ValueError("Missing/overlapping grid tariff")
+            grid += matching[0].price
+        if not isfinite(grid) or grid < 0:
+            raise ValueError("Invalid grid component")
+        active["dso"] = {
+            "id": "dso",
+            "ex_vat": grid,
+            "vat": grid * vat,
+            "incl_vat": grid * (1 + vat),
+        }
     active["spot"] = {
         "id": "spot",
         "ex_vat": spot_ex,
         "vat": spot_ex * vat,
         "incl_vat": slot.price if tariff["mode"] == "spot_incl_vat" else slot.price * (1 + vat),
     }
-    active["dso"] = {"id": "dso", "ex_vat": grid, "vat": grid * vat, "incl_vat": grid * (1 + vat)}
     return sum(c["incl_vat"] for c in active.values()), {
         "components": active,
         "fixed_subscriptions_excluded": fixed,

@@ -35,16 +35,16 @@ class PriceSchedule:
             and self.days.get(key, {}).get(str(day), {}).get("status") == "READY"
         )
 
-    async def refresh_day(self, site, day, now):
+    async def refresh_day(self, site, day, now, *, force=True):
         key = site["id"]
-        changed = await self.coordinator.price_updater.refresh(site, now, force=True, dates=[day])
+        changed = await self.coordinator.price_updater.refresh(site, now, force=force, dates=[day])
         start, end = day_bounds(day, site["timezone"])
         rows = self.coordinator.price_engine.lookup(key, start, end)
         report = self.coordinator.price_updater.status[key]
         complete = self.coordinator.price_engine.complete_day(key, day, site["timezone"])
         state = (
             "READY"
-            if complete and report["status"] not in {"ERROR", "STALE"}
+            if complete and report["status"] == "READY"
             else report["status"]
             if report["status"] in {"ERROR", "STALE"}
             else "INCOMPLETE"
@@ -76,16 +76,16 @@ class PriceSchedule:
         now = dt_util.utcnow()
         for optimizer in self.coordinator.sites.values():
             site = optimizer.site
-            today = now.astimezone(ZONE).date()
+            today = now.astimezone(ZoneInfo(site["timezone"])).date()
             # Always verify current day; also reconcile known/missing next day.
             for day in (today, today + timedelta(days=1)):
                 await self.refresh_day(site, day, now)
 
     async def run(self, now, hour, minute):
         changed = False
-        today = now.astimezone(ZONE).date()
         for optimizer in self.coordinator.sites.values():
             site = optimizer.site
+            today = now.astimezone(ZoneInfo(site["timezone"])).date()
             day = today if (hour, minute) == (0, 1) else today + timedelta(days=1)
             unconditional = (hour, minute) in {(0, 1), (13, 5)}
             if unconditional or not self.complete(site, day):

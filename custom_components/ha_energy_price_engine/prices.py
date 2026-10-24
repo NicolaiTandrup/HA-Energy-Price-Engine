@@ -50,6 +50,7 @@ class OfficialPrices:
     def __init__(self, hass):
         self.hass, self.cache = hass, {}
         self.attempts = {}
+        self.invalidated = set()
 
     async def get(self, site, now, *, compose=True, force=False, dates=None):
         rows = []
@@ -59,9 +60,12 @@ class OfficialPrices:
             key = (site["nordpool_entry"], site.get("area", "DK2"), str(day))
             cached = self.cache.get(key)
             attempted = self.attempts.get(key)
-            if (force or cached is None or (now - cached[0]).total_seconds() >= 3600) and (
-                force or attempted is None or (now - attempted).total_seconds() >= 900
-            ):
+            if (
+                force
+                or key in self.invalidated
+                or cached is None
+                or (now - cached[0]).total_seconds() >= 3600
+            ) and (force or attempted is None or (now - attempted).total_seconds() >= 900):
                 self.attempts[key] = now
                 try:
                     response = await self.hass.services.async_call(
@@ -79,6 +83,7 @@ class OfficialPrices:
                     data = response[key[1]]
                     parse_prices({"slots": data}, multiplier=0.001)
                     self.cache[key] = (now, data)
+                    self.invalidated.discard(key)
                 except HomeAssistantError, ValueError, KeyError, TypeError, TimeoutError:
                     self.last_errors.append(str(day))
                     # Cached values expire rather than hiding a broken price source.

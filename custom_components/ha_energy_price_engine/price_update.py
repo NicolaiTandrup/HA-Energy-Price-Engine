@@ -7,6 +7,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 
 from .adapters import parse_prices
+from .configuration import tariff_for
 from .price_components import danish_public_components
 from .price_engine import day_bounds
 from .prices import OfficialPrices
@@ -14,12 +15,13 @@ from .tariff_source import TariffSource
 
 
 class PriceUpdater:
-    def __init__(self, hass, engine):
+    def __init__(self, hass, engine, on_change=None):
         self.hass, self.engine = hass, engine
         self.official = OfficialPrices(hass)
         self.tariffs = TariffSource(hass, engine.entry_id)
         self.status = {}
         self.lock = Lock()
+        self.on_change = on_change
 
     def state(self, entity_id, now, minutes):
         entry = er.async_get(self.hass).async_get(entity_id)
@@ -46,7 +48,7 @@ class PriceUpdater:
             }
             self.status[key] = report
             try:
-                tariff = dict(site.get("tariff", {}))
+                tariff = tariff_for(site) if "vat" in site else dict(site.get("tariff", {}))
                 if site.get("grid_tariff_entity"):
                     state = self.state(
                         site["grid_tariff_entity"], now, site.get("stale_minutes", 40)
@@ -56,6 +58,8 @@ class PriceUpdater:
                     slots = await self.official.get(
                         site, now, compose=False, force=force, dates=dates
                     )
+                    if not slots and self.official.last_errors:
+                        raise ValueError("Official Nord Pool source failed; stored prices retained")
                     source = {
                         "kind": "nordpool",
                         "config_entry": site["nordpool_entry"],
@@ -87,7 +91,18 @@ class PriceUpdater:
                     source["verified_at"] = min(times).isoformat() if times else now.isoformat()
                 else:
                     source["verified_at"] = state.last_reported.isoformat()
-                if site.get("dso_mode", "manual") != "manual" and slots:
+                locked_dso = all(
+                    any(
+                        r["id"] == "dso"
+                        and r.get("locked")
+                        and r["valid_from"]
+                        <= str(slot.start.astimezone(ZoneInfo(site["timezone"])).date())
+                        < r["valid_to"]
+                        for r in site.get("dated_components", [])
+                    )
+                    for slot in slots
+                )
+                if site.get("dso_mode", "manual") != "manual" and slots and not locked_dso:
                     if (
                         tariff.get("mode") not in {"spot_ex_vat", "spot_incl_vat"}
                         or tariff.get("grid", 0)
@@ -101,9 +116,10 @@ class PriceUpdater:
                             site, slots[0].start, slots[-1].end, now
                         )
                     except ValueError:
-                        if "dso_manual_fallback" not in site:
+                        if not site.get("dso_manual_fallback"):
                             raise
-                        tariff["grid"] = site["dso_manual_fallback"]
+                        # Fallback must be an explicit dated DSO rule, never zero.
+                        tariff.pop("grid", None)
                         source["dso"] = {
                             "provider": "manual_fallback",
                             "warning": "Automatic tariff unavailable",
@@ -137,8 +153,16 @@ class PriceUpdater:
                                 changed=False,
                             )
                             return False
+                before = {r.start: r.final_price_incl_vat for r in self.engine.records.get(key, ())}
                 changed = await self.engine.async_update(key, slots, tariff, source, now)
-                day = now.astimezone(ZoneInfo(site["timezone"])).date()
+                affected = tuple(
+                    r
+                    for r in self.engine.records.get(key, ())
+                    if r.start >= now and before.get(r.start) != r.final_price_incl_vat
+                )
+                if affected and self.on_change:
+                    self.on_change(key, affected)
+                day = dates[0] if dates else now.astimezone(ZoneInfo(site["timezone"])).date()
                 report.update(
                     status="READY"
                     if self.engine.complete_day(key, day, site["timezone"])

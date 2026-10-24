@@ -1,0 +1,143 @@
+{
+  "title": "Energy Price Engine",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add an independent price site",
+        "description": "Choose an existing official Home Assistant Nord Pool integration. Configure Pricing / Tariffs / Supplier / Taxes in this site’s Options after adding it. No rates are inferred for your contract.",
+        "data": {
+          "id": "Stable site ID (lowercase letters, digits and underscores)",
+          "name": "Site name",
+          "nordpool_entry": "Official Nord Pool integration",
+          "area": "Price area (for example DK2)",
+          "timezone": "IANA timezone (for example Europe/Copenhagen)",
+          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)"
+        }
+      }
+    },
+    "error": {
+      "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap."
+    },
+    "abort": {
+      "already_configured": "This site ID is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Pricing, tariffs, supplier and taxes",
+        "description": "{pricing_summary}\n\nAdd or edit dated rates. Save applies this draft; closing without Save discards edits. Unknown rates are never zero.",
+        "menu_options": {
+          "site": "Site and spot VAT",
+          "add_rate": "Add dated rate or subscription",
+          "edit_rate": "Edit dated rate",
+          "remove_rate": "Remove dated rate",
+          "dso": "Grid tariff source and fallback",
+          "taxes": "Dated national baselines and tax eligibility",
+          "save": "Save changes"
+        }
+      },
+      "site": {
+        "title": "Site and official spot source",
+        "data": {
+          "name": "Site name",
+          "nordpool_entry": "Official Nord Pool integration",
+          "area": "Price area (for example DK2)",
+          "timezone": "IANA timezone (for example Europe/Copenhagen)",
+          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)"
+        }
+      },
+      "dso": {
+        "title": "Grid tariff source",
+        "description": "Automatic Radius C verifies GLN 5790000705689, D03/DT_C_01 and coverage. Manual uses dated DSO rates. Fallback uses explicit dated manual DSO periods when the verified cache cannot cover the request. Expired or unavailable rates never become zero.",
+        "data": {
+          "dso_mode": "DSO source (manual or verified Radius C)",
+          "dso_manual_fallback": "Allow explicit dated manual DSO fallback",
+          "dso_stale_days": "Maximum age of last verified DSO cache (days)"
+        }
+      },
+      "add_rate": {
+        "title": "Add dated price component",
+        "description": "Use a verified per-site rate and exclusive end date. EWII household example is 0.030 DKK/kWh ex VAT from 2026-06-01 until 2026-10-01 only; do not apply it to later dates or another site. Subscriptions use DKK/month and are excluded from slot totals.",
+        "data": {
+          "id": "Component",
+          "amount": "Amount (in selected unit)",
+          "unit": "Money unit (ore = øre)",
+          "vat_included": "Amount already includes VAT",
+          "vat_rate": "Component VAT fraction (0.25 = 25%)",
+          "valid_from": "Effective from (inclusive local date)",
+          "valid_to": "Effective until (exclusive local date)",
+          "source": "Source or contract reference (no customer identifiers)",
+          "verified_on": "Verified on",
+          "locked": "Manual lock (automatic rates cannot override)",
+          "eligibility": "Eligibility (heating requires verified registration and usage)"
+        }
+      },
+      "rate": {
+        "title": "Edit dated price component",
+        "description": "Change effective dates or amount; overlaps are rejected. Settled prices stay unchanged. Only affected future intervals are recalculated after Save.",
+        "data": {
+          "id": "Component",
+          "amount": "Amount (in selected unit)",
+          "unit": "Money unit (ore = øre)",
+          "vat_included": "Amount already includes VAT",
+          "vat_rate": "Component VAT fraction (0.25 = 25%)",
+          "valid_from": "Effective from (inclusive local date)",
+          "valid_to": "Effective until (exclusive local date)",
+          "source": "Source or contract reference (no customer identifiers)",
+          "verified_on": "Verified on",
+          "locked": "Manual lock (automatic rates cannot override)",
+          "eligibility": "Eligibility (heating requires verified registration and usage)"
+        }
+      },
+      "edit_rate": {
+        "title": "Choose a dated rate to edit",
+        "data": {
+          "rate": "Component and effective period"
+        }
+      },
+      "remove_rate": {
+        "title": "Choose a dated rate to remove",
+        "description": "Removal can leave future coverage incomplete. Existing settled history is retained.",
+        "data": {
+          "rate": "Component and effective period"
+        }
+      },
+      "save": {
+        "title": "Save pricing configuration"
+      },
+      "taxes": {
+        "title": "Dated public baselines and tax eligibility",
+        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026–2027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
+        "data": {
+          "danish_public_rates": "Use documented dated national baseline (not live legislative verification)",
+          "heating_registered": "Electrically heated residence registration verified",
+          "annual_usage_kwh": "Verified annual consumption (kWh)",
+          "usage_year": "Year of verified annual consumption"
+        }
+      }
+    },
+    "error": {
+      "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry."
+    },
+    "abort": {
+      "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_price": {
+        "name": "Current final electricity price"
+      },
+      "readiness": {
+        "name": "Price readiness"
+      }
+    }
+  },
+  "issues": {
+    "pricing_not_ready": {
+      "title": "Electricity pricing needs attention",
+      "description": "Verified current-day prices are incomplete, stale or unavailable. Open the Energy Price Engine site Options to review dated supplier, grid, TSO and tax coverage, then check diagnostics and the official Nord Pool integration. Stored historical prices are retained. Consumers must not treat unknown prices as free."
+    }
+  }
+}

@@ -119,11 +119,11 @@ class PriceEngine:
     """Per-site HA Store snapshots, serialized writes and immutable lookup results.
 
     Already-started intervals retain their original amounts/provenance. Corrections
-    replace future records only; retention defaults to 365 days. Disk save succeeds
+    replace future records only; history is retained permanently by default. Disk save succeeds
     before the memory index changes, so failed writes leave old reads authoritative.
     """
 
-    def __init__(self, hass, entry_id, retention_days=365):
+    def __init__(self, hass, entry_id, retention_days=None):
         self.hass, self.entry_id = hass, entry_id
         self.retention_days = retention_days
         self.records, self.index, self.planning, self.signatures, self.revisions = (
@@ -134,6 +134,9 @@ class PriceEngine:
             {},
         )
         self.price_keys = {}
+        self.batch_signatures = {}
+        self.audit = {}
+        self.load_errors = {}
         self.lock = Lock()
 
     def store(self, site):
@@ -164,57 +167,127 @@ class PriceEngine:
                     records.append(PriceRecord(**item))
                 validate_records(records, site)
                 self._install(site, records, saved["signature"], saved["revision"])
+                self.batch_signatures[site] = saved.get("batch_signatures", {})
+                self.audit[site] = saved.get("audit", [])
             except ValueError, TypeError, KeyError:
                 # Corrupt caches cannot create plausible zero/partial price tables.
                 self._install(site, (), "", 0)
+                self.load_errors[site] = "Invalid persisted price ledger"
 
     async def async_update(self, site, slots, tariff, source, now):
+        slots = tuple(slots)
+        if not slots:
+            return False
+        now = utc(now)
         payload = {
             "slots": [asdict(s) for s in slots],
             "tariff": tariff,
             "source": source_identity(source),
         }
         signature = sha256(json.dumps(payload, default=str, sort_keys=True).encode()).hexdigest()
+        batch_key = f"{slots[0].start.isoformat()}/{slots[-1].end.isoformat()}"
         async with self.lock:
-            if self.signatures.get(site) == signature:
+            if self.batch_signatures.get(site, {}).get(batch_key) == signature:
                 return False
             revision = self.revisions.get(site, 0) + 1
-            candidates = calculate(site, slots, tariff, source, now, revision)
-            validate_records(candidates, site)
             old = {r.start: r for r in self.records.get(site, ())}
-            for record in candidates:
-                prior = old.get(record.start)
-                if prior and (
-                    record.start < now
-                    or (
-                        prior.final_price_incl_vat == record.final_price_incl_vat
-                        and prior.components_json == record.components_json
-                        and source_identity(json.loads(prior.source_json))
-                        == source_identity(json.loads(record.source_json))
-                    )
-                ):
+            # A tariff edit must not even attempt to reprice settled intervals.
+            eligible = tuple(s for s in slots if s.start >= now or s.start not in old)
+            candidates = calculate(site, eligible, tariff, source, now, revision)
+            validate_records(candidates, site)
+            return await self._apply(site, candidates, signature, batch_key, now)
+
+    async def _apply(self, site, candidates, signature, batch_key, now):
+        old = {r.start: r for r in self.records.get(site, ())}
+        revision = self.revisions.get(site, 0) + 1
+        audit = list(self.audit.get(site, []))
+        for record in candidates:
+            prior = old.get(record.start)
+            if prior and (
+                record.start < now
+                or (
+                    prior.final_price_incl_vat == record.final_price_incl_vat
+                    and prior.components_json == record.components_json
+                    and source_identity(json.loads(prior.source_json))
+                    == source_identity(json.loads(record.source_json))
+                )
+            ):
+                continue
+            if prior:
+                audit.append(
+                    {
+                        "changed_at": now.isoformat(),
+                        "old": self._serialize(prior),
+                        "new": self._serialize(record),
+                    }
+                )
+            old[record.start] = record
+        records = tuple(
+            r
+            for _, r in sorted(old.items())
+            if self.retention_days is None or r.end > now - timedelta(days=self.retention_days)
+        )
+        validate_records(records, site)
+        if records == self.records.get(site, ()):
+            self.signatures[site] = signature
+            self.batch_signatures.setdefault(site, {})[batch_key] = signature
+            return False
+        signatures = {**self.batch_signatures.get(site, {}), batch_key: signature}
+        await self.store(site).async_save(
+            {
+                "records": [self._serialize(r) for r in records],
+                "signature": signature,
+                "revision": revision,
+                "batch_signatures": signatures,
+                "audit": audit,
+            }
+        )
+        self._install(site, records, signature, revision)
+        self.batch_signatures[site], self.audit[site] = signatures, audit
+        self.load_errors.pop(site, None)
+        return True
+
+    async def async_reconfigure(self, site, tariff_builder, now):
+        """Recompose only selected future rows; atomic across affected periods.
+
+        tariff_builder is a write-side selector returning None for unaffected
+        rows. Existing stored raw spot/source provenance is reused without HTTP.
+        """
+        now = utc(now)
+        async with self.lock:
+            candidates = []
+            for row in self.records.get(site, ()):
+                if row.start < now:
                     continue
-                old[record.start] = record
-            records = tuple(
-                r
-                for _, r in sorted(old.items())
-                if r.end > now - timedelta(days=self.retention_days)
-            )
-            validate_records(records, site)
-            if records == self.records.get(site, ()):
-                self.signatures[site] = signature
+                tariff = tariff_builder(row)
+                if tariff is None:
+                    continue
+                components = json.loads(row.components_json)["components"]
+                raw = PriceSlot(row.start, row.end, components["spot"]["ex_vat"])
+                candidates.extend(
+                    calculate(
+                        site,
+                        [raw],
+                        tariff,
+                        json.loads(row.source_json),
+                        now,
+                        self.revisions.get(site, 0) + 1,
+                    )
+                )
+            if not candidates:
                 return False
-            saved = []
-            for record in records:
-                row = asdict(record)
-                for key in ("start", "end", "calculated_at"):
-                    row[key] = row[key].isoformat()
-                saved.append(row)
-            await self.store(site).async_save(
-                {"records": saved, "signature": signature, "revision": revision}
-            )
-            self._install(site, records, signature, revision)
-            return True
+            validate_records(candidates, site)
+            signature = sha256(
+                json.dumps([self._serialize(r) for r in candidates], sort_keys=True).encode()
+            ).hexdigest()
+            return await self._apply(site, tuple(candidates), signature, "configuration", now)
+
+    @staticmethod
+    def _serialize(record):
+        row = asdict(record)
+        for key in ("start", "end", "calculated_at"):
+            row[key] = row[key].isoformat()
+        return row
 
     def lookup(self, site, start, end):
         keys = self.index.get(site, ())

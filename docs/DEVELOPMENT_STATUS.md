@@ -5,40 +5,63 @@ Updated 2026-10-24. Read AGENTS.md first; this is the single permanent handoff.
 ## Active work
 
 Branch: `feat/standalone-price-engine`, based on `981e489` (main).
-Last pushed checkpoint: `e50d0df`.
-Current checkpoint subject: `feat: port proven persistent pricing and tariff stack`.
-Issues #1–#5 read in full from GitHub. Proven pricing core ported; integration/API/UI work pending.
+Last pushed pricing core: `5eb20de`; initial permanent workflow: `e50d0df`.
+Current checkpoint subject: `feat: add native multi-site producer and versioned consumer API`.
 
-## Evidence and decisions
+## Completed and in progress
 
-- Main initially contains README and MIT license only; checkout clean.
-- Studied EV Charge Manager PR #11 (`5c32dc9`) and #12
-  (`9d949c6`; code checkpoint `6f972a554920ccd958ba4a77ccfa2147fd4c5b3f`).
-- Reuse its price_engine, price_components, price_schedule, price_update, prices
-  and tariff_source modules and regression tests. Separate price-only types from
-  vehicle planning. New domain: `ha_energy_price_engine`; independent HA config
-  entries represent sites. No EV/charging implementation belongs in this producer.
-- Preserve UTC quarter hours, Copenhagen scheduling (13:05/13:20/13:40/23:59/00:01),
-  atomic HA Store writes, settled history, no read-time I/O/arithmetic, VAT and source
-  provenance. Extend with versioned immutable API, native configuration, diagnostics.
-- EWII June–September 2026 household example only; future/other-site rates unknown.
+- #1 developer-preview domain, per-site HA entries, lifecycle, sensors, ADR-001,
+  public API v1, README, attribution, permanent workflow and CI definitions.
+- #2 ported atomic HA Store ledger, immutable indexed UTC lookups, permanent history
+  (upstream had 365-day retention), durable old/new future-correction audit,
+  batch signatures, failed-write protection and settled-history preservation.
+- #3 preserved all Copenhagen schedule times, startup recovery, complete-day
+  validation, operational statuses/counts, future-price-only revision events.
+- #4 native per-site config/options rate editor with explicit units/VAT/dates/source,
+  manual locks, bounded national baselines, Radius source/cache, manual fallback,
+  subscriptions and heating eligibility. No inferred EWII or summer-house default.
+  The household example is 0.030 DKK/kWh ex VAT, June–September 2026 only.
+- Diagnostics redact names/IDs/free-form source references. Native options show
+  applied values/source/periods/check/change, repair warnings show missing coverage.
+- #5 producer contract tests include isolated site mapping, degraded/unloaded API,
+  earliest-slot consumer ranking and shared upstream calculation fixtures. Actual
+  EV consumer adapter and broker-export comparisons remain pending.
 
-## Validation and access
+## Validation
 
-Read-only Git access works for both repositories. Local validation: Python 3.14.8, exact hash-verified upstream dependency lock;
-`pytest tests/test_price_engine.py tests/test_price_components.py tests/test_price_schedule.py tests/test_tariff_source.py`: **36 passed**, zero skips. Ruff check and format pass.
-No remote CI exists yet. GitHub API requests return proxy HTTP 403 (including gh); GitHub HTML
-and Git work. Required API and optional Datahub domains added to environment draft;
-saved configuration does not apply runtime networking or publish a snapshot.
+Python 3.14.8, `.venv`, hash-verified upstream requirements-dev.lock.
+`pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing`:
+**54 passed, zero skips, 86% coverage**. Ruff check/format passed.
+Official `ghcr.io/home-assistant/hassfest` local validation: **1 integration,
+0 invalid**, including config flow/translations/manifest. No live HA was used.
+CI definitions added for tests/Ruff, hassfest and HACS. Remote CI is not yet checked;
+do not infer success from local results or workflow files.
+
+## Access and decisions
+
+Git read/push works for Price Engine; GitHub HTML reads work for both repositories.
+GitHub API/gh requests still return proxy 403. `api.github.com` and optional public
+`api.energidataservice.dk` saved in the environment draft; user-facing save is needed
+for runtime policy propagation. No credentials requested or invented. Draft PR
+creation, progress comments and API CI inspection are currently blocked by API egress.
+
+Reuse EV Manager PR #11 (`5c32dc9`) and #12 (`9d949c6`, substantive `6f972a5`),
+not their vehicle/control stack. Source research checkout at
+`/tmp/price-engine-research/ev-charge-manager` is disposable; Git provenance is in
+PROVENANCE.md. One canonical handoff only. ADR/API docs define ownership/boundaries.
 
 ## Next steps
 
-1. Ported core and 36 regression cases complete; see docs/PROVENANCE.md.
-2. Locked development environment is `.venv`; use `.venv/bin/python -m pytest`.
-3. Add independent lifecycle, per-site native config/options UI, read-only API,
-   diagnostics, schedule/source event integration, audit and permanent history.
-4. Add mocked integration/contract/consumer-parity tests, Ruff and CI metadata checks.
-5. Push milestones, open draft PR and inspect exact-head CI when API access permits.
-   Record blockers honestly if proxy access remains unavailable.
+1. Extend targeted future-edit, disk rollback, native source-notification/backoff,
+   UI add/remove/taxes/DSO and household-boundary regression coverage; fix any gaps.
+2. Verify full local suite, Ruff and official hassfest after final changes.
+3. Inspect push CI via GitHub HTML if API remains blocked; create draft PR and post
+   progress comments once api.github.com access is available. Never claim pending CI.
+4. Implement a separately reviewed minimal read-only EV consumer adapter and tests;
+   no duplicate pricing or changes to optimizer cadence/earliest tie-break.
+5. Obtain owner-provided read-only broker comparison exports for #5; fixture parity
+   alone does not prove live household parity. Do not contact running HA/Node-RED.
+6. Performance measurement/storage migration for multi-year large deployments,
+   authoritative future rates and production/hardware acceptance are follow-ups.
 
-No production systems touched; no merge, stable release or live controls authorized.
+No merge, stable release, production cutover or live controls have been performed.
