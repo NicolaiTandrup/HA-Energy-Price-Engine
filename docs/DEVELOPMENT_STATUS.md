@@ -2,6 +2,33 @@
 
 Updated 2026-10-24. Read AGENTS.md first. This is the single permanent handoff.
 
+## Overnight beta mission in progress
+
+Continue PR #7 on `feat/standalone-price-engine`; do not reset/rebuild the preview.
+Baseline at `46b33bf`: 78 tests passed. Reviewed latest PR #6: it explicitly marks
+its service proposal superseded by the Python API. EV #16 now reconciles #15's API
+with #14 measured history (head `23bf84b`); preserve #15 and verify both lines.
+No new service transport is needed. Owner's latest Issue #5 clarification requires
+recorded/offline legacy comparison, not simultaneous live legacy/official brokers.
+
+Current checkpoint: `fix: preserve source verification and publish degraded readiness`.
+Eight new failing regression cases reproduced verification promotion, future/invalid time,
+API version type and identity gaps before changes. Additive site/producer entry
+identity and machine serialization preserve existing API v1 callers and events.
+Schedule metadata now uses actual source time; readiness is updated even when final
+amounts do not change. Price revision events remain material-change-only.
+
+Next milestones: native discovery/provider UI and entry migrations/lifecycle;
+robust scalable ledger recovery plus measured history volumes; machine contract
+fixtures and real #15/#16 conformance; reproducible beta installation archive,
+HACS/hassfest/CI, setup guide and joint recorded-fixture migration/rollback checklist.
+No live changes or prerelease publication authorized. Test/CI results for each new
+checkpoint must be recorded here before stopping.
+
+First overnight checkpoint validation: **88 passed, zero skips**, Ruff check/format
+clean. API cases failed before the fix and passed afterward. Remote CI is pending
+until this checkpoint is pushed.
+
 ## Branches, drafts and validated commits
 
 - Producer: `feat/standalone-price-engine`, based on `981e489` (main).

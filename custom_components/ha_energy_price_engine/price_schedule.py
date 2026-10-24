@@ -56,7 +56,9 @@ class PriceSchedule:
             "status": state,
             "requested_date": str(day),
             "last_attempt": now.isoformat(),
-            "last_success": now.isoformat() if state == "READY" else previous.get("last_success"),
+            "last_success": report.get("last_success")
+            if state == "READY"
+            else previous.get("last_success"),
             "valid_slots": report["source_slots"]
             if report.get("source_slots") is not None
             else (len(rows) if report.get("status") not in {"ERROR", "STALE"} else 0),
@@ -83,14 +85,16 @@ class PriceSchedule:
 
     async def run(self, now, hour, minute):
         changed = False
+        attempted = False
         for optimizer in self.coordinator.sites.values():
             site = optimizer.site
             today = now.astimezone(ZoneInfo(site["timezone"])).date()
             day = today if (hour, minute) == (0, 1) else today + timedelta(days=1)
             unconditional = (hour, minute) in {(0, 1), (13, 5)}
             if unconditional or not self.complete(site, day):
+                attempted = True
                 changed = await self.refresh_day(site, day, now) or changed
-        if changed:
+        if attempted:
             await self.coordinator.async_request_refresh()
         return changed
 

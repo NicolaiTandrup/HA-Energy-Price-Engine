@@ -40,6 +40,7 @@ class PriceCoordinator(DataUpdateCoordinator):
             PRICE_REVISION_EVENT,
             {
                 "api_version": 1,
+                "producer_entry_id": self.entry.entry_id,
                 "site_id": site_id,
                 "revision": self.price_engine.revisions[site_id],
                 "affected_slots": [r.start.isoformat() for r in records],

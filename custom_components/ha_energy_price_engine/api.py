@@ -1,5 +1,6 @@
 """Versioned read-only consumer contract. No network or composition on reads."""
 
+import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import StrEnum
@@ -27,6 +28,7 @@ class Site:
     name: str
     timezone: str
     area: str
+    producer_entry_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -40,6 +42,7 @@ class PriceResult:
     last_success: str | None
     reason: str | None
     revision: int
+    producer_entry_id: str | None = None
 
 
 class ConsumerAPI:
@@ -52,11 +55,13 @@ class ConsumerAPI:
 
     def sites(self) -> tuple[Site, ...]:
         return tuple(
-            Site(c.site["id"], c.site["name"], c.site["timezone"], c.site["area"])
-            for c in self._hass.data.get(DOMAIN, {}).values()
+            Site(c.site["id"], c.site["name"], c.site["timezone"], c.site["area"], entry_id)
+            for entry_id, c in self._hass.data.get(DOMAIN, {}).items()
         )
 
-    def lookup(self, site_id: str, start: datetime, end: datetime, *, now=None) -> PriceResult:
+    def lookup(
+        self, site_id: str, start: datetime, end: datetime, *, now=None, producer_entry_id=None
+    ) -> PriceResult:
         """Half-open UTC range on quarter boundaries; historical reads are supported."""
         from homeassistant.util import dt as dt_util
 
@@ -64,9 +69,16 @@ class ConsumerAPI:
         now = utc(now or dt_util.utcnow())
         if end <= start or start.timestamp() % 900 or end.timestamp() % 900:
             raise ValueError("Expected positive, quarter-aligned aware range")
-        c = next(
-            (c for c in self._hass.data.get(DOMAIN, {}).values() if c.site["id"] == site_id), None
+        match = next(
+            (
+                (entry_id, coordinator)
+                for entry_id, coordinator in self._hass.data.get(DOMAIN, {}).items()
+                if coordinator.site["id"] == site_id
+                and (producer_entry_id is None or producer_entry_id == entry_id)
+            ),
+            None,
         )
+        entry_id, c = match if match else (None, None)
         expected = int((end - start).total_seconds() / 900)
         if c is None:
             return PriceResult(
@@ -103,11 +115,24 @@ class ConsumerAPI:
             day += timedelta(days=1)
         reason = None
         successes = [r["last_success"] for r in reports if r.get("last_success")]
+        invalid_verification = False
+        valid_successes = []
+        for stamp in successes:
+            try:
+                parsed = utc(datetime.fromisoformat(stamp))
+                if parsed > now:
+                    invalid_verification = True
+                else:
+                    valid_successes.append(parsed)
+            except ValueError, TypeError:
+                invalid_verification = True
         # Operational errors matter for current/future reads; historical settlement
         # remains authoritative even if today's upstream is offline.
         if end > now:
             states = {r.get("status") for r in reports}
-            if "ERROR" in states:
+            if invalid_verification:
+                status, reason = Status.ERROR, "Invalid or future source verification time"
+            elif "ERROR" in states:
                 status = Status.ERROR
             elif "STALE" in states:
                 status = Status.STALE
@@ -120,7 +145,7 @@ class ConsumerAPI:
                 for r in reports
             ):
                 status = Status.STALE
-            reason = next((r.get("reason") for r in reports if r.get("reason")), None)
+            reason = reason or next((r.get("reason") for r in reports if r.get("reason")), None)
         if site_id in c.price_engine.load_errors:
             status, reason = Status.ERROR, c.price_engine.load_errors[site_id]
         return PriceResult(
@@ -130,16 +155,49 @@ class ConsumerAPI:
             rows,
             expected,
             len(rows),
-            min(successes) if successes else None,
+            min(valid_successes).isoformat() if valid_successes else None,
             reason,
             c.price_engine.revisions.get(site_id, 0),
+            entry_id,
         )
 
 
 def get_api(hass, version=1) -> ConsumerAPI:
     """Discover after integration setup; never auto-load or fetch on consumer reads."""
-    if version != API_VERSION:
+    if type(version) is not int or version != API_VERSION:
         raise ValueError(f"Unsupported Price Engine API version: {version}")
     if not hass.data.get(DOMAIN):
         raise EngineNotReady("Energy Price Engine is not loaded")
     return ConsumerAPI(hass)
+
+
+def serialize_result(result: PriceResult) -> dict:
+    """Machine-readable v1 fixture/export representation; no new service transport.
+
+    This is an additive view of the Python API, not the superseded PR #6 service.
+    Source verification time is never replaced by serialization/lookup time.
+    """
+    return {
+        "api_version": result.api_version,
+        "producer_entry_id": result.producer_entry_id,
+        "site_id": result.site_id,
+        "currency": "DKK",
+        "unit": "DKK/kWh",
+        "vat_included": True,
+        "revision": result.revision,
+        "status": str(result.status),
+        "verified_at": result.last_success,
+        "expected_slots": result.expected_slots,
+        "valid_slots": result.valid_slots,
+        "reason": result.reason,
+        "slots": [
+            {
+                "start": r.start.isoformat(),
+                "end": r.end.isoformat(),
+                "final_price_incl_vat": r.final_price_incl_vat,
+                "revision": r.revision,
+                "verified_at": json.loads(r.source_json).get("verified_at"),
+            }
+            for r in result.records
+        ],
+    }

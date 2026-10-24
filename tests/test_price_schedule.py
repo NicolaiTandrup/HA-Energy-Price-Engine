@@ -48,7 +48,7 @@ async def test_complete_day_conditional_schedule(scheduled, hour, minute, fetch)
     scheduled.days = {"home": {str(target): {"status": "READY"}}}
     await scheduled.run(now, hour, minute)
     assert scheduled.coordinator.price_updater.refresh.called is fetch
-    scheduled.coordinator.async_request_refresh.assert_not_called()
+    assert scheduled.coordinator.async_request_refresh.called is fetch
 
 
 async def test_partial_day_retry_and_changed_data_replans_once(scheduled):
@@ -58,7 +58,8 @@ async def test_partial_day_retry_and_changed_data_replans_once(scheduled):
     assert scheduled.days["home"]["2026-10-24"]["status"] == "INCOMPLETE"
     scheduled.coordinator.price_updater.refresh.return_value = True
     await scheduled.run(now + timedelta(minutes=20), 13, 40)
-    scheduled.coordinator.async_request_refresh.assert_awaited_once()
+    # Readiness is published after both attempts, independently of price events.
+    assert scheduled.coordinator.async_request_refresh.await_count == 2
 
 
 async def test_native_timer_and_unload_cancellation(scheduled, freezer):
