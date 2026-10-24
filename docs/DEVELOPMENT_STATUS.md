@@ -1,96 +1,121 @@
 # Development handoff
 
-Updated 2026-10-24. Read AGENTS.md first; this is the single permanent handoff.
+Updated 2026-10-24. Read AGENTS.md first. This is the single permanent handoff.
 
-## Active work
+## Branches, drafts and validated commits
 
-Branch: `feat/standalone-price-engine`, based on `981e489` (main).
-Last pushed validated producer: `f362507` (all six remote CI checks green).
-Earlier native producer `3f7f684`; pricing core `5eb20de`; workflow `e50d0df`.
-Draft PR: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7.
-Current checkpoint subject: `test: verify native tariff modes and consumer interoperability`.
-Previous hardening code: `a5cf2c2` (74 local tests, 91% coverage).
+- Producer: `feat/standalone-price-engine`, based on `981e489` (main).
+  Draft https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7.
+- Validated producer code: `e36e3e455b85a81fe2cf099a08ba4f6c8de37f49`.
+  All SIX exact-head push/PR checks passed: tests, hassfest and HACS.
+- Companion consumer: `feat/price-engine-consumer`, based on original EV PR #12.
+  Draft https://github.com/NicolaiTandrup/HA-EV-Charge-Manager/pull/15 targets
+  `feat/verified-danish-pricing`. Code `088c8fad00a0eb79fec246e35637d26655e1eb1c`:
+  all SIX exact-head push/PR tests, hassfest and HACS passed.
+- Current checkpoint subject: `docs: record validated producer and consumer handoff`.
+  This handoff-only checkpoint does not change validated application code. Its own
+  SHA cannot be recorded in this document; inspect Git/PR checks for the current head.
+- Earlier checkpoints: workflow `e50d0df`, proven core `5eb20de`, native producer
+  `3f7f684`, hardening `a5cf2c2`, metadata ordering `f362507`. All are pushed.
 
-## Completed and in progress
+## Implemented preview for Issues #1–#5
 
-- #1 developer-preview domain, per-site HA entries, lifecycle, sensors, ADR-001,
-  public API v1, README, attribution, permanent workflow and CI definitions.
-- #2 ported atomic HA Store ledger, immutable indexed UTC lookups, permanent history
+- #1: native `ha_energy_price_engine`, independent per-site config entries,
+  lifecycle, sensors, ADR-001, immutable read-only API v1, README, attribution,
+  permanent workflow and CI. No vehicle/charging code belongs to this producer.
+- #2: ported atomic HA Store ledger, indexed UTC range lookups, permanent history
   (upstream had 365-day retention), durable old/new future-correction audit,
-  batch signatures, failed-write protection and settled-history preservation.
-- #3 preserved all Copenhagen schedule times, startup recovery, complete-day
-  validation, operational statuses/counts, future-price-only revision events.
-- #4 native per-site config/options rate editor with explicit units/VAT/dates/source,
-  manual locks, bounded national baselines, Radius source/cache, manual fallback,
-  subscriptions and heating eligibility. No inferred EWII or summer-house default.
-  The household example is 0.030 DKK/kWh ex VAT, June–September 2026 only.
-- Diagnostics redact names/IDs/free-form source references. Native options show
-  applied values/source/periods/check/change, repair warnings show missing coverage.
-- #5 producer contract tests include isolated site mapping, degraded/unloaded API,
-  earliest-slot consumer ranking and shared upstream calculation fixtures. A separate EV consumer implementation is locally validated (153 tests);
-  broker-export comparisons remain pending.
+  per-day signatures, failed-write protection and settled-history preservation.
+  Reads perform no HTTP, calculation or persistence. Unknown prices are never zero.
+- #3: Copenhagen 13:05 primary; 13:20/13:40 conditional retry; 23:59 conditional
+  rescue; 00:01 unconditional current-day sync; startup catch-up; exact-day
+  validation; READY/INCOMPLETE/STALE/ERROR diagnostics; source debounce/backoff;
+  events only for effective future final-price changes after durable commit.
+- #4: native per-site config/options editor for units, VAT inclusion/fraction,
+  effective dates, verification/source, supplier, DSO, TSO, tax, subscriptions and
+  heating eligibility. Manual locks, dated national baselines, verified Radius,
+  last verified cache and explicit manual fallback. Public source diagnostics,
+  applied-value UI summary, repair warnings, durable options/configuration audit,
+  targeted future-only repricing from stored raw spot inputs, including offline
+  edits when required DSO data is available. No inferred private/future terms.
+- EWII historical household example: 0.030 DKK/kWh ex VAT from 2026-06-01 until
+  2026-10-01 only. Not automatically applied; no summer-house rate or later contract
+  is inferred. TSO baseline ends after 2026; uniform tax baseline ends after 2027.
+- #5: versioned producer contract and separately reviewed EV consumer. Explicit
+  external-site selection skips EV retrieval/calculation/storage/price sensors;
+  copies final values; subscribes to revisions; fails closed on degraded/unloaded
+  data with bounded discovery retry. Regular 30-minute planning and earliest-slot
+  tie-break preserved. Existing legacy simulation sites do not migrate silently.
 
-## Validation
+## Actual validation
 
-Python 3.14.8, `.venv`, hash-verified upstream requirements-dev.lock.
-`pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing`:
-**78 passed, zero skips, 92% coverage**. Ruff check/format passed.
-Official `ghcr.io/home-assistant/hassfest` local validation: **1 integration,
-0 invalid**, including config flow/translations/manifest. No live HA was used.
-All SIX exact-head remote push/PR checks (tests, hassfest, HACS) passed
-at `f36250715eb3ec2e8a47424a780943192c96a634`; earlier tests/hassfest passed at `3f7f684`. HACS failed
-because a local brand icon was missing; this checkpoint supplies that asset.
-The HACS fix is confirmed at `f362507`; new exact-head checks must be rechecked
-after this checkpoint is pushed. The optional categories field was tested and removed
-because official hassfest rejected the speculative value. The subsequent local
-run caught the required domain/name-first key ordering; this checkpoint restores it.
-No required check is disabled.
+Producer Python 3.14.8, hash-verified requirements-dev.lock, `.venv`:
+**78 passed, zero skips, 92% coverage**. Ruff check/format clean. Official local
+hassfest: **1 integration, 0 invalid**. Remote six checks green at code SHA above.
 
-## Access and decisions
+EV consumer, same locked Python environment and Node 24:
+**153 passed, zero skips, 91% coverage** (adapter 98%). Ruff/format and official
+local hassfest valid; remote six checks green at consumer code SHA above.
+CI pins producer `f36250715eb3ec2e8a47424a780943192c96a634` for cross-repository tests.
 
-Git read/push works for Price Engine; GitHub HTML reads work for both repositories.
-GitHub API access recovered after the saved network configuration; gh now works. `api.github.com` and optional public
-`api.energidataservice.dk` saved in the environment draft; user-facing save is needed
-for runtime policy propagation. No credentials requested or invented. Draft PR #7 created and meaningful progress comment posted. Run-log download
-redirects use an additional host blocked by the proxy; check-run annotations are
-available via api.github.com and were sufficient to diagnose the HACS failure.
+Coverage includes native UI editing/discard/overlap, offline future repricing,
+failed-write atomic rollback, restart/audit, 92/96/100-slot DST, source notification
+coalescing/backoff/failure recovery, DSO automatic/manual-lock/fallback/unavailable,
+site isolation and immutable consumer reads. Eight golden seasonal/DST/VAT scenarios
+(768 slots) were generated from original pinned PR #12 code, not this producer.
+Consumer tests exercise the real producer API/HA Store as well as Manager lifecycle
+with local fetch and arithmetic forbidden. This is fixture parity, not live broker
+or hardware acceptance. No live HA was used.
 
-Reuse EV Manager PR #11 (`5c32dc9`) and #12 (`9d949c6`, substantive `6f972a5`),
-not their vehicle/control stack. Source research checkout at
-`/tmp/price-engine-research/ev-charge-manager` is disposable; Git provenance is in
-PROVENANCE.md. One canonical handoff only. ADR/API docs define ownership/boundaries.
+## Resume here / acceptance gaps
 
-## Next steps
+1. Read current PR reviews and exact-head checks; preserve existing changes. Do not
+   rebuild the proven pricing/registry stack or repeat completed setup work.
+2. Owner-provided read-only Energy Price Broker/real_energy_price input/output
+   exports are required for actual household and summer-house parallel parity.
+   No live HA/Node-RED access is authorized. Do not fabricate missing contract terms.
+3. Review native UI usability in an owner-approved disposable HA instance; source
+   and lifecycle tests use real HA test harness with mocked upstream services.
+4. Measure multi-year/Raspberry Pi storage scale before production acceptance.
+   Permanent HA Store snapshots/audit grow; ADR-001 documents SQLite migration as
+   a measured follow-up, not hidden history pruning. Add broader DSO/source presets
+   and future national rates only from verified authoritative data.
+5. Consumer preview conservatively requests current quarter through next-day end;
+   incomplete day-ahead prices defer new plans. Narrower deadline-scoped queries
+   are a follow-up. No silent legacy fallback. Review PR #15 separately from #7.
+6. No issue is auto-closed: developer preview is implemented, but broker parity,
+   production acceptance, review and stable release remain outstanding.
 
-1. Hardening complete: offline targeted future-edit/old-new audit, disk rollback,
-   source debounce/backoff and persistent failure state, UI add/remove/taxes/DSO,
-   bounded EWII dates, per-day no-recomposition signatures and permanent retention.
-   Golden fixtures generated using the original pinned PR #12 code verify every
-   slot across eight seasonal/DST/VAT scenarios (not live broker parity).
-2. Full producer suite now 78 tests with native automatic/locked/manual-fallback/
-   unavailable DSO lifecycle tests. Added public source verification diagnostics,
-   active-period signature filtering and locked-DSO offline-edit support.
-   Verify final remote CI after push.
-3. Inspect push CI via GitHub HTML if API remains blocked; create draft PR and post
-   progress comments once api.github.com access is available. Never claim pending CI.
-4. A separate EV consumer branch `feat/price-engine-consumer` is in progress in
-   the research checkout, based on original PR #12. It explicitly selects an
-   external producer site, skips legacy source scheduling/calculation/publishing,
-   copies final values and fails closed. Consumer code `088c8fa` has **153 passed,
-   zero skips, 91% coverage**, Ruff/format and official local hassfest valid.
-   Separate draft: https://github.com/NicolaiTandrup/HA-EV-Charge-Manager/pull/15
-   (based on PR #12). Consumer push tests/hassfest/HACS passed at `088c8fa`;
-   PR-triggered counterparts were still running at the last check. Recheck all
-   exact-head checks before reporting final CI.
-5. Obtain owner-provided read-only broker comparison exports for #5; fixture parity
-   alone does not prove live household parity. Do not contact running HA/Node-RED.
-6. Performance measurement/storage migration for multi-year large deployments,
-   authoritative future rates and production/hardware acceptance are follow-ups.
+## Reproduction and retained setup
 
-Reusable environment install_script and start_skill are saved for Python 3.14.8,
-hash-locked dependency sync, existing-checkout startup and mocked HA validation.
-Commands were exercised/repeated successfully. No running service is required.
-Saving the draft is not publication; review/save/publish environment settings to
-retain a new snapshot when desired, independently of integration releases.
+From `/workspace/HA-Energy-Price-Engine`:
 
-No merge, stable release, production cutover or live controls have been performed.
+```sh
+.venv/bin/pytest --cov=custom_components.ha_energy_price_engine
+.venv/bin/ruff check custom_components tests tools
+.venv/bin/ruff format --check custom_components tests tools
+docker run --rm -v /workspace/HA-Energy-Price-Engine:/github/workspace ghcr.io/home-assistant/hassfest
+gh pr checks 7 --repo NicolaiTandrup/HA-Energy-Price-Engine
+```
+
+The EV research checkout `/tmp/price-engine-research/ev-charge-manager` may be
+transient. Recover `feat/price-engine-consumer` from its remote if absent. Read its
+AGENTS.md/handoff. Run its suite with `PRICE_ENGINE_SOURCE` pointing to a producer
+checkout; see docs/price-engine-consumer.md there for the exact CI pin.
+Golden regeneration requires an unchanged original PR #12 source checkout at
+`9d949c6d0905646d1bbf973ea2edb47846e1607d`; the generator refuses another HEAD.
+
+Reusable install_script/start_skill are saved in the cloud environment draft:
+Python 3.14.8, hash-locked dependency sync, existing-checkout workflow and mocked
+HA validation. Installation/refresh commands were exercised and repeated. No
+running service or secrets are required. Git read/push and GitHub API access work;
+API/Datahub domains are saved. Run-log redirect host is restricted, but check-run
+annotations are available and were sufficient for diagnosing the resolved HACS
+brand failure. No verification or required CI checks were disabled.
+
+Saving the environment draft does not publish it. Review/save the setup in
+environment settings, then publish the cloud environment to retain a new snapshot
+when desired; this is independent of integration release or production deployment.
+
+No merge, stable release, production cutover, Node-RED baseline edits or live
+Home Assistant/vehicle/charging controls have been performed or authorized.
