@@ -30,3 +30,16 @@ component as specified in Issues #1/#4. Expose durable lookup without fetching o
 calculating on reads, and revision events only for changed future final prices.
 Before stopping update this file, commit/push and record actual results. No merge,
 release, deployment or production cutover.
+
+## Consumer coordination checkpoint
+
+EV draft PR #13 implements the proposed consumer (152 tests and all EV remote checks
+passed at `3204a2f`). EV draft PR #14 adds native measured history and safety; latest
+local suite is 168 passed with zero skips, 91% coverage, Ruff and hassfest passed.
+These remain EV-side mocks, not producer conformance/runtime evidence.
+
+Contract SHA-256 in both repositories:
+`01de5723e5fb7634b51735069c3417ae30c68f244cb0bbb6b78dffb9007d464a`.
+The synthetic example is decoded in EV tests. Actual producer implementation/API
+and native pricing UI are still the next independent producer tasks. No runtime
+or invoice/source verification was added in this docs-only proposal branch.
