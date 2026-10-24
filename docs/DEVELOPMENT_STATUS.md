@@ -7,7 +7,8 @@ Updated 2026-10-24. Read AGENTS.md first; this is the single permanent handoff.
 Branch: `feat/standalone-price-engine`, based on `981e489` (main).
 Last pushed native producer: `3f7f684`; pricing core `5eb20de`; workflow `e50d0df`.
 Draft PR: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7.
-Current checkpoint subject: `fix: harden future edits source verification and preview metadata`.
+Current checkpoint subject: `fix: preserve Home Assistant manifest field ordering`.
+Previous hardening code: `a5cf2c2` (74 local tests, 91% coverage).
 
 ## Completed and in progress
 
@@ -39,7 +40,9 @@ Exact-head remote push/PR tests and hassfest passed at `3f7f684`. HACS failed
 because a local brand icon was missing; this checkpoint supplies that asset.
 All current exact-head checks must be rechecked after pushing; no HACS success
 claimed until observed. The optional categories field was tested and removed
-because official hassfest rejected the speculative value; no required check disabled.
+because official hassfest rejected the speculative value. The subsequent local
+run caught the required domain/name-first key ordering; this checkpoint restores it.
+No required check is disabled.
 
 ## Access and decisions
 
