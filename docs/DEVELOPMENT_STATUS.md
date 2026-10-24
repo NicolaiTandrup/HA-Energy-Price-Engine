@@ -61,6 +61,24 @@ compatibility, preserving hashes and documenting any fixture-version override.
 Then produce pinned #15/#16 contract tests, machine schema/fixtures, an installation
 archive smoke-tested independently of the source tree and the beta cutover guide.
 
+Cross-runtime/current-HA checkpoint `test: pin machine contracts and validate both consumer runtimes`:
+**123 tests pass on HA 2026.10.3 and current 2026.10.4**, zero skips. Actual PE+CM
+runtime tests pass separately for both pinned CM #15 (`0a28438`) and #16 (`23bf84b`)
+on both HA cores: setup, final prices, adjacent day revision coalescing, duplicate
+replan suppression and producer-unload fail-closed behavior. No live service/control
+calls are permitted in those tests. Source-tree mocks alone are not the evidence.
+Machine JSON Schema/fixtures (92/96/100/partial) validate against actual producer
+serialization and both consumer decoder implementations.
+
+Supported test pair: pytest-homeassistant-custom-component 0.13.374 / HA 2026.10.3.
+Current-patch lock explicitly overrides only its strict HA pin to 2026.10.4 while
+retaining the exact hash-verified fixture package. This is a declared test fixture
+compatibility override, not an installation verification bypass or production
+runtime dependency. CI runs both complete environments and two-runtime checks.
+Pinned consumer exports are generated test dependencies under ignored
+consumer-references/, not extra project checkouts or competing development branches.
+Run tools/prepare_consumer_refs.py before the producer suite in a fresh environment.
+
 ## Branches, drafts and validated commits
 
 - Producer: `feat/standalone-price-engine`, based on `981e489` (main).

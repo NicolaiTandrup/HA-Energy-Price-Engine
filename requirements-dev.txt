@@ -1,3 +1,4 @@
-homeassistant==2026.10.2
-pytest-homeassistant-custom-component==0.13.373
+homeassistant==2026.10.3
+pytest-homeassistant-custom-component==0.13.374
 ruff==0.17.2
+jsonschema[format-nongpl]==4.26.0

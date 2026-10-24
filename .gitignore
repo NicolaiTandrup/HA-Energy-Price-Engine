@@ -5,3 +5,6 @@ __pycache__/
 .ruff_cache/
 .coverage
 htmlcov/
+consumer-references/
+dist/
+.venv-ha-current/

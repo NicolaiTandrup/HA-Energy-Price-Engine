@@ -57,3 +57,29 @@ No write service, tariff editor or price arithmetic is exposed to consumers. UI
 options are the producer's business configuration boundary. The current price and
 readiness sensors support dashboards; long range consumers use the batch API.
 See INTEROPERABILITY.md for migration and remaining real-world parity work.
+
+## Additive beta contract details
+
+`Site` and `PriceResult` now also expose `producer_entry_id`. Existing v1 calls
+remain valid; callers may pass `producer_entry_id=` to `lookup` for explicit entry
+ownership verification. A mismatched entry returns NOT_LOADED with no prices.
+Version requests require an actual supported integer; booleans are not versions.
+Invalid, naive or future verification timestamps fail closed. Source verification
+is the successful provider time, never the time of a cache read or UI refresh.
+
+`serialize_result(result)` is an optional machine-readable view, not a new HA
+service. Schema and synthetic 92/96/100-slot/partial snapshots are in
+`docs/contracts/price-api-v1.*.json`. PR #6's former service proposal is superseded;
+no `get_prices` service or second event name is introduced.
+
+`lookup_revision(site_id, start, revision, producer_entry_id=...)` returns an exact
+immutable published record from current data or the durable correction audit.
+Missing/unloaded revisions return None; accounting must never substitute a different
+revision or zero. Retrieval performs no HTTP, price calculation or storage writes.
+Existing settled records remain untouched by automatic corrections.
+
+Pinned actual CM #15 and #16 decoders consume the same machine-tested snapshots.
+`tools/test_two_runtime.py` additionally starts actual PE+CM coordinators together
+in a disposable HA harness, verifies future revisions after HA's bounded coordinator
+debounce, duplicate-replan suppression, and invalid forecasts after producer unload.
+All data and provider/device observations are synthetic; no real controls are called.

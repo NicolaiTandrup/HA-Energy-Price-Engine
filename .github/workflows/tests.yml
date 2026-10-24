@@ -6,14 +6,30 @@ permissions:
   contents: read
 jobs:
   tests:
+    name: tests (${{ matrix.target }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: fixture-supported-ha-2026.10.3
+            lockfile: requirements-dev.lock
+          - target: current-ha-2026.10.4
+            lockfile: requirements-ha-current.lock
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14.8'
       - uses: astral-sh/setup-uv@v6
-      - run: uv venv && uv pip sync --require-hashes requirements-dev.lock
-      - run: uv run --no-project ruff check custom_components tests
-      - run: uv run --no-project ruff format --check custom_components tests
-      - run: uv run --no-project pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing
+      - name: Install exact hash-verified environment
+        run: uv venv && uv pip sync --require-hashes ${{ matrix.lockfile }}
+      - name: Prepare immutable consumer test dependencies
+        run: uv run --no-project python tools/prepare_consumer_refs.py
+      - run: uv run --no-project ruff check custom_components tests tools
+      - run: uv run --no-project ruff format --check custom_components tests tools
+      - run: uv run --no-project pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing -W error::ResourceWarning
+      - name: Actual PE and CM PR 15 runtimes, revisions and unload safety
+        run: uv run --no-project python tools/test_two_runtime.py --consumer pr15
+      - name: Actual PE and CM PR 16 measured-history runtimes
+        run: uv run --no-project python tools/test_two_runtime.py --consumer pr16
