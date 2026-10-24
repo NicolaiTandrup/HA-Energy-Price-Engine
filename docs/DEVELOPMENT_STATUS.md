@@ -29,6 +29,15 @@ First overnight checkpoint validation: **88 passed, zero skips**, Ruff check/for
 clean. API cases failed before the fix and passed afterward. Remote CI is pending
 until this checkpoint is pushed.
 
+Native configuration checkpoint `feat: add confirmed source discovery and native beta configuration`:
+**102 tests pass, zero skips, 91% coverage**; Ruff check/format clean. Native tests
+cover ambiguous discovery, generic sources without Nord Pool installed, unit/VAT/
+verification rejection, all-in VAT once, v1→v2 migration/future-version rejection,
+reconfigure/remove with stable identity, repair retry and seven isolated sites.
+Official hassfest initially caught repair translation schema errors; corrected to
+`issues.pricing_not_ready.fix_flow` with no mutually exclusive description. Final
+local hassfest passed. No validation was disabled. Remote checks follow this push.
+
 ## Branches, drafts and validated commits
 
 - Producer: `feat/standalone-price-engine`, based on `981e489` (main).

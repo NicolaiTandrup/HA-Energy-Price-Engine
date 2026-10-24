@@ -37,6 +37,8 @@ def danish_public_components():
 
 
 def normalize_component(rule):
+    if isinstance(rule["amount"], bool) or isinstance(rule["vat_rate"], bool):
+        raise ValueError("Boolean values are not money or VAT rates")
     amount = float(rule["amount"])
     rate = float(rule["vat_rate"])
     if not isfinite(amount) or amount < 0 or not isfinite(rate) or not 0 <= rate <= 1:
@@ -46,7 +48,11 @@ def normalize_component(rule):
         or type(rule["vat_included"]) is not bool
     ):
         raise ValueError("Explicit component unit and VAT inclusion required")
-    if not rule.get("source") or not rule.get("verified_on"):
+    if (
+        not isinstance(rule.get("source"), str)
+        or not rule["source"].strip()
+        or not rule.get("verified_on")
+    ):
         raise ValueError("Component source and verification date required")
     date.fromisoformat(rule["verified_on"])
     amount /= 100 if rule["unit"] == "ore/kWh" else 1

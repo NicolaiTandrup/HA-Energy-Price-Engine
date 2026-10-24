@@ -24,7 +24,10 @@ def parse_prices(
         if not isinstance(row, dict):
             raise ValueError("Prices require explicit start/end timestamps")
         start, end = (utc(datetime.fromisoformat(str(row[k]))) for k in ("start", "end"))
-        price = float(row.get("price", row.get("value"))) * multiplier
+        amount = row.get("price", row.get("value"))
+        if isinstance(amount, bool):
+            raise ValueError("Boolean source prices are invalid")
+        price = float(amount) * multiplier
         if not isfinite(price) or end <= start or (end - start).total_seconds() % 900:
             raise ValueError("Price intervals must be finite multiples of 15 minutes")
         while start < end:

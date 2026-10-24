@@ -106,12 +106,18 @@ def validate_records(records, site):
             or record.end.tzinfo is None
             or record.end - record.start != timedelta(minutes=15)
             or record.start.timestamp() % 900 != 0
+            or isinstance(record.final_price_incl_vat, bool)
             or not isfinite(record.final_price_incl_vat)
+            or type(record.revision) is not int
+            or record.revision < 1
+            or record.calculated_at.tzinfo is None
             or (previous is not None and record.start < previous)
         ):
             raise ValueError("Invalid/duplicate price interval, unit or site")
-        json.loads(record.components_json)
-        json.loads(record.source_json)
+        if not isinstance(json.loads(record.components_json), dict) or not isinstance(
+            json.loads(record.source_json), dict
+        ):
+            raise ValueError("Price provenance must be a JSON object")
         previous = record.end
 
 

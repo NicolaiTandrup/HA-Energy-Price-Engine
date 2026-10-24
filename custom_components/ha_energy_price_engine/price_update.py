@@ -11,6 +11,7 @@ from .configuration import tariff_for
 from .price_components import danish_public_components
 from .price_engine import day_bounds
 from .prices import OfficialPrices
+from .sources import validate_entity_source
 from .tariff_source import TariffSource
 
 
@@ -94,7 +95,36 @@ class PriceUpdater:
                     ]
                     source["verified_at"] = min(times).isoformat() if times else now.isoformat()
                 else:
-                    source["verified_at"] = state.last_reported.isoformat()
+                    verified = (
+                        validate_entity_source(state, site, now)
+                        if site.get("source_type") == "entity"
+                        else state.last_reported
+                    )
+                    source["verified_at"] = verified.isoformat()
+                    source["input_unit"] = site.get("price_unit", "explicit_multiplier")
+                if dates:
+                    verified_slots = []
+                    for day in dates:
+                        start, end = day_bounds(day, site["timezone"])
+                        selected = [s for s in slots if start <= s.start and s.end <= end]
+                        report["source_slots"] = len(selected)
+                        complete = (
+                            bool(selected)
+                            and selected[0].start == start
+                            and selected[-1].end == end
+                            and all(a.end == b.start for a, b in zip(selected, selected[1:]))
+                        )
+                        if not complete:
+                            report.update(
+                                status="INCOMPLETE",
+                                reason="Requested day source series is incomplete",
+                                changed=False,
+                            )
+                            return False
+                        verified_slots.extend(selected)
+                    if site.get("nordpool_entry") and len(verified_slots) != len(slots):
+                        raise ValueError("Source returned intervals outside the requested dates")
+                    slots = verified_slots
                 locked_dso = all(
                     any(
                         r["id"] == "dso"
@@ -129,7 +159,7 @@ class PriceUpdater:
                             "warning": "Automatic tariff unavailable",
                             "unit": "DKK/kWh ex VAT",
                         }
-                if site.get("dated_components") is not None:
+                if site.get("dated_components") is not None and tariff.get("mode") != "all_in":
                     tariff["components"] = list(site["dated_components"])
                     if site.get("danish_public_rates"):
                         tariff["components"] = danish_public_components() + tariff["components"]
@@ -139,29 +169,6 @@ class PriceUpdater:
                         annual_usage_kwh=site.get("annual_usage_kwh", 0),
                         usage_year=site.get("usage_year"),
                     )
-                if dates and site.get("nordpool_entry"):
-                    verified_slots = []
-                    for day in dates:
-                        start, end = day_bounds(day, site["timezone"])
-                        selected = [s for s in slots if start <= s.start and s.end <= end]
-                        report["source_slots"] = len(selected)
-                        complete = (
-                            bool(selected)
-                            and selected[0].start == start
-                            and selected[-1].end == end
-                            and all(a.end == b.start for a, b in zip(selected, selected[1:]))
-                        )
-                        if not complete:
-                            report.update(
-                                status="INCOMPLETE",
-                                reason="Requested day source series is incomplete",
-                                changed=False,
-                            )
-                            return False
-                        verified_slots.extend(selected)
-                    if len(verified_slots) != len(slots):
-                        raise ValueError("Source returned intervals outside the requested dates")
-                    slots = verified_slots
                 before = {r.start: r.final_price_incl_vat for r in self.engine.records.get(key, ())}
                 changed = await self.engine.async_update(key, slots, tariff, source, now)
                 affected = tuple(

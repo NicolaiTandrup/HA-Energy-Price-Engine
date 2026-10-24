@@ -55,7 +55,11 @@ class PriceSensor(BaseSensor):
         rows = self.coordinator.price_engine.lookup(
             self.site["id"], now, now + timedelta(microseconds=1)
         )
-        return rows[0].final_price_incl_vat if rows else None
+        return (
+            rows[0].final_price_incl_vat
+            if rows and (self.coordinator.data or {}).get("status") == "READY"
+            else None
+        )
 
     @property
     def extra_state_attributes(self):

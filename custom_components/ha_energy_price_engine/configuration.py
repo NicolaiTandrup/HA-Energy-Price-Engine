@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 
 from .const import COMPONENTS
 from .price_components import danish_public_components, validate_rules
+from .sources import BASES, UNIT_MULTIPLIERS
 
 
 def settings(entry):
@@ -14,9 +15,42 @@ def settings(entry):
 
 def validate_site(value):
     site = deepcopy(value)
+    source_type = site.setdefault("source_type", "nordpool")
+    site.setdefault("nordpool_entry", "")
+    site.setdefault("price_basis", "spot_ex_vat")
+    site.setdefault("price_unit", "DKK/MWh" if source_type == "nordpool" else "DKK/kWh")
+    site.setdefault("supplier", "custom")
+    site.setdefault("dso_tariff_class", "C")
+    if source_type not in {"nordpool", "entity"}:
+        raise ValueError("Unsupported source type")
+    if source_type == "nordpool":
+        if (
+            not site["nordpool_entry"]
+            or site["price_basis"] != "spot_ex_vat"
+            or site["price_unit"] != "DKK/MWh"
+        ):
+            raise ValueError(
+                "Official Nord Pool requires an explicit entry and ex-VAT DKK/MWh basis"
+            )
+    elif (
+        not site.get("price_entity")
+        or site["price_basis"] not in BASES
+        or site["price_unit"] not in UNIT_MULTIPLIERS
+    ):
+        raise ValueError("Entity source, explicit unit and price basis are required")
+    else:
+        site["nordpool_entry"] = ""
+        site["price_attribute"] = site.get("price_attribute", "slots")
+        site["price_multiplier"] = UNIT_MULTIPLIERS[site["price_unit"]]
+    if site.get("supplier") not in {"custom", "ewii"}:
+        raise ValueError("Unsupported supplier label; use custom for another supplier")
+    if site.get("dso_mode") == "radius_c" and site["dso_tariff_class"] != "C":
+        raise ValueError(
+            "Only Radius C has verified automatic tariff identity; use dated manual rates for another class"
+        )
     if not re.fullmatch(r"[a-z0-9][a-z0-9_]{0,63}", site["id"]):
         raise ValueError("Site ID must be a stable lowercase slug")
-    if not site["name"].strip() or not site["area"].strip() or not site["nordpool_entry"]:
+    if not site["name"].strip() or not site["area"].strip():
         raise ValueError("Site name, area and official Nord Pool entry are required")
     ZoneInfo(site["timezone"])
     vat = float(site["vat"])
@@ -25,6 +59,12 @@ def validate_site(value):
     site["vat"] = vat
     rules = site.get("dated_components", [])
     validate_rules(rules)
+    if site["price_basis"] == "all_in" and (
+        rules or site.get("danish_public_rates") or site.get("dso_mode", "manual") != "manual"
+    ):
+        raise ValueError(
+            "All-in input already includes tariffs, taxes, supplier and VAT; additions are prohibited"
+        )
     for i, rule in enumerate(rules):
         if rule["id"] not in COMPONENTS or rule.get("eligibility", "all") not in {
             "all",
@@ -63,11 +103,13 @@ def validate_site(value):
 
 
 def tariff_for(site):
+    if site.get("price_basis") == "all_in":
+        return {"mode": "all_in"}
     rules = list(site.get("dated_components", []))
     if site.get("danish_public_rates"):
         rules = danish_public_components() + rules
     return {
-        "mode": "spot_ex_vat",
+        "mode": site.get("price_basis", "spot_ex_vat"),
         "vat": site["vat"],
         "components": rules,
         "timezone": site["timezone"],

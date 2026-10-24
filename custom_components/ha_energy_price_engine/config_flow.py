@@ -13,6 +13,7 @@ from homeassistant.util import dt as dt_util
 
 from .configuration import settings, validate_site
 from .const import COMPONENTS, DOMAIN
+from .sources import BASES, UNIT_MULTIPLIERS, source_defaults
 
 
 def select(options):
@@ -29,8 +30,26 @@ def site_schema(value=None, *, initial=False):
     fields.update(
         {
             vol.Required("name", default=value.get("name", "")): str,
-            vol.Required(
-                "nordpool_entry", default=value.get("nordpool_entry", "")
+            vol.Required("source_type", default=value.get("source_type", "nordpool")): select(
+                ("nordpool", "entity")
+            ),
+            vol.Optional(
+                "price_entity",
+                **({"default": value["price_entity"]} if value.get("price_entity") else {}),
+            ): selector.EntitySelector(selector.EntitySelectorConfig(domain="sensor")),
+            vol.Required("price_unit", default=value.get("price_unit", "DKK/MWh")): select(
+                UNIT_MULTIPLIERS
+            ),
+            vol.Required("price_basis", default=value.get("price_basis", "spot_ex_vat")): select(
+                BASES
+            ),
+            vol.Required("price_attribute", default=value.get("price_attribute", "slots")): str,
+            vol.Required("stale_minutes", default=value.get("stale_minutes", 40)): vol.All(
+                vol.Coerce(int), vol.Range(min=1, max=2880)
+            ),
+            vol.Optional(
+                "nordpool_entry",
+                **({"default": value["nordpool_entry"]} if value.get("nordpool_entry") else {}),
             ): selector.ConfigEntrySelector(
                 selector.ConfigEntrySelectorConfig(integration="nordpool")
             ),
@@ -79,7 +98,7 @@ def rule_schema(value=None):
 
 
 class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    VERSION = 1
+    VERSION = 2
 
     @staticmethod
     @callback
@@ -92,7 +111,9 @@ class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 site = validate_site({**user_input, "dated_components": [], "dso_mode": "manual"})
                 source = self.hass.config_entries.async_get_entry(site["nordpool_entry"])
-                if source is None or source.domain != "nordpool":
+                if site["source_type"] == "nordpool" and (
+                    source is None or source.domain != "nordpool"
+                ):
                     raise ValueError("Select an official Nord Pool config entry")
                 await self.async_set_unique_id(site["id"])
                 self._abort_if_unique_id_configured()
@@ -100,8 +121,35 @@ class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except ValueError, KeyError, TypeError, ZoneInfoNotFoundError:
                 errors["base"] = "invalid_configuration"
         return self.async_show_form(
-            step_id="user", data_schema=site_schema(user_input, initial=True), errors=errors
+            step_id="user",
+            data_schema=site_schema(
+                {**source_defaults(self.hass), **(user_input or {})}, initial=True
+            ),
+            errors=errors,
         )
+
+    async def async_step_reconfigure(self, user_input=None):
+        entry = self._get_reconfigure_entry()
+        if user_input is not None:
+            try:
+                site = validate_site(
+                    {**settings(entry), **user_input, "id": entry.unique_id or entry.data["id"]}
+                )
+                source = self.hass.config_entries.async_get_entry(site["nordpool_entry"])
+                if site["source_type"] == "nordpool" and (
+                    source is None or source.domain != "nordpool"
+                ):
+                    raise ValueError("Official Nord Pool entry required")
+                if entry.update_listeners:
+                    return self.async_update_and_abort(entry, options=site, title=site["name"])
+                return self.async_update_reload_and_abort(entry, options=site, title=site["name"])
+            except ValueError, TypeError, KeyError, ZoneInfoNotFoundError:
+                return self.async_show_form(
+                    step_id="reconfigure",
+                    data_schema=site_schema(user_input),
+                    errors={"base": "invalid_configuration"},
+                )
+        return self.async_show_form(step_id="reconfigure", data_schema=site_schema(settings(entry)))
 
 
 class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
@@ -115,7 +163,16 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_menu(
             step_id="init",
             description_placeholders={"pricing_summary": self._summary()},
-            menu_options=["site", "add_rate", "edit_rate", "remove_rate", "dso", "taxes", "save"],
+            menu_options=[
+                "site",
+                "supplier",
+                "add_rate",
+                "edit_rate",
+                "remove_rate",
+                "dso",
+                "taxes",
+                "save",
+            ],
         )
 
     def _summary(self):
@@ -154,9 +211,27 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
             return await self._stage("site", user_input, site_schema(user_input))
         return self.async_show_form(step_id="site", data_schema=site_schema(self.draft))
 
+    async def async_step_supplier(self, user_input=None):
+        schema = vol.Schema(
+            {
+                vol.Required("supplier", default=self.draft.get("supplier", "custom")): select(
+                    ("custom", "ewii")
+                )
+            }
+        )
+        if user_input is not None:
+            return await self._stage("supplier", user_input, schema)
+        return self.async_show_form(step_id="supplier", data_schema=schema)
+
+    async def async_step_reconfigure_source(self, user_input=None):
+        return await self.async_step_site(user_input)
+
     async def async_step_dso(self, user_input=None):
         schema = vol.Schema(
             {
+                vol.Required(
+                    "dso_tariff_class", default=self.draft.get("dso_tariff_class", "C")
+                ): str,
                 vol.Required("dso_mode", default=self.draft.get("dso_mode", "manual")): select(
                     ("manual", "radius_c")
                 ),
@@ -202,7 +277,9 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         try:
             proposed = validate_site({**self.draft, **changes})
             source = self.hass.config_entries.async_get_entry(proposed["nordpool_entry"])
-            if source is None or source.domain != "nordpool":
+            if proposed["source_type"] == "nordpool" and (
+                source is None or source.domain != "nordpool"
+            ):
                 raise ValueError("Official Nord Pool entry required")
             self.draft = proposed
             return await self.async_step_init()

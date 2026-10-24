@@ -4,22 +4,46 @@
     "step": {
       "user": {
         "title": "Add an independent price site",
-        "description": "Choose an existing official Home Assistant Nord Pool integration. Configure Pricing / Tariffs / Supplier / Taxes in this site’s Options after adding it. No rates are inferred for your contract.",
+        "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates.",
         "data": {
           "id": "Stable site ID (lowercase letters, digits and underscores)",
           "name": "Site name",
           "nordpool_entry": "Official Nord Pool integration",
           "area": "Price area (for example DK2)",
           "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)"
+          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
+          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
+          "price_entity": "Timestamped provider entity (entity source only)",
+          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
+          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
+          "price_attribute": "Timestamped interval attribute (entity source only)",
+          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
         }
+      },
+      "reconfigure": {
+        "title": "Site and official spot source",
+        "data": {
+          "name": "Site name",
+          "nordpool_entry": "Official Nord Pool integration",
+          "area": "Price area (for example DK2)",
+          "timezone": "IANA timezone (for example Europe/Copenhagen)",
+          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
+          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
+          "price_entity": "Timestamped provider entity (entity source only)",
+          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
+          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
+          "price_attribute": "Timestamped interval attribute (entity source only)",
+          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
+        },
+        "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates."
       }
     },
     "error": {
       "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap."
     },
     "abort": {
-      "already_configured": "This site ID is already configured."
+      "already_configured": "This site ID is already configured.",
+      "reconfigure_successful": "Site source updated. Stable site identity and dated business settings were preserved."
     }
   },
   "options": {
@@ -34,7 +58,8 @@
           "remove_rate": "Remove dated rate",
           "dso": "Grid tariff source and fallback",
           "taxes": "Dated national baselines and tax eligibility",
-          "save": "Save changes"
+          "save": "Save changes",
+          "supplier": "Supplier and contract guidance"
         }
       },
       "site": {
@@ -44,7 +69,13 @@
           "nordpool_entry": "Official Nord Pool integration",
           "area": "Price area (for example DK2)",
           "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)"
+          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
+          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
+          "price_entity": "Timestamped provider entity (entity source only)",
+          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
+          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
+          "price_attribute": "Timestamped interval attribute (entity source only)",
+          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
         }
       },
       "dso": {
@@ -53,7 +84,8 @@
         "data": {
           "dso_mode": "DSO source (manual or verified Radius C)",
           "dso_manual_fallback": "Allow explicit dated manual DSO fallback",
-          "dso_stale_days": "Maximum age of last verified DSO cache (days)"
+          "dso_stale_days": "Maximum age of last verified DSO cache (days)",
+          "dso_tariff_class": "Tariff class (automatic Radius supports verified C only; other classes require manual dated rates)"
         }
       },
       "add_rate": {
@@ -115,6 +147,13 @@
           "annual_usage_kwh": "Verified annual consumption (kWh)",
           "usage_year": "Year of verified annual consumption"
         }
+      },
+      "supplier": {
+        "title": "Supplier contract",
+        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June–September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
+        "data": {
+          "supplier": "Supplier label (no automatic contract inheritance)"
+        }
       }
     },
     "error": {
@@ -137,7 +176,20 @@
   "issues": {
     "pricing_not_ready": {
       "title": "Electricity pricing needs attention",
-      "description": "Verified current-day prices are incomplete, stale or unavailable. Open the Energy Price Engine site Options to review dated supplier, grid, TSO and tax coverage, then check diagnostics and the official Nord Pool integration. Stored historical prices are retained. Consumers must not treat unknown prices as free."
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Verify this pricing site again",
+            "description": "Review this site’s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
+          }
+        },
+        "error": {
+          "pricing_not_ready": "Prices are still incomplete, stale or unavailable. Check site Options and diagnostics, then retry."
+        },
+        "abort": {
+          "site_not_loaded": "This pricing site is not loaded. Check its integration entry."
+        }
+      }
     }
   }
 }

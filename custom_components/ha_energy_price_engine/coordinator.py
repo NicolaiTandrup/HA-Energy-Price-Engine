@@ -80,6 +80,8 @@ class PriceCoordinator(DataUpdateCoordinator):
             e.entity_id
             for e in er.async_entries_for_config_entry(registry, self.site["nordpool_entry"])
         ]
+        if self.site.get("price_entity"):
+            sources.append(self.site["price_entity"])
         if sources:
             self.entry.async_on_unload(
                 async_track_state_change_event(self.hass, sources, self._source_changed)
@@ -88,7 +90,18 @@ class PriceCoordinator(DataUpdateCoordinator):
 
     async def reconfigure(self, previous, now):
         """Use stored raw spot inputs; select only affected, unstarted intervals."""
-        if any(previous[k] != self.site[k] for k in ("nordpool_entry", "area", "timezone")):
+        if any(
+            previous.get(k) != self.site.get(k)
+            for k in (
+                "nordpool_entry",
+                "area",
+                "timezone",
+                "source_type",
+                "price_entity",
+                "price_unit",
+                "price_basis",
+            )
+        ):
             return False  # A new source must first be verified by normal refresh.
         old_tariff, new_tariff = tariff_for(previous), tariff_for(self.site)
         before = {
@@ -174,7 +187,8 @@ class PriceCoordinator(DataUpdateCoordinator):
                 self.hass,
                 DOMAIN,
                 self.entry.entry_id,
-                is_fixable=False,
+                is_fixable=True,
+                data={"entry_id": self.entry.entry_id},
                 severity=ir.IssueSeverity.WARNING,
                 translation_key="pricing_not_ready",
             )
