@@ -5,8 +5,9 @@ Updated 2026-10-24. Read AGENTS.md first; this is the single permanent handoff.
 ## Active work
 
 Branch: `feat/standalone-price-engine`, based on `981e489` (main).
-Last pushed pricing core: `5eb20de`; initial permanent workflow: `e50d0df`.
-Current checkpoint subject: `feat: add native multi-site producer and versioned consumer API`.
+Last pushed native producer: `3f7f684`; pricing core `5eb20de`; workflow `e50d0df`.
+Draft PR: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7.
+Current checkpoint subject: `fix: harden future edits source verification and preview metadata`.
 
 ## Completed and in progress
 
@@ -31,19 +32,23 @@ Current checkpoint subject: `feat: add native multi-site producer and versioned 
 
 Python 3.14.8, `.venv`, hash-verified upstream requirements-dev.lock.
 `pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing`:
-**54 passed, zero skips, 86% coverage**. Ruff check/format passed.
+**74 passed, zero skips, 91% coverage**. Ruff check/format passed.
 Official `ghcr.io/home-assistant/hassfest` local validation: **1 integration,
 0 invalid**, including config flow/translations/manifest. No live HA was used.
-CI definitions added for tests/Ruff, hassfest and HACS. Remote CI is not yet checked;
-do not infer success from local results or workflow files.
+Exact-head remote push/PR tests and hassfest passed at `3f7f684`. HACS failed
+because a local brand icon was missing; this checkpoint supplies that asset.
+All current exact-head checks must be rechecked after pushing; no HACS success
+claimed until observed. The optional categories field was tested and removed
+because official hassfest rejected the speculative value; no required check disabled.
 
 ## Access and decisions
 
 Git read/push works for Price Engine; GitHub HTML reads work for both repositories.
-GitHub API/gh requests still return proxy 403. `api.github.com` and optional public
+GitHub API access recovered after the saved network configuration; gh now works. `api.github.com` and optional public
 `api.energidataservice.dk` saved in the environment draft; user-facing save is needed
-for runtime policy propagation. No credentials requested or invented. Draft PR
-creation, progress comments and API CI inspection are currently blocked by API egress.
+for runtime policy propagation. No credentials requested or invented. Draft PR #7 created and meaningful progress comment posted. Run-log download
+redirects use an additional host blocked by the proxy; check-run annotations are
+available via api.github.com and were sufficient to diagnose the HACS failure.
 
 Reuse EV Manager PR #11 (`5c32dc9`) and #12 (`9d949c6`, substantive `6f972a5`),
 not their vehicle/control stack. Source research checkout at
@@ -52,13 +57,18 @@ PROVENANCE.md. One canonical handoff only. ADR/API docs define ownership/boundar
 
 ## Next steps
 
-1. Extend targeted future-edit, disk rollback, native source-notification/backoff,
-   UI add/remove/taxes/DSO and household-boundary regression coverage; fix any gaps.
+1. Hardening complete: offline targeted future-edit/old-new audit, disk rollback,
+   source debounce/backoff and persistent failure state, UI add/remove/taxes/DSO,
+   bounded EWII dates, per-day no-recomposition signatures and permanent retention.
+   Golden fixtures generated using the original pinned PR #12 code verify every
+   slot across eight seasonal/DST/VAT scenarios (not live broker parity).
 2. Verify full local suite, Ruff and official hassfest after final changes.
 3. Inspect push CI via GitHub HTML if API remains blocked; create draft PR and post
    progress comments once api.github.com access is available. Never claim pending CI.
-4. Implement a separately reviewed minimal read-only EV consumer adapter and tests;
-   no duplicate pricing or changes to optimizer cadence/earliest tie-break.
+4. A separate EV consumer branch `feat/price-engine-consumer` is in progress in
+   the research checkout, based on original PR #12. It explicitly selects an
+   external producer site, skips legacy source scheduling/calculation, copies
+   final values and fails closed. Finish regression/CI and its own draft PR.
 5. Obtain owner-provided read-only broker comparison exports for #5; fixture parity
    alone does not prove live household parity. Do not contact running HA/Node-RED.
 6. Performance measurement/storage migration for multi-year large deployments,

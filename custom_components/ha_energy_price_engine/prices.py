@@ -51,6 +51,7 @@ class OfficialPrices:
         self.hass, self.cache = hass, {}
         self.attempts = {}
         self.invalidated = set()
+        self.errors = set()
 
     async def get(self, site, now, *, compose=True, force=False, dates=None):
         rows = []
@@ -84,11 +85,15 @@ class OfficialPrices:
                     parse_prices({"slots": data}, multiplier=0.001)
                     self.cache[key] = (now, data)
                     self.invalidated.discard(key)
+                    self.errors.discard(key)
                 except HomeAssistantError, ValueError, KeyError, TypeError, TimeoutError:
+                    self.errors.add(key)
                     self.last_errors.append(str(day))
                     # Cached values expire rather than hiding a broken price source.
                     if cached is None or (now - cached[0]).total_seconds() >= 7200:
                         continue
+            if key in self.errors and str(day) not in self.last_errors:
+                self.last_errors.append(str(day))
             cached = self.cache.get(key)
             if cached and (now - cached[0]).total_seconds() < 7200:
                 rows.extend(cached[1])

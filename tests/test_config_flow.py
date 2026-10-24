@@ -21,7 +21,9 @@ from .test_integration import model, price_service, setup  # noqa: F401
 
 @pytest.mark.usefixtures("price_service")
 async def test_config_flow_site_unique_source_and_invalid_timezone(hass):
-    source = MockConfigEntry(domain="nordpool", entry_id="np", data={})
+    source = MockConfigEntry(
+        domain="nordpool", entry_id="np", data={}, state=config_entries.ConfigEntryState.LOADED
+    )
     source.add_to_hass(hass)
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}
@@ -50,7 +52,9 @@ async def test_config_flow_site_unique_source_and_invalid_timezone(hass):
 @pytest.mark.usefixtures("price_service")
 async def test_options_edit_future_rate_reprice_once_and_survive_restart(hass, freezer):
     freezer.move_to("2026-10-23T12:00:00Z")
-    source = MockConfigEntry(domain="nordpool", entry_id="np", data={})
+    source = MockConfigEntry(
+        domain="nordpool", entry_id="np", data={}, state=config_entries.ConfigEntryState.LOADED
+    )
     source.add_to_hass(hass)
     entry = await setup(hass)
     c = entry.runtime_data
@@ -127,3 +131,53 @@ def test_overlap_and_bounded_ewii_example():
     assert rate["amount"] == 0.030 and rate["vat_included"] is False
     assert (rate["valid_from"], rate["valid_to"]) == ("2026-06-01", "2026-10-01")
     assert not any(r["amount"] == 0.030 for r in model("summer_house")["dated_components"])
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_options_add_overlap_remove_dso_tax_and_discard(hass, freezer):
+    freezer.move_to("2026-10-23T12:00:00Z")
+    source = MockConfigEntry(
+        domain="nordpool", entry_id="np", data={}, state=config_entries.ConfigEntryState.LOADED
+    )
+    source.add_to_hass(hass)
+    entry = await setup(hass)
+    original = deepcopy(dict(entry.data))
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    fid = result["flow_id"]
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "add_rate"})
+    # The form itself validates invalid overlaps, not only the pure helper.
+    result = await hass.config_entries.options.async_configure(fid, original["dated_components"][0])
+    assert result["errors"]["base"] == "invalid_configuration"
+    subscription = {
+        **original["dated_components"][0],
+        "id": "subscription",
+        "unit": "DKK/month",
+        "amount": 50,
+    }
+    result = await hass.config_entries.options.async_configure(fid, subscription)
+    assert result["type"] == FlowResultType.MENU
+    result = await hass.config_entries.options.async_configure(fid, {"next_step_id": "dso"})
+    assert result["type"] == FlowResultType.FORM
+    result = await hass.config_entries.options.async_configure(
+        fid, {"dso_mode": "manual", "dso_manual_fallback": True, "dso_stale_days": 3}
+    )
+    assert result["type"] == FlowResultType.MENU
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "taxes"})
+    result = await hass.config_entries.options.async_configure(
+        fid,
+        {
+            "danish_public_rates": True,
+            "heating_registered": True,
+            "annual_usage_kwh": 4500,
+            "usage_year": 2026,
+        },
+    )
+    assert result["type"] == FlowResultType.MENU
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "remove_rate"})
+    result = await hass.config_entries.options.async_configure(fid, {"rate": "2"})
+    assert result["type"] == FlowResultType.MENU
+    # Abort before Save: no runtime or durable mutation from any staged form.
+    hass.config_entries.options.async_abort(fid)
+    assert not entry.options and entry.data == original
+    assert entry.runtime_data.site == original
+    assert await hass.config_entries.async_unload(entry.entry_id)

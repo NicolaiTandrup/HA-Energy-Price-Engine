@@ -83,10 +83,14 @@ class PriceUpdater:
                 if site.get("nordpool_entry"):
                     times = [
                         timestamp
-                        for (entry, area, _), (timestamp, data) in self.official.cache.items()
+                        for (entry, area, requested), (
+                            timestamp,
+                            data,
+                        ) in self.official.cache.items()
                         if entry == site["nordpool_entry"]
                         and area == site.get("area", "DK2")
                         and data
+                        and (not dates or requested in {str(day) for day in dates})
                     ]
                     source["verified_at"] = min(times).isoformat() if times else now.isoformat()
                 else:
@@ -136,6 +140,7 @@ class PriceUpdater:
                         usage_year=site.get("usage_year"),
                     )
                 if dates and site.get("nordpool_entry"):
+                    verified_slots = []
                     for day in dates:
                         start, end = day_bounds(day, site["timezone"])
                         selected = [s for s in slots if start <= s.start and s.end <= end]
@@ -153,6 +158,10 @@ class PriceUpdater:
                                 changed=False,
                             )
                             return False
+                        verified_slots.extend(selected)
+                    if len(verified_slots) != len(slots):
+                        raise ValueError("Source returned intervals outside the requested dates")
+                    slots = verified_slots
                 before = {r.start: r.final_price_incl_vat for r in self.engine.records.get(key, ())}
                 changed = await self.engine.async_update(key, slots, tariff, source, now)
                 affected = tuple(
