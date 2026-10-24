@@ -135,10 +135,11 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
                 f"Current final price: {row.final_price_incl_vat:.6f} DKK/kWh incl VAT; "
                 f"last changed: {row.calculated_at.isoformat()}; revision {row.revision}"
             )
+            provenance = json.loads(row.source_json)
             for name, part in json.loads(row.components_json).get("components", {}).items():
                 lines.append(
                     f"{name}: {part['incl_vat']:.6f} DKK/kWh incl VAT; "
-                    f"source: {part.get('source', 'verified source adapter')}; "
+                    f"source: {part.get('source', provenance.get('dso', {}).get('provider', 'official Nord Pool'))}; "
                     f"period: {part.get('valid_from', 'see diagnostics')} – {part.get('valid_to', 'see diagnostics')}; "
                     f"manual lock: {part.get('locked', False)}"
                 )

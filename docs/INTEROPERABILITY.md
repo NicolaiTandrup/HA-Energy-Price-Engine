@@ -19,7 +19,12 @@ Radius seasonal/timeband fixtures and source failures. Shared original fixtures 
 regressions provide producer parity with EV Manager PR #12's tested calculations.
 This proves fixture parity, not a comparison to the owner's actual live broker.
 
-A separately reviewed EV Manager consumer PR and its tests remain part of #5.
+A separately reviewed EV Manager consumer draft on `feat/price-engine-consumer`
+implements explicit site selection, producer-only ownership, final-slot copying,
+revision subscriptions and fail-closed discovery. Its tests also exercise the real
+producer API/Store on 92/96/100-slot days; see the permanent handoff for PR/CI links.
+Legacy EV sites remain simulations until explicitly migrated; no production switch
+is automatic.
 Read-only exported Node-RED Energy Price Broker/real_energy_price sample inputs and
 outputs are needed for household/summer-house end-to-end parity. Do not fetch them
 from running HA or Node-RED without authorization. Never manufacture contract

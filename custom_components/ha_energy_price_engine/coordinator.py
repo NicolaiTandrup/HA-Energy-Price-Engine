@@ -110,7 +110,8 @@ class PriceCoordinator(DataUpdateCoordinator):
                 "dso_mode"
             ):
                 return None
-            if self.site.get("dso_mode") == "radius_c":
+            locked_dso = any(r["id"] == "dso" and r.get("locked") for r in tariff["components"])
+            if self.site.get("dso_mode") == "radius_c" and not locked_dso:
                 key = RADIUS_GLN + ":" + RADIUS_CODE
                 cached = self.price_updater.tariffs.cache.get(key, {})
                 fetched = dt_util.parse_datetime(cached.get("fetched_at", ""))

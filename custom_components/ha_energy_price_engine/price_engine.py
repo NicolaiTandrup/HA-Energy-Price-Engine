@@ -179,6 +179,21 @@ class PriceEngine:
         if not slots:
             return False
         now = utc(now)
+        if "components" in tariff:
+            dates = {
+                str(
+                    s.start.astimezone(ZoneInfo(tariff.get("timezone", "Europe/Copenhagen"))).date()
+                )
+                for s in slots
+            }
+            tariff = {
+                **tariff,
+                "components": [
+                    r
+                    for r in tariff["components"]
+                    if any(r["valid_from"] <= day < r["valid_to"] for day in dates)
+                ],
+            }
         payload = {
             "slots": [asdict(s) for s in slots],
             "tariff": tariff,

@@ -205,3 +205,58 @@ async def test_permanent_history_and_corrupt_ledger_reported(hass):
     await engine.store("broken").async_save({"records": [{"invalid": True}], "revision": 1})
     await engine.async_load(["broken"])
     assert engine.load_errors["broken"] and not engine.records["broken"]
+
+
+@pytest.mark.usefixtures("price_service")
+@pytest.mark.parametrize("mode", ["automatic", "locked", "fallback", "missing"])
+async def test_native_dso_verification_manual_lock_and_no_zero_fallback(hass, freezer, mode):
+    import json
+    from pathlib import Path
+    from unittest.mock import AsyncMock
+
+    from custom_components.ha_energy_price_engine.diagnostics import (
+        async_get_config_entry_diagnostics,
+    )
+    from custom_components.ha_energy_price_engine.tariff_source import (
+        RADIUS_CODE,
+        RADIUS_GLN,
+        normalize_tariffs,
+    )
+
+    freezer.move_to("2026-10-23T12:00:00Z")
+    data = model()
+    data["dso_mode"] = "radius_c"
+    if mode in {"automatic", "missing"}:
+        data["dated_components"] = [r for r in data["dated_components"] if r["id"] != "dso"]
+    if mode == "fallback":
+        data["dated_components"][1]["locked"] = False
+        data["dso_manual_fallback"] = True
+    records = json.loads((Path(__file__).parent / "fixtures/radius_c_datahub.json").read_text())
+
+    async def grid(site, start, end, now):
+        if mode in {"fallback", "missing"}:
+            raise ValueError("No sufficiently recent verified tariff cache")
+        return normalize_tariffs(records, RADIUS_GLN, RADIUS_CODE, start, end)
+
+    with patch(
+        "custom_components.ha_energy_price_engine.tariff_source.TariffSource.get",
+        new_callable=AsyncMock,
+        side_effect=grid,
+    ) as fetch:
+        entry = await setup(hass, data)
+        c = entry.runtime_data
+        if mode == "locked":
+            fetch.assert_not_awaited()
+        else:
+            assert fetch.await_count == 2
+        rows_today = c.price_engine.lookup("home", *day_bounds(date(2026, 10, 23)))
+        if mode == "missing":
+            assert not rows_today and c.data["status"] == "ERROR"
+        else:
+            assert rows_today
+            if mode == "fallback":
+                assert c.data["status"] == "STALE"
+            diag = await async_get_config_entry_diagnostics(hass, entry)
+            dso = diag["current_components"]["dso"]["ex_vat"]
+            assert dso == pytest.approx(0.318524 if mode == "automatic" else 0.2)
+        assert await hass.config_entries.async_unload(entry.entry_id)
