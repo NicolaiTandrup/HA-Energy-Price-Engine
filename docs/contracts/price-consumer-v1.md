@@ -1,3 +1,9 @@
+> **Superseded proposal:** Producer draft #7 implements the authoritative public
+> Python API v1 (`docs/API.md` on `feat/standalone-price-engine`), with event
+> `ha_energy_price_engine_price_revision_v1`. It exposes no `get_prices` service.
+> Retained below only as proposal history. EV reconciliation branch
+> `feat/reconcile-price-api-v1` adopts the actual API and reuses EV draft #15 tests.
+
 # Price lookup contract v1 — producer/consumer proposal
 
 Status: draft interoperability proposal, 2026-10-24. Authoritative producer:
