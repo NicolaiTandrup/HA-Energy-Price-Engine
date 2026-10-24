@@ -189,3 +189,35 @@ async def test_arbitrary_site_count_isolation_and_supplier_label_not_a_rate(hass
     assert all(e.runtime_data.data["status"] == "READY" for e in entries[:-1])
     for e in entries:
         assert await hass.config_entries.async_unload(e.entry_id)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_native_verified_backup_and_supplier_label_do_not_mutate_rates(hass, freezer):
+    freezer.move_to("2026-10-23T12:00:00Z")
+    entry = await setup(hass)
+    before = entry.runtime_data.price_engine.records["home"]
+    flow = await hass.config_entries.options.async_init(entry.entry_id)
+    fid = flow["flow_id"]
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "storage"})
+    result = await hass.config_entries.options.async_configure(fid, {})
+    assert result["type"] == "menu"
+    assert "Verified backup saved" in result["description_placeholders"]["pricing_summary"]
+    assert list(entry.runtime_data.price_engine.database.path.parent.glob("*.backup-*"))
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "supplier"})
+    result = await hass.config_entries.options.async_configure(fid, {"supplier": "ewii"})
+    assert result["type"] == "menu"
+    assert entry.runtime_data.price_engine.records["home"] == before
+    assert not entry.options  # Both editor actions leave saved business rates unchanged.
+    hass.config_entries.options.async_abort(fid)
+    assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+def test_unverified_radius_class_and_boolean_money_rejected():
+    data = model()
+    with pytest.raises(ValueError, match="Only Radius C"):
+        validate_site({**data, "dso_mode": "radius_c", "dso_tariff_class": "B"})
+    for field in ("amount", "vat_rate"):
+        changed = deepcopy(data)
+        changed["dated_components"][0][field] = True
+        with pytest.raises(ValueError, match="Boolean"):
+            validate_site(changed)

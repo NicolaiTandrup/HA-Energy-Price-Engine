@@ -93,3 +93,32 @@ async def test_api_identity_and_machine_contract(hass):
 async def test_version_is_an_actual_supported_integer(hass, version):
     with pytest.raises(ValueError):
         get_api(hass, version)
+
+
+async def test_exact_published_revision_remains_recoverable_after_future_correction(hass):
+    from unittest.mock import patch
+
+    now = datetime(2026, 10, 23, 12, tzinfo=UTC)
+    c = await context(hass, now, now.isoformat())
+    original = c.price_engine.records["home"][0]
+    await c.price_engine.async_update(
+        "home",
+        rows(date(2026, 10, 24)),
+        {"mode": "spot_ex_vat", "vat": 0.25},
+        {"version": "correction"},
+        now,
+    )
+    api = get_api(hass)
+    with patch(
+        "custom_components.ha_energy_price_engine.price_engine.calculate",
+        side_effect=AssertionError("accounting read recalculation"),
+    ):
+        assert api.lookup_revision("home", original.start, original.revision) == original
+        assert api.lookup_revision("home", original.start, 999) is None
+        assert api.lookup_revision("wrong_site", original.start, original.revision) is None
+        assert (
+            api.lookup_revision(
+                "home", original.start, original.revision, producer_entry_id="wrong"
+            )
+            is None
+        )

@@ -73,7 +73,10 @@ async def test_reconfigure_disk_failure_is_atomic_and_past_only_edits_do_not_cal
     before = c.price_engine.records["home"]
     old_site = deepcopy(c.site)
     c.site["dated_components"][0]["amount"] = 44
-    with patch("homeassistant.helpers.storage.Store.async_save", side_effect=OSError("disk full")):
+    with patch(
+        "custom_components.ha_energy_price_engine.ledger.LedgerDatabase.async_commit",
+        side_effect=OSError("disk full"),
+    ):
         with pytest.raises(OSError):
             await c.reconfigure(old_site, datetime(2026, 10, 23, 12, tzinfo=UTC))
     assert c.price_engine.records["home"] == before

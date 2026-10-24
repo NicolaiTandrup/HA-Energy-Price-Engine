@@ -1,6 +1,7 @@
 """Atomic precomputed price storage. Readers never fetch or compose prices."""
 
 import json
+import os
 from asyncio import Lock
 from bisect import bisect_left
 from dataclasses import asdict, dataclass
@@ -11,6 +12,7 @@ from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.storage import Store
 
+from .ledger import LedgerCorruptError, LedgerDatabase
 from .models import PriceSlot, utc
 from .price_components import compose_dated
 from .prices import all_in
@@ -36,7 +38,7 @@ def day_bounds(day: date, timezone="Europe/Copenhagen"):
     )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PriceRecord:
     site_id: str
     start: datetime
@@ -131,7 +133,9 @@ class PriceEngine:
 
     def __init__(self, hass, entry_id, retention_days=None):
         self.hass, self.entry_id = hass, entry_id
-        self.retention_days = retention_days
+        if retention_days is not None:
+            raise ValueError("Authoritative referenced history cannot be pruned automatically")
+        self.retention_days = None
         self.records, self.index, self.planning, self.signatures, self.revisions = (
             {},
             {},
@@ -144,6 +148,7 @@ class PriceEngine:
         self.audit = {}
         self.load_errors = {}
         self.lock = Lock()
+        self.database = LedgerDatabase(hass, entry_id)
 
     def store(self, site):
         return Store(self.hass, 1, f"ha_energy_price_engine.{self.entry_id}.{site}.prices")
@@ -151,36 +156,63 @@ class PriceEngine:
     def _install(self, site, records, signature, revision):
         self.records[site] = tuple(records)
         self.index[site] = tuple(r.start for r in records)
-        self.planning[site] = tuple(
-            PriceSlot(r.start, r.end, r.final_price_incl_vat) for r in records
-        )
+
         self.signatures[site], self.revisions[site] = signature, revision
-        self.price_keys[site] = sha256(
-            str(tuple((r.start, r.end, r.final_price_incl_vat) for r in records)).encode()
-        ).hexdigest()
+        self.price_keys[site] = str(revision)
 
     async def async_load(self, sites):
         for site in sites:
-            saved = await self.store(site).async_load()
-            if not saved:
-                continue
             try:
-                records = []
-                for row in saved["records"]:
-                    item = dict(row)
-                    for key in ("start", "end", "calculated_at"):
-                        item[key] = datetime.fromisoformat(item[key])
-                    records.append(PriceRecord(**item))
-                validate_records(records, site)
+                saved = await self.database.async_load(site)
+                legacy = saved is None
+                if legacy:
+                    store = self.store(site)
+                    existed = await self.hass.async_add_executor_job(os.path.exists, store.path)
+                    saved = await store.async_load()
+                    if existed and not saved:
+                        raise LedgerCorruptError(
+                            "Legacy history is unreadable; restore a verified backup"
+                        )
+                if not saved:
+                    continue
+                records = await self.hass.async_add_executor_job(self._decode, saved, site)
+                if legacy:
+                    await self.database.async_commit(
+                        site,
+                        saved["records"],
+                        saved["signature"],
+                        saved["revision"],
+                        saved.get("batch_signatures", {}),
+                        saved.get("audit", []),
+                        import_only=True,
+                    )
                 self._install(site, records, saved["signature"], saved["revision"])
                 self.batch_signatures[site] = saved.get("batch_signatures", {})
                 self.audit[site] = saved.get("audit", [])
-            except ValueError, TypeError, KeyError:
+            except ValueError, TypeError, KeyError, LedgerCorruptError:
                 # Corrupt caches cannot create plausible zero/partial price tables.
                 self._install(site, (), "", 0)
                 self.load_errors[site] = "Invalid persisted price ledger"
 
+    @staticmethod
+    def _decode(saved, site):
+        records = []
+        for row in saved["records"]:
+            item = dict(row)
+            for key in ("start", "end", "calculated_at"):
+                item[key] = datetime.fromisoformat(item[key])
+            records.append(PriceRecord(**item))
+        validate_records(records, site)
+        revision = saved["revision"]
+        if type(revision) is not int or revision < max((r.revision for r in records), default=0):
+            raise ValueError("Invalid persisted revision")
+        if not isinstance(saved.get("batch_signatures", {}), dict):
+            raise ValueError("Invalid batch verification signatures")
+        return tuple(records)
+
     async def async_update(self, site, slots, tariff, source, now):
+        if site in self.load_errors:
+            raise OSError("Authoritative history requires recovery; refusing to overwrite it")
         slots = tuple(slots)
         if not slots:
             return False
@@ -222,6 +254,7 @@ class PriceEngine:
         old = {r.start: r for r in self.records.get(site, ())}
         revision = self.revisions.get(site, 0) + 1
         audit = list(self.audit.get(site, []))
+        changed_rows = []
         for record in candidates:
             prior = old.get(record.start)
             if prior and (
@@ -243,25 +276,26 @@ class PriceEngine:
                     }
                 )
             old[record.start] = record
+            changed_rows.append(record)
         records = tuple(
             r
             for _, r in sorted(old.items())
             if self.retention_days is None or r.end > now - timedelta(days=self.retention_days)
         )
-        validate_records(records, site)
+        if any(a.end > b.start for a, b in zip(records, records[1:])):
+            raise ValueError("Overlapping stored price intervals")
         if records == self.records.get(site, ()):
             self.signatures[site] = signature
             self.batch_signatures.setdefault(site, {})[batch_key] = signature
             return False
         signatures = {**self.batch_signatures.get(site, {}), batch_key: signature}
-        await self.store(site).async_save(
-            {
-                "records": [self._serialize(r) for r in records],
-                "signature": signature,
-                "revision": revision,
-                "batch_signatures": signatures,
-                "audit": audit,
-            }
+        await self.database.async_commit(
+            site,
+            [self._serialize(r) for r in changed_rows],
+            signature,
+            revision,
+            signatures,
+            audit[len(self.audit.get(site, [])) :],
         )
         self._install(site, records, signature, revision)
         self.batch_signatures[site], self.audit[site] = signatures, audit
@@ -274,6 +308,8 @@ class PriceEngine:
         tariff_builder is a write-side selector returning None for unaffected
         rows. Existing stored raw spot/source provenance is reused without HTTP.
         """
+        if site in self.load_errors:
+            raise OSError("Authoritative history requires recovery")
         now = utc(now)
         async with self.lock:
             candidates = []
@@ -317,12 +353,12 @@ class PriceEngine:
         return tuple(r for r in self.records.get(site, ())[a:b] if r.end > start)
 
     def slots(self, site, start=None, end=None):
-        if start is None:
-            return self.planning.get(site, ())
-        keys = self.index.get(site, ())
-        a = max(0, bisect_left(keys, start) - 1)
-        b = bisect_left(keys, end) if end else len(keys)
-        return tuple(s for s in self.planning.get(site, ())[a:b] if s.end > start)
+        records = (
+            self.records.get(site, ())
+            if start is None
+            else self.lookup(site, start, end or datetime.max.replace(tzinfo=UTC))
+        )
+        return tuple(PriceSlot(r.start, r.end, r.final_price_incl_vat) for r in records)
 
     def complete_day(self, site, day, timezone="Europe/Copenhagen"):
         start, end = day_bounds(day, timezone)

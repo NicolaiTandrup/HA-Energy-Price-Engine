@@ -72,7 +72,10 @@ async def test_invalid_atomic_batch_and_separate_sites(hass):
         await engine.async_update("home", data + data[:1], {"mode": "all_in"}, {}, NOW)
     assert engine.complete_day("home", date(2026, 10, 24))
     assert not engine.complete_day("away", date(2026, 10, 24))
-    with patch("homeassistant.helpers.storage.Store.async_save", side_effect=OSError("disk full")):
+    with patch(
+        "custom_components.ha_energy_price_engine.ledger.LedgerDatabase.async_commit",
+        side_effect=OSError("disk full"),
+    ):
         with pytest.raises(OSError):
             await engine.async_update("away", data, {"mode": "all_in"}, {}, NOW)
     assert engine.lookup("away", *day_bounds(date(2026, 10, 24))) == ()

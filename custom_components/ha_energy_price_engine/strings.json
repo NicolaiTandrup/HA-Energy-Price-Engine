@@ -59,7 +59,8 @@
           "dso": "Grid tariff source and fallback",
           "taxes": "Dated national baselines and tax eligibility",
           "save": "Save changes",
-          "supplier": "Supplier and contract guidance"
+          "supplier": "Supplier and contract guidance",
+          "storage": "Storage and verified backup"
         }
       },
       "site": {
@@ -154,10 +155,16 @@
         "data": {
           "supplier": "Supplier label (no automatic contract inheritance)"
         }
+      },
+      "storage": {
+        "title": "Create a verified local ledger backup",
+        "description": "{backup_result}\\n\\nSubmit to create a new verified SQLite snapshot. No prices, source configuration or controls change. Existing backups are never overwritten. Restore is deliberately offline-only: stop HA, compare backup revisions with recorded costs, preserve current files, then follow the beta recovery guide."
       }
     },
     "error": {
-      "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry."
+      "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry.",
+      "site_not_loaded": "Load this pricing site before creating a backup.",
+      "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate."

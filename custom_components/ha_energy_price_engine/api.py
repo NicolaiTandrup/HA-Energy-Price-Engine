@@ -161,6 +161,38 @@ class ConsumerAPI:
             entry_id,
         )
 
+    def lookup_revision(self, site_id, start, revision, *, producer_entry_id=None):
+        """Recover the exact immutable amount/provenance used before a correction.
+
+        Missing/unloaded versions return None; consumer accounting never substitutes
+        a different revision or a zero amount. This is read-only, including history.
+        """
+        if type(revision) is not int or revision < 1:
+            raise ValueError("Expected a positive integer price revision")
+        start = utc(start)
+        if start.timestamp() % 900:
+            raise ValueError("Expected a quarter-aligned aware instant")
+        for entry_id, coordinator in self._hass.data.get(DOMAIN, {}).items():
+            if coordinator.site["id"] != site_id or (
+                producer_entry_id is not None and producer_entry_id != entry_id
+            ):
+                continue
+            rows = coordinator.price_engine.lookup(site_id, start, start + timedelta(minutes=15))
+            if rows and rows[0].revision == revision:
+                return rows[0]
+            for item in reversed(coordinator.price_engine.audit.get(site_id, ())):
+                for version in ("old", "new"):
+                    row = item[version]
+                    if (
+                        row["revision"] == revision
+                        and datetime.fromisoformat(row["start"]) == start
+                    ):
+                        values = {**row}
+                        for key in ("start", "end", "calculated_at"):
+                            values[key] = datetime.fromisoformat(values[key])
+                        return PriceRecord(**values)
+        return None
+
 
 def get_api(hass, version=1) -> ConsumerAPI:
     """Discover after integration setup; never auto-load or fetch on consumer reads."""

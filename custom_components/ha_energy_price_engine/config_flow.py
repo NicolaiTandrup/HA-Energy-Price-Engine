@@ -156,6 +156,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
     def __init__(self):
         self.draft = None
         self.index = None
+        self.backup_result = None
 
     async def async_step_init(self, user_input=None):
         if self.draft is None:
@@ -171,6 +172,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
                 "remove_rate",
                 "dso",
                 "taxes",
+                "storage",
                 "save",
             ],
         )
@@ -204,6 +206,8 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
             lines.append(
                 "No verified current slot. Configure missing rates; consult diagnostics for requested dates."
             )
+        if self.backup_result:
+            lines.append(self.backup_result)
         return "\n".join(lines)
 
     async def async_step_site(self, user_input=None):
@@ -277,8 +281,10 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         try:
             proposed = validate_site({**self.draft, **changes})
             source = self.hass.config_entries.async_get_entry(proposed["nordpool_entry"])
-            if proposed["source_type"] == "nordpool" and (
-                source is None or source.domain != "nordpool"
+            if (
+                step == "site"
+                and proposed["source_type"] == "nordpool"
+                and (source is None or source.domain != "nordpool")
             ):
                 raise ValueError("Official Nord Pool entry required")
             self.draft = proposed
@@ -336,6 +342,31 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
             self.draft["dated_components"] = rules
             return await self.async_step_init()
         return await self._choose("remove_rate", user_input)
+
+    async def async_step_storage(self, user_input=None):
+        result = "No backup created in this editor session."
+        errors = {}
+        if user_input is not None:
+            runtime = getattr(self.config_entry, "runtime_data", None)
+            if runtime is None:
+                errors["base"] = "site_not_loaded"
+            else:
+                from uuid import uuid4
+
+                database = runtime.price_engine.database
+                destination = database.path.with_name(database.path.name + ".backup-" + uuid4().hex)
+                try:
+                    await database.async_backup(destination)
+                    self.backup_result = f"Verified backup saved in .storage/{destination.name}. Include it in an HA configuration backup."
+                    return await self.async_step_init()
+                except OSError:
+                    errors["base"] = "backup_failed"
+        return self.async_show_form(
+            step_id="storage",
+            data_schema=vol.Schema({}),
+            errors=errors,
+            description_placeholders={"backup_result": result},
+        )
 
     async def async_step_save(self, user_input=None):
         # ConfigEntry options are HA-managed durable storage; the update listener

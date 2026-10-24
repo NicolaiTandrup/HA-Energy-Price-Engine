@@ -38,6 +38,29 @@ Official hassfest initially caught repair translation schema errors; corrected t
 `issues.pricing_not_ready.fix_flow` with no mutually exclusive description. Final
 local hassfest passed. No validation was disabled. Remote checks follow this push.
 
+Ledger beta checkpoint `feat: add transactional ledger recovery and measured history scaling`:
+**114 tests pass, zero skips, no ResourceWarnings** (warning treated as an error).
+Ruff check/format and official local hassfest pass. Runtime disk writes now use
+SQLite transactions, compressed/deduplicated provenance, row checksums and stale-
+writer rejection; valid HA Store v1 snapshots import once and remain untouched.
+Corrupt authoritative history fails closed and cannot be overwritten with a fresh
+table. Native backup, verified offline restore and actual interrupted/failed-write
+regressions pass. An additive API lookup recovers exact prior published revisions.
+
+Actual synthetic cloud measurements: one-year append 96 rows improved from 1.675 s
+JSON/69.5 MB to 0.028 s SQLite/18.2 MB; five-year 175,296-row append 0.108 s,
+reload 4.393 s, ~5.3 microsecond 96-row lookups. Peak whole-benchmark RSS was
+~635 MiB at five years (includes original/restored engines and synthetic inputs).
+These are not Raspberry Pi measurements. See ADR-002 and PERFORMANCE.md plus raw
+reports. History remains in memory for compatible synchronous API v1 lookups;
+there is no automatic retention pruning or unsupported hardware readiness claim.
+
+Official current HA is now 2026.10.4. Latest custom-component test fixture 0.13.374
+pins HA 2026.10.3; next validate the compatible pair plus explicit current-patch
+compatibility, preserving hashes and documenting any fixture-version override.
+Then produce pinned #15/#16 contract tests, machine schema/fixtures, an installation
+archive smoke-tested independently of the source tree and the beta cutover guide.
+
 ## Branches, drafts and validated commits
 
 - Producer: `feat/standalone-price-engine`, based on `981e489` (main).
