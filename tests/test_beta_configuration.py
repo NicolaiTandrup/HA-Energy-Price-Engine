@@ -221,3 +221,19 @@ def test_unverified_radius_class_and_boolean_money_rejected():
         changed["dated_components"][0][field] = True
         with pytest.raises(ValueError, match="Boolean"):
             validate_site(changed)
+
+
+async def test_legacy_hacs_domain_is_never_discovered_as_official_nordpool(hass):
+    from pytest_homeassistant_custom_component.common import MockModule, mock_integration
+
+    from custom_components.ha_energy_price_engine.sources import async_source_defaults
+
+    mock_integration(hass, MockModule("nordpool"), built_in=False)
+    MockConfigEntry(domain="nordpool", entry_id="legacy", data={"areas": ["DK2"]}).add_to_hass(hass)
+    assert await async_source_defaults(hass) == {}
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    data = {k: v for k, v in model().items() if k in {"id", "name", "area", "timezone", "vat"}}
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {**data, "nordpool_entry": "legacy"}
+    )
+    assert result["errors"]["base"] == "invalid_configuration"

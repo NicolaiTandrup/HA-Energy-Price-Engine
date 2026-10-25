@@ -9,6 +9,7 @@ from homeassistant.helpers.event import async_track_utc_time_change
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
+from .api import ConsumerAPI
 from .const import DOMAIN
 
 
@@ -26,6 +27,13 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
             identifiers={(DOMAIN, self.site["id"])},
             name=self.site["name"],
             manufacturer="Energy Price Engine",
+        )
+
+    def current_result(self):
+        now = dt_util.utcnow()
+        start = now.replace(minute=(now.minute // 15) * 15, second=0, microsecond=0)
+        return ConsumerAPI(self.coordinator.hass).lookup(
+            self.site["id"], start, start + timedelta(minutes=15), now=now
         )
 
 
@@ -51,13 +59,10 @@ class PriceSensor(BaseSensor):
 
     @property
     def native_value(self):
-        now = dt_util.utcnow()
-        rows = self.coordinator.price_engine.lookup(
-            self.site["id"], now, now + timedelta(microseconds=1)
-        )
+        result = self.current_result()
         return (
-            rows[0].final_price_incl_vat
-            if rows and (self.coordinator.data or {}).get("status") == "READY"
+            result.records[0].final_price_incl_vat
+            if str(result.status) == "READY" and result.records
             else None
         )
 
@@ -66,7 +71,7 @@ class PriceSensor(BaseSensor):
         return {
             "api_version": 1,
             "site_id": self.site["id"],
-            "readiness": (self.coordinator.data or {}).get("status", "INCOMPLETE"),
+            "readiness": str(self.current_result().status),
             "revision": self.coordinator.price_engine.revisions.get(self.site["id"], 0),
             "vat_included": True,
         }
@@ -82,8 +87,12 @@ class ReadinessSensor(BaseSensor):
 
     @property
     def native_value(self):
-        return (self.coordinator.data or {}).get("status", "INCOMPLETE")
+        return str(self.current_result().status)
 
     @property
     def extra_state_attributes(self):
-        return {k: v for k, v in (self.coordinator.data or {}).items() if k != "status"}
+        from zoneinfo import ZoneInfo
+
+        today = str(dt_util.utcnow().astimezone(ZoneInfo(self.site["timezone"])).date())
+        report = self.coordinator.schedule.days.get(self.site["id"], {}).get(today, {})
+        return {"requested_date": today, **{k: v for k, v in report.items() if k != "status"}}

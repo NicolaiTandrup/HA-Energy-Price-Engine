@@ -332,3 +332,41 @@ def backup_ledger(source, destination):
         return str(destination)
     except sqlite3.DatabaseError as err:
         raise LedgerCorruptError("Ledger backup failed") from err
+
+
+def export_recorded_range(path, site, start, end):
+    """Read an explicitly selected backup for offline comparison, not live readiness."""
+    from datetime import UTC
+
+    if start.tzinfo is None or end.tzinfo is None:
+        raise ValueError("Offline export requires aware UTC interval boundaries")
+    start, end = start.astimezone(UTC), end.astimezone(UTC)
+    if end <= start or start.timestamp() % 900 or end.timestamp() % 900:
+        raise ValueError("Offline export requires a positive quarter-aligned range")
+    report = inspect_ledger(path)
+    if site not in report["sites"]:
+        raise ValueError("Selected site is not present in this backup")
+    with closing(
+        sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
+    ) as connection:
+        slots = [
+            {
+                "start": a,
+                "end": b,
+                "final_price_incl_vat": amount,
+                "revision": revision,
+                "verified_at": json.loads(zlib.decompress(source)).get("verified_at"),
+            }
+            for a, b, amount, revision, source in connection.execute(
+                "SELECT p.start,p.end,p.amount,p.revision,b.body FROM prices p JOIN blobs b ON b.digest=p.source WHERE p.site=? AND p.start>=? AND p.end<=? ORDER BY p.start",
+                (site, start.isoformat(), end.isoformat()),
+            )
+        ]
+    return {
+        "capture_type": "offline_checked_ledger_backup",
+        "site_id": site,
+        "currency": "DKK",
+        "unit": "DKK/kWh",
+        "vat_included": True,
+        "slots": slots,
+    }

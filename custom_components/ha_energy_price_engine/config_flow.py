@@ -13,7 +13,7 @@ from homeassistant.util import dt as dt_util
 
 from .configuration import settings, validate_site
 from .const import COMPONENTS, DOMAIN
-from .sources import BASES, UNIT_MULTIPLIERS, source_defaults
+from .sources import BASES, UNIT_MULTIPLIERS, async_source_defaults, ensure_official_nordpool
 
 
 def select(options):
@@ -31,7 +31,10 @@ def site_schema(value=None, *, initial=False):
         {
             vol.Required("name", default=value.get("name", "")): str,
             vol.Required("source_type", default=value.get("source_type", "nordpool")): select(
-                ("nordpool", "entity")
+                [
+                    {"value": "nordpool", "label": "Official Home Assistant Nord Pool"},
+                    {"value": "entity", "label": "Verified provider entity"},
+                ]
             ),
             vol.Optional(
                 "price_entity",
@@ -67,7 +70,9 @@ def rule_schema(value=None):
     value = value or {}
     return vol.Schema(
         {
-            vol.Required("id", default=value.get("id", "supplier")): select(COMPONENTS),
+            vol.Required("id", default=value.get("id", "supplier")): select(
+                [{"value": key, "label": key.replace("_", " ").capitalize()} for key in COMPONENTS]
+            ),
             vol.Required("amount", default=value.get("amount", 0)): selector.NumberSelector(
                 selector.NumberSelectorConfig(min=0, step="any", mode="box")
             ),
@@ -89,6 +94,16 @@ def rule_schema(value=None):
                 "verified_on",
                 **({"default": value["verified_on"]} if "verified_on" in value else {}),
             ): selector.DateSelector(),
+            vol.Optional(
+                "hours", default=[str(h) for h in value.get("hours", [])]
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    multiple=True,
+                    options=[
+                        {"value": str(h), "label": f"{h:02d}:00–{h + 1:02d}:00"} for h in range(24)
+                    ],
+                )
+            ),
             vol.Required("locked", default=value.get("locked", True)): bool,
             vol.Required("eligibility", default=value.get("eligibility", "all")): select(
                 ("all", "heating_above_4000")
@@ -115,6 +130,8 @@ class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     source is None or source.domain != "nordpool"
                 ):
                     raise ValueError("Select an official Nord Pool config entry")
+                if site["source_type"] == "nordpool":
+                    await ensure_official_nordpool(self.hass)
                 await self.async_set_unique_id(site["id"])
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(title=site["name"], data=site)
@@ -123,7 +140,7 @@ class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user",
             data_schema=site_schema(
-                {**source_defaults(self.hass), **(user_input or {})}, initial=True
+                {**await async_source_defaults(self.hass), **(user_input or {})}, initial=True
             ),
             errors=errors,
         )
@@ -140,6 +157,8 @@ class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     source is None or source.domain != "nordpool"
                 ):
                     raise ValueError("Official Nord Pool entry required")
+                if site["source_type"] == "nordpool":
+                    await ensure_official_nordpool(self.hass)
                 if entry.update_listeners:
                     return self.async_update_and_abort(entry, options=site, title=site["name"])
                 return self.async_update_reload_and_abort(entry, options=site, title=site["name"])
@@ -287,6 +306,8 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
                 and (source is None or source.domain != "nordpool")
             ):
                 raise ValueError("Official Nord Pool entry required")
+            if step == "site" and proposed["source_type"] == "nordpool":
+                await ensure_official_nordpool(self.hass)
             self.draft = proposed
             return await self.async_step_init()
         except ValueError, TypeError, KeyError, ZoneInfoNotFoundError:

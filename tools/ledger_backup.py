@@ -3,12 +3,14 @@
 import argparse
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from custom_components.ha_energy_price_engine.ledger import (
     backup_ledger,
+    export_recorded_range,
     inspect_ledger,
     restore_ledger,
 )
@@ -16,7 +18,7 @@ from custom_components.ha_energy_price_engine.ledger import (
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=("inspect", "backup", "restore"))
+    parser.add_argument("operation", choices=("inspect", "backup", "restore", "export"))
     parser.add_argument("source", type=Path)
     parser.add_argument("destination", type=Path, nargs="?")
     parser.add_argument(
@@ -24,10 +26,22 @@ def main():
         action="store_true",
         help="For restore: HA is stopped and backup revisions/consumer references have been reviewed",
     )
+    parser.add_argument("--site")
+    parser.add_argument("--start")
+    parser.add_argument("--end")
     args = parser.parse_args()
     try:
         if args.operation == "inspect":
             result = inspect_ledger(args.source)
+        elif args.operation == "export":
+            if not all((args.site, args.start, args.end)):
+                parser.error("export requires --site --start --end")
+            result = export_recorded_range(
+                args.source,
+                args.site,
+                datetime.fromisoformat(args.start),
+                datetime.fromisoformat(args.end),
+            )
         elif args.destination is None:
             parser.error("backup/restore require a separate destination")
         elif args.operation == "backup":

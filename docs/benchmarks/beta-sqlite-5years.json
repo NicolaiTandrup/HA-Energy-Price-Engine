@@ -3,10 +3,10 @@
   "hardware": "cloud Linux x86_64; not Raspberry Pi",
   "years": 5,
   "records": 175296,
-  "initial_seconds": 24.376989630000025,
-  "append_96_seconds": 0.10819740399892908,
-  "reload_seconds": 4.3929933160034125,
-  "lookup_96_mean_seconds": 5.321156997524667e-06,
-  "storage_bytes": 69615616,
-  "peak_process_rss_kib": 650664
+  "initial_seconds": 26.073006760008866,
+  "append_96_seconds": 0.11530998499074485,
+  "reload_seconds": 4.519299908002722,
+  "lookup_96_mean_seconds": 5.827226006658748e-06,
+  "storage_bytes": 69611520,
+  "peak_process_rss_kib": 662048
 }

@@ -36,6 +36,15 @@ def danish_public_components():
     return result
 
 
+def active_hours(rule):
+    hours = rule.get("hours", [])
+    if not isinstance(hours, list) or any(
+        isinstance(v, bool) or not str(v).isdigit() or not 0 <= int(v) <= 23 for v in hours
+    ):
+        raise ValueError("Hours must be a list of local clock hours 0–23")
+    return frozenset(map(int, hours)) if hours else frozenset(range(24))
+
+
 def normalize_component(rule):
     if isinstance(rule["amount"], bool) or isinstance(rule["vat_rate"], bool):
         raise ValueError("Boolean values are not money or VAT rates")
@@ -55,11 +64,13 @@ def normalize_component(rule):
     ):
         raise ValueError("Component source and verification date required")
     date.fromisoformat(rule["verified_on"])
+    hours = active_hours(rule)
     amount /= 100 if rule["unit"] == "ore/kWh" else 1
     ex = amount / (1 + rate) if rule["vat_included"] else amount
     gross = amount if rule["vat_included"] else amount * (1 + rate)
     return {
         "id": rule["id"],
+        "hours": sorted(hours) if rule.get("hours") else [],
         "unit": "DKK/month" if rule["unit"] == "DKK/month" else "DKK/kWh",
         "ex_vat": ex,
         "vat": gross - ex,
@@ -89,7 +100,8 @@ def compose_dated(slot, tariff):
         raise ValueError("Dated components cannot be added to all-in input")
     if any(tariff.get(key, 0) for key in ("tax", "supplier")):
         raise ValueError("Dated and legacy tax/supplier fees would be duplicated")
-    day = slot.start.astimezone(ZoneInfo(tariff.get("timezone", "Europe/Copenhagen"))).date()
+    local = slot.start.astimezone(ZoneInfo(tariff.get("timezone", "Europe/Copenhagen")))
+    day = local.date()
     rules = tariff["components"]
     if not isinstance(rules, list):
         raise ValueError("Dated components must be a list")
@@ -99,7 +111,7 @@ def compose_dated(slot, tariff):
         start, end = date.fromisoformat(rule["valid_from"]), date.fromisoformat(rule["valid_to"])
         if end <= start:
             raise ValueError("Invalid component effective period")
-        if not start <= day < end:
+        if not start <= day < end or local.hour not in active_hours(rule):
             continue
         if rule.get("eligibility", "all") == "heating_above_4000":
             if not isfinite(float(tariff.get("annual_usage_kwh", 0))):

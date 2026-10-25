@@ -21,6 +21,9 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14.8'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - uses: astral-sh/setup-uv@v6
       - name: Install exact hash-verified environment
         run: uv venv && uv pip sync --require-hashes ${{ matrix.lockfile }}
@@ -33,3 +36,7 @@ jobs:
         run: uv run --no-project python tools/test_two_runtime.py --consumer pr15
       - name: Actual PE and CM PR 16 measured-history runtimes
         run: uv run --no-project python tools/test_two_runtime.py --consumer pr16
+      - name: Full unchanged CM PR 15 suite against candidate API
+        run: uv run --no-project python tools/run_consumer_suite.py --consumer pr15
+      - name: Full unchanged CM PR 16 measured-history suite
+        run: uv run --no-project python tools/run_consumer_suite.py --consumer pr16

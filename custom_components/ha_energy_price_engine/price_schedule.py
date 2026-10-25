@@ -28,11 +28,22 @@ class PriceSchedule:
         self.cancel = None
         self.active = False
 
-    def complete(self, site, day):
+    def complete(self, site, day, now=None):
         key = site["id"]
+        report = self.days.get(key, {}).get(str(day), {})
+        try:
+            verified = dt_util.parse_datetime(report.get("last_success", ""))
+            fresh = (
+                verified is not None
+                and verified.tzinfo is not None
+                and 0 <= ((now or dt_util.utcnow()) - verified).total_seconds() <= 86400
+            )
+        except ValueError, TypeError:
+            fresh = False
         return (
             self.coordinator.price_engine.complete_day(key, day, site["timezone"])
-            and self.days.get(key, {}).get(str(day), {}).get("status") == "READY"
+            and report.get("status") == "READY"
+            and fresh
         )
 
     async def refresh_day(self, site, day, now, *, force=True):
@@ -91,7 +102,7 @@ class PriceSchedule:
             today = now.astimezone(ZoneInfo(site["timezone"])).date()
             day = today if (hour, minute) == (0, 1) else today + timedelta(days=1)
             unconditional = (hour, minute) in {(0, 1), (13, 5)}
-            if unconditional or not self.complete(site, day):
+            if unconditional or not self.complete(site, day, now):
                 attempted = True
                 changed = await self.refresh_day(site, day, now) or changed
         if attempted:

@@ -8,7 +8,7 @@ from homeassistant.helpers import entity_registry as er
 
 from .adapters import parse_prices
 from .configuration import tariff_for
-from .price_components import danish_public_components
+from .price_components import active_hours, danish_public_components
 from .price_engine import day_bounds
 from .prices import OfficialPrices
 from .sources import validate_entity_source
@@ -128,6 +128,8 @@ class PriceUpdater:
                 locked_dso = all(
                     any(
                         r["id"] == "dso"
+                        and slot.start.astimezone(ZoneInfo(site["timezone"])).hour
+                        in active_hours(r)
                         and r.get("locked")
                         and r["valid_from"]
                         <= str(slot.start.astimezone(ZoneInfo(site["timezone"])).date())

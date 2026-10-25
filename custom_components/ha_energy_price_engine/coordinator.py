@@ -5,6 +5,7 @@ from datetime import timedelta
 from types import SimpleNamespace
 from zoneinfo import ZoneInfo
 
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import issue_registry as ir
@@ -15,6 +16,7 @@ from homeassistant.util import dt as dt_util
 
 from .configuration import settings, tariff_for, validate_site
 from .const import DOMAIN, PRICE_REVISION_EVENT
+from .price_components import active_hours
 from .price_engine import PriceEngine
 from .price_schedule import PriceSchedule
 from .price_update import PriceUpdater
@@ -34,6 +36,8 @@ class PriceCoordinator(DataUpdateCoordinator):
         self.schedule = PriceSchedule(self)
         self.pending = None
         self.stopped = False
+        self.source_unsub = None
+        self.source_entities = set()
 
     def _changed(self, site_id, records):
         self.hass.bus.async_fire(
@@ -75,18 +79,60 @@ class PriceCoordinator(DataUpdateCoordinator):
         await self.schedule.startup()
         self.schedule.listen()
         self.entry.async_on_unload(self.stop)
+        self._watch_source_entities()
+        source_entry = self.hass.config_entries.async_get_entry(self.site["nordpool_entry"])
+        if source_entry is not None:
+            self.entry.async_on_unload(
+                source_entry.async_on_state_change(self._provider_state_changed)
+            )
+        self.entry.async_on_unload(
+            self.hass.bus.async_listen(
+                er.EVENT_ENTITY_REGISTRY_UPDATED, self._source_registry_changed
+            )
+        )
+        await self.async_refresh()
+
+    @callback
+    def _watch_source_entities(self):
+        if self.source_unsub:
+            self.source_unsub()
+            self.source_unsub = None
         registry = er.async_get(self.hass)
-        sources = [
+        self.source_entities = {
             e.entity_id
             for e in er.async_entries_for_config_entry(registry, self.site["nordpool_entry"])
-        ]
+        }
         if self.site.get("price_entity"):
-            sources.append(self.site["price_entity"])
-        if sources:
-            self.entry.async_on_unload(
-                async_track_state_change_event(self.hass, sources, self._source_changed)
+            self.source_entities.add(self.site["price_entity"])
+        if self.source_entities:
+            self.source_unsub = async_track_state_change_event(
+                self.hass, list(self.source_entities), self._source_changed
             )
-        await self.async_refresh()
+
+    @callback
+    def _source_registry_changed(self, event):
+        entity = er.async_get(self.hass).async_get(event.data.get("entity_id"))
+        if event.data.get("entity_id") in self.source_entities or (
+            entity is not None and entity.config_entry_id == self.site["nordpool_entry"]
+        ):
+            self._watch_source_entities()
+            self._source_changed(event)
+
+    @callback
+    def _provider_state_changed(self):
+        if self.stopped:
+            return
+        source = self.hass.config_entries.async_get_entry(self.site["nordpool_entry"])
+        self._watch_source_entities()
+        if source and source.state == ConfigEntryState.LOADED:
+            self.price_updater.official.attempts.clear()
+        else:
+            for report in self.schedule.days.get(self.site["id"], {}).values():
+                report.update(status="STALE", reason="Official Nord Pool entry is not loaded")
+            self.entry.async_create_task(
+                self.hass, self.async_request_refresh(), "Publish provider readiness"
+            )
+        self._source_changed(None)
 
     async def reconfigure(self, previous, now):
         """Use stored raw spot inputs; select only affected, unstarted intervals."""
@@ -109,20 +155,23 @@ class PriceCoordinator(DataUpdateCoordinator):
             for r in self.price_engine.records.get(self.site["id"], ())
         }
 
-        def project(tariff, day):
+        def project(tariff, day, hour):
             return {
                 **tariff,
                 "components": [
-                    r for r in tariff["components"] if r["valid_from"] <= day < r["valid_to"]
+                    r
+                    for r in tariff["components"]
+                    if r["valid_from"] <= day < r["valid_to"] and hour in active_hours(r)
                 ],
             }
 
         def select(row):
             day = str(row.start.astimezone(ZoneInfo(self.site["timezone"])).date())
-            tariff = project(new_tariff, day)
-            if tariff == project(old_tariff, day) and self.site.get("dso_mode") == previous.get(
+            hour = row.start.astimezone(ZoneInfo(self.site["timezone"])).hour
+            tariff = project(new_tariff, day, hour)
+            if tariff == project(old_tariff, day, hour) and self.site.get(
                 "dso_mode"
-            ):
+            ) == previous.get("dso_mode"):
                 return None
             locked_dso = any(r["id"] == "dso" and r.get("locked") for r in tariff["components"])
             if self.site.get("dso_mode") == "radius_c" and not locked_dso:
@@ -174,6 +223,9 @@ class PriceCoordinator(DataUpdateCoordinator):
     def stop(self):
         self.stopped = True
         self.schedule.stop()
+        if self.source_unsub:
+            self.source_unsub()
+            self.source_unsub = None
         if self.pending:
             self.pending()
             self.pending = None

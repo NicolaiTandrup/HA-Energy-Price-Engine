@@ -5,9 +5,11 @@ from datetime import timedelta
 from math import isfinite
 from zoneinfo import ZoneInfo
 
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.exceptions import HomeAssistantError
 
 from .adapters import parse_prices
+from .sources import ensure_official_nordpool
 
 
 def all_in(slots, tariff):
@@ -54,6 +56,12 @@ class OfficialPrices:
         self.errors = set()
 
     async def get(self, site, now, *, compose=True, force=False, dates=None):
+        await ensure_official_nordpool(self.hass)
+        selected = self.hass.config_entries.async_get_entry(site["nordpool_entry"])
+        if selected is not None and selected.state != ConfigEntryState.LOADED:
+            raise HomeAssistantError(
+                "Official Nord Pool entry is not loaded; waiting for provider recovery"
+            )
         rows = []
         self.last_errors = []
         today = now.astimezone(ZoneInfo(site["timezone"])).date()

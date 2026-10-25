@@ -103,7 +103,8 @@
           "source": "Source or contract reference (no customer identifiers)",
           "verified_on": "Verified on",
           "locked": "Manual lock (automatic rates cannot override)",
-          "eligibility": "Eligibility (heating requires verified registration and usage)"
+          "eligibility": "Eligibility (heating requires verified registration and usage)",
+          "hours": "Local hours (blank = all day; use separate dated rates for manual time-of-use bands)"
         }
       },
       "rate": {
@@ -120,7 +121,8 @@
           "source": "Source or contract reference (no customer identifiers)",
           "verified_on": "Verified on",
           "locked": "Manual lock (automatic rates cannot override)",
-          "eligibility": "Eligibility (heating requires verified registration and usage)"
+          "eligibility": "Eligibility (heating requires verified registration and usage)",
+          "hours": "Local hours (blank = all day; use separate dated rates for manual time-of-use bands)"
         }
       },
       "edit_rate": {

@@ -1,81 +1,79 @@
 # Home Assistant Energy Price Engine
 
-A standalone native Home Assistant **developer preview** that owns electricity
-price retrieval, tariff verification, calculation, durable 15-minute final prices
-and publishing. EV Charge Manager, heating and batteries consume stored prices;
-this integration contains no vehicle or charging controls.
+**Proposed v0.1.0-beta.1** — an independently installable native Home Assistant
+candidate on [draft PR #7](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7).
+No release has been published and no production cutover is authorized by this code.
 
-Built from the tested pricing implementation in EV Charge Manager PRs
-[#11](https://github.com/NicolaiTandrup/HA-EV-Charge-Manager/pull/11) and
-[#12](https://github.com/NicolaiTandrup/HA-EV-Charge-Manager/pull/12).
-[Source provenance](docs/PROVENANCE.md) · [Architecture](docs/ADR-001.md) ·
-[API v1](docs/API.md) · [Development handoff](docs/DEVELOPMENT_STATUS.md)
+The standalone `ha_energy_price_engine` owns electricity price retrieval, tariff
+verification, calculation, permanent 15-minute final prices and publishing. EV
+Charge Manager, heating and batteries consume the read-only API. There are no
+vehicle or charging controls here. The tested EV PR #11/#12 pricing implementation
+is reused with [provenance retained](docs/PROVENANCE.md).
 
-## Preview installation and native configuration
+**[Installation and native setup](docs/BETA_SETUP.md)** ·
+**[Beta acceptance / migration / rollback](docs/BETA_ACCEPTANCE.md)** ·
+[API v1](docs/API.md) · [Storage/recovery](docs/ADR-002-ledger-storage.md) ·
+[Measured performance](docs/PERFORMANCE.md) · [Permanent handoff](docs/DEVELOPMENT_STATUS.md)
 
-Requires Home Assistant 2026.10+ and its official **Nord Pool** integration. For an
-isolated development HA instance, copy `custom_components/ha_energy_price_engine`
-to the HA configuration's `custom_components` directory and restart that instance.
-HACS custom-repository metadata is included; catalog inclusion is not claimed.
-There is no stable release and no authorization to deploy this preview to a live HA.
+Add one independent site per entry in **Settings → Devices & services → Energy
+Price Engine**. Configure sources, supplier contracts, grid tariff class, dated
+rates, units, VAT, time-of-use hours, locks/fallbacks and fixed subscriptions in native
+Options. Sites have stable IDs and no hardcoded count limit; no private contract is
+copied to another site. Safe discovery suggests only an unambiguous official Nord
+Pool entry for confirmation, and rejects a legacy custom component shadowing it.
 
-Add **Energy Price Engine** in Settings → Devices & services. Create one entry per
-site with a stable ID, name, official Nord Pool entry, area (initially DK2), timezone
-and explicit VAT fraction. Open its **Options** to configure:
+Final inclusive DKK/kWh prices use immutable UTC quarters, 92/96/100-slot local DST
+days, negative prices, transactional SQLite persistence, revision/correction history
+and read-only indexed lookups. Valid preview JSON ledgers migrate once; corrupted
+history blocks writes instead of being discarded. Native backup, diagnostics and
+repair flows expose actual applied sources/values and readiness. Missing prices
+never become zero; subscriptions never affect marginal slot ranking.
 
-- **Pricing / Supplier:** add or edit dated supplier markup and other components;
-  select DKK/kWh or øre/kWh, VAT inclusion/fraction, source, verification and dates.
-- **Tariffs:** verified automatic Radius C, manual dated DSO rules, or explicit
-  manual fallback plus last verified cache. Manual locks take precedence.
-- **Taxes / TSO:** explicit dated rates or the documented, bounded national baseline;
-  verified heating/annual usage is optional and never invents future legislation.
-- **Subscriptions:** use DKK/month; fixed charges never affect marginal slot ranking.
+Copenhagen refreshes remain **13:05**, conditional **13:20 / 13:40 / 23:59**, and
+unconditional **00:01**, plus startup and bounded source-event recovery. Reads do
+not fetch providers or recalculate tariffs. Consumers must check complete READY
+coverage and explicit site identity. Actual PE+CM #15/#16 runtime conformance is
+exercised with synthetic observations and no control calls.
 
-Dates are local, start inclusive/end exclusive. To schedule a new contract, end the
-old period on the new start date and add the new period in the same options draft,
-then **Save**. Equal-priority overlapping periods and invalid units/VAT are rejected.
-Closing the editor without Save discards the draft. Configuration survives HA
-restart; affected future stored prices are recalculated on change and audited.
-Settled history stays intact. The options summary shows actual applied components,
-source, periods, last check/change and current final price. Diagnostics expose
-readiness/counts and redacted configuration; repair warnings point to missing data.
-Unknown or expired rates leave pricing degraded, never silently zero.
+The documented EWII **household** markup is **0.030 DKK/kWh excluding VAT for
+June–September 2026 only**. It is not an October/current default or a summer-house
+rate. Enter actual verified per-site terms. National baselines are explicitly bounded;
+future supplier/TSO/tax rules are not invented. Recorded legacy comparisons replace
+any requirement to co-run the legacy HACS broker and official Nord Pool integration.
 
-**Documented EWII household example:** 0.030 DKK/kWh excluding VAT, from
-2026-06-01 until 2026-10-01 (June–September invoices only). This is not an automatic
-site default, a later contract or a summer-house rate. Enter separate verified
-periods for each site. The public TSO baseline ends after 2026; tax 0.008 DKK/kWh
-ex VAT ends after 2027. No later terms are inferred.
+## Candidate package and validation
 
-## Behavior and safety
+CI builds reproducible HACS-root and manual-install ZIPs, file/commit metadata and
+SHA-256 checksums, then installs them **outside the repository source tree** in a
+fresh HA harness. Download the exact reviewed commit's **Beta candidate package**
+artifact. HACS metadata/brand validation is included; ordinary HACS release discovery
+requires separately authorized publication, not an unmerged default-branch promise.
 
-Refreshes use Europe/Copenhagen: 13:05 primary, 13:20 and 13:40 conditional retries,
-23:59 conditional rescue, 00:01 unconditional current-day source check, plus startup
-catch-up. Complete UTC quarter-hour series (92/96/100 slots with DST) are validated
-before atomic persistence. Verification-only checks do not reprice identical inputs.
-Negative spot prices are supported. VAT is applied exactly once per component.
-
-History is retained permanently with future correction audit and indexed read-only
-range lookups. HA Store JSON snapshots grow with retained history; multi-year scale
-needs measurement before production acceptance. Consumers must check readiness and
-coverage; stale or missing prices are never free. No live Home Assistant, Node-RED
-or charger changes, merges, stable releases or cutovers without owner approval.
+Tests cover native multi-site flows/upgrades, real official HA Nord Pool service
+plumbing with a mocked market client, units/VAT, overrides/time bands, source failures,
+SQLite interruption/corruption/recovery, exact historical revisions, JSON contract
+fixtures, actual PE+CM runtime interaction and archive installation. CI targets the
+fixture-supported HA 2026.10.3 and current 2026.10.4 with documented test scaffolding.
+Cloud scale benchmarks do **not** establish Raspberry Pi performance. Consult the
+handoff for exact current counts/CI and the acceptance guide for remaining live gates.
 
 ## Development
 
-Read AGENTS.md and docs/DEVELOPMENT_STATUS.md first. Use the existing isolated
-checkout, Python 3.14.8 and the hash-verified dependency lock:
+Read AGENTS.md and the existing handoff first. Use this isolated checkout, Python
+3.14.8, hash-verified locks and pinned read-only consumer exports:
 
 ```sh
 uv venv --python 3.14.8
 uv pip sync --require-hashes requirements-dev.lock
-.venv/bin/pytest --cov=custom_components.ha_energy_price_engine
-.venv/bin/ruff check custom_components tests
-.venv/bin/ruff format --check custom_components tests
+.venv/bin/python tools/prepare_consumer_refs.py
+.venv/bin/pytest --cov=custom_components.ha_energy_price_engine -W error::ResourceWarning
+.venv/bin/ruff check custom_components tests tools
+.venv/bin/ruff format --check custom_components tests tools
+.venv/bin/python tools/test_two_runtime.py --consumer pr15
+.venv/bin/python tools/test_two_runtime.py --consumer pr16
 docker run --rm -v "$PWD:/github/workspace" ghcr.io/home-assistant/hassfest
+.venv/bin/python tools/build_beta.py
 ```
 
-Tests mock all service/network inputs. CI runs tests/Ruff, official hassfest and HACS
-metadata validation. No integration service, credentials or hardware are needed to
-develop/test. See the permanent handoff for actual local/remote results and remaining
-acceptance gaps; presence of a workflow file is not a claim CI passed.
+No running HA service, secret, live Node-RED change or hardware access is needed for
+the development tests. No merge, release publication or live deployment is performed.

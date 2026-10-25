@@ -5,7 +5,7 @@ from copy import deepcopy
 from zoneinfo import ZoneInfo
 
 from .const import COMPONENTS
-from .price_components import danish_public_components, validate_rules
+from .price_components import active_hours, danish_public_components, validate_rules
 from .sources import BASES, UNIT_MULTIPLIERS
 
 
@@ -71,15 +71,22 @@ def validate_site(value):
             "heating_above_4000",
         }:
             raise ValueError("Unsupported component or eligibility")
-        if rule["id"] == "subscription" and rule["unit"] != "DKK/month":
+        if (
+            rule["id"] in {"subscription", "supplier_subscription", "grid_subscription"}
+            and rule["unit"] != "DKK/month"
+        ):
             raise ValueError("Subscriptions must use DKK/month")
-        if rule["id"] != "subscription" and rule["unit"] == "DKK/month":
+        if (
+            rule["id"] not in {"subscription", "supplier_subscription", "grid_subscription"}
+            and rule["unit"] == "DKK/month"
+        ):
             raise ValueError("Marginal components require a per-kWh unit")
         for other in rules[:i]:
             if (
                 rule["id"] == other["id"]
                 and rule.get("locked", False) == other.get("locked", False)
                 and rule.get("eligibility", "all") == other.get("eligibility", "all")
+                and bool(active_hours(rule) & active_hours(other))
                 and max(rule["valid_from"], other["valid_from"])
                 < min(rule["valid_to"], other["valid_to"])
             ):

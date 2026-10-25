@@ -45,7 +45,7 @@ async def test_complete_day_conditional_schedule(scheduled, hour, minute, fetch)
     target = local.date() if (hour, minute) == (0, 1) else local.date() + timedelta(days=1)
     engine = scheduled.coordinator.price_engine
     await engine.async_update("home", rows(target), {"mode": "all_in"}, {}, now - timedelta(days=2))
-    scheduled.days = {"home": {str(target): {"status": "READY"}}}
+    scheduled.days = {"home": {str(target): {"status": "READY", "last_success": now.isoformat()}}}
     await scheduled.run(now, hour, minute)
     assert scheduled.coordinator.price_updater.refresh.called is fetch
     assert scheduled.coordinator.async_request_refresh.called is fetch
@@ -109,3 +109,33 @@ async def test_incomplete_corrected_day_does_not_mix_with_old_complete_table(has
     assert not await updater.refresh(site, now, force=True, dates=[day])
     assert updater.status["home"]["status"] == "INCOMPLETE"
     assert engine.lookup("home", data[0].start, data[0].end)[0].final_price_incl_vat == -0.1
+
+
+@pytest.mark.parametrize("instant", ["2026-03-29T11:04:59+00:00", "2026-10-25T12:04:59+00:00"])
+async def test_native_publication_timer_uses_copenhagen_after_dst_transition(
+    scheduled, freezer, instant
+):
+    freezer.move_to(instant)
+    scheduled.run = AsyncMock()
+    scheduled.listen()
+    freezer.tick(timedelta(seconds=2))
+    async_fire_time_changed(scheduled.hass)
+    await scheduled.hass.async_block_till_done()
+    scheduled.run.assert_awaited_once()
+    assert scheduled.run.call_args.args[1:] == (13, 5)
+    scheduled.stop()
+
+
+async def test_rescue_rechecks_stale_complete_table_instead_of_trusting_coverage(scheduled):
+    now = datetime(2026, 10, 23, 21, 59, tzinfo=UTC)
+    day = date(2026, 10, 24)
+    await scheduled.coordinator.price_engine.async_update(
+        "home", rows(day), {"mode": "all_in"}, {}, now - timedelta(days=2)
+    )
+    scheduled.days = {
+        "home": {
+            str(day): {"status": "READY", "last_success": (now - timedelta(hours=30)).isoformat()}
+        }
+    }
+    await scheduled.run(now, 23, 59)
+    scheduled.coordinator.price_updater.refresh.assert_awaited_once()

@@ -175,3 +175,41 @@ async def test_local_backup_cli_exercises_real_verified_files(hass, tmp_path):
         )
     )
     assert denied.returncode == 1 and "Stop Home Assistant" in denied.stderr
+
+
+async def test_year_scale_append_preserves_database_enforced_historical_freeze(hass):
+    from datetime import timedelta
+
+    from custom_components.ha_energy_price_engine.models import PriceSlot
+
+    engine = PriceEngine(hass, "year-scale")
+    start = datetime(2025, 1, 1, tzinfo=UTC)
+    data = [
+        PriceSlot(start + timedelta(minutes=15 * i), start + timedelta(minutes=15 * (i + 1)), -0.1)
+        for i in range(365 * 96)
+    ]
+    await engine.async_update(
+        "home", data, {"mode": "all_in"}, {"provider": "synthetic-year-scale"}, NOW
+    )
+
+    def freeze():
+        with closing(sqlite3.connect(engine.database.path, isolation_level=None)) as c:
+            c.execute(
+                "CREATE TRIGGER freeze_published_history BEFORE INSERT ON prices WHEN NEW.start < '2026-01-01' BEGIN SELECT RAISE(ABORT,'attempted historical rewrite'); END"
+            )
+
+    await hass.async_add_executor_job(freeze)
+    await engine.async_update(
+        "home", rows(), {"mode": "all_in"}, {"provider": "new-synthetic-publication"}, NOW
+    )
+    restored = PriceEngine(hass, "year-scale")
+    await restored.async_load(["home"])
+    assert len(restored.records["home"]) == 365 * 96 + 96
+    assert restored.records["home"][0].start == start
+    assert restored.records["home"][0].final_price_incl_vat == -0.1
+    assert not restored.load_errors
+    with patch(
+        "custom_components.ha_energy_price_engine.price_engine.calculate",
+        side_effect=AssertionError("historical read arithmetic"),
+    ):
+        assert len(restored.lookup("home", start, start + timedelta(days=1))) == 96

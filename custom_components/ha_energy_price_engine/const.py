@@ -10,4 +10,6 @@ COMPONENTS = (
     "energinet_system",
     "electricity_tax",
     "subscription",
+    "supplier_subscription",
+    "grid_subscription",
 )
