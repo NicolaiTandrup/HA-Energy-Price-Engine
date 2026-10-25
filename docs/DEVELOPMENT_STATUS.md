@@ -39,12 +39,18 @@ beta complete until actual owner HACS add/download/configuration succeeds.
 - Native status/source/latest-consumer checkpoint **`3bdfb3b`**: 164 local tests on
   both cores, 92% coverage, zero skips; all **ten exact-head remote checks green**,
   including latest CM #25/#26 full suites and coupled runtimes.
-- Current checkpoint subject: **`test: verify HACS distribution gate and installation lifecycle`**.
+- HACS workflow checkpoint **`561c9f781280b17533a337c4301492264d12b12a`** has
+  all **ten exact-head remote checks green**, including actual HACS workflows and
+  full latest consumers on both cores.
+- Final checkpoint subject: **`test: retain source proof in native slot inspection`**.
   **175 tests pass on BOTH HA 2026.10.3 and 2026.10.4**, zero skips, 91% coverage,
   ResourceWarnings errors. Two upstream HACS deprecation warnings remain visible.
-  Ruff check/format and independent package smoke pass. Full final CI follows push;
-  do not claim pending checks passed. Local official hassfest passed after the new
-  sensors/Options translations; CI repeats it for this checkpoint.
+  Final local reruns pass after adding original source-unit/VAT/verification and
+  manual source proof in the selected-slot view. Daily aggregate regression uses
+  varied negative and positive prices, with distinct independent expected min/max/mean.
+  Ruff check/format clean; both-layout native lifecycle smoke passed at 561c9f7.
+  Final clean packages/CI repeat after this push. Latest official HA release was
+  rechecked on GitHub: 2026.10.4 (published 2026-10-24), matching the current lock.
 - The ten new HACS tests execute unchanged published 2.0.5
   `c0dfd8b44297c3673c21973e2539375a53687a9c` and upstream
   `a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8`. Both current main trees reproduce the
@@ -54,7 +60,7 @@ beta complete until actual owner HACS add/download/configuration succeeds.
   are not replaced. HACS backup directories are isolated per test; the actual backup
   implementation is retained. This is not a live authenticated frontend session.
 - Latest CM PR #25 full suite **227 passed**, #26 **228 passed** on HA .4; actual
-  coupled runtimes pass. CI at 3bdfb3b also passed them on fixture-supported HA .3.
+  coupled runtimes pass. CI at 561c9f7 also passed them on fixture-supported HA .3.
   Earlier unchanged CM #15/#16 suites remain **153/176** and still run in CI.
 
 ## Completed native software scope
@@ -165,6 +171,6 @@ separate from PE/API tests. Keep commands disabled until independently accepted 
 explicitly authorized. Rollback must restore BOTH the legacy Nordpool dependency
 and the exact Brain, Energy Price Broker and Charger Optimizer flow/config backups.
 
-Next: finish current-checkpoint CI/clean artifacts and PR/issue receipts. Then owner
+Next: verify final checkpoint CI/artifacts and exact-head PR receipt. Then owner
 reviews the concrete HACS distribution choices and exact setup/acceptance guide.
 Do not make main/settings/release/live changes without the corresponding approval.

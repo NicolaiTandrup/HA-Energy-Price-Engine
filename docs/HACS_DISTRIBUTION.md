@@ -42,7 +42,9 @@ PAHA02-DEV's installed HACS version must be recorded during owner acceptance.
 ## Reviewable distribution choices — none executed
 
 **Recommended:** after review and explicit owner authorization, merge existing PE
-PR #7 and the reviewed CM stack ending at #26 into their existing `main` branches.
+PR #7 and the reviewed CM stack ending at #26 into their existing `main` branches. CM is stacked: review
+the full base/merge sequence, rather than merely merging #26 into its current
+development base.
 Keep the PRs, commits and history. No force push or history replacement. Both
 roots then contain `custom_components/<domain>/manifest.json`, native flows,
 translations, brand assets and `hacs.json`. A HACS custom repository can install

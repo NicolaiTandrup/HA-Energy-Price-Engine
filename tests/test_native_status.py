@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import pytest
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.core import SupportsResponse
 from homeassistant.helpers import selector
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -74,12 +75,28 @@ async def test_opaque_entry_selection_replacement_and_readable_status(hass, free
 @pytest.mark.usefixtures("price_service")
 async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, freezer):
     freezer.move_to("2026-10-23T12:00:00Z")
+
+    async def varied_publication(call):
+        series = rows(date.fromisoformat(call.data["date"]))
+        return {
+            "DK2": [
+                {"start": s.start.isoformat(), "end": s.end.isoformat(), "price": (i - 48) * 100}
+                for i, s in enumerate(series)
+            ]
+        }
+
+    hass.services.async_register(
+        "nordpool",
+        "get_prices_for_date",
+        varied_publication,
+        supports_response=SupportsResponse.ONLY,
+    )
     entry = await setup(hass)
     c = entry.runtime_data
     with patch.object(c.price_updater, "refresh", side_effect=AssertionError("read fetched")):
         assert NextPriceSensor(c).native_value is not None
-        for kind in ("minimum", "maximum", "average"):
-            assert DayStatisticSensor(c, kind).native_value == pytest.approx(0.41625)
+        for kind, expected in {"minimum": -5.45875, "maximum": 6.41625, "average": 0.47875}.items():
+            assert DayStatisticSensor(c, kind).native_value == pytest.approx(expected)
         assert TomorrowSensor(c).native_value == "READY"
         assert TomorrowSensor(c).extra_state_attributes["expected_slots"] == 96
         status = source_status(c)
@@ -95,7 +112,8 @@ async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, 
         )
         text = result["description_placeholders"]["slot_breakdown"]
         assert "supplier:" in text and "Stored final:" in text and "electricity_tax:" in text
-        assert "revision:" in text
+        assert "revision:" in text and "input unit: DKK/MWh" in text
+        assert "original verification:" in text and "Fictional test supplier" in text
         hass.config_entries.options.async_abort(result["flow_id"])
         c.schedule.days["home"]["2026-10-23"]["status"] = "INCOMPLETE"
         assert DayStatisticSensor(c, "minimum").native_value is None

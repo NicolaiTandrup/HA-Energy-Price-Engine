@@ -62,17 +62,30 @@ def slot_breakdown(coordinator, start, now=None):
         return f"{start.isoformat()}: {result.status}. No stored price. Missing is not zero."
     row = result.records[0]
     payload = json.loads(row.components_json)
+    source = json.loads(row.source_json)
     lines = [
         f"{row.start.isoformat()} – {row.end.isoformat()} (UTC)",
         f"Status: {result.status}; revision: {row.revision}; verified: {result.last_success or 'unverified'}",
         f"Stored final: {row.final_price_incl_vat:.6f} DKK/kWh including VAT",
     ]
+    lines.append(
+        f"Stored source: {source.get('kind', 'recorded provider')}; "
+        f"input unit: {source.get('input_unit', 'provider contract')}; "
+        f"input VAT: {source.get('input_vat', 'provider contract')}; "
+        f"original verification: {source.get('verified_at', 'see diagnostics')}"
+    )
+    if source.get("dso"):
+        dso = source["dso"]
+        lines.append(
+            f"Grid source: {dso.get('provider')}; product: {dso.get('product')}; "
+            f"verified: {dso.get('fetched_at')}; effective ranges: {dso.get('effective_ranges')}"
+        )
     for name, part in payload.get("components", {}).items():
         lines.append(
             f"{name}: {part['ex_vat']:.6f} ex VAT + {part['vat']:.6f} VAT = "
             f"{part['incl_vat']:.6f} DKK/kWh; verified {part.get('verified_on', 'see source')}; "
             f"period {part.get('valid_from', 'source interval')} – {part.get('valid_to', 'source interval')}; "
-            f"locked {part.get('locked', False)}"
+            f"locked {part.get('locked', False)}; source: {part.get('source', 'see input/grid source')}"
         )
     if "external_all_in" in payload:
         lines.append("Provider final all-in price; no additional tariff or VAT applied.")
