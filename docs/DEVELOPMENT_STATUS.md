@@ -2,6 +2,41 @@
 
 Updated 2026-10-25. Read AGENTS.md first. This is the single permanent handoff.
 
+## Extended run checkpoint — 2026-10-25
+
+Resumed validated final head `8ef40b74bff2b7a4359b18c37de598e6ce061e51` (all ten CI
+checks confirmed green). Read all five open issues and current PR receipts. Native
+Nord Pool already used HA ConfigEntrySelector; added a real opaque-ID selection /
+replacement regression with readable source titles, no text-entry workaround.
+Added seven total entities/site (current, next, complete-day min/max/average,
+readiness and tomorrow); source health/refresh/completeness/next scheduled check
+are attributes. Options now offers a bounded today/tomorrow stored-slot inspector
+with UTC offsets, original components/VAT/revision/verification and excluded fixed
+subscriptions. Reads neither fetch nor compose. Official input now rejects hourly
+resolution and off-quarter boundaries; actual core service tests reject partial,
+duplicate, overlapping, shifted, hourly and nonfinite source rows.
+
+Local **164 tests pass on both HA 2026.10.3 and 2026.10.4**, 92% coverage, zero skips,
+ResourceWarnings errors. Real three-site year-long SQLite histories and concurrent
+reads during an actual blocked disk commit pass, preserving old snapshots until
+commit and exact settled rows on recovery. Official local hassfest passes.
+Latest pinned CM #25 `1246ccff25ee36f705e7c503499317f58802d7a2` full **227** tests and
+#26 `5ef7115a9599e1ff25019e91b3737500853b9a38` **228** tests pass on HA .4; coupled
+runtime tests pass. CI now also exercises these unchanged suites plus original
+#15/#16 and shared machine fixtures. Supported-HA latest CM runs follow in CI.
+Checkpoint subject: `feat: expose native price status and verify latest consumers`.
+
+**Critical HACS distribution finding:** owner reports both PE and CM custom repo
+adds rejected because main contains only LICENSE/README. Passing HACS action or ZIP
+smoke is NOT an actual HACS installation. Current native code remains on draft
+branches. Never claim ordinary HACS installability until the default-branch gate
+is resolved with explicit owner approval. No merge/default-branch change/release
+is authorized. Next priority: pinned actual HACS add/download workflow tests,
+non-destructive owner-reviewable distribution strategy and exact PAHA02-DEV guide.
+Manual ZIP remains independently testable but does not satisfy the requested HACS
+distribution gate. Storage remains history-preserving/unpruned; Pi resource bounds
+require real measurement and a future reference-aware archival design.
+
 ## Resume point
 
 Existing branch `feat/standalone-price-engine`, existing draft PR #7; proposed

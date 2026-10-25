@@ -25,7 +25,11 @@ def validate_slots(slots: list[PriceSlot]) -> list[PriceSlot]:
         (PriceSlot(utc(s.start), utc(s.end), s.price) for s in slots), key=lambda s: s.start
     )
     for i, slot in enumerate(result):
-        if not isfinite(slot.price) or slot.end - slot.start != QUARTER:
+        if (
+            not isfinite(slot.price)
+            or slot.end - slot.start != QUARTER
+            or slot.start.timestamp() % 900
+        ):
             raise ValueError("Prices must be finite, non-overlapping 15-minute intervals")
         if i and result[i - 1].end > slot.start:
             raise ValueError("Overlapping price intervals")

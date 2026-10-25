@@ -120,8 +120,8 @@ class PriceSchedule:
             self.cancel()
             self.cancel = None
 
-    def _arm(self):
-        now = dt_util.utcnow()
+    def next_update(self, now=None):
+        now = now or dt_util.utcnow()
         local = now.astimezone(ZONE)
         choices = []
         for offset in (0, 1):
@@ -131,7 +131,10 @@ class PriceSchedule:
                 )
                 if candidate > local:
                     choices.append(candidate)
-        target = min(choices)
+        return min(choices)
+
+    def _arm(self):
+        target = self.next_update()
 
         async def run_and_arm():
             try:

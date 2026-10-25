@@ -40,3 +40,11 @@ jobs:
         run: uv run --no-project python tools/run_consumer_suite.py --consumer pr15
       - name: Full unchanged CM PR 16 measured-history suite
         run: uv run --no-project python tools/run_consumer_suite.py --consumer pr16
+      - name: Latest CM PR 25 packaged candidate runtimes and full suite
+        run: |
+          uv run --no-project python tools/test_two_runtime.py --consumer pr25
+          uv run --no-project python tools/run_consumer_suite.py --consumer pr25
+      - name: Latest CM PR 26 acknowledgment hardening runtimes and full suite
+        run: |
+          uv run --no-project python tools/test_two_runtime.py --consumer pr26
+          uv run --no-project python tools/run_consumer_suite.py --consumer pr26

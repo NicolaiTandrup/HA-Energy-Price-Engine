@@ -60,7 +60,8 @@
           "taxes": "Dated national baselines and tax eligibility",
           "save": "Save changes",
           "supplier": "Supplier and contract guidance",
-          "storage": "Storage and verified backup"
+          "storage": "Storage and verified backup",
+          "breakdown": "Inspect a stored quarter-hour price"
         }
       },
       "site": {
@@ -95,7 +96,7 @@
         "data": {
           "id": "Component",
           "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = øre)",
+          "unit": "Money unit (ore = \u00f8re)",
           "vat_included": "Amount already includes VAT",
           "vat_rate": "Component VAT fraction (0.25 = 25%)",
           "valid_from": "Effective from (inclusive local date)",
@@ -113,7 +114,7 @@
         "data": {
           "id": "Component",
           "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = øre)",
+          "unit": "Money unit (ore = \u00f8re)",
           "vat_included": "Amount already includes VAT",
           "vat_rate": "Component VAT fraction (0.25 = 25%)",
           "valid_from": "Effective from (inclusive local date)",
@@ -143,7 +144,7 @@
       },
       "taxes": {
         "title": "Dated public baselines and tax eligibility",
-        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026–2027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
+        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026\u20132027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
         "data": {
           "danish_public_rates": "Use documented dated national baseline (not live legislative verification)",
           "heating_registered": "Electrically heated residence registration verified",
@@ -153,7 +154,7 @@
       },
       "supplier": {
         "title": "Supplier contract",
-        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June–September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
+        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June\u2013September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
         "data": {
           "supplier": "Supplier label (no automatic contract inheritance)"
         }
@@ -161,6 +162,13 @@
       "storage": {
         "title": "Create a verified local ledger backup",
         "description": "{backup_result}\\n\\nSubmit to create a new verified SQLite snapshot. No prices, source configuration or controls change. Existing backups are never overwritten. Restore is deliberately offline-only: stop HA, compare backup revisions with recorded costs, preserve current files, then follow the beta recovery guide."
+      },
+      "breakdown": {
+        "title": "Stored price breakdown",
+        "description": "{slot_breakdown}",
+        "data": {
+          "slot": "Quarter (local date/time and UTC offset)"
+        }
       }
     },
     "error": {
@@ -169,7 +177,8 @@
       "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics."
     },
     "abort": {
-      "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate."
+      "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
+      "site_not_loaded": "Load this site to inspect stored prices."
     }
   },
   "entity": {
@@ -179,6 +188,21 @@
       },
       "readiness": {
         "name": "Price readiness"
+      },
+      "next_price": {
+        "name": "Next quarter final electricity price"
+      },
+      "today_minimum": {
+        "name": "Today minimum final price"
+      },
+      "today_maximum": {
+        "name": "Today maximum final price"
+      },
+      "today_average": {
+        "name": "Today average final price"
+      },
+      "tomorrow_status": {
+        "name": "Tomorrow price readiness"
       }
     }
   },
@@ -189,7 +213,7 @@
         "step": {
           "confirm": {
             "title": "Verify this pricing site again",
-            "description": "Review this site’s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
+            "description": "Review this site\u2019s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
           }
         },
         "error": {

@@ -112,3 +112,49 @@ async def test_provider_late_start_and_new_entities_recover_without_waiting_for_
     await hass.async_block_till_done()
     assert ReadinessSensor(entry.runtime_data).native_value == "STALE"
     assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.parametrize(
+    "fault", ["partial", "duplicate", "overlap", "shifted", "hourly", "nonfinite"]
+)
+async def test_real_official_service_malformed_intervals_never_publish(hass, freezer, fault):
+    from homeassistant.components.nordpool.services import async_setup_services
+
+    freezer.move_to("2026-10-23T12:00:00Z")
+    day = date(2026, 10, 24)
+    series = [SimpleNamespace(start=s.start, end=s.end, entry={"DK2": 100}) for s in rows(day)]
+    if fault == "partial":
+        series.pop(5)
+    elif fault == "duplicate":
+        series.append(series[0])
+    elif fault == "overlap":
+        series[1].start -= timedelta(minutes=15)
+    elif fault == "shifted":
+        for s in series:
+            s.start += timedelta(minutes=1)
+            s.end += timedelta(minutes=1)
+    elif fault == "hourly":
+        series = [
+            SimpleNamespace(start=s.start, end=s.start + timedelta(hours=1), entry=s.entry)
+            for s in series[::4]
+        ]
+    else:
+        series[0].entry["DK2"] = float("nan")
+    client = AsyncMock()
+    client.async_get_delivery_period.return_value = SimpleNamespace(entries=series)
+    source = MockConfigEntry(domain="nordpool", state=ConfigEntryState.LOADED)
+    source.add_to_hass(hass)
+    source.runtime_data = SimpleNamespace(client=client)
+    async_setup_services(hass)
+    engine = PriceEngine(hass, "malformed-official")
+    updater = PriceUpdater(hass, engine)
+    assert not await updater.refresh(
+        {**model(), "nordpool_entry": source.entry_id},
+        datetime(2026, 10, 23, 12, tzinfo=UTC),
+        force=True,
+        dates=[day],
+    )
+    assert not engine.records.get("home")
+    assert updater.status["home"]["status"] in {"ERROR", "INCOMPLETE"}
+    assert not updater.status["home"].get("last_success")
+    source.mock_state(hass, ConfigEntryState.NOT_LOADED)

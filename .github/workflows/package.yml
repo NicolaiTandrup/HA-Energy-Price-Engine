@@ -25,7 +25,7 @@ jobs:
         run: uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: ha-energy-price-engine-candidate-${{ github.sha }}
+          name: ha-energy-price-engine-candidate-${{ github.event.pull_request.head.sha || github.sha }}
           path: dist/
           if-no-files-found: error
           retention-days: 14

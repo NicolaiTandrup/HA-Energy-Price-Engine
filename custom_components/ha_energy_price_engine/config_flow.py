@@ -2,8 +2,8 @@
 
 import json
 from copy import deepcopy
-from datetime import timedelta
-from zoneinfo import ZoneInfoNotFoundError
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import voluptuous as vol
 from homeassistant import config_entries
@@ -14,6 +14,7 @@ from homeassistant.util import dt as dt_util
 from .configuration import settings, validate_site
 from .const import COMPONENTS, DOMAIN
 from .sources import BASES, UNIT_MULTIPLIERS, async_source_defaults, ensure_official_nordpool
+from .status import slot_breakdown, source_status
 
 
 def select(options):
@@ -192,6 +193,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
                 "dso",
                 "taxes",
                 "storage",
+                "breakdown",
                 "save",
             ],
         )
@@ -203,9 +205,12 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         now = dt_util.utcnow()
         rows = runtime.price_engine.lookup(runtime.site["id"], now, now + timedelta(microseconds=1))
         report = runtime.data or {}
+        status = source_status(runtime, now)
         lines = [
-            f"Status: {report.get('status', 'INCOMPLETE')}; last check: {report.get('last_attempt', 'never')}; "
-            f"last verified: {report.get('last_success', 'never')}"
+            f"Site: {self.draft['name']}; source: {status['source']}; area: {status['area']}; "
+            "currency: DKK; resolution: 15 minutes",
+            f"Status: {status['health']}; last check: {report.get('last_attempt', 'never')}; "
+            f"last verified: {status['last_success'] or 'never'}; next update: {status['next_scheduled_update']}",
         ]
         if rows:
             row = rows[0]
@@ -363,6 +368,49 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
             self.draft["dated_components"] = rules
             return await self.async_step_init()
         return await self._choose("remove_rate", user_input)
+
+    async def async_step_breakdown(self, user_input=None):
+        runtime = getattr(self.config_entry, "runtime_data", None)
+        if runtime is None:
+            return self.async_abort(reason="site_not_loaded")
+        now = dt_util.utcnow()
+        zone = ZoneInfo(runtime.site["timezone"])
+        from .price_engine import day_bounds
+
+        day = now.astimezone(zone).date()
+        start, _ = day_bounds(day, runtime.site["timezone"])
+        _, end = day_bounds(day + timedelta(days=1), runtime.site["timezone"])
+        rows = runtime.price_engine.lookup(runtime.site["id"], start, end)
+        explanation = "Select a stored quarter to inspect its original amounts and verification. No source is fetched."
+        if user_input:
+            try:
+                selected = datetime.fromisoformat(user_input["slot"])
+                if selected not in {row.start for row in rows}:
+                    raise ValueError("Slot not in displayed range")
+                explanation = slot_breakdown(runtime, selected, now)
+            except ValueError, KeyError, TypeError:
+                explanation = (
+                    "Select an available quarter from the list. Missing prices are not zero."
+                )
+        if not rows:
+            explanation = "No stored quarters for today/tomorrow. Configure required components and check source readiness."
+        return self.async_show_form(
+            step_id="breakdown",
+            data_schema=vol.Schema(
+                {
+                    vol.Optional("slot"): select(
+                        [
+                            {
+                                "value": r.start.isoformat(),
+                                "label": f"{r.start.astimezone(zone).isoformat()} — {r.final_price_incl_vat:.6f} DKK/kWh",
+                            }
+                            for r in rows
+                        ]
+                    )
+                }
+            ),
+            description_placeholders={"slot_breakdown": explanation},
+        )
 
     async def async_step_storage(self, user_input=None):
         result = "No backup created in this editor session."

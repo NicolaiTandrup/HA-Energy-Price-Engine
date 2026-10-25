@@ -38,7 +38,7 @@ def consumer_module(name):
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda x: x["name"])
-@pytest.mark.parametrize("consumer", ["pr15", "pr16"])
+@pytest.mark.parametrize("consumer", list(PINS))
 async def test_actual_consumer_matches_pinned_machine_snapshot_without_io(hass, case, consumer):
     request, response = case["request"], case["response"]
     entry = MockConfigEntry(

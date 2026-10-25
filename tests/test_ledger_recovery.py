@@ -213,3 +213,75 @@ async def test_year_scale_append_preserves_database_enforced_historical_freeze(h
         side_effect=AssertionError("historical read arithmetic"),
     ):
         assert len(restored.lookup("home", start, start + timedelta(days=1))) == 96
+
+
+async def test_concurrent_reads_see_old_snapshot_until_durable_commit(hass):
+    import asyncio
+    from threading import Event
+
+    engine = await seed(hass)
+    original = engine.records["home"]
+    entered, release = Event(), Event()
+    blob = engine.database._blob
+
+    def blocked_blob(connection, value):
+        entered.set()
+        if not release.wait(10):
+            raise OSError("Test failed to release writer")
+        return blob(connection, value)
+
+    with patch.object(engine.database, "_blob", side_effect=blocked_blob):
+        update = asyncio.create_task(
+            engine.async_update(
+                "home", rows(), {"mode": "spot_ex_vat", "vat": 0.25}, {"provider": "new"}, NOW
+            )
+        )
+        try:
+            assert await hass.async_add_executor_job(entered.wait, 5)
+            for _ in range(100):
+                assert engine.lookup("home", original[0].start, original[-1].end) == original
+            assert engine.revisions["home"] == 1
+        finally:
+            release.set()
+        assert await update
+    assert engine.revisions["home"] == 2
+    assert engine.records["home"][0].final_price_incl_vat == pytest.approx(
+        original[0].final_price_incl_vat * 1.25
+    )
+    restored = PriceEngine(hass, "disk")
+    await restored.async_load(["home"])
+    assert restored.records["home"] == engine.records["home"]
+
+
+async def test_three_independent_year_ledgers_recover_without_cross_site_history(hass):
+    import asyncio
+    from datetime import timedelta
+
+    from custom_components.ha_energy_price_engine.models import PriceSlot
+
+    start = datetime(2025, 1, 1, tzinfo=UTC)
+    series = [
+        PriceSlot(start + timedelta(minutes=15 * i), start + timedelta(minutes=15 * (i + 1)), -0.25)
+        for i in range(365 * 96)
+    ]
+    engines = [PriceEngine(hass, f"multisite-{i}") for i in range(3)]
+    await asyncio.gather(
+        *[
+            e.async_update(
+                f"site_{i}", series, {"mode": "all_in"}, {"provider": f"synthetic-site-{i}"}, NOW
+            )
+            for i, e in enumerate(engines)
+        ]
+    )
+    for i, e in enumerate(engines):
+        name = f"site_{i}"
+        previous = e.records[name]
+        await e.async_update(
+            name, rows(), {"mode": "all_in"}, {"provider": "synthetic-next-day"}, NOW
+        )
+        restored = PriceEngine(hass, f"multisite-{i}")
+        await restored.async_load([name])
+        assert len(restored.records[name]) == 365 * 96 + 96
+        assert restored.records[name][: len(previous)] == previous
+        assert not restored.lookup(f"site_{(i + 1) % 3}", start, start + timedelta(days=1))
+        assert not restored.load_errors

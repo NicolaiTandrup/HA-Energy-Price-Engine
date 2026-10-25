@@ -7,6 +7,8 @@ import tempfile
 from pathlib import Path
 
 PINS = {
+    "pr25": "1246ccff25ee36f705e7c503499317f58802d7a2",
+    "pr26": "5ef7115a9599e1ff25019e91b3737500853b9a38",
     "pr15": "0a28438d1cfa5cc8136417f1520a891faa67b979",
     "pr16": "23bf84b2488372d9708164a4b42df3fd109b7726",
 }

@@ -90,7 +90,11 @@ class OfficialPrices:
                         return_response=True,
                     )
                     data = response[key[1]]
-                    parse_prices({"slots": data}, multiplier=0.001)
+                    parsed = parse_prices({"slots": data}, multiplier=0.001)
+                    if len(parsed) != len(data):
+                        raise ValueError(
+                            "Official Nord Pool requires explicit 15-minute resolution"
+                        )
                     self.cache[key] = (now, data)
                     self.invalidated.discard(key)
                     self.errors.discard(key)
