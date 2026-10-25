@@ -42,14 +42,17 @@ beta complete until actual owner HACS add/download/configuration succeeds.
 - HACS workflow checkpoint **`561c9f781280b17533a337c4301492264d12b12a`** has
   all **ten exact-head remote checks green**, including actual HACS workflows and
   full latest consumers on both cores.
-- Final checkpoint subject: **`test: retain source proof in native slot inspection`**.
+- Final application checkpoint **`ba855e2ba1a187a940311f4589174a34c67bad2d`** has
+  all **ten exact-head checks green**.
+- Final test/handoff checkpoint subject: **`test: cover consumer-first startup and HACS branch downloads`**.
   **175 tests pass on BOTH HA 2026.10.3 and 2026.10.4**, zero skips, 91% coverage,
   ResourceWarnings errors. Two upstream HACS deprecation warnings remain visible.
   Final local reruns pass after adding original source-unit/VAT/verification and
   manual source proof in the selected-slot view. Daily aggregate regression uses
   varied negative and positive prices, with distinct independent expected min/max/mean.
   Ruff check/format clean; both-layout native lifecycle smoke passed at 561c9f7.
-  Final clean packages/CI repeat after this push. Latest official HA release was
+  Both clean archive layouts passed native lifecycle smoke on BOTH cores.
+  Final test/handoff checkpoint CI repeats after this push. Latest official HA release was
   rechecked on GitHub: 2026.10.4 (published 2026-10-24), matching the current lock.
 - The ten new HACS tests execute unchanged published 2.0.5
   `c0dfd8b44297c3673c21973e2539375a53687a9c` and upstream
@@ -62,6 +65,23 @@ beta complete until actual owner HACS add/download/configuration succeeds.
 - Latest CM PR #25 full suite **227 passed**, #26 **228 passed** on HA .4; actual
   coupled runtimes pass. CI at 561c9f7 also passed them on fixture-supported HA .3.
   Earlier unchanged CM #15/#16 suites remain **153/176** and still run in CI.
+
+Additional final regressions: both producer-first and **consumer-first** startup
+pass for ALL FOUR pinned CM lines on BOTH HA cores (eight actual runtime scenarios
+per core). Consumer-first stays degraded with no valid forecast until PE loads,
+then recovers within the existing 65-second simulated retry window; revisions,
+duplicate suppression and producer unload remain safe with control/local-fetch/
+consumer-composition paths prohibited. No consumer source changes.
+HACS download transport now explicitly returns not-found for the nonexistent main
+tag and requires the actual **heads/main branch-archive fallback**. All ten HACS
+workflow cases pass on both cores with this realistic no-release transport fixture.
+No HACS code/installer logic is replaced and no tag is manufactured.
+
+Final application ZIP hashes (unchanged by the final test/handoff-only commit):
+HACS-root `2d5d205d4151c28c15d280df4ee6fa161b9fb86cea4c8ca94b316530cddb801e`;
+manual `3c14c07fb74c02a6389c10b0ab5ac54c9ea51a3970f5c2260a79961a584b074e`.
+Rebuild clean for the final commit's BUILD_MANIFEST; dirty=false/published=false.
+These are review/manual artifacts, not proof the blocked HACS default branch changed.
 
 ## Completed native software scope
 

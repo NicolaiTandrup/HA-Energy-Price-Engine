@@ -158,6 +158,9 @@ async def test_candidate_after_approved_default_branch_gate_installs_via_actual_
 
     async def download(url, **kwargs):
         requests.append(url)
+        if "/archive/refs/tags/main.zip" in url:
+            return None  # No main tag exists: actual HACS must fall back to the branch.
+        assert "/archive/refs/heads/main.zip" in url
         return archive.getvalue()
 
     hacs.async_download_file = AsyncMock(side_effect=download)
@@ -202,7 +205,10 @@ async def test_candidate_after_approved_default_branch_gate_installs_via_actual_
             for path, payload in files.items()
             if path.startswith(f"custom_components/{domain}/")
         )
-        assert any("refs/tags/main.zip" in url for url in requests)
+        assert requests[:2] == [
+            f"https://github.com/{repository}/archive/refs/tags/main.zip",
+            f"https://github.com/{repository}/archive/refs/heads/main.zip",
+        ]
         # Actual HACS update exercises its backup/replace/restore path too.
         await repo.async_install()
         assert (installed / "config_flow.py").is_file()

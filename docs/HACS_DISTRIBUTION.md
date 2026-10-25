@@ -30,6 +30,8 @@ Do not suggest entering an opaque branch SHA as a normal HACS version.
 - Actual candidate registration, download/archive extraction, update backup,
   uninstall and reinstall paths are exercised in temporary HA directories with
   candidate integration trees, modelling an **approved** default-branch distribution.
+  The nonexistent main-tag download fails and HACS must use its real heads/main
+  branch-archive fallback, without manufacturing a release/tag.
   No validator, installer or extraction method is replaced. GitHub metadata,
   tree/content/archive transport is the mocked boundary. Both PE and pinned CM #26
   trees are tested. Native PE install/config/options/reload/removal/recreation is
