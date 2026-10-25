@@ -7,8 +7,9 @@ Updated 2026-10-25. Read AGENTS.md first. This is the single permanent handoff.
 Existing branch `feat/standalone-price-engine`, existing draft PR #7; proposed
 `v0.1.0-beta.1`. Continue this checkout, do not restart implementation. Previous
 validated application checkpoint `c88c6ae852b496930464fca96d11aa45efdccf4f` had all
-eight exact-head CI checks green. Current checkpoint subject:
-`feat: prepare independently installable native beta candidate`.
+eight exact-head CI checks green. Validated beta application commit **`e6090a9f66a2acfcda59c6c553142eb0de3c8c5e`**.
+Final handoff/CI identity checkpoint subject:
+`docs: record validated beta candidate and publication gates`.
 This document cannot contain its own final commit hash.
 
 No live HA, Node-RED, vehicle/charger commands, merge, tag or release publication
@@ -71,10 +72,22 @@ retrieval/calculation/control prohibited. Native API fixtures cover both callers
   PR #16 **176 passed**, each 91% coverage. Runner isolates the existing fixture's
   shared disk directory; no consumer sources or stale-writer safeguards weakened.
   Node 24+ is required for the existing JavaScript parity tests.
-- Additional supported-HA consumer suites and final coupled-runtime reruns are
-  in progress; clean committed archive smoke tests and remote CI are pending this
-  push. Earlier both-layout independent smoke and both-core coupled tests passed;
-  do not represent those earlier results as final exact-head CI.
+- Supported-HA full consumer suites also pass **153 / 176**; both coupled-runtime
+  checks pass on BOTH cores. Both clean committed archive layouts pass independent
+  install/import/config/options/SQLite reload on BOTH cores.
+- All **ten exact-head remote CI checks passed at e6090a9**: two HA targets,
+  HACS, hassfest and independent beta install, each on push and PR. Push package
+  run `40178336545` has the head-commit artifact; PR run `40178339787` originally
+  recorded GitHub's synthetic merge SHA. Final workflow explicitly checks out PR
+  head for package identity. Final handoff-only/CI-identity checkpoint rerun follows.
+- Clean archive SHA-256: HACS-root
+  `48dd5a2add286538c57a87c2ccf8891b880742e0cf8658ea82db53ce253dedb7`; manual
+  `9aea596d4213e5f4746036d45ffc9f11a38f1b4704ee2eff44a393fc7b0f6ee0`.
+  BUILD_MANIFEST says dirty=false, published=false. No runtime changes follow
+  e6090a9, so these runtime archive hashes remain applicable.
+- Cloud artifact-download redirect host returned HTTP403; GitHub confirms the
+  uploaded artifact and passing independent installation job. Local clean ZIPs
+  remain available in dist; do not claim a downloaded-CI-byte comparison occurred.
 - Latest fixture 0.13.374 pins HA 2026.10.3. The second hash-locked environment
   explicitly overrides that test-only HA pin to 2026.10.4. Hash/TLS verification and
   all required checks remain enabled; runtime has no added dependency on fixtures.
@@ -93,9 +106,9 @@ DO NOT establish Raspberry Pi throughput/RAM or live provider availability.
 
 ## Publication blockers versus pilot gates
 
-No known application build blocker after the local validations above. Exact-head
-remote CI and clean archive verification must complete before calling this the
-reviewable final candidate. **Owner publication authorization remains absent**;
+No known application build blocker: exact-head CI and clean archive installation
+verification passed for the application commit above. **Owner publication
+authorization remains absent**;
 no tag/prerelease/merge is authorized. Ordinary HACS default-branch/release download
 is not yet available while code is an unmerged draft; reviewed ZIP installation is
 independent of that distribution gate.
@@ -127,10 +140,9 @@ gh pr checks 7 --repo NicolaiTandrup/HA-Energy-Price-Engine
 ```
 
 Repeat in an independent venv with requirements-ha-current.lock. CI does both,
-plus official hassfest/HACS and clean package artifact installation. Next: finish
-pending validations, push this checkpoint, resolve actual CI failures without
-bypasses, update existing PR/handoff with exact evidence and leave owner-reviewable
-candidate/checksums. Never auto-close pilot acceptance issues from synthetic tests.
+plus official hassfest/HACS and clean package artifact installation. Next: verify final handoff-only/CI-identity checkpoint checks, then owner review
+of the candidate/checksums and acceptance checklist. If CI fails, resolve without
+bypasses. Never auto-close pilot acceptance issues from synthetic tests.
 
 Reusable cloud setup draft already saves Python/hash-lock/existing-checkout workflow;
 no service or secrets required. Git/GitHub API work; use REST PR updates if gh's

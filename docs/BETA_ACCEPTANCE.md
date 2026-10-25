@@ -7,17 +7,23 @@ or grant charging commands without separate explicit owner approval.
 ## Software candidate gates
 
 - [ ] Review the exact PR #7 commit and BUILD_MANIFEST; package says `dirty: false`.
-- [ ] Unit/native lifecycle, SQLite migration/recovery/revision, DST, lint, official
+- [x] Unit/native lifecycle, SQLite migration/recovery/revision, DST, lint, official
   hassfest, HACS and current-HA CI checks passed for that exact commit.
-- [ ] Both archive layouts import and configure outside the repository, then reload
+- [x] Both archive layouts import and configure outside the repository, then reload
   from real SQLite. Checksums match the independently installable files.
-- [ ] Machine fixtures and actual two-runtime tests pass for the selected CM line
+- [x] Machine fixtures and actual two-runtime tests pass for the selected CM line
   (#15 or reconciled measured-history #16), including changed revisions, coalesced
   duplicate notifications, and producer-unload fail-closed behavior.
 - [ ] Review resource limits: cloud five-year benchmarks exist; Pi throughput/RAM,
   real source access and household invoice parity have not been proven by mocks.
 - [ ] Owner authorizes publication of this precise candidate as a prerelease.
   Publication is a separate action; this checklist performs none.
+
+Software evidence: application commit `e6090a9`, 146 producer tests on each of HA
+2026.10.3/2026.10.4, unchanged consumer suites 153/176 on each, actual coupled
+runtimes, ten remote CI checks green and both clean archive layouts independently
+installed on each core. See the permanent handoff for hashes and final checkpoint.
+Checks above do not check owner review/publication or any pilot gate for the owner.
 
 ## Before touching the owner's installation
 
