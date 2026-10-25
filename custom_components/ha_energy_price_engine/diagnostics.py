@@ -7,7 +7,9 @@ from homeassistant.util import dt as dt_util
 
 
 async def async_get_config_entry_diagnostics(hass, entry):
-    c = entry.runtime_data
+    c = getattr(entry, "runtime_data", None)
+    if c is None or entry.entry_id not in hass.data.get("ha_energy_price_engine", {}):
+        return {"api_version": 1, "loaded": False, "state": str(entry.state)}
     now = dt_util.utcnow()
     rows = c.price_engine.lookup(c.site["id"], now, now + timedelta(microseconds=1))
     components = json.loads(rows[0].components_json).get("components", {}) if rows else {}
@@ -36,7 +38,24 @@ async def async_get_config_entry_diagnostics(hass, entry):
                 "fetched_at",
             }
         }
+
+    def storage_usage():
+        import shutil
+
+        path = c.price_engine.database.path
+        return {
+            "bytes": path.stat().st_size if path.exists() else 0,
+            "free_bytes": shutil.disk_usage(path.parent).free if path.parent.exists() else None,
+            "retention": "preserve_all_referenced_history_no_automatic_pruning",
+            "memory_index": "all_history",
+        }
+
+    try:
+        storage = await hass.async_add_executor_job(storage_usage)
+    except OSError:
+        storage = {"error": "Storage usage unavailable"}
     return {
+        "storage": storage,
         "api_version": 1,
         "source_verification": public_source,
         "area": c.site["area"],

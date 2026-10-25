@@ -1,185 +1,170 @@
 # Development handoff
 
-Updated 2026-10-25. Read AGENTS.md first. This is the single permanent handoff.
+Updated 2026-10-25 (Europe/Copenhagen). Read AGENTS.md first. This is the single
+permanent handoff. Continue existing branch `feat/standalone-price-engine` and
+existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
 
-## Extended run checkpoint — 2026-10-25
+## Current result and critical HACS blocker
 
-Resumed validated final head `8ef40b74bff2b7a4359b18c37de598e6ce061e51` (all ten CI
-checks confirmed green). Read all five open issues and current PR receipts. Native
-Nord Pool already used HA ConfigEntrySelector; added a real opaque-ID selection /
-replacement regression with readable source titles, no text-entry workaround.
-Added seven total entities/site (current, next, complete-day min/max/average,
-readiness and tomorrow); source health/refresh/completeness/next scheduled check
-are attributes. Options now offers a bounded today/tomorrow stored-slot inspector
-with UTC offsets, original components/VAT/revision/verification and excluded fixed
-subscriptions. Reads neither fetch nor compose. Official input now rejects hourly
-resolution and off-quarter boundaries; actual core service tests reject partial,
-duplicate, overlapping, shifted, hourly and nonfinite source rows.
+Proposed **v0.1.0-beta.1 remains an uncompleted HACS beta**. Native software and
+manually test-installable ZIPs exist; normal HACS custom-repository installation
+currently fails for BOTH PE and CM. Read-only GitHub snapshots confirm their main
+branches contain LICENSE/README only:
 
-Local **164 tests pass on both HA 2026.10.3 and 2026.10.4**, 92% coverage, zero skips,
-ResourceWarnings errors. Real three-site year-long SQLite histories and concurrent
-reads during an actual blocked disk commit pass, preserving old snapshots until
-commit and exact settled rows on recovery. Official local hassfest passes.
-Latest pinned CM #25 `1246ccff25ee36f705e7c503499317f58802d7a2` full **227** tests and
-#26 `5ef7115a9599e1ff25019e91b3737500853b9a38` **228** tests pass on HA .4; coupled
-runtime tests pass. CI now also exercises these unchanged suites plus original
-#15/#16 and shared machine fixtures. Supported-HA latest CM runs follow in CI.
-Checkpoint subject: `feat: expose native price status and verify latest consumers`.
+- PE main `981e48988197bc4fd32bd2e877946db469be2a57`.
+- CM main `0f0b002b136f2ef2480151dc42797256c5cabe8c`.
 
-**Critical HACS distribution finding:** owner reports both PE and CM custom repo
-adds rejected because main contains only LICENSE/README. Passing HACS action or ZIP
-smoke is NOT an actual HACS installation. Current native code remains on draft
-branches. Never claim ordinary HACS installability until the default-branch gate
-is resolved with explicit owner approval. No merge/default-branch change/release
-is authorized. Next priority: pinned actual HACS add/download workflow tests,
-non-destructive owner-reviewable distribution strategy and exact PAHA02-DEV guide.
-Manual ZIP remains independently testable but does not satisfy the requested HACS
-distribution gate. Storage remains history-preserving/unpruned; Pi resource bounds
-require real measurement and a future reference-aware archival design.
+The owner's PAHA02-DEV observation supersedes any earlier broad “installable beta”
+claim. A ZIP smoke test or HACS validation action does not close this distribution
+gate. `/tree/branch` URLs are stripped to owner/repository by the normal HACS add
+workflow. Do not suggest an unsupported branch URL or unpublished version bypass.
 
-## Resume point
+Read **docs/HACS_DISTRIBUTION.md**: actual pinned HACS workflow evidence, reviewable
+non-destructive distribution choices and exact PAHA02-DEV UI steps after approval.
+Recommended gate is owner review/authorization of existing PE PR #7 and the reviewed
+CM stack ending at #26 into their default branches. CM is stacked: approve the
+whole base/merge sequence, not just merging #26 into its current development base.
+Changing default branches or creating separate beta repositories are distinct
+owner-approved alternatives with repository-wide consequences. None was executed.
+A release is separately authorized; default-branch installation need not require one.
 
-Existing branch `feat/standalone-price-engine`, existing draft PR #7; proposed
-`v0.1.0-beta.1`. Continue this checkout, do not restart implementation. Previous
-validated application checkpoint `c88c6ae852b496930464fca96d11aa45efdccf4f` had all
-eight exact-head CI checks green. Validated beta application commit **`e6090a9f66a2acfcda59c6c553142eb0de3c8c5e`**.
-Final handoff/CI identity checkpoint subject:
-`docs: record validated beta candidate and publication gates`.
-This document cannot contain its own final commit hash.
+No main merge, default-branch setting change, new distribution repository, tag,
+release, live HA/Node-RED or vehicle/charger command has occurred. Do not call the
+beta complete until actual owner HACS add/download/configuration succeeds.
 
-No live HA, Node-RED, vehicle/charger commands, merge, tag or release publication
-has occurred. Owner separately authorizes publication and any actual cutover.
+## Checkpoints and validation
 
-## Completed Issues #1–#5 software scope
+- Resumed `8ef40b74bff2b7a4359b18c37de598e6ce061e51`: ten checks green; original
+  application `e6090a9`, 146 tests on both HA cores; package independently loaded.
+- Native status/source/latest-consumer checkpoint **`3bdfb3b`**: 164 local tests on
+  both cores, 92% coverage, zero skips; all **ten exact-head remote checks green**,
+  including latest CM #25/#26 full suites and coupled runtimes.
+- Current checkpoint subject: **`test: verify HACS distribution gate and installation lifecycle`**.
+  **175 tests pass on BOTH HA 2026.10.3 and 2026.10.4**, zero skips, 91% coverage,
+  ResourceWarnings errors. Two upstream HACS deprecation warnings remain visible.
+  Ruff check/format and independent package smoke pass. Full final CI follows push;
+  do not claim pending checks passed. Local official hassfest passed after the new
+  sensors/Options translations; CI repeats it for this checkpoint.
+- The ten new HACS tests execute unchanged published 2.0.5
+  `c0dfd8b44297c3673c21973e2539375a53687a9c` and upstream
+  `a15e87ec0d1c82e58f1ddbaf17669d3eaa261eb8`. Both current main trees reproduce the
+  exact rejection. PE and CM #26 candidate trees pass actual registration, archive
+  download/extraction, update backup, uninstall and reinstall in temporary HA paths.
+  GitHub metadata/content/archive transport is mocked; validator/installer methods
+  are not replaced. HACS backup directories are isolated per test; the actual backup
+  implementation is retained. This is not a live authenticated frontend session.
+- Latest CM PR #25 full suite **227 passed**, #26 **228 passed** on HA .4; actual
+  coupled runtimes pass. CI at 3bdfb3b also passed them on fixture-supported HA .3.
+  Earlier unchanged CM #15/#16 suites remain **153/176** and still run in CI.
 
-- Independent native integration; arbitrary repeatable per-site config entries,
-  devices/sensors, Options, Reconfigure, entry migration, repairs and diagnostics.
-  Explicit stable site/entry identity; no private rates copied between sites.
-- Official built-in Nord Pool discovery and read-only service use, rejecting a
-  shadowing legacy HACS component. Real HA service schema/response tested with a
-  mocked market client. Generic timestamped entity sources require explicit units,
-  VAT and genuine provider verification. Late provider startup/reload/new entities
-  trigger recovery; failed verification publishes degraded readiness.
-- Native dated supplier/DSO/TSO/tax/VAT/subscription editing, local-hour tariff
-  bands, manual locks, safe automatic Radius C and explicit fallback. Overlaps and
-  missing coverage fail closed. Fixed monthly charges never affect marginal price.
-  EWII 0.030 DKK/kWh ex VAT is a household June–September 2026 fact only. No
-  October/future/summer-house contract guessed. National baselines are bounded.
-- Persistent final 15-minute prices; 92/96/100-slot DST; immutable settled quarters,
-  targeted future repricing, durable correction audit and exact prior revisions.
-  Refreshes preserved: 13:05, conditional 13:20/13:40/23:59, unconditional 00:01,
-  startup/reconnection. Stale full coverage cannot suppress rescue. Midnight sensors
-  read the new quarter instead of advertising yesterday's readiness.
-- Read-only Python API v1 is authoritative. Immutable synchronous memory lookups,
-  no retrieval/arithmetic/disk mutation, explicit degraded statuses. Additive
-  producer-entry identity and machine serialization/schema preserve existing users.
-  No obsolete service transport added; PR #6 acknowledges supersession.
-- Transactional SQLite, checksummed rows/deduplicated provenance, optimistic
-  stale-writer guard, executor disk work, failed/interrupted commit recovery,
-  valid preview JSON migration without deletion, corrupt history fails closed.
-  Verified snapshot/inspect/export/offline restore preserve original bytes.
-- Deterministic licensed HACS-root and manual ZIPs, exact commit/file hashes,
-  clean-tree build guard, isolated installation/import/config/options/SQLite reload
-  smoke tests, HACS/hassfest metadata, English translations and CI packaging.
-- Recorded legacy comparison tooling validates explicit sites/UTC/unit/VAT,
-  differences and gaps. No simultaneous live legacy/official broker requirement.
-  Complete setup and acceptance/atomic source migration/rollback guides are
-  `docs/BETA_SETUP.md` and `docs/BETA_ACCEPTANCE.md`.
+## Completed native software scope
 
-## Provenance and consumers
+PE alone owns retrieval, normalization, verification, tariff composition, permanent
+15-minute final prices and publishing. No vehicle/charger controls. Reuses tested
+CM PR #11 `5c32dc9` and PR #12 `9d949c6d0905646d1bbf973ea2edb47846e1607d`;
+retain PROVENANCE.md and original golden fixtures (eight cases / 768 quarters).
 
-Reused tested EV Charge Manager PR #11 `5c32dc9` and PR #12
-`9d949c6d0905646d1bbf973ea2edb47846e1607d`; see PROVENANCE.md. Eight independently
-regenerated original seasonal/DST/VAT golden scenarios cover 768 quarters.
-Consumer exports are immutable test dependencies, not deployed PE dependencies:
-PR #15 `0a28438d1cfa5cc8136417f1520a891faa67b979`, PR #16 reconciled measured-history
-`23bf84b2488372d9708164a4b42df3fd109b7726`. Do not replace #15 with the older service
-proposal or lose #16's measured history. Actual separate runtimes test revisions,
-duplicate replan suppression and producer-unload invalidation with local consumer
-retrieval/calculation/control prohibited. Native API fixtures cover both callers.
+- Native ConfigEntrySelector uses real opaque official Nord Pool IDs internally,
+  rendered as readable HA entry titles. Safe unambiguous suggestions, explicit
+  multiple-entry choice, Options/Reconfigure replacement without code edits.
+  Legacy custom `nordpool` shadowing core is rejected. Actual core Nord Pool service
+  schema/response tested with mocked market client; ex-VAT DKK/MWh converts once.
+  Partial, duplicate, overlapping, shifted, hourly and nonfinite input cannot publish.
+- One independently configurable entry/device per site, no arbitrary count cap.
+  Explicit source/area/timezone, supplier label, dated rates/units/VAT, Radius C or
+  manual tariff class/time bands, locks/fallbacks, taxes/eligibility, subscriptions,
+  stable identity, Options draft/discard, migrations and repairs. No private rate
+  copying. Missing components never zero. Settled rows cannot be silently repriced.
+- Seven sensors/site: current and next-quarter price; complete-day min/max/average;
+  current and tomorrow readiness. Minute publication handles midnight/freshness.
+  Readiness attributes expose chosen source, site, currency, resolution, coverage,
+  last verification/error and next scheduled check. Options stored-slot inspector
+  shows UTC/local-offset identity, component/VAT amounts, effective/verification
+  periods, original revisions and excluded monthly subscriptions. Reads do not
+  fetch or perform tariff composition. Diagnostics redact private labels/references.
+- Refresh requirements preserved in Copenhagen: 13:05, conditional 13:20/13:40/
+  23:59, unconditional 00:01, startup/reload/source recovery. Real verification times
+  are not promoted merely by reading cached data. Late provider startup, new registry
+  entities and reload recover without waiting for the next afternoon publication.
+- Read-only Python API v1 remains authoritative; immutable synchronous indexed
+  snapshots, explicit READY/INCOMPLETE/STALE/ERROR/NOT_LOADED, additive producer-entry
+  identity, machine schema/fixtures and exact prior-revision lookup. No old service
+  transport or duplicated consumer tariff arithmetic was introduced.
+- Transactional executor SQLite with row/provenance checksums, stale-writer guard,
+  atomic corrections/revisions, real interrupted writer and I/O-failure recovery,
+  corruption fails closed, verified backup/offline restore and non-destructive JSON
+  migration. New tests read concurrently during a blocked disk commit and recover
+  three independent year-long site histories, with unchanged historical amounts.
+- Deterministic licensed HACS-root/manual ZIPs, commit/file hashes and dirty-tree
+  guard. Outside-source-tree native setup/options/reload/delete/recreate smoke now
+  preserves the old ledger and prevents silent inheritance by a replacement entry.
+  Actual HACS package tests are additional to these ZIP tests, not conflated with them.
 
-## Validation at this checkpoint
+EWII household markup **0.030 DKK/kWh ex VAT applies June–September 2026 only**.
+No current October/future/other-site contract invented. National baselines are bounded
+and opt-in: 2026 TSO net .043/system .072; 2026–2027 electricity tax .008 ex VAT.
+Future/reduced-tax terms require explicit verified rules/eligibility, never guesses.
 
-- Python 3.14.8; **146 tests, zero skips, 91% coverage** on BOTH HA 2026.10.3 and
-  current HA 2026.10.4. ResourceWarnings are errors. Ruff check/format clean.
-- Official local hassfest: one integration, zero invalid.
-- Unchanged full pinned consumer suites against current HA: PR #15 **153 passed**,
-  PR #16 **176 passed**, each 91% coverage. Runner isolates the existing fixture's
-  shared disk directory; no consumer sources or stale-writer safeguards weakened.
-  Node 24+ is required for the existing JavaScript parity tests.
-- Supported-HA full consumer suites also pass **153 / 176**; both coupled-runtime
-  checks pass on BOTH cores. Both clean committed archive layouts pass independent
-  install/import/config/options/SQLite reload on BOTH cores.
-- All **ten exact-head remote CI checks passed at e6090a9**: two HA targets,
-  HACS, hassfest and independent beta install, each on push and PR. Push package
-  run `40178336545` has the head-commit artifact; PR run `40178339787` originally
-  recorded GitHub's synthetic merge SHA. Final workflow explicitly checks out PR
-  head for package identity. Final handoff-only/CI-identity checkpoint rerun follows.
-- Clean archive SHA-256: HACS-root
-  `48dd5a2add286538c57a87c2ccf8891b880742e0cf8658ea82db53ce253dedb7`; manual
-  `9aea596d4213e5f4746036d45ffc9f11a38f1b4704ee2eff44a393fc7b0f6ee0`.
-  BUILD_MANIFEST says dirty=false, published=false. No runtime changes follow
-  e6090a9, so these runtime archive hashes remain applicable.
-- Cloud artifact-download redirect host returned HTTP403; GitHub confirms the
-  uploaded artifact and passing independent installation job. Local clean ZIPs
-  remain available in dist; do not claim a downloaded-CI-byte comparison occurred.
-- Latest fixture 0.13.374 pins HA 2026.10.3. The second hash-locked environment
-  explicitly overrides that test-only HA pin to 2026.10.4. Hash/TLS verification and
-  all required checks remain enabled; runtime has no added dependency on fixtures.
+## Consumer references and reproducibility
 
-## Performance and limitations
+Immutable test exports (not deployed PE dependencies), unchanged consumer sources:
 
-Actual cloud x86_64 reports in docs/benchmarks and PERFORMANCE.md:
-35,136 rows +96 append: JSON 1.675 s /69.5 MB versus SQLite 0.0297 s /18.2 MB.
-Five-year 175,296 rows: append 0.115 s, reload 4.519 s, ~5.8 microsecond 96-row
-lookup, 69.6 MB SQLite. CI additionally prohibits rewriting historic rows with an
-actual SQLite trigger while appending a day to a year of history.
-Five-year benchmark whole-process peak ~647 MiB includes HA imports, synthetic
-inputs and original/restored engines. History remains memory resident for API v1;
-no automatic retention pruning or arbitrary resource guarantee. These measurements
-DO NOT establish Raspberry Pi throughput/RAM or live provider availability.
+- #15 `0a28438d1cfa5cc8136417f1520a891faa67b979`.
+- #16 measured history `23bf84b2488372d9708164a4b42df3fd109b7726`.
+- #25 packaged beta `1246ccff25ee36f705e7c503499317f58802d7a2`.
+- #26 acknowledgment hardening `5ef7115a9599e1ff25019e91b3737500853b9a38` (latest).
 
-## Publication blockers versus pilot gates
-
-No known application build blocker: exact-head CI and clean archive installation
-verification passed for the application commit above. **Owner publication
-authorization remains absent**;
-no tag/prerelease/merge is authorized. Ordinary HACS default-branch/release download
-is not yet available while code is an unmerged draft; reviewed ZIP installation is
-independent of that distribution gate.
-
-Production pilot additionally needs recorded household/summer-house legacy/billing
-exports and known-good plans, actual current per-site supplier terms, approved
-HA OS/Raspberry Pi resource/source testing, and independent real CM command-executor
-acceptance if control is desired. Automated mocked-source tests cannot supply that
-evidence. Restore BOTH the legacy Nordpool dependency and exact saved Brain,
-Energy Price Broker and Charger Optimizer flows on rollback. Actual source migration
-and granting live commands require distinct explicit owner approval at cutover.
-
-## Reproduce and next actions
+Python 3.14.8; fixture 0.13.374 pins HA .3. Current-HA hash lock explicitly overrides
+that test-only pin to .4; no TLS/hash/check bypass and no fixture runtime dependency.
+Node 24+ runs original JavaScript parity tests. No live service/secrets required.
 
 ```sh
-uv venv && uv pip sync --require-hashes requirements-dev.lock
+uv venv --python 3.14.8
+uv pip sync --require-hashes requirements-dev.lock
 .venv/bin/python tools/prepare_consumer_refs.py
+.venv/bin/python tools/prepare_hacs_reference.py
 .venv/bin/ruff check custom_components tests tools
 .venv/bin/ruff format --check custom_components tests tools
 .venv/bin/pytest --cov=custom_components.ha_energy_price_engine -W error::ResourceWarning
-.venv/bin/python tools/test_two_runtime.py --consumer pr15
-.venv/bin/python tools/test_two_runtime.py --consumer pr16
-.venv/bin/python tools/run_consumer_suite.py --consumer pr15
-.venv/bin/python tools/run_consumer_suite.py --consumer pr16
+.venv/bin/python tools/test_two_runtime.py --consumer pr26
+.venv/bin/python tools/run_consumer_suite.py --consumer pr26
 .venv/bin/python tools/build_beta.py
 .venv/bin/python tools/smoke_install_package.py dist/ha_energy_price_engine.zip
 .venv/bin/python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
 gh pr checks 7 --repo NicolaiTandrup/HA-Energy-Price-Engine
 ```
 
-Repeat in an independent venv with requirements-ha-current.lock. CI does both,
-plus official hassfest/HACS and clean package artifact installation. Next: verify final handoff-only/CI-identity checkpoint checks, then owner review
-of the candidate/checksums and acceptance checklist. If CI fails, resolve without
-bypasses. Never auto-close pilot acceptance issues from synthetic tests.
+Repeat in an independent venv with requirements-ha-current.lock. CI executes all
+four consumer lines on both cores plus actual HACS workflows, official hassfest,
+HACS metadata validation and clean independent package install. Download final exact
+head Actions artifacts or build clean; use BUILD_MANIFEST/SHA256SUMS. Old archive
+hashes from e6090a9 are superseded. Artifact redirect host previously returned 403
+in this cloud; do not claim a downloaded-CI-byte comparison if that persists.
 
-Reusable cloud setup draft already saves Python/hash-lock/existing-checkout workflow;
-no service or secrets required. Git/GitHub API work; use REST PR updates if gh's
-legacy projectCards GraphQL query fails. Saving environment configuration is separate
-from publishing a cloud snapshot and separate again from integration release.
+## Remaining gates and limits
+
+HACS distribution approval/implementation and actual PAHA02-DEV installation are
+blocking beta completion. Publication/merge/cutover permissions are not inferred
+from passing tests. For real read-only pilot acceptance, obtain actual current
+per-site supplier terms and recorded legacy/billing/plan exports, then compare offline
+with explicit units/VAT/site mapping. No simultaneous live legacy/official brokers.
+
+Cloud benchmarks preserve the SQLite improvement: year append 96 rows ~.030s versus
+JSON ~1.675s; five-year append .115s, reload 4.519s, 69.6MB database. See PERFORMANCE.md
+and raw reports. These are NOT Raspberry Pi evidence. Five-year whole-process peak
+~647MiB includes multiple engines/synthetic inputs; all history stays in RAM for API
+v1. No reference-acknowledgment/archival API exists to safely prune accounting data.
+Storage/RAM is therefore not arbitrarily bounded. Diagnostics expose real bytes/free
+space and this policy. Measure Pi resource limits before acceptance; if insufficient,
+implement compatible async historical paging/reference-aware archival, never silent
+history deletion. Multi-site cloud tests do not close that hardware gate.
+
+CM #26 now has a durable executor with independent acknowledgment hardening, but
+actual provider transport/session/physical acknowledgment commissioning remains
+separate from PE/API tests. Keep commands disabled until independently accepted and
+explicitly authorized. Rollback must restore BOTH the legacy Nordpool dependency
+and the exact Brain, Energy Price Broker and Charger Optimizer flow/config backups.
+
+Next: finish current-checkpoint CI/clean artifacts and PR/issue receipts. Then owner
+reviews the concrete HACS distribution choices and exact setup/acceptance guide.
+Do not make main/settings/release/live changes without the corresponding approval.

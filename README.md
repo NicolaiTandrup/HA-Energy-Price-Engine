@@ -1,7 +1,10 @@
 # Home Assistant Energy Price Engine
 
-**Proposed v0.1.0-beta.1** — an independently installable native Home Assistant
-candidate on [draft PR #7](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7).
+**Proposed v0.1.0-beta.1 — HACS distribution blocked.** Native Home Assistant
+software candidate on [draft PR #7](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7).
+Both repositories’ main branches lack integration code; normal HACS custom-repository
+installation is currently rejected. This beta is not complete as an owner-installable
+HACS beta. See the [distribution gate and exact PAHA02-DEV procedure](docs/HACS_DISTRIBUTION.md).
 No release has been published and no production cutover is authorized by this code.
 
 The standalone `ha_energy_price_engine` owns electricity price retrieval, tariff
@@ -66,6 +69,7 @@ Read AGENTS.md and the existing handoff first. Use this isolated checkout, Pytho
 uv venv --python 3.14.8
 uv pip sync --require-hashes requirements-dev.lock
 .venv/bin/python tools/prepare_consumer_refs.py
+.venv/bin/python tools/prepare_hacs_reference.py
 .venv/bin/pytest --cov=custom_components.ha_energy_price_engine -W error::ResourceWarning
 .venv/bin/ruff check custom_components tests tools
 .venv/bin/ruff format --check custom_components tests tools

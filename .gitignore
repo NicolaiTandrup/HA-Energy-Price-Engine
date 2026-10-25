@@ -8,3 +8,5 @@ htmlcov/
 consumer-references/
 dist/
 .venv-ha-current/
+
+hacs-references/

@@ -39,10 +39,11 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     hass.states.async_set("sensor.package_source","-.25",{"slots":slots,"currency":"DKK","unit_of_measurement":"DKK/kWh","vat_included":True,"verified_at":now.isoformat()})
     form=await hass.config_entries.flow.async_init("ha_energy_price_engine",context={"source":"user"})
     assert form["type"]=="form"
-    created=await hass.config_entries.flow.async_configure(form["flow_id"],{
+    configuration={
         "id":"installed","name":"Installed package","source_type":"entity","price_entity":"sensor.package_source",
         "price_unit":"DKK/kWh","price_basis":"all_in","price_attribute":"slots","stale_minutes":40,
-        "area":"DK2","timezone":"Europe/Copenhagen","vat":.25})
+        "area":"DK2","timezone":"Europe/Copenhagen","vat":.25}
+    created=await hass.config_entries.flow.async_configure(form["flow_id"],configuration)
     assert created["type"]=="create_entry"
     await hass.async_block_till_done()
     entry=created["result"]
@@ -58,7 +59,20 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     options=await hass.config_entries.options.async_init(entry.entry_id)
     assert options["type"]=="menu"
     hass.config_entries.options.async_abort(options["flow_id"])
-    assert await hass.config_entries.async_unload(entry.entry_id)
+    old_id=entry.entry_id
+    old_ledger=entry.runtime_data.price_engine.database.path
+    result=await hass.config_entries.async_remove(old_id)
+    assert result["require_restart"] is False
+    assert old_ledger.is_file()  # Removal cannot erase accounting references.
+    form=await hass.config_entries.flow.async_init("ha_energy_price_engine",context={"source":"user"})
+    created=await hass.config_entries.flow.async_configure(form["flow_id"],configuration)
+    assert created["type"]=="create_entry"
+    await hass.async_block_till_done()
+    replacement=created["result"]
+    assert replacement.entry_id != old_id and replacement.state==ConfigEntryState.LOADED
+    assert replacement.runtime_data.price_engine.database.path != old_ledger
+    assert get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now).records
+    assert await hass.config_entries.async_unload(replacement.entry_id)
     await hass.async_block_till_done()
 """
 

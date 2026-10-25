@@ -4,6 +4,10 @@ Target: proposed **v0.1.0-beta.1**. Candidate files/CI artifacts are not a publi
 release. Do not merge, tag, publish a prerelease, modify live HA, disable Node-RED
 or grant charging commands without separate explicit owner approval.
 
+**HACS distribution gate remains open. The beta is not complete for owner HACS
+installation.** See [HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md). A manually placed
+ZIP does not close this gate.
+
 ## Software candidate gates
 
 - [ ] Review the exact PR #7 commit and BUILD_MANIFEST; package says `dirty: false`.
@@ -16,6 +20,8 @@ or grant charging commands without separate explicit owner approval.
   duplicate notifications, and producer-unload fail-closed behavior.
 - [ ] Review resource limits: cloud five-year benchmarks exist; Pi throughput/RAM,
   real source access and household invoice parity have not been proven by mocks.
+- [ ] Owner approves and implements a distribution strategy; both PE/CM custom
+  repositories can actually be added/downloaded/configured in PAHA02-DEV HACS.
 - [ ] Owner authorizes publication of this precise candidate as a prerelease.
   Publication is a separate action; this checklist performs none.
 

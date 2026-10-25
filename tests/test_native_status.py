@@ -103,3 +103,19 @@ async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, 
         assert TomorrowSensor(c).native_value == "STALE"
         assert "No stored price" in slot_breakdown(c, datetime(2026, 10, 28, tzinfo=UTC))
     assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_diagnostics_expose_storage_policy_and_unloaded_entry_safely(hass, freezer):
+    from custom_components.ha_energy_price_engine.diagnostics import (
+        async_get_config_entry_diagnostics,
+    )
+
+    freezer.move_to("2026-10-23T12:00:00Z")
+    entry = await setup(hass)
+    result = await async_get_config_entry_diagnostics(hass, entry)
+    assert result["storage"]["bytes"] > 0 and result["storage"]["free_bytes"] > 0
+    assert result["storage"]["memory_index"] == "all_history"
+    assert "no_automatic_pruning" in result["storage"]["retention"]
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    assert (await async_get_config_entry_diagnostics(hass, entry))["loaded"] is False

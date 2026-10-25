@@ -1,0 +1,18 @@
+{
+  "NicolaiTandrup/HA-Energy-Price-Engine": {
+    "default_branch": "main",
+    "sha": "981e48988197bc4fd32bd2e877946db469be2a57",
+    "paths": [
+      "LICENSE",
+      "README.md"
+    ]
+  },
+  "NicolaiTandrup/HA-EV-Charge-Manager": {
+    "default_branch": "main",
+    "sha": "0f0b002b136f2ef2480151dc42797256c5cabe8c",
+    "paths": [
+      "LICENSE",
+      "README.md"
+    ]
+  }
+}

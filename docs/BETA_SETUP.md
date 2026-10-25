@@ -1,6 +1,11 @@
 # Install and configure proposed v0.1.0-beta.1
 
-This is an independently installable **candidate on PR #7**, not a published release
+**HACS installation is currently blocked:** both default main branches contain no
+integration code. This beta is not complete for normal HACS installation. See
+[HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md) for the owner approval gate and exact
+PAHA02-DEV steps after distribution is enabled. Branch URLs do not bypass this gate.
+
+This is a manually test-installable **candidate on PR #7**, not a published release
 or permission to change production. Ordinary setup and rate changes use Home
 Assistant's native UI; there is no YAML or Python business configuration.
 
@@ -34,8 +39,8 @@ venvs, tests, dependency locks or consumer-reference exports into HA. Restart th
 
 The source tree has HACS metadata/brand assets and passes HACS validation. A normal
 HACS installation from the repository's default branch is not promised while the
-implementation is an unmerged draft. One-click HACS release-asset distribution
-requires a separately authorized publication. The tested ZIP is usable now through
+implementation is an unmerged draft. Normal HACS default-branch installation requires an approved distribution change;
+release-asset distribution separately requires authorized publication. The tested ZIP is usable now through
 the placement above; no prerelease has been published by this work.
 
 ## Official Nord Pool prerequisite and safe discovery
@@ -123,7 +128,14 @@ Final all-in mode prohibits tariff/VAT additions; use spot mode for composed rat
 
 ## Check readiness, sources and persistence
 
-Each site publishes current final DKK/kWh and diagnostic readiness. Dashboard reads
+Each site publishes seven entities: current and next-quarter final DKK/kWh,
+complete-day minimum/maximum/average, current readiness and tomorrow readiness.
+Incomplete/stale days have no numeric aggregate. Readiness attributes show source
+title, site, DK2/DKK, 15-minute resolution, coverage, last verification/error and
+next scheduled check. Options → Inspect a stored quarter-hour price explains a
+selected today/tomorrow slot including VAT and original revision, with unambiguous
+local UTC offsets on repeated autumn hours. No source calls or tariff composition
+occur on these reads. Dashboard reads
 and API v1 lookups never fetch sources or calculate tariffs. Diagnostics and Options
 show applied components, periods/locks, verification, revisions, valid/expected slot
 counts and public source provenance. Names/free-form source references are redacted
