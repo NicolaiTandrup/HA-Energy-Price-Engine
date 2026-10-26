@@ -4,6 +4,30 @@ Updated 2026-10-26 (Europe/Copenhagen). Read AGENTS.md first. This is the single
 permanent handoff. Continue existing branch `feat/standalone-price-engine` and
 existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
 
+## Publication execution checkpoint — 2026-10-26
+
+PR #7 is merged normally (history preserved, no protection bypass) at
+**56cdb3c10993179371483812cbc36f651ba3ad8e**. Actual merged main passes all five
+remote checks, 177 local tests on both HA cores, Ruff, official hassfest and clean
+both-layout independent native install. Main now contains the full integration.
+Annotated tag **v0.1.0-beta.1** points to that exact source; tag object
+b971f31855c9fb9386eaa679a9c26cd94d4273a8. No tag was moved/force-pushed.
+
+Cloud `gh release create` could create its temporary release but asset upload to
+uploads.github.com returned Forbidden; the CLI removed its incomplete draft. No
+prerelease was published by that failed attempt. Public asset download/codeload
+network preflights work. A narrowly scoped GitHub Actions publisher on this preserved
+development branch now targets ONLY the existing authorized tag/source, waits for
+all exact-source CI checks, rebuilds clean, smokes both archives and publishes the
+prerelease with four provenance assets from the runner's supported upload route.
+It cannot publish a stable/CM release or change/move a tag. Workflow change is part
+of this authorized PE publication mission; main/tag source remain unchanged.
+
+Checkpoint subject: `ci: publish authorized beta through GitHub runner`.
+Next: verify the publisher completes, independently download actual public
+metadata/source/assets with tools/verify_public_release.py, run HACS/native public
+byte tests, then record the final receipt. Do not stop at a draft/failed upload.
+
 ## Authorized PE beta.1 publication mission
 
 On 2026-10-26 the owner explicitly authorized: complete PE HACS integration,
