@@ -1,0 +1,31 @@
+name: Beta candidate package
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  package:
+    name: independent beta install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv venv && uv pip sync --require-hashes requirements-ha-current.lock
+      - name: Build clean reproducible candidate (no release publication)
+        run: uv run --no-project python tools/build_beta.py
+      - name: Install HACS asset layout outside repository
+        run: uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine.zip
+      - name: Install manual HA config layout outside repository
+        run: uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ha-energy-price-engine-candidate-${{ github.event.pull_request.head.sha || github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14

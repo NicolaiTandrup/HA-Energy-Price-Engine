@@ -1,0 +1,2 @@
+# Compatibility target for the current HA patch; test fixture package still pins .3.
+homeassistant==2026.10.4
