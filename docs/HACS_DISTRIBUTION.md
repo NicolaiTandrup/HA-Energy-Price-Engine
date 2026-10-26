@@ -1,9 +1,9 @@
 # Install Energy Price Engine beta.1 with HACS
 
-Repository: **NicolaiTandrup/HA-Energy-Price-Engine**  
-HACS category: **Integration**  
-HACS and native integration name: **Energy Price Engine**  
-Release: **v0.1.0-beta.1**, manifest version `0.1.0-beta.1`  
+Repository: **NicolaiTandrup/HA-Energy-Price-Engine**
+HACS category: **Integration**
+HACS and native integration name: **Energy Price Engine**
+Release: **v0.1.0-beta.1**, manifest version `0.1.0-beta.1`
 [Public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.1)
 
 The owner authorized merging PE PR #7 and publishing this PE prerelease on
