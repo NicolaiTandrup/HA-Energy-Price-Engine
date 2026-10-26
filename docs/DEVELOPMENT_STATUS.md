@@ -4,6 +4,38 @@ Updated 2026-10-26 (Europe/Copenhagen). Read AGENTS.md first. This is the single
 permanent handoff. Continue existing branch `feat/standalone-price-engine` and
 existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
 
+## Completed PE beta.1 publication — final receipt
+
+**Published and independently verified**, 2026-10-26. Public prerelease:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.1
+
+- PR #7 merged normally at **56cdb3c10993179371483812cbc36f651ba3ad8e**.
+- Main is HACS-compliant and remains at that release source. No history rewrite,
+  force push, protection bypass or default-branch setting change occurred.
+- Annotated tag **v0.1.0-beta.1** resolves to exactly that source; tag object
+  **b971f31855c9fb9386eaa679a9c26cd94d4273a8**. Tag was never moved.
+- Non-draft GitHub **prerelease** includes both ZIPs, BUILD_MANIFEST and SHA256SUMS.
+  No stable release or CM publication. All ten actual source checks (main/tag)
+  succeeded, including HACS, hassfest, both-core full tests and independent install.
+- **177 tests per HA 2026.10.3/2026.10.4**, 91% coverage, zero skips. Full pinned
+  consumer suites/coupled runtimes remain green, with both startup orders.
+- Independently downloaded actual public metadata, source ZIP and all four assets.
+  Tag/source, GitHub digests, ZIP SHA256SUMS, manifest provenance and every runtime
+  file match. Unauthenticated public release HTTP200. Actual pinned HACS code passed
+  add/beta discovery/exact tag capability/download/extraction/update/uninstall/
+  reinstall using those public bytes on BOTH HA cores. Both downloaded ZIP layouts
+  passed outside-source native setup/Options/SQLite reload/delete/recreate on both.
+- Machine receipt: **docs/receipts/v0.1.0-beta.1.json**. Exact owner instructions:
+  **docs/HACS_DISTRIBUTION.md**. No owner HA session was accessed; isolated testing
+  does not assert authenticated PAHA02-DEV/frontend or Pi hardware acceptance.
+
+The cloud upload restriction was resolved by the narrowly scoped publisher run
+40392618234 on the preserved development branch. Main/tag source remain immutable.
+Final receipt/handoff-only checkpoint subject: `docs: record published beta.1 verification`;
+this development checkpoint is not a different release source and creates no release.
+Publication mission is complete. Stop; do not start CM work or unrelated features.
+Any production/cutover/stable/CM publication requires separate authorization.
+
 ## Publication execution checkpoint — 2026-10-26
 
 PR #7 is merged normally (history preserved, no protection bypass) at

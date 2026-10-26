@@ -11,9 +11,8 @@ a stable release, CM publication or production/control cutover.
 - [x] Actual HACS prerelease discovery/tag download/update/reinstall regression tests.
 - [x] Independently placed ZIPs configure/reload/remove/recreate outside source.
 - [x] Explicit owner approval for PE PR #7 merge and PE beta.1 prerelease.
-- [ ] Exact merged/tagged commit CI and independent public-release receipt recorded
-  on the release and PR #7. The live receipt, not this source checklist, establishes
-  completion of merge/publication/download verification.
+- [x] Exact merged/tagged commit CI and independent public-release receipt recorded
+  on the release and PR #7; docs/receipts/v0.1.0-beta.1.json records the full evidence.
 - [ ] Owner records actual PAHA02-DEV HACS installation/configuration and hardware
   observations. Isolated tests do not check this box for the owner.
 
