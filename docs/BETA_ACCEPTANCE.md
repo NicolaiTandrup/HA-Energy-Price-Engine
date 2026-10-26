@@ -1,35 +1,25 @@
 # PE + CM beta acceptance, source migration and rollback
 
-Target: proposed **v0.1.0-beta.1**. Candidate files/CI artifacts are not a published
-release. Do not merge, tag, publish a prerelease, modify live HA, disable Node-RED
-or grant charging commands without separate explicit owner approval.
+Target: **v0.1.0-beta.1 read-only PE prerelease**. On 2026-10-26 the owner explicitly
+authorized merging PE PR #7 and publishing this prerelease. This does not authorize
+a stable release, CM publication or production/control cutover.
 
-**HACS distribution gate remains open. The beta is not complete for owner HACS
-installation.** See [HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md). A manually placed
-ZIP does not close this gate.
+## Software distribution acceptance
 
-## Software candidate gates
+- [x] Existing validated native implementation and immutable SQLite history preserved.
+- [x] Both-core unit/integration, source selection, DST, recovery and consumer API tests.
+- [x] Actual HACS prerelease discovery/tag download/update/reinstall regression tests.
+- [x] Independently placed ZIPs configure/reload/remove/recreate outside source.
+- [x] Explicit owner approval for PE PR #7 merge and PE beta.1 prerelease.
+- [ ] Exact merged/tagged commit CI and independent public-release receipt recorded
+  on the release and PR #7. The live receipt, not this source checklist, establishes
+  completion of merge/publication/download verification.
+- [ ] Owner records actual PAHA02-DEV HACS installation/configuration and hardware
+  observations. Isolated tests do not check this box for the owner.
 
-- [ ] Review the exact PR #7 commit and BUILD_MANIFEST; package says `dirty: false`.
-- [x] Unit/native lifecycle, SQLite migration/recovery/revision, DST, lint, official
-  hassfest, HACS and current-HA CI checks passed for that exact commit.
-- [x] Both archive layouts import and configure outside the repository, then reload
-  from real SQLite. Checksums match the independently installable files.
-- [x] Machine fixtures and actual two-runtime tests pass for the selected CM line
-  (#15 or reconciled measured-history #16), including changed revisions, coalesced
-  duplicate notifications, and producer-unload fail-closed behavior.
-- [ ] Review resource limits: cloud five-year benchmarks exist; Pi throughput/RAM,
-  real source access and household invoice parity have not been proven by mocks.
-- [ ] Owner approves and implements a distribution strategy; both PE/CM custom
-  repositories can actually be added/downloaded/configured in PAHA02-DEV HACS.
-- [ ] Owner authorizes publication of this precise candidate as a prerelease.
-  Publication is a separate action; this checklist performs none.
-
-Software evidence: application commit `e6090a9`, 146 producer tests on each of HA
-2026.10.3/2026.10.4, unchanged consumer suites 153/176 on each, actual coupled
-runtimes, ten remote CI checks green and both clean archive layouts independently
-installed on each core. See the permanent handoff for hashes and final checkpoint.
-Checks above do not check owner review/publication or any pilot gate for the owner.
+Follow [HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md) for exact PE installation and
+public verification. CM remains a separate unpublished development project; its
+merge/publication is not a prerequisite to read-only PE installation.
 
 ## Before touching the owner's installation
 

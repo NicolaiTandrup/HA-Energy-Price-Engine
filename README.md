@@ -1,11 +1,12 @@
 # Home Assistant Energy Price Engine
 
-**Proposed v0.1.0-beta.1 — HACS distribution blocked.** Native Home Assistant
-software candidate on [draft PR #7](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/7).
-Both repositories’ main branches lack integration code; normal HACS custom-repository
-installation is currently rejected. This beta is not complete as an owner-installable
-HACS beta. See the [distribution gate and exact PAHA02-DEV procedure](docs/HACS_DISTRIBUTION.md).
-No release has been published and no production cutover is authorized by this code.
+**v0.1.0-beta.1 — read-only native Home Assistant beta.**
+Install the exact [published prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.1)
+through HACS as category **Integration**, then configure **Energy Price Engine**
+under Devices & services. Follow the [exact PAHA02-DEV HACS procedure](docs/HACS_DISTRIBUTION.md).
+The release page and verification receipt establish publication/source identity;
+do not substitute a moving development branch for the selected beta version.
+No stable release, CM publication or production/control cutover is authorized.
 
 The standalone `ha_energy_price_engine` owns electricity price retrieval, tariff
 verification, calculation, permanent 15-minute final prices and publishing. EV
@@ -46,11 +47,11 @@ any requirement to co-run the legacy HACS broker and official Nord Pool integrat
 
 ## Candidate package and validation
 
-CI builds reproducible HACS-root and manual-install ZIPs, file/commit metadata and
+The prerelease provides reproducible HACS-root and manual-install ZIPs, file/commit metadata and
 SHA-256 checksums, then installs them **outside the repository source tree** in a
-fresh HA harness. Download the exact reviewed commit's **Beta candidate package**
-artifact. HACS metadata/brand validation is included; ordinary HACS release discovery
-requires separately authorized publication, not an unmerged default-branch promise.
+fresh HA harness. Use the published release assets and SHA256SUMS. HACS downloads the exact selected
+tag's integration directory; public source and assets are independently compared.
+CI artifacts are development receipts and do not replace a published version.
 
 Tests cover native multi-site flows/upgrades, real official HA Nord Pool service
 plumbing with a mocked market client, units/VAT, overrides/time bands, source failures,

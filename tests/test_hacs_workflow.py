@@ -46,7 +46,7 @@ def candidate_tree(reference="pe"):
 
 @pytest.mark.parametrize("line", list(PINS))
 @pytest.mark.parametrize("repository", list(RECEIPTS))
-async def test_current_default_branch_reproduces_real_hacs_rejection(
+async def test_recorded_prebootstrap_branch_reproduces_hacs_rejection(
     hass, tmp_path, line, repository
 ):
     alias = upstream(line)

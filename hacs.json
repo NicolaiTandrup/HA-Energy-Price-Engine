@@ -1,5 +1,5 @@
 {
-  "name": "Energy Price Engine (beta candidate)",
+  "name": "Energy Price Engine",
   "homeassistant": "2026.10.0",
   "render_readme": true
 }

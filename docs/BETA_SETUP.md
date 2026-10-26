@@ -1,13 +1,10 @@
-# Install and configure proposed v0.1.0-beta.1
+# Install and configure v0.1.0-beta.1
 
-**HACS installation is currently blocked:** both default main branches contain no
-integration code. This beta is not complete for normal HACS installation. See
-[HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md) for the owner approval gate and exact
-PAHA02-DEV steps after distribution is enabled. Branch URLs do not bypass this gate.
-
-This is a manually test-installable **candidate on PR #7**, not a published release
-or permission to change production. Ordinary setup and rate changes use Home
-Assistant's native UI; there is no YAML or Python business configuration.
+Use the [exact HACS / PAHA02-DEV procedure](HACS_DISTRIBUTION.md) to add the PE
+repository as Integration and select **v0.1.0-beta.1** with beta versions enabled.
+The owner authorized the PE main merge and prerelease on 2026-10-26. Check the public
+release/verification receipt for its validated commit. No CM publication or production
+change is part of that authorization. Everyday pricing setup is native UI, not YAML.
 
 ## Choose an isolated installation and exact package
 
@@ -16,8 +13,8 @@ Use a disposable/current supported 64-bit HA installation first. Current HA
 backup before installation or upgrade. Real Raspberry Pi resource/source acceptance
 is still required; [cloud measurements](PERFORMANCE.md) are not Pi measurements.
 
-Download the **Beta candidate package** artifact for the reviewed PR commit from
-GitHub Actions, or build that exact checkout with:
+For manual placement, download the published prerelease assets and checksums.
+Developers can reproduce the exact clean release checkout with:
 
 ```sh
 .venv/bin/python tools/build_beta.py
@@ -37,11 +34,10 @@ Do not extract the HACS-root ZIP at HA's configuration root. Do not copy develop
 venvs, tests, dependency locks or consumer-reference exports into HA. Restart the
 **approved test instance** after installing/updating custom integration code.
 
-The source tree has HACS metadata/brand assets and passes HACS validation. A normal
-HACS installation from the repository's default branch is not promised while the
-implementation is an unmerged draft. Normal HACS default-branch installation requires an approved distribution change;
-release-asset distribution separately requires authorized publication. The tested ZIP is usable now through
-the placement above; no prerelease has been published by this work.
+The source tree has HACS metadata/brand assets. HACS uses the selected published tag's
+`custom_components/ha_energy_price_engine` directory; manual placement of a ZIP is an
+alternative, not a prerequisite or custom-repository URL. See HACS_DISTRIBUTION.md
+for beta visibility, updates and independently verified public download details.
 
 ## Official Nord Pool prerequisite and safe discovery
 

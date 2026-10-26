@@ -1,36 +1,45 @@
 # Development handoff
 
-Updated 2026-10-25 (Europe/Copenhagen). Read AGENTS.md first. This is the single
+Updated 2026-10-26 (Europe/Copenhagen). Read AGENTS.md first. This is the single
 permanent handoff. Continue existing branch `feat/standalone-price-engine` and
 existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
 
-## Current result and critical HACS blocker
+## Authorized PE beta.1 publication mission
 
-Proposed **v0.1.0-beta.1 remains an uncompleted HACS beta**. Native software and
-manually test-installable ZIPs exist; normal HACS custom-repository installation
-currently fails for BOTH PE and CM. Read-only GitHub snapshots confirm their main
-branches contain LICENSE/README only:
+On 2026-10-26 the owner explicitly authorized: complete PE HACS integration,
+merge existing PR #7 into main without force/protection bypass, and publish
+**v0.1.0-beta.1 as a GitHub prerelease**. Do not stop at a candidate/draft. This
+supersedes the prior PE distribution approval gate. It authorizes neither a stable
+release nor EV Charge Manager publication nor live HA/Node-RED/device operations.
+No new CM development is in scope; unchanged consumer tests remain compatibility
+checks. No PAHA01/production access or PAHA02-DEV mutation is performed here.
 
-- PE main `981e48988197bc4fd32bd2e877946db469be2a57`.
-- CM main `0f0b002b136f2ef2480151dc42797256c5cabe8c`.
+Resumed validated baseline `bb71585654b431e61aa256657ab18d8c0f571cf0`, all ten
+exact-head checks green. Existing runtime/SQLite/API architecture is preserved.
+HACS metadata now uses the same display name as native HA: **Energy Price Engine**.
+New prerelease tests run actual HACS registration, beta visibility, version selection,
+`async_download_repository` capability checks, tag download/extraction, update,
+uninstall/reinstall on published HACS 2.0.5 and pinned upstream code. The public
+verification tool will download actual release metadata/source/assets, check source
+identity and all payload hashes, and rerun HACS plus outside-source native install.
+The historical empty-main snapshots remain a regression, not a claim about the
+post-merge branch. Exact owner instructions are docs/HACS_DISTRIBUTION.md.
 
-The owner's PAHA02-DEV observation supersedes any earlier broad “installable beta”
-claim. A ZIP smoke test or HACS validation action does not close this distribution
-gate. `/tree/branch` URLs are stripped to owner/repository by the normal HACS add
-workflow. Do not suggest an unsupported branch URL or unpublished version bypass.
+Preparation checkpoint subject: `release: prepare authorized HACS beta.1 publication`.
+Local baseline release suites: **177 passed on HA 2026.10.3 and 2026.10.4**, zero
+skips, 91% coverage; Ruff clean. New HACS download entry-point cases pass separately.
+Commit/push, wait for exact-head CI, make PR #7 ready, then normal history-preserving
+merge with expected head SHA. GitHub enforces its protections; do not use admin or
+force bypass. Protection-settings GET returned HTTP403 for this integration token;
+normal repository ruleset listing returned no rulesets. This is not permission to
+bypass the merge API or required checks.
 
-Read **docs/HACS_DISTRIBUTION.md**: actual pinned HACS workflow evidence, reviewable
-non-destructive distribution choices and exact PAHA02-DEV UI steps after approval.
-Recommended gate is owner review/authorization of existing PE PR #7 and the reviewed
-CM stack ending at #26 into their default branches. CM is stacked: approve the
-whole base/merge sequence, not just merging #26 into its current development base.
-Changing default branches or creating separate beta repositories are distinct
-owner-approved alternatives with repository-wide consequences. None was executed.
-A release is separately authorized; default-branch installation need not require one.
-
-No main merge, default-branch setting change, new distribution repository, tag,
-release, live HA/Node-RED or vehicle/charger command has occurred. Do not call the
-beta complete until actual owner HACS add/download/configuration succeeds.
+After merge, check out exact merged main, run required tests/CI/package smoke, build
+clean archives, create the annotated beta tag at that validated commit, publish a
+non-draft prerelease with both ZIPs/manifest/checksums, then independently verify
+public tag/release/assets and isolated real HACS/native install. Record actual
+merge/tag/source/check results in the final handoff/PR/release receipt. No success
+claim until those actions complete. No release exists at preparation time.
 
 ## Checkpoints and validation
 
@@ -169,9 +178,10 @@ in this cloud; do not claim a downloaded-CI-byte comparison if that persists.
 
 ## Remaining gates and limits
 
-HACS distribution approval/implementation and actual PAHA02-DEV installation are
-blocking beta completion. Publication/merge/cutover permissions are not inferred
-from passing tests. For real read-only pilot acceptance, obtain actual current
+PE merge and beta.1 prerelease publication are now explicitly authorized above.
+The current mission must resolve its distribution implementation and independently
+verify public downloads. Actual PAHA02-DEV observations remain owner-run hardware
+acceptance and must not be fabricated; isolated verification is permitted. For real read-only pilot acceptance, obtain actual current
 per-site supplier terms and recorded legacy/billing/plan exports, then compare offline
 with explicit units/VAT/site mapping. No simultaneous live legacy/official brokers.
 
@@ -191,6 +201,6 @@ separate from PE/API tests. Keep commands disabled until independently accepted 
 explicitly authorized. Rollback must restore BOTH the legacy Nordpool dependency
 and the exact Brain, Energy Price Broker and Charger Optimizer flow/config backups.
 
-Next: verify final checkpoint CI/artifacts and exact-head PR receipt. Then owner
-reviews the concrete HACS distribution choices and exact setup/acceptance guide.
-Do not make main/settings/release/live changes without the corresponding approval.
+Next: complete the authorized merge/prerelease/public verification sequence above.
+Preserve exact tag/commit/asset provenance and existing branch history. No stable
+release, CM publication, production HA/Node-RED changes or live controls.
