@@ -57,6 +57,7 @@ async def async_get_config_entry_diagnostics(hass, entry):
     return {
         "storage": storage,
         "api_version": 1,
+        "raw_source_days": c.price_updater.raw_reports,
         "source_verification": public_source,
         "area": c.site["area"],
         "timezone": c.site["timezone"],

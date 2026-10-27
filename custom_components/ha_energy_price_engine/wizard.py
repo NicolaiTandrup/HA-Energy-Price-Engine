@@ -1,20 +1,19 @@
 """Native, resumable setup. Drafts are durable; active pricing changes only on Save."""
 
+import json
 from copy import deepcopy
-from datetime import timedelta
 from uuid import uuid4
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import voluptuous as vol
 from homeassistant.helpers import selector
 from homeassistant.helpers.storage import Store
-from homeassistant.util import dt as dt_util
 from homeassistant.util import slugify
 
 from .configuration import settings, validate_site
 from .const import DOMAIN
-from .price_components import REQUIRED, active_hours, danish_public_components
 from .sources import async_source_defaults, ensure_official_nordpool
+from .verification import verify_site
 
 
 def choice(items, translation_key=None):
@@ -69,9 +68,9 @@ class Wizard:
                     data_schema=vol.Schema(
                         {
                             vol.Required("draft", default=next(iter(self._initial_drafts))): choice(
-                                [("new", "Create another site")]
+                                [("new", "➕")]
                                 + [
-                                    (k, v["draft"].get("name", "Unfinished site"))
+                                    (k, v["draft"].get("name", "…"))
                                     for k, v in self._initial_drafts.items()
                                 ]
                             )
@@ -110,9 +109,9 @@ class Wizard:
                 data_schema=vol.Schema(
                     {
                         vol.Required("draft", default=next(iter(self._initial_drafts))): choice(
-                            [("new", "Create another site")]
+                            [("new", "➕")]
                             + [
-                                (k, v["draft"].get("name", "Unfinished site"))
+                                (k, v["draft"].get("name", "…"))
                                 for k, v in self._initial_drafts.items()
                             ]
                         )
@@ -164,19 +163,21 @@ class Wizard:
             await self._wizard_store.async_save(data)
 
     def _state(self):
+        # Human text belongs in native translations, never the system language.
         active = settings(self._wizard_entry) if self._wizard_entry else None
-        da = (getattr(self.hass.config, "language", "en") or "en").startswith("da")
-        if active != self.draft:
-            return (
-                "Ikke gemt · kladden bevares med Fortsæt; aktive priser er uændrede."
-                if da
-                else "Unsaved changes · draft preserved on Continue; active prices unchanged."
+        return "✓" if active == self.draft else "✎"
+
+    async def _verify(self, force=False):
+        site = validate_site(self.draft)
+        signature = json.dumps(site, sort_keys=True)
+        if force or getattr(self, "_verified_signature", None) != signature:
+            self._verification = await verify_site(
+                self.hass,
+                site,
+                self._wizard_entry.entry_id if self._wizard_entry else "onboarding-preview",
             )
-        return (
-            "Gemte indstillinger · ændringer gemmes separat indtil Gem og kontrollér."
-            if da
-            else "Saved settings · changes stay in a separate draft until Save & verify."
-        )
+            self._verified_signature = signature
+        return self._verification
 
     def _form(self, step, fields, progress, errors=None, help_text=""):
         fields[vol.Required("navigation", default="next")] = choice(
@@ -199,7 +200,7 @@ class Wizard:
             description_placeholders={
                 "draft_status": self._state(),
                 "progress": progress,
-                "context": help_text,
+                "context": "",
             },
         )
 
@@ -263,7 +264,8 @@ class Wizard:
                 [
                     ("nordpool", "Official Home Assistant Nord Pool"),
                     ("entity", "Advanced: verified provider entity"),
-                ]
+                ],
+                "wizard_source_type",
             ),
         }
         if self._initial:
@@ -339,9 +341,7 @@ class Wizard:
                     [(k, k.replace("ore", "øre")) for k in UNIT_MULTIPLIERS]
                 ),
                 vol.Required("price_basis", default=v.get("price_basis", "spot_ex_vat")): choice(
-                    list(
-                        zip(BASES, ["Spot before VAT", "Spot including VAT", "Final all-in price"])
-                    )
+                    list(zip(BASES, BASES)), "price_basis"
                 ),
                 vol.Required("price_attribute", default=v.get("price_attribute", "slots")): str,
                 vol.Required("stale_minutes", default=v.get("stale_minutes", 40)): vol.All(
@@ -428,7 +428,8 @@ class Wizard:
                     [
                         ("radius_c", "Automatic: verified Radius C"),
                         ("manual", "Manual dated grid rates"),
-                    ]
+                    ],
+                    "wizard_grid_source",
                 ),
                 vol.Required(
                     "dso_tariff_class", default=self.draft.get("dso_tariff_class", "C")
@@ -530,7 +531,7 @@ class Wizard:
             if self.draft.get("price_basis") == "all_in"
             else {
                 vol.Required("supplier", default=self.draft.get("supplier", "custom")): choice(
-                    [("ewii", "EWII"), ("custom", "Other / custom supplier")]
+                    [("ewii", "EWII"), ("custom", "Other / custom supplier")], "wizard_supplier"
                 ),
                 **self._rate_fields("supplier"),
             }
@@ -594,7 +595,7 @@ class Wizard:
             {
                 vol.Required(
                     "display_unit", default=self.draft.get("display_unit", "øre/kWh")
-                ): choice([("øre/kWh", "øre/kWh (recommended)"), ("DKK/kWh", "DKK/kWh")])
+                ): choice([("øre/kWh", "øre/kWh"), ("DKK/kWh", "DKK/kWh")])
             },
             "5 / 6",
             help_text="100 DKK/MWh = 10 øre/kWh = 0.10 DKK/kWh before tariffs/tax. Official input is fixed; this changes presentation only. Existing DKK sensor identities/statistics and stored/API DKK/kWh amounts stay unchanged; unit-specific display entities keep histories separate.",
@@ -602,73 +603,63 @@ class Wizard:
 
     def _review(self):
         site = self.draft
-        lines = [
-            self._state(),
-            f"Site: {site.get('name')} · permanent ID: {site.get('id')}",
-            f"Source: {site.get('source_type')} · area: {site.get('area')} · timezone: {site.get('timezone')}",
-            f"Grid: {site.get('dso_mode')} {site.get('dso_tariff_class', 'C')} · supplier: {site.get('supplier')} · dated periods: {len(site.get('dated_components', []))}",
-            f"Display: {site.get('display_unit', 'øre/kWh')} · storage/API: DKK/kWh including VAT.",
-        ]
-        if site.get("price_basis") != "all_in":
-            rules = list(site.get("dated_components", [])) + (
-                danish_public_components() if site.get("danish_public_rates") else []
-            )
-            today = (
-                dt_util.utcnow()
-                .astimezone(ZoneInfo(site.get("timezone", "Europe/Copenhagen")))
-                .date()
-            )
-            for day in (today, today + timedelta(days=1)):
-                missing = []
-                for key in sorted(
-                    REQUIRED | ({"dso"} if site.get("dso_mode") != "radius_c" else set())
-                ):
-                    coverage = set().union(
-                        *(
-                            active_hours(r)
-                            for r in rules
-                            if r["id"] == key
-                            and r["valid_from"] <= str(day) < r["valid_to"]
-                            and r.get("eligibility", "all") == "all"
-                        )
-                    )
-                    if coverage != set(range(24)):
-                        missing.append(key)
-                lines.append(
-                    f"{day}: "
-                    + (
-                        "Missing full-day coverage: "
-                        + ", ".join(
-                            {
-                                "supplier": "supplier contract",
-                                "dso": "grid tariff",
-                                "energinet_net": "Energinet network tariff",
-                                "energinet_system": "Energinet system tariff",
-                                "electricity_tax": "electricity tax",
-                            }.get(k, k.replace("_", " "))
-                            for k in missing
-                        )
-                        + ". Add verified dated periods; no zero fallback."
-                        if missing
-                        else "Configured component periods cover the day; source verification still required."
-                    )
-                )
-        lines.append(
-            "Save applies this draft once and starts actual source verification. Site saved does not mean prices READY; inspect readiness and precise errors after verification."
+        reports = getattr(self, "_verification", {})
+
+        def mark(ok):
+            return "✓" if ok else "✕"
+
+        result = {
+            "draft_status": self._state(),
+            "name": site.get("name", ""),
+            "site_id": site.get("id", ""),
+            "area": site.get("area", ""),
+            "timezone": site.get("timezone", ""),
+            "display_unit": site.get("display_unit", "øre/kWh"),
+            "vat": str(site.get("vat", 0.25) * 100),
+            "review": "",
+        }
+        source = self.hass.config_entries.async_get_entry(site.get("nordpool_entry", ""))
+        result["source"] = source.title if source else site.get("price_entity", "—")
+        result["raw"] = "\n\n".join(
+            f"{d}: {mark(r.get('raw', {}).get('status') == 'READY')} {r.get('raw', {}).get('valid_slots', 0)}/{r.get('raw', {}).get('expected_slots', 0)}"
+            for d, r in reports.items()
         )
-        if self._pending:
-            lines.append(
-                "Preserved page edits need Continue before they can be applied. Save will return to the pending page; no typed draft is silently discarded."
+        result["final"] = "\n\n".join(
+            f"{d}: {mark(r.get('status') == 'READY')} {r.get('calculated_slots', 0)}/{r.get('raw', {}).get('expected_slots', 0)}"
+            for d, r in reports.items()
+        )
+        for key in ("supplier", "dso", "energinet_net", "energinet_system", "electricity_tax"):
+            result[key] = "; ".join(
+                f"{d}: {mark(r.get('coverage', {}).get(key, True) or (key == 'dso' and r.get('failure_stage') not in {'source', 'grid'} and site.get('dso_mode') == 'radius_c'))}"
+                for d, r in reports.items()
             )
-        return "\n\n".join(lines)
+        result["technical"] = (
+            "\n\n".join(f"{d}: {r['reason']}" for d, r in reports.items() if r.get("reason")) or "—"
+        )
+        return result
 
     async def async_step_wizard_review(self, user_input=None):
         await self._persist("wizard_review")
+        await self._verify()
         return self.async_show_menu(
             step_id="wizard_review",
-            description_placeholders={"review": self._review()},
-            menu_options=["wizard_save", "wizard_display", "advanced", "wizard_discard"],
+            description_placeholders=self._review(),
+            menu_options=[
+                "wizard_save",
+                "wizard_source",
+                "wizard_grid",
+                "wizard_supplier",
+                "wizard_charges",
+                "wizard_display",
+                "wizard_recheck",
+                "advanced",
+                "wizard_discard",
+            ],
         )
+
+    async def async_step_wizard_recheck(self, user_input=None):
+        await self._verify(force=True)
+        return await self.async_step_wizard_review()
 
     async def async_step_wizard_save(self, user_input=None):
         if self._pending:
@@ -700,6 +691,8 @@ class Wizard:
                 return await self.async_step_wizard_source(
                     {"nordpool_entry": site["nordpool_entry"]}
                 )
+        await self._verify(force=True)
+        summary = self._review()
         await self._persist("wizard_review", submitted=True)
         if self._initial:
             if any(
@@ -719,7 +712,10 @@ class Wizard:
                 )
             await self.async_set_unique_id(site["id"])
             return self.async_create_entry(
-                title=site["name"], data=site, description="saved_pending_verification"
+                title=site["name"],
+                data=site,
+                description="saved_pending_verification",
+                description_placeholders=summary,
             )
         if dict(self._wizard_entry.options) == site:
             # HA does not notify option listeners for equal values. The explicit

@@ -24,7 +24,7 @@ from tools.prepare_hacs_reference import PINS
 from .test_hacs_workflow import candidate_tree, upstream
 
 ROOT = Path(__file__).parents[1]
-TAG = "v0.1.0-beta.2"
+TAG = "v0.1.0-beta.3"
 DOMAIN = "ha_energy_price_engine"
 
 
@@ -160,9 +160,19 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         assert repo and repo.data.domain == DOMAIN and repo.data.config_flow
         assert repo.data.manifest_name == "Energy Price Engine"
         assert repo.data.prerelease == TAG and TAG not in repo.data.published_tags
+        # Reproduce the owner's HACS card: no stable release + beta visibility
+        # disabled falls back to main's short SHA, even after a beta install.
+        hacs.coordinators[enums.HacsCategory.INTEGRATION] = Mock()
+        update_module = importlib.import_module(alias + ".update")
+        native_update = update_module.HacsRepositoryUpdateEntity(hacs=hacs, repository=repo)
+        repo.data.installed_version = TAG
+        repo.data.last_commit = "56cdb3c"
+        assert native_update.latest_version == "56cdb3c"
         repo.data.show_beta = True  # Same state set by HACS's Show beta versions action.
         await repo.update_repository(force=True)
         assert TAG in repo.data.published_tags
+        assert native_update.latest_version == TAG
+        assert native_update.installed_version == TAG
         repo.data.selected_tag = TAG
         assert repo.version_to_download() == TAG
         installed = tmp_path / "custom_components" / DOMAIN

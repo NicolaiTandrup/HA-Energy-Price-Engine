@@ -19,7 +19,9 @@ from .status import slot_breakdown, source_status
 
 def select(options):
     return selector.SelectSelector(
-        selector.SelectSelectorConfig(options=list(options), mode="dropdown")
+        selector.SelectSelectorConfig(
+            options=list(options), mode="dropdown", translation_key="values"
+        )
     )
 
 
@@ -426,7 +428,7 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
                 destination = database.path.with_name(database.path.name + ".backup-" + uuid4().hex)
                 try:
                     await database.async_backup(destination)
-                    self.backup_result = f"Verified backup saved in .storage/{destination.name}. Include it in an HA configuration backup."
+                    self.backup_result = f"✓ .storage/{destination.name}"
                     return await self.async_step_init()
                 except OSError:
                     errors["base"] = "backup_failed"

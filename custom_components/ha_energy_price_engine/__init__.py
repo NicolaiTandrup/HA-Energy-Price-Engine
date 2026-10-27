@@ -11,7 +11,7 @@ from .configuration import validate_site
 from .const import DOMAIN
 from .coordinator import PriceCoordinator
 
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.SENSOR, Platform.UPDATE]
 LOGGER = logging.getLogger(__name__)
 
 

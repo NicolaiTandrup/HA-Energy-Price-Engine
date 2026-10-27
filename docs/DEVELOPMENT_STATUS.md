@@ -1,9 +1,53 @@
 # Development handoff
 
 Updated 2026-10-27 (Europe/Copenhagen). Read AGENTS.md first. This is the single
-permanent handoff. Beta.2 mission is complete: **published and independently verified**.
-Stop here unless the owner requests further development. Existing history and PRs
+permanent handoff. Beta.3 is in progress on **feat/beta3-functional-onboarding**.
+Owner explicitly requested this follow-up after beta.2 failed real PAHA02-DEV acceptance. Existing history and PRs
 are preserved; no worktree, force push, main merge or production change occurred.
+
+## Beta.3 functional onboarding — in progress
+
+Primary #8 read including latest owner failure/localization/update feedback. No
+owner HA access; exact private configuration unavailable. Do not infer which owner
+rates exist from an old generic screenshot. Reproduced the same failure path using
+real source service + verified Radius fixtures: missing supplier/public periods
+prevent canonical composition even when 96 raw source quarters were retrieved.
+Beta.2 exposed only final-price sensors, hiding valid raw source results.
+
+Checkpoint subject: `feat: verify onboarding and expose independent spot source`.
+New independent raw current/next sensors + today/tomorrow raw coverage/readiness
+and verification timestamps precede all grid/composition/storage work. Missing
+required periods are INCOMPLETE/configuration; provider/grid/storage failures are
+separately classified and a native translated problem entity gives corrective action.
+Final valid_slots counts final records, not raw input slots. Existing final sensor
+identities and API values remain unchanged and fail closed.
+
+Review now runs actual adapters and the canonical calculate() in an in-memory sink,
+with no draft ledger writes. It shows raw and calculated today/tomorrow quarters,
+all required component coverage and direct step navigation; Save rechecks and starts
+normal transactional runtime. Native descriptions/selector resources replace system-
+language-dependent dynamic prose. EN/DA completion and frontend evidence still pending.
+No claim that source/calculation preview proves a successful later ledger write.
+
+HACS short-SHA root cause reproduced from pinned actual HACS code: show_beta false
++ no stable release falls back to last_commit despite installed beta. A PE-owned
+read-only semantic release UpdateEntity filters draft/non-semver/other-channel tags;
+HACS still owns its separate update entity and must have Show beta versions enabled.
+No monkey-patch of HACS, no stable release workaround. hide_default_branch metadata
+prevents intentional development-branch selection. Installed manifest version retained.
+
+195 producer tests passed before final native translation/update fixture adjustments.
+Nine new functional cases cover actual final runtime math, 96/100/92-day coverage,
+missing supplier/Energinet/tax with raw READY retained, Radius failure, ledger write
+failure and semantic release filtering. Actual released beta.1 AND beta.2 code seed
+SQLite upgrade fixtures. Both references fetched for shallow CI. Final both-core,
+HACS, hassfest/translation and native EN/DA first-run checks are mandatory before
+publication; no beta.3 tag/release exists yet. Existing beta.1/.2 immutable.
+
+Next: complete DA/native strings, first-run EN/DA complete/missing/error/source
+fixtures in real frontend, final regression/consumer/CI/package verification, docs,
+then authorized beta.3 prerelease and independent public verification. Never call
+simulated results owner acceptance. No main merge or production/control operations.
 
 ## Completed PE beta.2 — final receipt
 

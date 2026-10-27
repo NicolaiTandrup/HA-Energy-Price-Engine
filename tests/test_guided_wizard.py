@@ -50,7 +50,7 @@ async def test_new_official_wizard_source_defaults_review_save_incomplete(hass, 
     r = await hass.config_entries.flow.async_configure(fid, {"display_unit": "øre/kWh"})
     assert r["step_id"] == "wizard_review"
     assert r["menu_options"][0] == "wizard_save"
-    assert "supplier" in r["description_placeholders"]["review"]
+    assert "✕" in r["description_placeholders"]["supplier"]
     created = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "wizard_save"})
     await hass.async_block_till_done()
     entry = created["result"]
@@ -114,7 +114,7 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
     c = entry.runtime_data
     assert entry.version == 3
     device = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)[0]
-    assert device.sw_version == "0.1.0-beta.2"  # Installed manifest, not flow/core version.
+    assert device.sw_version == "0.1.0-beta.3"  # Installed manifest, not flow/core version.
     now = datetime(2026, 10, 23, 12, tzinfo=UTC)
     original = c.price_engine.records["home"]
     price = PriceSensor(c).native_value
@@ -261,8 +261,15 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
 
 
 @pytest.mark.usefixtures("price_service")
+@pytest.mark.parametrize(
+    "released,version",
+    [
+        ("56cdb3c10993179371483812cbc36f651ba3ad8e", 2),
+        ("0c93d2bfac88878cff46e7726f59accbeababf85", 3),
+    ],
+)
 async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(
-    hass, freezer, tmp_path
+    hass, freezer, tmp_path, released, version
 ):
     import io
     import json
@@ -281,7 +288,7 @@ async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(
             [
                 "git",
                 "archive",
-                "56cdb3c10993179371483812cbc36f651ba3ad8e",
+                released,
                 "custom_components/ha_energy_price_engine",
             ]
         )
@@ -329,7 +336,7 @@ asyncio.run(run())
         domain=DOMAIN,
         entry_id="released-beta1-entry",
         unique_id="home",
-        version=2,
+        version=version,
         data=data,
         options={"supplier": "ewii"},
     )

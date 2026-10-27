@@ -39,7 +39,7 @@
       },
       "wizard_site": {
         "title": "1 / 6 · Site and source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nName this independent site. Leave the optional ID blank. Choose official Nord Pool for normal setup.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "name": "Site name (required)",
           "id": "Permanent site ID (optional)",
@@ -56,7 +56,7 @@
       },
       "wizard_source": {
         "title": "1 / 6 · Installed source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nSelect your already installed official Nord Pool integration by name. Its input is automatically DKK/MWh excluding VAT. Entity-provider fields appear only for advanced sources.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "nordpool_entry": "Installed official Nord Pool (required)",
           "navigation": "Navigation",
@@ -79,7 +79,7 @@
       },
       "wizard_location": {
         "title": "1 / 6 · Area and VAT",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm the source’s delivery area and timezone. Enter 25 for 25% VAT. This VAT applies to spot/automatic grid rates; each manual rate declares its own VAT.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "area": "Delivery area (required)",
           "timezone": "Delivery timezone (required)",
@@ -96,7 +96,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Grid tariffs",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm your grid product before selecting automatic Radius C. C is a household connection class, not a supplier contract. Review will retrieve and verify the actual dated Radius tariff. Other classes need manual dated rates from Review → Advanced.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Grid tariff source",
@@ -115,7 +115,7 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Supplier contract",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nRequired for final prices: your supplier’s per-kWh markup, unit, VAT convention, start/end dates and verification reference. Select EWII as a label only. To add a period, enable the checkbox and complete its fields below. Leave it off to retain existing periods or save incomplete setup; raw spot prices will still work. No private rate is guessed.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "supplier": "Supplier",
@@ -146,7 +146,7 @@
       },
       "wizard_charges": {
         "title": "4 / 6 · National charges and tax",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nFinal prices need Energinet network/system tariffs and electricity tax. Enable the documented bounded baseline, or enter verified dated manual rules from Review → Advanced. Baseline: 2026 Energinet 0.043/0.072 DKK/kWh ex VAT; tax 0.008 for 2026–2027. This is documented data, not live legislation discovery. Heating requires explicit verified eligibility and a rate; registration alone never creates a discount.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "danish_public_rates": "Use documented bounded Danish baseline",
@@ -165,7 +165,7 @@
       },
       "wizard_display": {
         "title": "5 / 6 · Display preference",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nChoose display units. 100 DKK/MWh input = 10 øre/kWh = 0.10 DKK/kWh before additions. Preferred display defaults to øre/kWh. Existing DKK entities, history and CM API units remain unchanged.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "display_unit": "Preferred display unit"
@@ -178,7 +178,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Review, Save & verify",
-        "description": "{review}",
+        "description": "{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -186,7 +186,12 @@
           "wizard_save": "Save & verify",
           "wizard_display": "Back to display preference",
           "advanced": "Dated rates / manual overrides",
-          "wizard_discard": "Discard draft…"
+          "wizard_discard": "Discard draft…",
+          "wizard_source": "Correct spot source",
+          "wizard_grid": "Correct grid / Radius tariff",
+          "wizard_supplier": "Correct supplier contract",
+          "wizard_charges": "Correct national charges / tax",
+          "wizard_recheck": "Recheck sources and calculation"
         }
       },
       "wizard_resume": {
@@ -202,7 +207,7 @@
       },
       "wizard_discard": {
         "title": "Confirm discard",
-        "description": "{draft_status}",
+        "description": "Discard this draft? Active settings and history remain.",
         "data": {
           "confirm": "Discard all staged changes?"
         },
@@ -213,7 +218,7 @@
       },
       "advanced": {
         "title": "Dated rates and diagnostics",
-        "description": "{draft_status}",
+        "description": "{draft_status} · Dated rate editor. Submit each edit to preserve it, then return to Review → Save & verify.",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -228,6 +233,9 @@
           "wizard_supplier": "Supplier contract step",
           "wizard_charges": "National charges step"
         }
+      },
+      "wizard_recheck": {
+        "title": "Recheck"
       }
     },
     "error": {
@@ -251,7 +259,7 @@
       "draft_discarded": "Draft discarded; active prices/configuration/history were preserved."
     },
     "create_entry": {
-      "saved_pending_verification": "Site configuration saved. Source/component verification starts now; only READY with complete valid quarters means final prices are usable. If incomplete/error, reopen Configure to resume and correct missing dated components. No control commands are involved."
+      "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity."
     }
   },
   "options": {
@@ -380,7 +388,7 @@
       },
       "wizard_site": {
         "title": "1 / 6 · Site and source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nName this independent site. Leave the optional ID blank. Choose official Nord Pool for normal setup.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "name": "Site name (required)",
           "id": "Permanent site ID (optional)",
@@ -397,7 +405,7 @@
       },
       "wizard_source": {
         "title": "1 / 6 · Installed source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nSelect your already installed official Nord Pool integration by name. Its input is automatically DKK/MWh excluding VAT. Entity-provider fields appear only for advanced sources.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "nordpool_entry": "Installed official Nord Pool (required)",
           "navigation": "Navigation",
@@ -420,7 +428,7 @@
       },
       "wizard_location": {
         "title": "1 / 6 · Area and VAT",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm the source’s delivery area and timezone. Enter 25 for 25% VAT. This VAT applies to spot/automatic grid rates; each manual rate declares its own VAT.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "area": "Delivery area (required)",
           "timezone": "Delivery timezone (required)",
@@ -437,7 +445,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Grid tariffs",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm your grid product before selecting automatic Radius C. C is a household connection class, not a supplier contract. Review will retrieve and verify the actual dated Radius tariff. Other classes need manual dated rates from Review → Advanced.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Grid tariff source",
@@ -456,7 +464,7 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Supplier contract",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nRequired for final prices: your supplier’s per-kWh markup, unit, VAT convention, start/end dates and verification reference. Select EWII as a label only. To add a period, enable the checkbox and complete its fields below. Leave it off to retain existing periods or save incomplete setup; raw spot prices will still work. No private rate is guessed.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "supplier": "Supplier",
@@ -487,7 +495,7 @@
       },
       "wizard_charges": {
         "title": "4 / 6 · National charges and tax",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nFinal prices need Energinet network/system tariffs and electricity tax. Enable the documented bounded baseline, or enter verified dated manual rules from Review → Advanced. Baseline: 2026 Energinet 0.043/0.072 DKK/kWh ex VAT; tax 0.008 for 2026–2027. This is documented data, not live legislation discovery. Heating requires explicit verified eligibility and a rate; registration alone never creates a discount.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "danish_public_rates": "Use documented bounded Danish baseline",
@@ -506,7 +514,7 @@
       },
       "wizard_display": {
         "title": "5 / 6 · Display preference",
-        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nChoose display units. 100 DKK/MWh input = 10 øre/kWh = 0.10 DKK/kWh before additions. Preferred display defaults to øre/kWh. Existing DKK entities, history and CM API units remain unchanged.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "display_unit": "Preferred display unit"
@@ -519,7 +527,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Review, Save & verify",
-        "description": "{review}",
+        "description": "{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -527,7 +535,12 @@
           "wizard_save": "Save & verify",
           "wizard_display": "Back to display preference",
           "advanced": "Dated rates / manual overrides",
-          "wizard_discard": "Discard draft…"
+          "wizard_discard": "Discard draft…",
+          "wizard_source": "Correct spot source",
+          "wizard_grid": "Correct grid / Radius tariff",
+          "wizard_supplier": "Correct supplier contract",
+          "wizard_charges": "Correct national charges / tax",
+          "wizard_recheck": "Recheck sources and calculation"
         }
       },
       "wizard_resume": {
@@ -543,7 +556,7 @@
       },
       "wizard_discard": {
         "title": "Confirm discard",
-        "description": "{draft_status}",
+        "description": "Discard this draft? Active settings and history remain.",
         "data": {
           "confirm": "Discard all staged changes?"
         },
@@ -554,7 +567,7 @@
       },
       "advanced": {
         "title": "Dated rates and diagnostics",
-        "description": "{draft_status}",
+        "description": "{draft_status} · Dated rate editor. Submit each edit to preserve it, then return to Review → Save & verify.",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -569,6 +582,9 @@
           "wizard_supplier": "Supplier contract step",
           "wizard_charges": "National charges step"
         }
+      },
+      "wizard_recheck": {
+        "title": "Recheck"
       }
     },
     "error": {
@@ -594,7 +610,7 @@
       "draft_discarded": "Draft discarded; active prices/configuration/history were preserved."
     },
     "create_entry": {
-      "saved_pending_verification": "Site configuration saved. Source/component verification starts now; only READY with complete valid quarters means final prices are usable. If incomplete/error, reopen Configure to resume and correct missing dated components. No control commands are involved."
+      "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity."
     }
   },
   "entity": {
@@ -603,7 +619,13 @@
         "name": "Current final electricity price"
       },
       "readiness": {
-        "name": "Price readiness"
+        "name": "Price readiness",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete — configure missing periods or await publication",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
       },
       "next_price": {
         "name": "Next quarter final electricity price"
@@ -618,7 +640,13 @@
         "name": "Today average final price"
       },
       "tomorrow_status": {
-        "name": "Tomorrow price readiness"
+        "name": "Tomorrow price readiness",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete — configure missing periods or await publication",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
       },
       "display_current": {
         "name": "Current final price (preferred display)"
@@ -634,6 +662,51 @@
       },
       "display_average": {
         "name": "Today average (preferred display)"
+      },
+      "raw_current": {
+        "name": "Current raw spot price (before additions)"
+      },
+      "raw_next": {
+        "name": "Next quarter raw spot price"
+      },
+      "raw_today": {
+        "name": "Today raw source readiness",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete — configure missing periods or await publication",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
+      },
+      "raw_tomorrow": {
+        "name": "Tomorrow raw source readiness",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete — configure missing periods or await publication",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
+      },
+      "pricing_problem": {
+        "name": "Pricing problem — corrective action",
+        "state": {
+          "none": "No pricing failure",
+          "source": "Spot source failed — check official Nord Pool",
+          "grid": "Radius/grid verification failed — check coverage or manual tariff",
+          "storage": "Price ledger write failed — check disk space and recovery",
+          "configuration": "Missing configuration — open Configure",
+          "composition": "Calculation rejected — inspect rate/source details",
+          "supplier": "Supplier markup missing for affected period — Configure its dated rate",
+          "dso": "Grid tariff missing for affected period — Configure its dated rate",
+          "energinet_net": "Energinet network tariff missing for affected period — Configure its dated rate",
+          "energinet_system": "Energinet system tariff missing for affected period — Configure its dated rate",
+          "electricity_tax": "Electricity tax missing for affected period — Configure its dated rate"
+        }
+      }
+    },
+    "update": {
+      "published_release": {
+        "name": "Published PE release (update through HACS)"
       }
     }
   },
@@ -662,6 +735,31 @@
         "next": "Next",
         "back": "Back",
         "review": "Review draft"
+      }
+    },
+    "wizard_source_type": {
+      "options": {
+        "nordpool": "Official Home Assistant Nord Pool",
+        "entity": "Advanced verified provider entity"
+      }
+    },
+    "wizard_grid_source": {
+      "options": {
+        "radius_c": "Automatic verified Radius C",
+        "manual": "Manual dated grid rates"
+      }
+    },
+    "wizard_supplier": {
+      "options": {
+        "ewii": "EWII",
+        "custom": "Other supplier"
+      }
+    },
+    "price_basis": {
+      "options": {
+        "spot_ex_vat": "Spot excluding VAT",
+        "spot_incl_vat": "Spot including VAT",
+        "all_in": "Final all-in price"
       }
     }
   }

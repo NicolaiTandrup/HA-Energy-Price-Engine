@@ -70,12 +70,12 @@ class PriceSchedule:
             "last_success": report.get("last_success")
             if state == "READY"
             else previous.get("last_success"),
-            "valid_slots": report["source_slots"]
-            if report.get("source_slots") is not None
-            else (len(rows) if report.get("status") not in {"ERROR", "STALE"} else 0),
+            "valid_slots": len(rows) if state == "READY" else 0,
             "stored_slots": len(rows),
             "expected_slots": int((end - start).total_seconds() / 900),
             "reason": report.get("reason"),
+            "failure_stage": report.get("failure_stage"),
+            "source_slots": report.get("source_slots"),
             "required_action": report.get("required_action"),
             "missing_components": report.get("missing_components", []),
             "affected_period": report.get("affected_period"),

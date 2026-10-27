@@ -19,6 +19,12 @@ from custom_components import ha_energy_price_engine as integration
 from custom_components.ha_energy_price_engine.api import get_api
 from custom_components.ha_energy_price_engine.price_engine import day_bounds
 
+@pytest.fixture(autouse=True)
+def release_metadata():
+    from unittest.mock import AsyncMock,patch
+    with patch("custom_components.ha_energy_price_engine.update.fetch_releases",AsyncMock(return_value=[])):
+        yield
+
 @pytest.fixture
 def hass_config_dir():
     return os.environ["PE_PACKAGE_ROOT"]
@@ -27,7 +33,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
-    assert manifest["version"]=="0.1.0-beta.2"
+    assert manifest["version"]=="0.1.0-beta.3"
     freezer.move_to("2026-10-24T10:00:00Z")
     now=datetime(2026,10,24,10,tzinfo=UTC)
     slots=[]

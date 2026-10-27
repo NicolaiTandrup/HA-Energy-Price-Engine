@@ -76,7 +76,7 @@ async def test_options_edit_future_rate_reprice_once_and_survive_restart(hass, f
     hass.bus.async_listen(PRICE_REVISION_EVENT, lambda event: events.append(event.data))
     options = await options_advanced(hass, entry.entry_id)
     assert options["type"] == FlowResultType.MENU
-    assert "Saved settings" in options["description_placeholders"]["draft_status"]
+    assert "✓" in options["description_placeholders"]["draft_status"]
     result = await hass.config_entries.options.async_configure(
         options["flow_id"], {"next_step_id": "edit_rate"}
     )

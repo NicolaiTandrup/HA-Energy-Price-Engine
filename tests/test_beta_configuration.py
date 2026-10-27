@@ -191,7 +191,7 @@ async def test_arbitrary_site_count_isolation_and_supplier_label_not_a_rate(hass
             data["dated_components"] = []
         entries.append(await setup(hass, data))
     assert len(get_api(hass).sites()) == 7
-    assert entries[-1].runtime_data.data["status"] == "ERROR"
+    assert entries[-1].runtime_data.data["status"] == "INCOMPLETE"
     assert all(e.runtime_data.data["status"] == "READY" for e in entries[:-1])
     for e in entries:
         assert await hass.config_entries.async_unload(e.entry_id)
@@ -207,7 +207,7 @@ async def test_native_verified_backup_and_supplier_label_do_not_mutate_rates(has
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "storage"})
     result = await hass.config_entries.options.async_configure(fid, {})
     assert result["type"] == "menu"
-    assert "Verified backup saved" in result["description_placeholders"]["draft_status"]
+    assert "✓ .storage/" in result["description_placeholders"]["draft_status"]
     assert list(entry.runtime_data.price_engine.database.path.parent.glob("*.backup-*"))
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "wizard_supplier"})
     result = await hass.config_entries.options.async_configure(
