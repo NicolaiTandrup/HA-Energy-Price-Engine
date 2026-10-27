@@ -26,6 +26,9 @@ class PreviewEngine:
         self.records[key] = tuple(calculate(key, slots, tariff, source, now, 0))
         return False
 
+    def lookup(self, key, start, end):
+        return tuple(r for r in self.records.get(key, ()) if start <= r.start and r.end <= end)
+
     def complete_day(self, key, day, timezone):
         start, end = day_bounds(day, timezone)
         rows = [r for r in self.records.get(key, ()) if start <= r.start < end]

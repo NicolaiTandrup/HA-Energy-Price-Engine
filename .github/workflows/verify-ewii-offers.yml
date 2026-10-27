@@ -29,13 +29,11 @@ jobs:
                   with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=30) as r:
                       body=r.read(); final=r.url
                   parser=Text();parser.feed(body.decode());text=' '.join(p for p in parser.parts if p)
-                  matches=list(re.finditer(r'(?i)(øre|moms|tillæg|abonnement|kr./md|kr/md)',text))
-                  spans=[text[max(0,m.start()-120):m.end()+220] for m in matches]
-                  data={'product':product,'url':final,'verified_at':datetime.now(UTC).isoformat(),'sha256':hashlib.sha256(body).hexdigest()}
-                  unique=list(dict.fromkeys(spans[:8]+[v for v in spans if 'moms' in v.lower()]))
-                  for i,term in enumerate(unique[:15]):
-                      row=json.dumps({'product':product,'term':term},ensure_ascii=False).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
-                      print('::notice title=EWII term::'+row)
+                  prices=[text[max(0,m.start()-60):m.end()+160] for m in re.finditer(r'(?i)(tillæg på|kr\. i abonnement|månedligt abonnement)',text)][:3]
+                  vat=[re.sub('<[^>]*>',' ',body.decode()[max(0,m.start()-100):m.end()+160]) for m in re.finditer(r'(?i)moms',body.decode())][:4]
+                  links=list(dict.fromkeys(re.findall(r'href="([^" ]*(?:pris|beting|vilk)[^" ]*)"',body.decode(),re.I)))[:8]
+                  data={'product':product,'url':final,'verified_at':datetime.now(UTC).isoformat(),'sha256':hashlib.sha256(body).hexdigest(),'prices':prices,'vat':vat,'terms_links':links}
+
               except Exception as err:data={'product':product,'url':url,'error':str(err)}
               message=json.dumps(data,ensure_ascii=False).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
               print('::notice title=EWII authoritative source::'+message)

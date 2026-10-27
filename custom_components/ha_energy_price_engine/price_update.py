@@ -1,7 +1,7 @@
 """Source refresh/composition boundary, separate from all lookup consumers."""
 
 from asyncio import Lock
-from datetime import timedelta
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from homeassistant.exceptions import HomeAssistantError
@@ -228,6 +228,15 @@ class PriceUpdater:
                         annual_usage_kwh=site.get("annual_usage_kwh", 0),
                         usage_year=site.get("usage_year"),
                     )
+                # Raw coverage still describes the full source day. Current
+                # contract confirmation can price only accepted future quarters.
+                activation = (
+                    datetime.fromisoformat(site["pricing_start"])
+                    if site.get("pricing_start")
+                    else None
+                )
+                if activation:
+                    slots = [slot for slot in slots if slot.start >= activation]
                 stage = "composition"
                 report["grid_status"] = "STALE" if source.get("dso", {}).get("warning") else "READY"
                 if not (site.get("nordpool_entry") and self.official.last_errors):
@@ -247,9 +256,16 @@ class PriceUpdater:
                 if affected and self.on_change:
                     self.on_change(key, affected)
                 day = dates[0] if dates else now.astimezone(ZoneInfo(site["timezone"])).date()
+                scoped = False
+                if activation and slots:
+                    composed = self.engine.lookup(key, slots[0].start, slots[-1].end)
+                    scoped = len(composed) == len(slots) and all(
+                        a.start == b.start and a.end == b.end
+                        for a, b in zip(composed, slots, strict=True)
+                    )
                 report.update(
                     status="READY"
-                    if self.engine.complete_day(key, day, site["timezone"])
+                    if self.engine.complete_day(key, day, site["timezone"]) or scoped
                     else "INCOMPLETE",
                     last_success=source["verified_at"],
                     reason=None,
@@ -258,6 +274,8 @@ class PriceUpdater:
                     required_action=None,
                     affected_period=None,
                     changed=changed,
+                    verified_from=slots[0].start.isoformat() if slots else None,
+                    verified_until=slots[-1].end.isoformat() if slots else None,
                 )
                 if site.get("nordpool_entry") and self.official.last_errors:
                     report.update(

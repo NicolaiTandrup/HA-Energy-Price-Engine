@@ -61,9 +61,14 @@ class PriceSchedule:
         rows = self.coordinator.price_engine.lookup(key, start, end)
         report = self.coordinator.price_updater.status[key]
         complete = self.coordinator.price_engine.complete_day(key, day, site["timezone"])
+        scoped = bool(
+            site.get("pricing_start")
+            and report.get("verified_from")
+            and report.get("verified_until")
+        )
         state = (
             "READY"
-            if complete and report["status"] == "READY"
+            if (complete or scoped) and report["status"] == "READY"
             else report["status"]
             if report["status"] in {"ERROR", "STALE"}
             else "INCOMPLETE"
@@ -85,6 +90,8 @@ class PriceSchedule:
             "failure_stage": report.get("failure_stage"),
             "source_slots": report.get("source_slots"),
             "grid_status": report.get("grid_status"),
+            "verified_from": report.get("verified_from"),
+            "verified_until": report.get("verified_until"),
             "required_action": report.get("required_action"),
             "missing_components": report.get("missing_components", []),
             "affected_period": report.get("affected_period"),

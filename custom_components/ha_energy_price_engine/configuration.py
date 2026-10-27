@@ -126,6 +126,14 @@ def validate_site(value):
 
         if date.fromisoformat(rule["valid_to"]) <= date.fromisoformat(rule["valid_from"]):
             raise ValueError("Invalid provisional period")
+    if start := site.get("pricing_start"):
+        from datetime import datetime
+
+        from .models import utc
+
+        parsed = utc(datetime.fromisoformat(start))
+        if parsed.timestamp() % 900:
+            raise ValueError("Price activation must start at a UTC quarter boundary")
     return site
 
 

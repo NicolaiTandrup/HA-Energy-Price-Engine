@@ -34,6 +34,7 @@ def owned_files(hass, entry):
             suffix
             in {
                 "configuration",
+                "setup",
                 "price_schedule",
                 "tariffs",
                 "ledger.sqlite3",

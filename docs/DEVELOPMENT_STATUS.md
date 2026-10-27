@@ -24,7 +24,21 @@ source adapters, safe deletion and mandatory refresh times. Activation must not
 backfill earlier unverified intervals. New UI must be tested in real disposable
 HA frontend EN/DA desktop/mobile, including close/reopen and beta.4 migration.
 
-No beta.5 runtime change/tag/release yet. Next: verify authoritative product sources,
+Foundation checkpoint: **feat: accept current supplier rates without backfilling history**.
+35 focused contract/pricing/schedule/readiness tests passed. Current contract terms
+start at the next complete UTC quarter, use an open-ended end date, preserve prior
+settled ledger rows and never fill earlier unknown intervals. Monthly subscription
+remains separate; provisional rates stay outside verified ledger/API. Additive
+verified-range metadata lets the existing read-only API certify complete requested
+future ranges while full-day reads remain INCOMPLETE for new partial first days.
+SQLite touched-row persistence/arithmetic are unchanged. Setup progress is owned
+storage and included in selected-site cleanup.
+
+Official runner reads succeeded; primary markup/monthly quotes observed at EWII.
+VAT conventions still require authoritative verification before offering automatic
+rates; do not guess from consumer-page appearance. Source capture bounded notices
+being refined because GitHub limits annotations. No beta.5 tag/release yet.
+Next: verify authoritative product sources,
 implement/test incremental saving and current-rate activation, then simple native
 setup/diagnostics, full regression/consumer/HACS/package/CI gates and actual frontend
 journey screenshots/demonstration before immutable prerelease publication.
