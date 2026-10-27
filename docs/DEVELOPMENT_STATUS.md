@@ -1,9 +1,35 @@
 # Development handoff
 
-Updated 2026-10-27. **Beta.4 is published and independently verified. Stop unless
-the owner requests further development.** Read AGENTS.md first. Software/synthetic
-validation does not establish owner acceptance. No main merge, stable release or
-live HA/Node-RED/charging operation occurred.
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.5 in progress** on
+`feat/beta5-simple-onboarding`, based on beta.4 final checkpoint d089a52.
+Owner explicitly authorizes beta.5 prerelease after mandatory checks. Preserve
+all prior tags/releases; no main merge, stable or live HA/control operations.
+Read AGENTS.md first. Beta.1–.4 failed owner onboarding acceptance; simulations
+are not owner acceptance. Issue #8 latest escalation and #12 read.
+
+## Beta.5 initial checkpoint
+
+Checkpoint subject: **ci: investigate authoritative EWII product terms for beta.5**.
+Direct cloud requests to official EWII URLs fail at network proxy (403 tunnel).
+Read-only GitHub-runner verification records official source URL, retrieval time,
+HTML hash and relevant rate/VAT/subscription text as check notices. Never convert
+owner-provided illustrative offers into verified current presets without evidence.
+
+Implementation plan: five ordinary stages, step-confirmed ConfigEntry persistence,
+no final draft commit, rate-from-now/open-ended confirmed supplier terms, concise
+rate/source/status checklist and direct corrective settings. Public offers require
+explicit agreement confirmation; custom markup/VAT/monthly optional. Monthly fees
+remain outside marginal prices. Preserve advanced dated rules, consumer API, ledger,
+source adapters, safe deletion and mandatory refresh times. Activation must not
+backfill earlier unverified intervals. New UI must be tested in real disposable
+HA frontend EN/DA desktop/mobile, including close/reopen and beta.4 migration.
+
+No beta.5 runtime change/tag/release yet. Next: verify authoritative product sources,
+implement/test incremental saving and current-rate activation, then simple native
+setup/diagnostics, full regression/consumer/HACS/package/CI gates and actual frontend
+journey screenshots/demonstration before immutable prerelease publication.
+
+## Earlier beta.4 handoff (historical)
 
 ## Completed beta.4 publication
 
