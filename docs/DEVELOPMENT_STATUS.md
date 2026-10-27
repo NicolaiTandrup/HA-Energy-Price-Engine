@@ -24,33 +24,40 @@ presentation entities avoid reinterpreting statistics when display units change.
 Owned device sw_version derives from installed manifest metadata. Missing component
 exceptions now identify component/date/action without changing calculations.
 
-Checkpoint subject: `test: preserve wizard drafts and verify released beta migration`.
-All **184 producer tests** passed on fixture-supported HA 2026.10.3 before the
-beta.2 manifest bump; rerun both cores on final source remains mandatory. Seven new
-wizard cases cover source defaults, initial/resumed/invalid/Back drafts, explicit
-Discard, stable entities/device metadata/display units, and actual immutable beta.1
-source creating SQLite history then migrating without changing bytes/rows/revisions.
-Legacy flow tests retain their pricing/recovery assertions through the new navigation.
-CI preparation fetches the immutable beta.1 commit for shallow checkouts.
+Latest tested checkpoint **7d5cf2f**: all ten actual push/PR CI checks passed,
+including both-core producer/consumer suites, HACS, hassfest and independent install.
+Both local cores **184 passed**, 88% coverage; two upstream HACS deprecation warnings.
 
-Browser plugin absent; regular Playwright/system Chromium against disposable real
-HA 2026.10.4 frontend 20260930.5. Desktop native pages and review rendered correctly.
-External brand icons blocked the browser's HTTP connection pool; QA substitutes
-only decorative icons, never integration forms/data. Mobile and final save/restart
-still pending. IMPORTANT native HA limitation: Close/reload never submits fields
-still being typed. Every wizard page now explicitly warns to Continue before Close;
-Continue/Back/validation errors persist raw drafts. No claim of keystroke autosave.
-No custom frontend patch or owner HA access. Credentials and raw QA files in /tmp.
+Checkpoint subject: `fix: validate timezone off loop and document verified wizard`.
+Real desktop 1440x1000 and mobile 390x844 HA 2026.10.4 frontend 20260930.5 QA completed:
+all stages, Back, source-specific fields and defaults, missing-period Review, native
+Save (new site and mobile Options), close/reopen submitted draft, invalid timezone
+retention/recovery, explicit Discard and installed device version. Mobile document
+width equals viewport (390px), no horizontal overflow; final mobile console/errors
+empty. This found/fixed invalid ZoneInfo lookup importing tzdata on the event loop;
+regression asserts executor-thread validation. The same invalid input now produces
+its actionable field error without a HA blocking-call warning.
 
-Manifest is proposed 0.1.0-beta.2. Development dirty archive passed independent
-outside-tree native install/reload/Options/delete/recreate smoke after adapting it
-to the wizard (not a release integrity build). Release verification now checks main
-HACS structure independently from exact tag source; no main merge is authorized.
+Illustrated docs/WIZARD_GUIDE.md contains real synthetic QA screenshots; BETA_SETUP,
+HACS_DISTRIBUTION and BETA_ACCEPTANCE now describe actual beta.2 navigation/upgrade.
+IMPORTANT native HA limitation: Close/reload never submits fields still being typed.
+Every page gives a bold warning to Continue before closing. Continue/Back/error
+submissions persist raw draft pages and active configuration only changes on final
+Save. This is not keystroke autosave. No custom frontend patch or owner HA access.
+Browser plugin absent: used regular Playwright/system Chromium. Decorative icon
+requests alone substituted to avoid HTTP pool starvation; forms/backend are real HA.
+Minimal fixture initially lacked an unrelated websocket command and system camera
+libturbojpeg; this does not establish owner HA health or Pi/mobile physical testing.
 
-Next: finish mobile/native save/error/restart QA; complete clean both-core suites,
-HACS/hassfest/consumer/packaging CI; setup guide and acceptance checklist; then exact
-source tag, prerelease runner publication and independent public asset verification.
-Preserve beta.1 tag/assets, engine/ledger/API. No release has been published yet.
+Public verification now downloads actual main and tag source separately and serves
+ref-appropriate bytes to unchanged HACS registration/installation methods. Beta.2
+can install from its exact prerelease tag while main remains immutable beta.1; no
+main merge is required or authorized. No PE beta.2 release has been published yet.
+
+Next: final clean both-core tests/CI and package integrity, immutable beta.2 tag,
+fixed-source prerelease runner publication, then independently download/verify all
+public assets and actual HACS/native install on both cores. Preserve beta.1 tag/assets,
+pricing engine/SQLite/API. Stop after verified publication, leaving receipt here.
 
 ## Completed PE beta.1 publication — final receipt
 

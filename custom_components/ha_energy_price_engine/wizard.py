@@ -364,7 +364,7 @@ class Wizard:
         errors = {}
         if user_input is not None:
             try:
-                ZoneInfo(user_input["timezone"])
+                await self.hass.async_add_executor_job(ZoneInfo, user_input["timezone"])
             except ZoneInfoNotFoundError, ValueError:
                 errors["timezone"] = "invalid_timezone"
             area = user_input.get("area", "").strip().upper()

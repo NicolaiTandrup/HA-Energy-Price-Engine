@@ -99,7 +99,10 @@ def verify(output, expected_commit):
                 for p in archive.namelist()
             }
             assert actual == manifest["runtime_files"], "Published ZIP differs from source payload"
+    main_source = output / "public-main-source.zip"
+    download(f"https://codeload.github.com/{REPOSITORY}/zip/{main_commit}", main_source)
     receipt = {
+        "main_archive": str(main_source.resolve()),
         "verified_at": datetime.now(UTC).isoformat(),
         "repository": repository,
         "release": release,

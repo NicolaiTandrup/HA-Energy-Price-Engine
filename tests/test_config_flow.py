@@ -2,7 +2,9 @@
 
 from copy import deepcopy
 from datetime import UTC, date, datetime
+from threading import get_ident
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from homeassistant import config_entries
@@ -29,9 +31,16 @@ async def test_config_flow_site_unique_source_and_invalid_timezone(hass):
     result = await source_page(hass, "Test home")
     fid = result["flow_id"]
     result = await hass.config_entries.flow.async_configure(fid, {"nordpool_entry": "np"})
-    result = await hass.config_entries.flow.async_configure(
-        fid, {"area": "DK2", "timezone": "invalid/timezone", "vat_percent": 25}
-    )
+    loop_thread = get_ident()
+
+    def validate_timezone(value):
+        assert get_ident() != loop_thread  # Unknown zones can import tzdata from disk.
+        return ZoneInfo(value)
+
+    with patch("custom_components.ha_energy_price_engine.wizard.ZoneInfo", validate_timezone):
+        result = await hass.config_entries.flow.async_configure(
+            fid, {"area": "DK2", "timezone": "invalid/timezone", "vat_percent": 25}
+        )
     assert result["errors"] == {"timezone": "invalid_timezone"}
     result = await hass.config_entries.flow.async_configure(
         fid,

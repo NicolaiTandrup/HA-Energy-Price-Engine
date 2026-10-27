@@ -63,6 +63,14 @@ def release_inputs():
 @pytest.mark.parametrize("line", list(PINS))
 async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_path, line):
     receipt, files, archive = release_inputs()
+    main_files = files
+    if main_archive := receipt.get("main_archive"):
+        with zipfile.ZipFile(main_archive) as source:
+            main_files = {
+                "/".join(p.split("/")[1:]): source.read(p)
+                for p in source.namelist()
+                if not p.endswith("/")
+            }
     assert receipt["release"]["prerelease"] and not receipt["release"]["draft"]
     assert receipt["release"]["tag_name"] == TAG
     alias = upstream(line)
@@ -84,22 +92,31 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         last_commit=receipt["source_commit"],
         set_last_commit=AsyncMock(),
     )
-    directories = {str(p) for name in files for p in Path(name).parents if str(p) != "."}
-    tree = [
-        SimpleNamespace(
-            path=p,
-            full_path=p,
-            filename=Path(p).name,
-            is_directory=p in directories,
-            type="tree" if p in directories else "blob",
-            url="https://api.github.com/recorded-public-tree",
-        )
-        for p in sorted(set(files) | directories)
-    ]
+
+    def tree_for(payload):
+        directories = {str(p) for name in payload for p in Path(name).parents if str(p) != "."}
+        return [
+            SimpleNamespace(
+                path=p,
+                full_path=p,
+                filename=Path(p).name,
+                is_directory=p in directories,
+                type="tree" if p in directories else "blob",
+                url="https://api.github.com/recorded-public-tree",
+            )
+            for p in sorted(set(payload) | directories)
+        ]
+
+    async def get_tree(self, ref):
+        return tree_for(files if ref == TAG else main_files)
+
     calls = []
 
     async def contents(*, path, **kwargs):
-        return SimpleNamespace(data=SimpleNamespace(content=base64.b64encode(files[path]).decode()))
+        payload = files if kwargs.get("params", {}).get("ref") == TAG else main_files
+        return SimpleNamespace(
+            data=SimpleNamespace(content=base64.b64encode(payload[path]).decode())
+        )
 
     async def download(url, **kwargs):
         calls.append(url)
@@ -133,7 +150,7 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
             "get_releases",
             AsyncMock(return_value=[GitHubReleaseModel(receipt["release"])]),
         ),
-        patch.object(repo_base.HacsRepository, "get_tree", AsyncMock(return_value=tree)),
+        patch.object(repo_base.HacsRepository, "get_tree", get_tree),
         patch.object(repo_base.HacsRepository, "async_set_last_commits", last_commits, create=True),
         patch.object(repo_base, "Backup", side_effect=isolated_backup),
     ):

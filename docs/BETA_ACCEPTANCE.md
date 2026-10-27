@@ -1,24 +1,22 @@
 # PE + CM beta acceptance, source migration and rollback
 
-Target: **v0.1.0-beta.1 read-only PE prerelease**. On 2026-10-26 the owner explicitly
-authorized merging PE PR #7 and publishing this prerelease. This does not authorize
-a stable release, CM publication or production/control cutover.
+Target: **v0.1.0-beta.2 read-only PE prerelease**. Publication is owner-authorized
+once mandatory software checks pass; no stable, main merge or production cutover.
 
-## Software distribution acceptance
+## Beta.2 software acceptance
 
-- [x] Existing validated native implementation and immutable SQLite history preserved.
-- [x] Both-core unit/integration, source selection, DST, recovery and consumer API tests.
-- [x] Actual HACS prerelease discovery/tag download/update/reinstall regression tests.
-- [x] Independently placed ZIPs configure/reload/remove/recreate outside source.
-- [x] Explicit owner approval for PE PR #7 merge and PE beta.1 prerelease.
-- [x] Exact merged/tagged commit CI and independent public-release receipt recorded
-  on the release and PR #7; docs/receipts/v0.1.0-beta.1.json records the full evidence.
-- [ ] Owner records actual PAHA02-DEV HACS installation/configuration and hardware
-  observations. Isolated tests do not check this box for the owner.
+- [x] Pricing adapters, immutable SQLite history, multi-site identity and CM API retained.
+- [x] 184 producer tests on HA 2026.10.3 and 2026.10.4; migration uses actual beta.1 code.
+- [x] Invalid/Back/submitted drafts resume without applying active changes.
+- [x] Desktop and 390px mobile native wizard navigation/screenshots with real HA frontend.
+- [x] HACS, hassfest, independent installed wizard/Options/reload/delete/recreate CI.
+- [x] Clear Close/reload warning: HA cannot persist unsubmitted keystrokes. Continue first.
+- [ ] Exact final tagged source CI and independent public source/asset/HACS receipts.
+- [ ] Owner PAHA02-DEV upgrade/configuration, current contracts and real Pi observations.
 
-Follow [HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md) for exact PE installation and
-public verification. CM remains a separate unpublished development project; its
-merge/publication is not a prerequisite to read-only PE installation.
+The final public receipt records completed distribution checks; owner hardware
+acceptance remains separate. See [HACS instructions](HACS_DISTRIBUTION.md) and
+[illustrated wizard](WIZARD_GUIDE.md). No production/Node-RED/control changes.
 
 ## Before touching the owner's installation
 
