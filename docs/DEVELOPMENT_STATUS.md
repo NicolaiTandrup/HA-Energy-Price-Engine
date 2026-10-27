@@ -7,6 +7,22 @@ worktree, main merge, stable or production/Node-RED/CM/physical-control changes.
 Owner authorizes immutable beta.7 prerelease after mandatory gates; stop after
 publication and independent verification. Prior beta.6 STOP is historical below.
 
+## Beta.7 final validation before tag
+
+Checkpoint subject: **docs: freeze validated beta.7 candidate for immutable publication**.
+Full **308 passed per HA2026.10.3/current2026.10.4**,88% coverage,zero skips,two expected
+upstream HACS warnings. Current stable .4 rechecked. Official hassfest1integration/
+0invalid. No optional Babel dependency; minimal native system-locale rerun passed.
+All native preservation and readiness evidence is committed. Sourcea5df28a includes
+only docs/evidence beyond de15c69 runtime; whitespace/candidate status follow-up only.
+
+Complete unchanged consumers153/176/227/228/core and two coupled cases/reference/core
+passed both cores. Original engine, ledger, APIv1, schedule and source normalization
+remain byte-identical to beta.6. No new storage schema or units reinterpretation.
+Clean deterministic archives and four outside-source core/layout installs are next,
+then all exact-source push/PR/draft-updater checks, annotated tag and five tag checks.
+No beta.7 tag/release yet at this checkpoint; no owner publication approval needed.
+
 ## Beta.7 source/evidence checkpoint
 
 Checkpoint subject: **docs: prepare beta.7 setup, readiness and persistent-price evidence**.

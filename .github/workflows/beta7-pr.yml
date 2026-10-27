@@ -18,17 +18,17 @@ jobs:
           set -euo pipefail
           cat > "$RUNNER_TEMP/pe-beta7-body.md" <<'PR_BODY'
           Beta.7 candidate completes price presentation and readiness semantics after owner real-HA feedback in #8. This existing PR remains draft/unmerged; owner authorizes beta.7 prerelease only after mandatory gates.
-          
+
           Preferred prices default to ore/kWh2 decimals, optional DKK/kWh4. Raw spot, final/current/next/statistics/provisional entities and current/selected-future breakdowns use the same site unit. Exact values remain in canonical DKK/kWh entities/SQLite/APIv1; original IDs/Recorder units persist. Contract input precision and charging cost arithmetic remain unrounded. Canonical technical sensors are labelled separately; raw display labels show VAT basis. User language and explicit/browser-system decimal preferences are supported without optional dependencies.
-          
+
           Current/next readiness and full-day history are independent. Read-only future-window diagnostics use unchanged APIv1; missing earlier history never blocks an otherwise verified requested window. Example:7/96 today, current/next/window READY, tomorrow96/96 READY; unpublished future remains INCOMPLETE. No unknown past backfill, no invented zero price or charging plan. API/engine/SQLite/schedules remain established implementation.
-          
-          Validation:full307/core passed on HA2026.10.3/.4,88% coverage,zero skips; final308/core includes minimal-runtime system-locale regression and is running. Focused33 final presentation/readiness/native-status cases pass. Unchanged consumers153/176/227/228/core plus two coupled runtime cases/reference/core pass. Official hassfest/HACS/package gates run in CI; earlier stale beta.6 package assertion is fixed and both native layouts install outside source.
-          
+
+          Validation:full308/core passed on HA2026.10.3/.4,88% coverage,zero skips, including minimal-runtime system-locale regression. Focused33 final presentation/readiness/native-status cases pass. Unchanged consumers153/176/227/228/core plus two coupled runtime cases/reference/core pass. Official hassfest/HACS/package gates run in CI; earlier stale beta.6 package assertion is fixed and both native layouts install outside source.
+
           Native HA2026.10.4/frontend20260930.5 EN/en-GB/DA desktop/mobile passed ore2/DKK4, native entity formatting, custom separator, browser-system format, selected future components and READY/INCOMPLETE windows. No frontend errors/warnings. Upgrade preserved15 beta.6 configurations/1,211 original SQL rows/revisions/315 entity IDs/29 Recorder unit metadata rows. Restart preserved16configs/1,314rows exactly. Recorded/synthetic source boundaries only, not owner acceptance.250 repeated indexed reads/case reject provider fetch, recomposition and SQLite connection. One changed source quarter writes one future row and preserves settled history/revisions. Current16:45→next17:00 Radius example68.32→147.95ore; supplied1.25/2kWh costs3.81287625DKK from unrounded rates.
-          
+
           Complete setup/examples, native simulation receipt, acceptance checklist and permanent handoff are committed. Cloud35,136-row SQLite repeat retains original18.24MB storage and .0302s96-row append; not Pi measurements. No beta.7 tag/release at this candidate checkpoint. Next:final exact-source CI/tag, authorized immutable prerelease and independent public HACS/native verification.
-          
+
           No main merge, stable publication, production HA, Node-RED, CM or physical charging changes. Previous releases preserved. Stop after beta.7 publication and verification. Refs#8,#12.
           PR_BODY
           gh api "repos/$GITHUB_REPOSITORY/pulls/14" > "$RUNNER_TEMP/pe-existing-pr.json"
