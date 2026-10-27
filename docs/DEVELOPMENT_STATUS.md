@@ -54,6 +54,15 @@ ref-appropriate bytes to unchanged HACS registration/installation methods. Beta.
 can install from its exact prerelease tag while main remains immutable beta.1; no
 main merge is required or authorized. No PE beta.2 release has been published yet.
 
+Checkpoint subject: `fix: reverify unchanged settings on explicit wizard save`.
+Code review found that HA skips update listeners for equal options, so Save & verify
+now schedules one native reload even when options are identical. Regression executes
+that reload and checks unchanged historical records/revision; **8 wizard cases pass**.
+Previous exact source 373ea45 has all ten remote checks green and both local cores
+184 tests passing. Final suite now has **185** cases and must pass on the next head.
+PyPI current Home Assistant rechecked: **2026.10.4**. Prepublication actual-main beta.1
+versus candidate-tag HACS transport test passed on both pinned HACS lines.
+
 Next: final clean both-core tests/CI and package integrity, immutable beta.2 tag,
 fixed-source prerelease runner publication, then independently download/verify all
 public assets and actual HACS/native install on both cores. Preserve beta.1 tag/assets,

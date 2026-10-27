@@ -6,7 +6,7 @@ once mandatory software checks pass; no stable, main merge or production cutover
 ## Beta.2 software acceptance
 
 - [x] Pricing adapters, immutable SQLite history, multi-site identity and CM API retained.
-- [x] 184 producer tests on HA 2026.10.3 and 2026.10.4; migration uses actual beta.1 code.
+- [x] 185 producer tests (final rerun required before tagging) on HA 2026.10.3 and 2026.10.4; migration uses actual beta.1 code.
 - [x] Invalid/Back/submitted drafts resume without applying active changes.
 - [x] Desktop and 390px mobile native wizard navigation/screenshots with real HA frontend.
 - [x] HACS, hassfest, independent installed wizard/Options/reload/delete/recreate CI.

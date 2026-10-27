@@ -345,3 +345,34 @@ asyncio.run(run())
     old = json.loads(expected.read_text())
     assert [engine._serialize(r) for r in engine.records["home"]] == old["records"]
     assert engine.revisions["home"] == old["revision"] and not engine.load_errors
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_save_verify_unchanged_options_rechecks_sources_and_preserves_history(hass, freezer):
+    from unittest.mock import patch
+
+    from custom_components.ha_energy_price_engine.configuration import settings
+
+    freezer.move_to("2026-10-23T12:00:00Z")
+    MockConfigEntry(
+        domain="nordpool", entry_id="np", data={"areas": ["DK2"]}, state=ConfigEntryState.LOADED
+    ).add_to_hass(hass)
+    entry = await setup(hass)
+    rows = entry.runtime_data.price_engine.records["home"]
+    revision = entry.runtime_data.price_engine.revisions["home"]
+    # Persist a complete options model once, then Save an identical draft.
+    hass.config_entries.async_update_entry(entry, options=settings(entry))
+    await hass.async_block_till_done()
+    result = await options_review(hass, entry.entry_id)
+    with patch.object(
+        hass.config_entries, "async_reload", wraps=hass.config_entries.async_reload
+    ) as reload:
+        result = await hass.config_entries.options.async_configure(
+            result["flow_id"], {"next_step_id": "wizard_save"}
+        )
+        await hass.async_block_till_done()
+        reload.assert_awaited_once_with(entry.entry_id)
+    assert result["type"] == "create_entry"
+    assert entry.runtime_data.price_engine.records["home"] == rows
+    assert entry.runtime_data.price_engine.revisions["home"] == revision
+    assert await hass.config_entries.async_unload(entry.entry_id)

@@ -721,6 +721,10 @@ class Wizard:
             return self.async_create_entry(
                 title=site["name"], data=site, description="saved_pending_verification"
             )
+        if dict(self._wizard_entry.options) == site:
+            # HA does not notify option listeners for equal values. The explicit
+            # Save & verify action must still recheck sources, not just close.
+            self.hass.config_entries.async_schedule_reload(self._wizard_entry.entry_id)
         if hasattr(self, "_get_reconfigure_entry"):
             if self._wizard_entry.update_listeners:
                 return self.async_update_and_abort(
