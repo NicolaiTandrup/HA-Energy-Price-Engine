@@ -1,8 +1,42 @@
 # Development handoff
 
-Updated 2026-10-26 (Europe/Copenhagen). Read AGENTS.md first. This is the single
+Updated 2026-10-27 (Europe/Copenhagen). Read AGENTS.md first. This is the single
 permanent handoff. Continue existing branch `feat/standalone-price-engine` and
 existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
+
+## Beta.2 guided setup mission in progress
+
+Owner authorizes publishing **v0.1.0-beta.2** after mandatory validation; no stable,
+production/Node-RED/charging operations. Primary Issue #8 was read in full, including
+real PAHA02-DEV screenshots/feedback described there. New branch:
+**feat/beta2-guided-setup**, based on preserved beta.1 final handoff 72ae9a3. Published
+beta.1 main/tag remain immutable. HACS can already add PE from main; beta.2 can be
+selected from a validated prerelease tag without an unrelated main/protection change.
+
+Checkpoint subject: `feat: add durable native setup wizard and safe price display`.
+Draft implementation has six logical stages, source-specific substeps, safe area
+hints, 25-percent UI with fixed official DKK/MWh input, durable per-site/new-site
+staging, Back/Next/review navigation, explicit discard and atomic Save & verify.
+Advanced dated rate editor is retained behind Review; no private rate is invented.
+Version-3 config migration adds presentation preference while preserving identity,
+source/rates/history. Existing DKK entities/API are retained; separate unit-specific
+presentation entities avoid reinterpreting statistics when display units change.
+Owned device sw_version derives from installed manifest metadata. Missing component
+exceptions now identify component/date/action without changing calculations.
+
+Targeted new wizard, legacy time-band and native lifecycle cases: **12 passed**;
+separate existing pricing/component tests passed, Ruff clean, official local hassfest
+valid. Whole legacy flow suite is being adapted to the intentionally changed UI;
+first sweep had 11 old-navigation expectations to update, not a passing release.
+Do not publish until complete suites, migration/error/restart/draft cases and CI pass.
+Browser plugin absent; using frontend-testing-debugging skill with regular Playwright
+and system Chromium, disposable local HA .4 at /tmp/pe-beta2-ui (no owner access).
+Its HA frontend dependency is pinned to core's required 20260930.5 in ignored .venv-ui;
+all UI credentials/fixtures/screenshots remain in /tmp. Desktop/mobile checks pending.
+
+Next: finish native regression adaptation and draft edge cases, real frontend QA,
+version beta.2/package/public-release tooling, exact-source CI and public verification.
+No CM development. Preserve source/ledger/API and beta.1 tag/assets.
 
 ## Completed PE beta.1 publication — final receipt
 

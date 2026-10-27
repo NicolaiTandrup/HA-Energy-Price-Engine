@@ -47,6 +47,9 @@ def source_status(coordinator, now=None):
         "last_success": result.last_success,
         "last_attempt": report.get("last_attempt"),
         "last_error": result.reason,
+        "required_action": report.get("required_action"),
+        "missing_components": report.get("missing_components", []),
+        "affected_period": report.get("affected_period"),
         "valid_slots": result.valid_slots,
         "expected_slots": result.expected_slots,
         "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
@@ -63,10 +66,13 @@ def slot_breakdown(coordinator, start, now=None):
     row = result.records[0]
     payload = json.loads(row.components_json)
     source = json.loads(row.source_json)
+    display_unit = coordinator.site.get("display_unit", "øre/kWh")
+    factor = 100 if display_unit == "øre/kWh" else 1
     lines = [
         f"{row.start.isoformat()} – {row.end.isoformat()} (UTC)",
         f"Status: {result.status}; revision: {row.revision}; verified: {result.last_success or 'unverified'}",
-        f"Stored final: {row.final_price_incl_vat:.6f} DKK/kWh including VAT",
+        f"Preferred display: {row.final_price_incl_vat * factor:.6f} {display_unit} including VAT",
+        f"Stored final: {row.final_price_incl_vat:.6f} DKK/kWh including VAT (unchanged API unit)",
     ]
     lines.append(
         f"Stored source: {source.get('kind', 'recorded provider')}; "
@@ -82,8 +88,8 @@ def slot_breakdown(coordinator, start, now=None):
         )
     for name, part in payload.get("components", {}).items():
         lines.append(
-            f"{name}: {part['ex_vat']:.6f} ex VAT + {part['vat']:.6f} VAT = "
-            f"{part['incl_vat']:.6f} DKK/kWh; verified {part.get('verified_on', 'see source')}; "
+            f"{name}: {part['ex_vat'] * factor:.6f} ex VAT + {part['vat'] * factor:.6f} VAT = "
+            f"{part['incl_vat'] * factor:.6f} {display_unit}; verified {part.get('verified_on', 'see source')}; "
             f"period {part.get('valid_from', 'source interval')} – {part.get('valid_to', 'source interval')}; "
             f"locked {part.get('locked', False)}; source: {part.get('source', 'see input/grid source')}"
         )

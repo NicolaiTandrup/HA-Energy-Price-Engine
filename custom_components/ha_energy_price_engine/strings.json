@@ -36,14 +36,218 @@
           "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
         },
         "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates."
+      },
+      "wizard_site": {
+        "title": "1 / 6 · Site and source",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "name": "Site name (required)",
+          "id": "Permanent site ID (optional)",
+          "source_type": "Price source",
+          "navigation": "Navigation"
+        },
+        "data_description": {
+          "name": "A friendly label, e.g. Summer house. Changing the label never changes its permanent ID.",
+          "id": "Leave blank to generate a unique ID from the name. Lowercase letters, numbers and underscores; e.g. sommerhus. Used for history/consumer mapping, not an entity ID.",
+          "source_type": "Choose official Nord Pool for ordinary setup. The entity contract is for advanced providers only.",
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify."
+        },
+        "submit": "Continue"
+      },
+      "wizard_source": {
+        "title": "1 / 6 · Installed source",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "nordpool_entry": "Installed official Nord Pool (required)",
+          "navigation": "Navigation",
+          "price_entity": "Advanced provider entity (required)",
+          "price_unit": "Provider INPUT unit",
+          "price_basis": "Provider price/VAT convention",
+          "price_attribute": "Interval attribute",
+          "stale_minutes": "Maximum provider verification age (minutes)"
+        },
+        "data_description": {
+          "nordpool_entry": "Select the integration by its readable name. No opaque ID is typed. If absent, add official Nord Pool in Devices & services first.",
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "price_entity": "Must expose explicit intervals and verified_at; HA report time alone is not verification.",
+          "price_unit": "Confirm the provider contract. This is not the preferred display unit.",
+          "price_basis": "Final all-in input cannot be combined with extra tariffs/VAT.",
+          "price_attribute": "Provider attribute containing aware start/end/price rows, normally slots.",
+          "stale_minutes": "Stale, missing or future verification fails closed."
+        },
+        "submit": "Continue"
+      },
+      "wizard_location": {
+        "title": "1 / 6 · Area and VAT",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "area": "Delivery area (required)",
+          "timezone": "Delivery timezone (required)",
+          "vat_percent": "Spot/automatic grid VAT (%)",
+          "navigation": "Navigation"
+        },
+        "data_description": {
+          "area": "Suggested from the selected integration. DK1 = west Denmark; DK2 = east Denmark. Confirm the correct area for this site.",
+          "timezone": "Danish areas suggest Europe/Copenhagen. The timezone defines local tariff dates and 92/96/100-quarter DST days.",
+          "vat_percent": "25 means 25%. Nord Pool input is DKK/MWh before VAT; the engine converts units and applies VAT once. This is not a final all-in price by itself.",
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify."
+        },
+        "submit": "Continue"
+      },
+      "wizard_grid": {
+        "title": "2 / 6 · Grid tariffs",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "dso_mode": "Grid tariff source",
+          "dso_tariff_class": "Confirmed tariff class",
+          "dso_manual_fallback": "Allow verified manual fallback",
+          "dso_stale_days": "Maximum verified grid-cache age (days)"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "dso_mode": "Choose automatic Radius C only for a confirmed Radius C connection. Manual rates and locks remain editable from Review → Dated rates.",
+          "dso_tariff_class": "Automatic verification currently supports C only. Other classes require explicit dated manual rates.",
+          "dso_manual_fallback": "Only your explicitly entered dated grid rates can be used as fallback. Missing data never becomes zero.",
+          "dso_stale_days": "An expired cache is not certified fresh. Coverage and source identity must still pass."
+        },
+        "submit": "Continue"
+      },
+      "wizard_supplier": {
+        "title": "3 / 6 · Supplier contract",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "supplier": "Supplier",
+          "add_contract": "Add/update this draft contract period",
+          "amount": "Contract markup (required when adding)",
+          "unit": "Contract rate unit",
+          "vat_included": "Contract amount already includes VAT",
+          "rate_vat_percent": "Contract VAT (%)",
+          "valid_from": "Effective from (inclusive)",
+          "valid_to": "Effective until (exclusive)",
+          "verified_on": "Terms verified on",
+          "source": "Contract reference (no customer identifiers)"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "supplier": "EWII is a label, not a contract preset. Historical household .030 DKK/kWh ex VAT applies June–September 2026 only. Never assume current/other-site terms.",
+          "add_contract": "Off retains all existing periods. Turn on to enter a verified period below. Missing required coverage remains unavailable.",
+          "amount": "Your actual verified amount in the selected unit. No private contract rate is filled automatically.",
+          "unit": "This unit belongs to the contract amount, not Nord Pool input or the display preference.",
+          "vat_included": "Confirm the invoice convention to prevent double VAT.",
+          "rate_vat_percent": "25 means 25%; do not type 0.25 for 25%.",
+          "valid_from": "Required when adding a period. Local delivery date.",
+          "valid_to": "Required when adding. The rule does not apply on this date; do not extend beyond verified terms.",
+          "verified_on": "Required when adding. Record when the actual contract/source was checked.",
+          "source": "Required when adding, e.g. verified contract. Do not enter addresses, account numbers or secrets."
+        },
+        "submit": "Continue"
+      },
+      "wizard_charges": {
+        "title": "4 / 6 · National charges and tax",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "danish_public_rates": "Use documented bounded Danish baseline",
+          "heating_registered": "Heating registration verified (optional)",
+          "annual_usage_kwh": "Verified annual consumption (kWh)",
+          "usage_year": "Year of consumption evidence (optional)"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "danish_public_rates": "Opt in only when applicable: Energinet net .043/system .072 ex VAT during 2026; tax .008 during 2026–2027. Manual locked periods override. No later rule is guessed.",
+          "heating_registered": "Never inferred from a heat pump. A reduced rate also requires an explicitly verified eligible tax rule and same-year consumption evidence.",
+          "annual_usage_kwh": "Only used with an explicit eligible heating rule, registration and usage year. No automatic discount is created.",
+          "usage_year": "Evidence must match the delivery year for any explicit heating rule."
+        },
+        "submit": "Continue"
+      },
+      "wizard_display": {
+        "title": "5 / 6 · Display preference",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "display_unit": "Preferred display unit"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "display_unit": "Default øre/kWh. 100 DKK/MWh = 10 øre/kWh = 0.10 DKK/kWh before additions. Ledger/API and existing DKK sensors stay unchanged."
+        },
+        "submit": "Continue"
+      },
+      "wizard_review": {
+        "title": "6 / 6 · Review, Save & verify",
+        "description": "{review}",
+        "data": {},
+        "data_description": {},
+        "submit": "Continue",
+        "menu_options": {
+          "wizard_save": "Save & verify",
+          "wizard_display": "Back to display preference",
+          "advanced": "Dated rates / manual overrides",
+          "wizard_discard": "Discard draft…"
+        }
+      },
+      "wizard_resume": {
+        "title": "Resume unfinished setup",
+        "description": "Choose the preserved draft. No active pricing changes until Save & verify.",
+        "data": {
+          "draft": "Resume a preserved draft or create another site"
+        },
+        "data_description": {
+          "draft": "Drafts are separate from active settings."
+        },
+        "submit": "Continue"
+      },
+      "wizard_discard": {
+        "title": "Confirm discard",
+        "description": "{draft_status}",
+        "data": {
+          "confirm": "Discard all staged changes?"
+        },
+        "data_description": {
+          "confirm": "Only explicit confirmation discards the draft. Existing active configuration/history stay untouched."
+        },
+        "submit": "Continue"
+      },
+      "advanced": {
+        "title": "Dated rates and diagnostics",
+        "description": "{draft_status}",
+        "data": {},
+        "data_description": {},
+        "submit": "Continue",
+        "menu_options": {
+          "wizard_review": "Review & Save",
+          "add_rate": "Add dated rate",
+          "edit_rate": "Edit dated rate",
+          "remove_rate": "Remove dated rate",
+          "storage": "Verified backup",
+          "breakdown": "Inspect stored quarter"
+        }
       }
     },
     "error": {
-      "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap."
+      "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap.",
+      "name_required": "Enter a friendly site name.",
+      "invalid_id": "Use lowercase a-z, digits and underscores, starting with a letter/digit.",
+      "duplicate_id": "This ID already belongs to a site. Use another ID or configure that existing site.",
+      "source_required": "Select an installed enabled source; add official Nord Pool first if needed.",
+      "legacy_source": "A legacy HACS Nordpool shadows the official integration. Use the official source in an approved test setup; do not silently substitute it.",
+      "invalid_timezone": "Enter a valid IANA timezone, e.g. Europe/Copenhagen.",
+      "area_required": "Confirm the delivery area, e.g. DK2 for east Denmark.",
+      "unsupported_area": "This area is not configured in the selected Nord Pool entry. Select a supported area/source.",
+      "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
+      "invalid_rate": "Check dates, explicit units/VAT, source and overlap. Edit an old end date in Dated rates before adding an overlapping period.",
+      "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
-      "reconfigure_successful": "Site source updated. Stable site identity and dated business settings were preserved."
+      "reconfigure_successful": "Site source updated. Stable site identity and dated business settings were preserved.",
+      "draft_discarded": "Draft discarded; active prices/configuration/history were preserved."
+    },
+    "create_entry": {
+      "saved_pending_verification": "Site configuration saved. Source/component verification starts now; only READY with complete valid quarters means final prices are usable. If incomplete/error, reopen Configure to resume and correct missing dated components. No control commands are involved."
     }
   },
   "options": {
@@ -96,7 +300,7 @@
         "data": {
           "id": "Component",
           "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = \u00f8re)",
+          "unit": "Money unit (ore = øre)",
           "vat_included": "Amount already includes VAT",
           "vat_rate": "Component VAT fraction (0.25 = 25%)",
           "valid_from": "Effective from (inclusive local date)",
@@ -114,7 +318,7 @@
         "data": {
           "id": "Component",
           "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = \u00f8re)",
+          "unit": "Money unit (ore = øre)",
           "vat_included": "Amount already includes VAT",
           "vat_rate": "Component VAT fraction (0.25 = 25%)",
           "valid_from": "Effective from (inclusive local date)",
@@ -144,7 +348,7 @@
       },
       "taxes": {
         "title": "Dated public baselines and tax eligibility",
-        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026\u20132027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
+        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026–2027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
         "data": {
           "danish_public_rates": "Use documented dated national baseline (not live legislative verification)",
           "heating_registered": "Electrically heated residence registration verified",
@@ -154,7 +358,7 @@
       },
       "supplier": {
         "title": "Supplier contract",
-        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June\u2013September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
+        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June–September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
         "data": {
           "supplier": "Supplier label (no automatic contract inheritance)"
         }
@@ -169,16 +373,220 @@
         "data": {
           "slot": "Quarter (local date/time and UTC offset)"
         }
+      },
+      "wizard_site": {
+        "title": "1 / 6 · Site and source",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "name": "Site name (required)",
+          "id": "Permanent site ID (optional)",
+          "source_type": "Price source",
+          "navigation": "Navigation"
+        },
+        "data_description": {
+          "name": "A friendly label, e.g. Summer house. Changing the label never changes its permanent ID.",
+          "id": "Leave blank to generate a unique ID from the name. Lowercase letters, numbers and underscores; e.g. sommerhus. Used for history/consumer mapping, not an entity ID.",
+          "source_type": "Choose official Nord Pool for ordinary setup. The entity contract is for advanced providers only.",
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify."
+        },
+        "submit": "Continue"
+      },
+      "wizard_source": {
+        "title": "1 / 6 · Installed source",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "nordpool_entry": "Installed official Nord Pool (required)",
+          "navigation": "Navigation",
+          "price_entity": "Advanced provider entity (required)",
+          "price_unit": "Provider INPUT unit",
+          "price_basis": "Provider price/VAT convention",
+          "price_attribute": "Interval attribute",
+          "stale_minutes": "Maximum provider verification age (minutes)"
+        },
+        "data_description": {
+          "nordpool_entry": "Select the integration by its readable name. No opaque ID is typed. If absent, add official Nord Pool in Devices & services first.",
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "price_entity": "Must expose explicit intervals and verified_at; HA report time alone is not verification.",
+          "price_unit": "Confirm the provider contract. This is not the preferred display unit.",
+          "price_basis": "Final all-in input cannot be combined with extra tariffs/VAT.",
+          "price_attribute": "Provider attribute containing aware start/end/price rows, normally slots.",
+          "stale_minutes": "Stale, missing or future verification fails closed."
+        },
+        "submit": "Continue"
+      },
+      "wizard_location": {
+        "title": "1 / 6 · Area and VAT",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "area": "Delivery area (required)",
+          "timezone": "Delivery timezone (required)",
+          "vat_percent": "Spot/automatic grid VAT (%)",
+          "navigation": "Navigation"
+        },
+        "data_description": {
+          "area": "Suggested from the selected integration. DK1 = west Denmark; DK2 = east Denmark. Confirm the correct area for this site.",
+          "timezone": "Danish areas suggest Europe/Copenhagen. The timezone defines local tariff dates and 92/96/100-quarter DST days.",
+          "vat_percent": "25 means 25%. Nord Pool input is DKK/MWh before VAT; the engine converts units and applies VAT once. This is not a final all-in price by itself.",
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify."
+        },
+        "submit": "Continue"
+      },
+      "wizard_grid": {
+        "title": "2 / 6 · Grid tariffs",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "dso_mode": "Grid tariff source",
+          "dso_tariff_class": "Confirmed tariff class",
+          "dso_manual_fallback": "Allow verified manual fallback",
+          "dso_stale_days": "Maximum verified grid-cache age (days)"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "dso_mode": "Choose automatic Radius C only for a confirmed Radius C connection. Manual rates and locks remain editable from Review → Dated rates.",
+          "dso_tariff_class": "Automatic verification currently supports C only. Other classes require explicit dated manual rates.",
+          "dso_manual_fallback": "Only your explicitly entered dated grid rates can be used as fallback. Missing data never becomes zero.",
+          "dso_stale_days": "An expired cache is not certified fresh. Coverage and source identity must still pass."
+        },
+        "submit": "Continue"
+      },
+      "wizard_supplier": {
+        "title": "3 / 6 · Supplier contract",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "supplier": "Supplier",
+          "add_contract": "Add/update this draft contract period",
+          "amount": "Contract markup (required when adding)",
+          "unit": "Contract rate unit",
+          "vat_included": "Contract amount already includes VAT",
+          "rate_vat_percent": "Contract VAT (%)",
+          "valid_from": "Effective from (inclusive)",
+          "valid_to": "Effective until (exclusive)",
+          "verified_on": "Terms verified on",
+          "source": "Contract reference (no customer identifiers)"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "supplier": "EWII is a label, not a contract preset. Historical household .030 DKK/kWh ex VAT applies June–September 2026 only. Never assume current/other-site terms.",
+          "add_contract": "Off retains all existing periods. Turn on to enter a verified period below. Missing required coverage remains unavailable.",
+          "amount": "Your actual verified amount in the selected unit. No private contract rate is filled automatically.",
+          "unit": "This unit belongs to the contract amount, not Nord Pool input or the display preference.",
+          "vat_included": "Confirm the invoice convention to prevent double VAT.",
+          "rate_vat_percent": "25 means 25%; do not type 0.25 for 25%.",
+          "valid_from": "Required when adding a period. Local delivery date.",
+          "valid_to": "Required when adding. The rule does not apply on this date; do not extend beyond verified terms.",
+          "verified_on": "Required when adding. Record when the actual contract/source was checked.",
+          "source": "Required when adding, e.g. verified contract. Do not enter addresses, account numbers or secrets."
+        },
+        "submit": "Continue"
+      },
+      "wizard_charges": {
+        "title": "4 / 6 · National charges and tax",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "danish_public_rates": "Use documented bounded Danish baseline",
+          "heating_registered": "Heating registration verified (optional)",
+          "annual_usage_kwh": "Verified annual consumption (kWh)",
+          "usage_year": "Year of consumption evidence (optional)"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "danish_public_rates": "Opt in only when applicable: Energinet net .043/system .072 ex VAT during 2026; tax .008 during 2026–2027. Manual locked periods override. No later rule is guessed.",
+          "heating_registered": "Never inferred from a heat pump. A reduced rate also requires an explicitly verified eligible tax rule and same-year consumption evidence.",
+          "annual_usage_kwh": "Only used with an explicit eligible heating rule, registration and usage year. No automatic discount is created.",
+          "usage_year": "Evidence must match the delivery year for any explicit heating rule."
+        },
+        "submit": "Continue"
+      },
+      "wizard_display": {
+        "title": "5 / 6 · Display preference",
+        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "data": {
+          "navigation": "Navigation",
+          "display_unit": "Preferred display unit"
+        },
+        "data_description": {
+          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
+          "display_unit": "Default øre/kWh. 100 DKK/MWh = 10 øre/kWh = 0.10 DKK/kWh before additions. Ledger/API and existing DKK sensors stay unchanged."
+        },
+        "submit": "Continue"
+      },
+      "wizard_review": {
+        "title": "6 / 6 · Review, Save & verify",
+        "description": "{review}",
+        "data": {},
+        "data_description": {},
+        "submit": "Continue",
+        "menu_options": {
+          "wizard_save": "Save & verify",
+          "wizard_display": "Back to display preference",
+          "advanced": "Dated rates / manual overrides",
+          "wizard_discard": "Discard draft…"
+        }
+      },
+      "wizard_resume": {
+        "title": "Resume unfinished setup",
+        "description": "Choose the preserved draft. No active pricing changes until Save & verify.",
+        "data": {
+          "draft": "Resume a preserved draft or create another site"
+        },
+        "data_description": {
+          "draft": "Drafts are separate from active settings."
+        },
+        "submit": "Continue"
+      },
+      "wizard_discard": {
+        "title": "Confirm discard",
+        "description": "{draft_status}",
+        "data": {
+          "confirm": "Discard all staged changes?"
+        },
+        "data_description": {
+          "confirm": "Only explicit confirmation discards the draft. Existing active configuration/history stay untouched."
+        },
+        "submit": "Continue"
+      },
+      "advanced": {
+        "title": "Dated rates and diagnostics",
+        "description": "{draft_status}",
+        "data": {},
+        "data_description": {},
+        "submit": "Continue",
+        "menu_options": {
+          "wizard_review": "Review & Save",
+          "add_rate": "Add dated rate",
+          "edit_rate": "Edit dated rate",
+          "remove_rate": "Remove dated rate",
+          "storage": "Verified backup",
+          "breakdown": "Inspect stored quarter"
+        }
       }
     },
     "error": {
       "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry.",
       "site_not_loaded": "Load this pricing site before creating a backup.",
-      "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics."
+      "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics.",
+      "name_required": "Enter a friendly site name.",
+      "invalid_id": "Use lowercase a-z, digits and underscores, starting with a letter/digit.",
+      "duplicate_id": "This ID already belongs to a site. Use another ID or configure that existing site.",
+      "source_required": "Select an installed enabled source; add official Nord Pool first if needed.",
+      "legacy_source": "A legacy HACS Nordpool shadows the official integration. Use the official source in an approved test setup; do not silently substitute it.",
+      "invalid_timezone": "Enter a valid IANA timezone, e.g. Europe/Copenhagen.",
+      "area_required": "Confirm the delivery area, e.g. DK2 for east Denmark.",
+      "unsupported_area": "This area is not configured in the selected Nord Pool entry. Select a supported area/source.",
+      "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
+      "invalid_rate": "Check dates, explicit units/VAT, source and overlap. Edit an old end date in Dated rates before adding an overlapping period.",
+      "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
-      "site_not_loaded": "Load this site to inspect stored prices."
+      "site_not_loaded": "Load this site to inspect stored prices.",
+      "draft_discarded": "Draft discarded; active prices/configuration/history were preserved."
+    },
+    "create_entry": {
+      "saved_pending_verification": "Site configuration saved. Source/component verification starts now; only READY with complete valid quarters means final prices are usable. If incomplete/error, reopen Configure to resume and correct missing dated components. No control commands are involved."
     }
   },
   "entity": {
@@ -203,6 +611,21 @@
       },
       "tomorrow_status": {
         "name": "Tomorrow price readiness"
+      },
+      "display_current": {
+        "name": "Current final price (preferred display)"
+      },
+      "display_next": {
+        "name": "Next quarter (preferred display)"
+      },
+      "display_minimum": {
+        "name": "Today minimum (preferred display)"
+      },
+      "display_maximum": {
+        "name": "Today maximum (preferred display)"
+      },
+      "display_average": {
+        "name": "Today average (preferred display)"
       }
     }
   },
@@ -213,7 +636,7 @@
         "step": {
           "confirm": {
             "title": "Verify this pricing site again",
-            "description": "Review this site\u2019s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
+            "description": "Review this site’s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
           }
         },
         "error": {
@@ -222,6 +645,15 @@
         "abort": {
           "site_not_loaded": "This pricing site is not loaded. Check its integration entry."
         }
+      }
+    }
+  },
+  "selector": {
+    "wizard_navigation": {
+      "options": {
+        "next": "Next",
+        "back": "Back",
+        "review": "Review draft"
       }
     }
   }
