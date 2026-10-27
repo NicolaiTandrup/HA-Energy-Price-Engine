@@ -873,3 +873,31 @@ source, tag beta.5 immutably, run fixed-source publisher with15 green checks and
 both-layout native installation gates. Independently verify public release/assets/
 HACS/version selection on both cores, update receipt/PR/handoff and stop. No stable,
 main merge or owner equipment access. No beta.5 publication claimed yet.
+
+## Beta.5 immutable release orchestration
+
+Checkpoint subject: **ci: publish immutable beta.5 with independent public verification**.
+Release source **a4ede923e42573def49026a8d1d817c37a979171**, clean build. All10
+push/PR checks green, independently visible on public GitHub source checks. Annotated
+v0.1.0-beta.5 object **7a919061010e1a018a54235e96711ff4295622a7** pushed; source/tag
+never moved.13 exact-source jobs green at this checkpoint; tag core jobs pending.
+Publisher refuses publication unless all15 exact-source jobs are successful, source/
+annotated object match, clean deterministic hashes match, and both independent native
+archive installations pass. Existing matching release is verified without replacing
+any assets; mismatches stop publication. Main and prior beta tags remain preserved.
+
+SHA256 root9f8ea839a04b5d67f61dc0e49f11611abcb4c85cdfced809f813937548dc0ad0;
+manual422c5d1bb39c4596a4af36db2e325ad56b642b8287e2bc09409d96a5928d3036.
+Native QA server stopped after evidence collection; no owner HA/control access.
+
+After cloud environment reconnect, api.github.com requests began failing at the
+proxy CONNECT layer(403); github.com web/Git/codeload still work. Existing saved
+environment draft includes the API hostname, but saved policy is not proof of live
+access. No credentials extracted/replaced, no verification bypass. API-based
+publication and independent postpublication verification run on authorized GitHub
+runners. Two fresh locked core jobs independently download public metadata/assets/
+source/main, verify digests and actual unchanged HACS workflows plus both native ZIP
+layouts, and test actual public semantic release selection. Audit commits permanent
+receipt and updates existing PR14 only after both pass. Local read-only public
+release/assets/tag checks and final handoff still follow. No beta.5 publication
+claimed at this checkpoint. Stop after authorized beta publication and verification.
