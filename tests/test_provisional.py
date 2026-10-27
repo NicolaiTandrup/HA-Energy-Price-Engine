@@ -44,6 +44,7 @@ async def test_provisional_is_not_verified_or_durable(hass, freezer, day, count)
     result = get_api(hass).lookup("home", *day_bounds(date.fromisoformat(day)))
     assert result.status == Status.INCOMPLETE and not result.records
     assert not c.price_engine.records.get("home")
+    assert c.schedule.days["home"][day]["grid_status"] == "READY"
     sensor = EstimatedPriceSensor(c)
     assert sensor.native_value == pytest.approx(rows[0].price)
     assert sensor.extra_state_attributes["eligible_for_control"] is False

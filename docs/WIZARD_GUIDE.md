@@ -1,134 +1,96 @@
-# Beta.3: configure, verify and retest
+# Configure Energy Price Engine
 
-Beta.1 and beta.2 failed owner acceptance. This beta is for focused PAHA02-DEV
-retesting, not a claim that the owner's installation has passed.
+Update through HACS and restart Home Assistant. Existing beta users choose
+**Devices & services → Energy Price Engine → Configure** on their existing site;
+do not delete/recreate it to upgrade. Device info derives the software version from
+the installed manifest. A new site gets its own stable ID and independent history.
 
-Update through HACS: enable **Show beta versions**, select **v0.1.0-beta.3**, download
-and restart. Keep the beta subscription enabled; [HACS update explanation](HACS_DISTRIBUTION.md#beta3-retest-and-the-short-hash-update-card).
-Check Device info shows **0.1.0-beta.3**. Existing site: **Devices & services → Energy
-Price Engine → Configure**. Do not delete/recreate it. Add integration creates a
-separate site, not an upgrade. Source mappings, contracts, IDs, entities and SQLite
-history are retained.
+## Six stages
 
-## Six native stages
+Choose Next, Back or Review, then **Continue / Fortsæt**. Continue preserves the page
+as a durable draft; **Save & verify** applies it. Closing cannot submit typed fields:
+press Continue first. Invalid submissions and Back edits remain resumable. Advanced
+contains an explicitly confirmed draft-discard action. Avoid simultaneous editing
+flows for one site.
 
-Choose Next/Back/Review and press **Continue / Fortsæt**. Continue preserves a
-separate draft; **Save & verify / Gem og kontrollér** applies it. Close/reload cannot
-submit fields still being typed: Continue first. Invalid submissions and Back edits
-are retained. Discard requires explicit confirmation. Avoid simultaneous editing
-flows on the same site.
+1. **Site and Nord Pool source.** Enter a friendly name; leave the optional ID blank
+   for an automatically assigned stable ID. Select your installed official Nord
+   Pool entry by name. Confirm its supported area; DK1 is not DK2. Copenhagen is
+   suggested for a verified Danish area. Official input is DKK/MWh excluding VAT;
+   it is independent of your display choice. Enter **25** for 25% VAT. Advanced
+   entity providers expose their own unit and verification settings.
+2. **Grid tariffs.** Choose automatic Radius C only if this is your actual tariff
+   product. Area alone cannot prove your grid company or class. The adapter reads
+   authoritative dated grid rates and checks coverage. Other products require
+   verified dated manual rules under Advanced. No missing tariff becomes zero.
+3. **Electricity supplier.** Select EWII or another supplier as a label. Answer:
+   **What is your supplier markup above the spot price?** Find the per-kWh trading
+   fee or spot supplement in your electricity bill/contract. Exclude fixed monthly
+   subscriptions. Enter the amount, preferably in **øre/kWh**, VAT inclusion and
+   the actual effective dates. A period through September 30 has exclusive end
+   October 1. Confirm that you checked your bill/contract. A zero markup needs an
+   explicit zero in that document. No amount is prefilled. The old EWII household
+   .030 DKK/kWh excluding VAT applies June–September 2026 only, never current terms.
+   Existing saved periods can be retained; explicit overlap replacement preserves
+   dates outside the replacement interval. Advanced shows each stored period.
+   If the value is unknown, select **I do not know my markup yet**, or explicitly
+   approve a **provisional visualization-only estimate**. An estimate is
+   ESTIMATED/UNVERIFIED; it does not enter verified history, make the API READY or
+   enable charging. Estimates still require fresh public components.
+4. **National charges and taxes.** New Danish official-source sites suggest a
+   visible documented bounded baseline: 2026 Energinet network .043 and system
+   .072 DKK/kWh excluding VAT; 2026–2027 electricity tax .008. This is dated data,
+   not live legislative discovery. Beyond those periods configure verified rates.
+   Locked dated overrides remain available. Heating registration alone creates no
+   discount; eligible rates need verified registration, evidence/year and usage.
+5. **Display preferences.** Preferred display defaults to **øre/kWh**. Example:
+   100 DKK/MWh input = .100 DKK/kWh = 10 øre/kWh before additions. Original DKK
+   sensors, SQLite and consumer API remain canonical DKK/kWh.
+6. **Review, Save & verify.** One Today/Tomorrow table compares all required
+   components and final prices. Verified, Missing, Expired, Provisional and
+   Unavailable statuses explain the next action. Missing components have direct
+   correction choices. Advanced contains all steps, manual editing and diagnostics.
+   **Save & verify** applies once, reloads and checks actual persisted verified
+   prices for today. If unavailable, a **Saved – verified prices still unavailable**
+   form offers corrections or intentional incomplete completion; this is not
+   successful complete pricing. Tomorrow may remain unavailable before publication.
 
-1. **Site and source / Sted og kilde.** Enter a friendly name; leave optional ID
-   blank for an automatic unique stable ID. Select your installed official Nord
-   Pool by name. Only advanced entity providers see entity/unit/verification fields.
-   Confirm source-supported DK2 and Copenhagen hints, and **25** for 25% VAT.
-   Official input is fixed DKK/MWh excluding VAT, not your display preference.
-   After confirmation the next page displays actual raw-source quarter coverage.
-2. **Grid / Nettarif.** Confirm your actual grid product before choosing automatic
-   Radius C. C is a connection/tariff class. DK2 alone does not prove Radius. Review
-   retrieves the real dated tariff and checks coverage. Other classes use verified
-   dated manual rules through Review → Advanced. No private grid product is guessed.
-3. **Supplier / Leverandør.** EWII is a label, not a contract preset. Required:
-   actual per-kWh markup, unit, VAT inclusion/percentage, inclusive start date,
-   exclusive end date, verification date and reference. Enable Add/update contract
-   to enter these fields; leave it off to retain existing periods or save incomplete.
-   Choose dates with HA's calendar controls. No amount is filled automatically.
-4. **National charges / Energinet og elafgift.** New Danish official-source sites
-   suggest a visible documented bounded baseline: 2026 Energinet .043/.072 DKK/kWh
-   ex VAT and 2026–2027 electricity tax .008. Existing choices stay unchanged. This
-   is documented data, not live legislative discovery. Manual verified periods and
-   locks remain available. Heating registration alone creates no discount: an
-   explicit eligible rule, evidence, year and consumption are required.
-5. **Display / Visning.** Default øre/kWh for preferred-display sensors. Input
-   100 DKK/MWh = .100 DKK/kWh = 10 øre/kWh before additions. Original DKK sensors,
-   SQLite values and read-only CM API stay canonical; changing display units does
-   not reinterpret old statistics.
-6. **Review / Oversigt.** The real adapters and canonical calculator check both
-   days. See raw quarter counts, calculated final counts, and dated coverage for
-   supplier, grid, Energinet and tax. ✓ means covered, ✕ identifies missing/failed
-   data. Choose the named correction step directly. **Save & verify** is the first
-   action; there is no separate hidden Save. It rechecks and persists configuration.
+English/Danish forms, validation and selectors follow the authenticated user's HA
+interface language. Entity names use HA's system language and existing registry;
+changing a profile does not rename globally shared entities.
 
-Review calculation is a transient preview with no draft ledger writes. After Save,
-check the actual runtime status and slot counts: disk/source failures can still
-prevent persistence, and preview success must never override that failure.
+## Check prices and diagnose
 
-## What to check after Save
+Raw current/next-quarter spot sensors and source coverage work independently of
+final prices. Final status and pricing-problem entities identify missing components,
+affected dates, stale source/grid data or storage failures. Advanced → Inspect stored
+quarter shows the actual VAT, sources, component periods and revision. Original
+uppercase readiness/API values are preserved alongside localized diagnostic enums.
 
-| Observation | Meaning and action |
-| --- | --- |
-| Raw READY 96, final READY 96 | Normal complete day. Verify final components/units against your actual contract. DST days legitimately have 92 or 100 quarters. |
-| Raw READY 96, final INCOMPLETE 0, supplier problem | Nord Pool works. Enter the actual verified supplier period shown as missing; do not change input units or invent a zero markup. |
-| Raw READY, final ERROR, grid problem | Radius coverage/verification failed. Recheck the grid source or enter explicitly verified manual rates. |
-| Raw INCOMPLETE | Selected area/date has incomplete intervals. Check official Nord Pool, publication time and missing source quarters. |
-| Raw STALE after refresh failure | Cached source retains its original verification timestamp, expires within two hours, and is not fresh READY evidence. Final API remains unavailable. |
-| Storage problem | Preserve history, check free space/permissions, use verified backup/recovery instructions. Do not delete the ledger or certify preview prices as persisted. |
+Do not interpret retained historical records as newly verified READY prices.
+Negative spot prices remain negative before additions; 92/100-quarter DST days
+need their actual local-day coverage. Automatic checks retain 13:05, 13:20, 13:40,
+23:59 and 00:01 schedules. Test public source availability and your bill yourself.
 
-The raw sensors show current/next spot in DKK/kWh **before additions** plus coverage
-and timestamps. They remain observable when final composition is blocked. Inspect
-**Final pricing status (localized)** and **Pricing problem — corrective action**.
-Legacy readiness codes remain uppercase for compatibility. The same native enum
-messages are localized in Danish. Technical attributes include affected period,
-missing component IDs, source detail and corrective action. Device info shows the
-installed manifest version.
+## Remove, archive or start clean
 
-HA entity *names* use the system language/existing registry, standard HA behavior;
-profile changes do not rename them globally. Wizard text, native selectors, validation,
-Repairs and new enum state messages use the individual user's UI language. Both name
-resource sets are included. Technical keys/provider exception text retain their
-original conventions. No unsupported frontend/core patch is installed.
+Advanced → **Remove / delete this site** lists the selected entry's PE-owned paths.
+**Remove with archive** retains identified history at those paths and records it in
+`.storage/ha_energy_price_engine.archives`. It never autoattaches to a new site.
+HA's ordinary integration Delete action also retains this archive.
 
-## Focused owner retest — PAHA02-DEV
+**Permanent deletion** requires typing the selected site ID and confirming the
+checkbox. It stops pricing/writers before clearing that active entry's SQLite,
+backups, configuration audit, caches, submitted drafts and owned registry entries.
+An interrupted cleanup stays stopped; Configure and retry after resolving access.
+A new same-name site starts with a new entry ID and empty history. Earlier removed
+archives, external/full backups and HA's global recorder history are separate;
+this action does not delete them or another site's data. Integration-owned ID-only
+cleanup markers contain no contract/history. HACS uninstall only removes program
+files and preserves data.
 
-1. Back up first. Record HA/HACS/PE versions and chosen site ID. Upgrade existing
-   site in place; verify names, Nord Pool mapping, dated overrides and old history.
-2. Switch the **user profile** between English and Danish; reopen Configure.
-   Check the wizard and status messages, without changing the site's geography.
-3. Confirm raw-source area, 15-minute coverage and verification timestamps. If
-   source fails, use its exact diagnostic; valid supplier rates cannot fix a bad source.
-4. Confirm actual grid product and supplier terms. For a DK2 summer house create
-   its own independent site and use its own contract. The EWII household .030 ex-VAT
-   fact is **June–September 2026 only**, never a current/future/summer-house default.
-5. Review all dated checks. Save. Record raw and final valid/expected quarters and
-   one stored price breakdown. Unknown inputs must be identified, never set to zero.
-6. Close after Continue, resume, then restart. Verify same site/source/history and
-   manifest version. Keep HACS beta visibility on and confirm semantic latest version,
-   not a short main hash. PE's published-release entity is read-only; install via HACS.
-7. Attach redacted PE diagnostics and the affected stage/status if acceptance fails.
-   Do not include account numbers, addresses, tokens or unrelated integration videos.
-
-No production HA, Node-RED, Tesla, Easee or charging controls are touched. Cloud
-benchmarks do not establish Raspberry Pi performance; historical memory use remains
-as documented in PERFORMANCE.md. Owner source/billing/hardware acceptance is separate.
-
-## Simulated evidence and screenshots
-
-Real disposable HA 2026.10.4/frontend 20260930.5, system English, user UI EN then DA.
-Playwright/system Chromium (Browser plugin unavailable), desktop 1440×1000 and mobile
-390×844. Core person/recorder are enabled so the native frontend is exercised normally;
-only decorative external brand images are substituted. Source data and Radius rates
-are explicitly synthetic, not owner data or live provider verification.
-
-Complete GUI fixture: spot .100 + grid .200 + **fictional supplier .111** + .043 +
-.072 + .008 = .534 ex VAT; × 1.25 = **.6675 DKK/kWh**, **66.75 øre/kWh**. Both days
-contain 96 persisted quarters (192 per site). Do not copy the fictional contract.
-Separate runtime tests use negative spot and normal/92/100-slot days, missing
-supplier/national periods, source/Radius/ledger errors, and actual beta.1/.2 upgrade
-fixtures. Browser evidence and mocked sources do not establish PAHA02-DEV success.
-
-| Stage | English native UI | Dansk brugerflade |
-| --- | --- | --- |
-| Site | [Site](images/beta3/site-en.png) | [Sted](images/beta3/site-da.png) |
-| Grid | [Grid and source verification](images/beta3/grid-en.png) | [Nettarif](images/beta3/grid-da.png) |
-| Supplier | [Supplier requirements](images/beta3/supplier-en.png) | [Leverandøraftale](images/beta3/supplier-da.png) |
-| National | [National components](images/beta3/charges-en.png) | [Energinet og afgift](images/beta3/charges-da.png) |
-| Display | [Display](images/beta3/display-en.png) | [Visning](images/beta3/display-da.png) |
-| Complete | [96-quarter calculation](images/beta3/complete-review-en.png) | [Kontrolleret beregning](images/beta3/complete-review-da.png) |
-
-![Valid raw source with explicitly missing supplier contract](images/beta3/missing-review-en.png)
-![Mobile Radius outage with independent raw-source results](images/beta3/grid-outage-mobile.png)
-![Danish status messages and decimal formatting with preserved canonical entity names](images/beta3/device-da.png)
-
-[Machine-readable synthetic runtime/ledger evidence](receipts/v0.1.0-beta.3-simulation.json).
-
-![Danish missing-contract correction on mobile](images/beta3/missing-review-da-mobile.png)
+If an update card shows a short commit hash, use Advanced → **Repair HACS beta
+channel**, explicitly approve, then inspect HACS again. This uses HACS's supported
+repository commands only for PE and persists Show beta versions. It installs
+nothing. Administrator/local authenticated HTTP access is required; otherwise use
+HACS's own Show beta versions control and refresh information.

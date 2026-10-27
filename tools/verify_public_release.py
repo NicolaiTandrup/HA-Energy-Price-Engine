@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = "NicolaiTandrup/HA-Energy-Price-Engine"
-TAG = "v0.1.0-beta.3"
+TAG = "v0.1.0-beta.4"
 DOMAIN = "ha_energy_price_engine"
 
 

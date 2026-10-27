@@ -9,7 +9,7 @@ No main merge, stable release or live HA/control changes.
 ## Beta.4 checkpoint
 
 Checkpoint subject: **feat: add explicit supplier estimates and persisted setup verification**.
-Based on beta.3 final handoff 4560ec6; new draft PR pending first push.
+Based on beta.3 final handoff 4560ec6; draft PR #13.
 
 - Direct supplier markup defaults to øre/kWh, blank amount, explicit bill/contract
   verification; optional separately approved provisional amounts. Existing periods
@@ -33,17 +33,39 @@ Based on beta.3 final handoff 4560ec6; new draft PR pending first push.
   passed native authenticated HTTP/WebSocket repair, actual HACS store persistence,
   semantic UpdateEntity values and tag download/update/uninstall/reinstall tests.
 
-Completed local gate: **37 passed**, two upstream HACS deprecation warnings
-(flows, provisional, lifecycle and real HACS channel/distribution).
-Ruff check/format passed; EN/DA source translations updated. Full producer/core matrix,
-unchanged CM suites/coupled runtimes, packaging, hassfest, HACS, actual frontend
-EN/DA/mobile, migration, release integrity and CI remain PENDING for beta.4.
-New UI/browser evidence must distinguish synthetic providers from owner acceptance.
+Second checkpoint subject: **fix: complete beta.4 review reporting and public setup guides**.
+Known implementation commit e95152d pushed; PR #13 stays draft/unmerged.
 
-Next: finish native HACS HTTP/WebSocket tests, branding/public README, strengthen
-new flow/reset tests, run full gates, browser journeys, update guides/acceptance,
-then immutable source commit/tag/package and exact-source green CI before publisher.
-No beta.4 version bump/tag/assets exist at this checkpoint.
+- Full producer run before final edge fixes: **213 passed** on HA .4 (88% coverage),
+  **211 passed** on .3 before two newly added direct-flow cases. Zero skips; two
+  upstream HACS warnings. Complete final runs remain required.
+- Four unchanged consumer full suites on current core: **153/176/227/228 passed**;
+  actual coupled-runtime tests **2 passed per consumer**. Supported-core repeats pending.
+- Official local hassfest: **1 integration, zero invalid**. Both ZIP layouts built
+  dirty for development and independently installed outside source: **1 passed each**.
+- Native actual frontend EN complete, missing supplier and provisional journeys
+  passed without console errors using synthetic source/Radius. Complete setup 96
+  raw/final quarters each day; incomplete/provisional saved forms show no success.
+  Browser exposed lost grid_status after save; now retained in durable day report.
+- Final edge gate **16 passed**, including failed-save rejection of old READY
+  runtime, concurrent deletion intents, direct øre markup verification and native
+  destructive confirmation. New regression fixture includes actual beta.3 source.
+- Public README and four setup guides rewritten without private hostnames/internal
+  PR details; contributor documentation separate and public-doc lint added.
+- Beta.4 manifest/version/package verification targets updated. Local HA native
+  brand renders with no PE image substitution; HACS external CDN fallback explicitly
+  documented. No unsupported HACS/HA frontend patch ships.
+- Repeated one-year SQLite benchmark: 35,136 rows, 18,239,488 bytes; append96 .0293s,
+  reload .891s, mean lookup6.65us. Cloud x86_64, explicitly not Pi performance.
+
+CI on first e95152d checkpoint correctly failed stale schedule/review tests now fixed;
+HACS/hassfest/independent install CI passed. One supported-core job failed dependency
+preparation before tests. Do not report initial CI green. Next push reruns all gates.
+
+Next: final source tests/core matrix and unchanged consumers, disposable native DA/
+mobile/restart/delete/recreate checks and screenshots; clean packages and CI; only
+then immutable source/tag and authorized beta.4 publication/integrity verification.
+No beta.4 tag/release/assets have been published. Owner acceptance remains pending.
 
 ---
 

@@ -50,7 +50,7 @@ class PriceSchedule:
 
     async def refresh_day(self, site, day, now, *, force=True):
         async with self.work_lock:
-            if self.coordinator.stopped:
+            if getattr(self.coordinator, "stopped", False):
                 return False
             return await self._refresh_day(site, day, now, force=force)
 
@@ -84,6 +84,7 @@ class PriceSchedule:
             "reason": report.get("reason"),
             "failure_stage": report.get("failure_stage"),
             "source_slots": report.get("source_slots"),
+            "grid_status": report.get("grid_status"),
             "required_action": report.get("required_action"),
             "missing_components": report.get("missing_components", []),
             "affected_period": report.get("affected_period"),

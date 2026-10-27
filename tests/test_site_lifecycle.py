@@ -86,3 +86,16 @@ async def test_unexpected_symlink_aborts_without_touching_target(hass, freezer, 
     assert target.read_bytes() == b"never follow me"
     link.unlink()
     await permanently_remove(hass, entry)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_concurrent_selected_site_deletions_keep_both_recovery_intents(hass, freezer):
+    import asyncio
+
+    freezer.move_to("2026-10-23T12:00:00Z")
+    a = await setup(hass)
+    b = await setup(hass, model("second"))
+    await asyncio.gather(permanently_remove(hass, a), permanently_remove(hass, b))
+    intents = await Store(hass, 1, f"{DOMAIN}.deletions").async_load()
+    assert set(intents) == {a.entry_id, b.entry_id}
+    assert not hass.config_entries.async_entries(DOMAIN)

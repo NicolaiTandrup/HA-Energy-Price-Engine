@@ -247,7 +247,7 @@
       },
       "wizard_saved": {
         "title": "Saved – verified prices still unavailable",
-        "description": "Your settings are saved, but complete verified prices for today are still unavailable. Pricing setup is incomplete. Correct the components below or intentionally finish incomplete setup. Estimates are visualization only.\n\n{table}",
+        "description": "Your settings are saved, but complete verified prices for today are still unavailable. Pricing setup is incomplete. Correct the components below or intentionally finish incomplete setup. Estimates are visualization only.\n\n{table}\n\n{save_problem}",
         "data": {
           "action": "Next action"
         }
@@ -299,7 +299,8 @@
       "hacs_channel_updated": "HACS beta channel saved. Latest published version: {version}."
     },
     "create_entry": {
-      "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity."
+      "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity.",
+      "saved_verified": "Verified prices for today have been calculated and persisted. Check tomorrow’s separate readiness and inspect a stored price breakdown."
     }
   },
   "options": {
@@ -637,7 +638,7 @@
       },
       "wizard_saved": {
         "title": "Saved – verified prices still unavailable",
-        "description": "Your settings are saved, but complete verified prices for today are still unavailable. Pricing setup is incomplete. Correct the components below or intentionally finish incomplete setup. Estimates are visualization only.\n\n{table}",
+        "description": "Your settings are saved, but complete verified prices for today are still unavailable. Pricing setup is incomplete. Correct the components below or intentionally finish incomplete setup. Estimates are visualization only.\n\n{table}\n\n{save_problem}",
         "data": {
           "action": "Next action"
         }
@@ -691,7 +692,8 @@
       "hacs_channel_updated": "HACS beta channel saved. Latest published version: {version}."
     },
     "create_entry": {
-      "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity."
+      "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity.",
+      "saved_verified": "Verified prices for today have been calculated and persisted. Check tomorrow’s separate readiness and inspect a stored price breakdown."
     }
   },
   "entity": {
@@ -888,7 +890,8 @@
         "expired": "Expired",
         "provisional": "Provisional",
         "unavailable": "Unavailable",
-        "included": "Included"
+        "included": "Included",
+        "save_failed": "Reload of the saved settings failed. Check storage access and PE diagnostics. Retry Save & verify; previous prices do not verify these changes."
       }
     },
     "contract_mode": {

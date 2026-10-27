@@ -247,7 +247,7 @@
       },
       "wizard_saved": {
         "title": "Gemt – verificerede priser mangler",
-        "description": "Opsætningen er gemt, men der er endnu ingen komplette verificerede priser for i dag. Dette er ikke en bekræftelse på færdig prisopsætning. Ret komponenterne nedenfor eller afslut bevidst med ufuldstændig opsætning. Estimater er kun til visning.\n\n{table}",
+        "description": "Opsætningen er gemt, men der er endnu ingen komplette verificerede priser for i dag. Dette er ikke en bekræftelse på færdig prisopsætning. Ret komponenterne nedenfor eller afslut bevidst med ufuldstændig opsætning. Estimater er kun til visning.\n\n{table}\n\n{save_problem}",
         "data": {
           "action": "Næste handling"
         }
@@ -299,7 +299,8 @@
       "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}."
     },
     "create_entry": {
-      "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten."
+      "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten.",
+      "saved_verified": "Verificerede priser for i dag er beregnet og gemt. Se den separate status for i morgen og gennemgå en gemt prisopdeling."
     }
   },
   "options": {
@@ -637,7 +638,7 @@
       },
       "wizard_saved": {
         "title": "Gemt – verificerede priser mangler",
-        "description": "Opsætningen er gemt, men der er endnu ingen komplette verificerede priser for i dag. Dette er ikke en bekræftelse på færdig prisopsætning. Ret komponenterne nedenfor eller afslut bevidst med ufuldstændig opsætning. Estimater er kun til visning.\n\n{table}",
+        "description": "Opsætningen er gemt, men der er endnu ingen komplette verificerede priser for i dag. Dette er ikke en bekræftelse på færdig prisopsætning. Ret komponenterne nedenfor eller afslut bevidst med ufuldstændig opsætning. Estimater er kun til visning.\n\n{table}\n\n{save_problem}",
         "data": {
           "action": "Næste handling"
         }
@@ -691,7 +692,8 @@
       "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}."
     },
     "create_entry": {
-      "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten."
+      "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten.",
+      "saved_verified": "Verificerede priser for i dag er beregnet og gemt. Se den separate status for i morgen og gennemgå en gemt prisopdeling."
     }
   },
   "entity": {
@@ -888,7 +890,8 @@
         "expired": "Udløbet",
         "provisional": "Foreløbig",
         "unavailable": "Utilgængelig",
-        "included": "Inkluderet"
+        "included": "Inkluderet",
+        "save_failed": "Genindlæsning af de gemte indstillinger mislykkedes. Kontrollér lageradgang og PE-diagnostik. Prøv Gem & verificér igen; tidligere priser bekræfter ikke disse ændringer."
       }
     },
     "contract_mode": {

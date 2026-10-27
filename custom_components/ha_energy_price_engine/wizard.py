@@ -721,6 +721,11 @@ class Wizard:
             return labels.get(key, key)
 
         reports = getattr(self, "_verification", {})
+        if not reports:
+            from datetime import timedelta
+
+            today = dt_util.utcnow().astimezone(ZoneInfo(self.hass.config.time_zone)).date()
+            reports = {str(today + timedelta(days=n)): {} for n in (0, 1)}
         days = list(reports)
         rules = list(self.draft.get("dated_components", []))
         if self.draft.get("danish_public_rates"):
@@ -867,13 +872,13 @@ class Wizard:
             return self.async_create_entry(
                 title=site["name"],
                 data=site,
-                description="saved_pending_verification",
+                description="saved_verified",
                 description_placeholders=summary,
             )
         from . import apply_settings
 
-        await apply_settings(self.hass, self._wizard_entry, site)
-        if not self._actually_ready():
+        self._save_failed = not await apply_settings(self.hass, self._wizard_entry, site)
+        if self._save_failed or not self._actually_ready():
             return await self._saved_form()
         if hasattr(self, "async_set_unique_id"):
             return self.async_abort(reason="reconfigure_successful")
@@ -886,7 +891,7 @@ class Wizard:
 
         entry = self._wizard_entry
         runtime = self.hass.data.get(DOMAIN, {}).get(entry.entry_id) if entry else None
-        if runtime is None:
+        if runtime is None or runtime.site != validate_site(self.draft):
             return False
         now = dt_util.utcnow()
         day = now.astimezone(ZoneInfo(runtime.site["timezone"])).date()
@@ -899,6 +904,9 @@ class Wizard:
         # Readiness is from the loaded, persisted runtime, never the draft preview.
         entry = self._wizard_entry
         runtime = self.hass.data.get(DOMAIN, {}).get(entry.entry_id)
+        if getattr(self, "_save_failed", False):
+            runtime = None
+        self._verification = {}
         reports = runtime.schedule.days.get(runtime.site["id"], {}) if runtime else {}
         if runtime:
             from datetime import date
@@ -918,6 +926,12 @@ class Wizard:
                 for day, report in reports.items()
             }
         summary, choices = await self._compact_review()
+        from .localization import review_labels
+
+        labels = await review_labels(self.hass)
+        summary["save_problem"] = (
+            labels.get("save_failed", "") if getattr(self, "_save_failed", False) else ""
+        )
         choices = [v for v in choices if v != "wizard_save"] + ["finish"]
         await self._persist("wizard_saved", submitted=True)
         return self.async_show_form(
