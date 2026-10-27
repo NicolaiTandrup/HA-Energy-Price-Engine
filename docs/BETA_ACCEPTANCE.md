@@ -24,8 +24,11 @@ CI, package hashes and simulation screenshots are in the release receipt and
   authenticated channel repair, persisted beta state and semantic version reporting.
 - [x] Hassfest, translations, HACS validation, clean deterministic packages and
   both ZIP layouts installed/imported outside the repository.
-- [ ] Exact-source green CI, immutable prerelease tag, public assets/source hashes
+- [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
+
+Publication software receipt: [beta.4 verification](receipts/v0.1.0-beta.4.json).
+All owner acceptance items below remain unchecked.
 
 ## Your development HA acceptance
 
