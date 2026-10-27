@@ -8,21 +8,21 @@ CI, package hashes and simulation screenshots are in the release receipt and
 
 ## Software release gates
 
-- [ ] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
-- [ ] Unchanged consumer API suites and both actual runtime startup orders.
-- [ ] Official Nord Pool action/config discovery, automatic Radius C, bounded
+- [x] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
+- [x] Unchanged consumer API suites and both actual runtime startup orders.
+- [x] Official Nord Pool action/config discovery, automatic Radius C, bounded
   national rates, component expiry, negative prices and 92/96/100-quarter DST days.
-- [ ] Missing/incorrect supplier verification, explicit provisional approval,
+- [x] Missing/incorrect supplier verification, explicit provisional approval,
   fail-closed API/ledger and raw source independence.
-- [ ] Interrupted native wizard, unsaved submissions, Back/Resume, single Save,
+- [x] Interrupted native wizard, unsaved submissions, Back/Resume, single Save,
   actual persisted current-day readiness, storage failure and restart.
-- [ ] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
-- [ ] Beta.1–.3 config, ledger rows, revisions, entity IDs and source references.
-- [ ] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
+- [x] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
+- [x] Beta.1–.3 config, ledger rows, revisions, entity IDs and source references.
+- [x] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
   clean reinstall and second-site/global recorder isolation.
-- [ ] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
+- [x] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
   authenticated channel repair, persisted beta state and semantic version reporting.
-- [ ] Hassfest, translations, HACS validation, clean deterministic packages and
+- [x] Hassfest, translations, HACS validation, clean deterministic packages and
   both ZIP layouts installed/imported outside the repository.
 - [ ] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.

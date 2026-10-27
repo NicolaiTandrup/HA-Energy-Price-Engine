@@ -87,6 +87,41 @@ restore with semantic version values after restart. Native destructive retest wi
 an actual ledger and fresh recreation is in progress. Final CI/screenshots/release
 integrity remain pending. No beta.4 publication yet.
 
+
+Fourth checkpoint subject: **test: record beta.4 native acceptance simulations and deterministic HACS fixture**.
+Known implementation commit **4e98db6cb0782be2131ce40ca30ad8e049c5c8df**.
+Final runtime source unchanged from that commit; next changes are tests/docs only.
+Actual release source is not yet selected/tagged.
+
+- Both final local producer suites: **217 passed**, 88%, zero skips, two upstream
+  HACS warnings. Added four further credential-boundary cases (non-admin/public/
+  wildcard/multicast socket rejected before any network); focused both-core gate **9 passed each** (two HACS warnings).
+- Both-core unchanged consumer and runtime suites passed; clean independent ZIP
+  installs passed on both. Local hassfest0 invalid, remote HACS/hassfest/package green.
+- Real frontend EN/DA desktop/mobile complete/missing/provisional journeys, invalid
+  supplier approval, interrupted/resumed draft and actual destructive confirmation
+  tested. Corrected operation remains permanent after wrong ID error; final mobile
+  deletion removed an actual 192-row ledger and its config/drafts/registries.
+  Same-name fresh creation has new entry ID and no old accounting references.
+- Native final screens no page/console errors, mobile390=document390, systemEN/userDA
+  translation verified. Native PE branding loaded without PE image mocks.
+- Restart preserved all four verified ledgers' complete decoded SQL rows/checksums;
+  provisional site's ledger absent, raw.100, visualization.6675, authoritative
+  readiness INCOMPLETE. Beta.3 inherited past rows unchanged. Evidence:
+  docs/receipts/v0.1.0-beta.4-simulation.json and docs/images/beta4/.
+- CI4e98 current-core push passed full job; supported-core push exposed test-only
+  race registering HTTP view after test client freezes router. Fixed registration
+  ordering (view/commands before client); real HACS code unchanged. Both PR matrix
+  jobs in progress at checkpoint. Do not publish until exact-source all green.
+
+Next: finish focused both-core checks, push evidence/test fixture checkpoint, await
+all mandatory source checks. Then build immutable clean source, tag/package hashes,
+authorized prerelease publisher and independent public install/source verification.
+Owner acceptance remains unchecked; HACS external CDN icon requires separate catalog
+review, bundled native HA/README/PE update branding works. National baselines are dated,
+not live legislation. Continue before closing unsent forms; HA entity naming uses
+system/registry language. No stable/main/live/control changes.
+
 ---
 
 ## Completed beta.3 software publication

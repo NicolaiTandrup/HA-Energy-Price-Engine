@@ -94,3 +94,15 @@ channel**, explicitly approve, then inspect HACS again. This uses HACS's support
 repository commands only for PE and persists Show beta versions. It installs
 nothing. Administrator/local authenticated HTTP access is required; otherwise use
 HACS's own Show beta versions control and refresh information.
+
+## Native screen examples
+
+These are disposable HA frontend simulations with fictional supplier/provider data,
+not a claim of your installation's acceptance. No PE brand image was substituted.
+
+| English | Danish |
+| --- | --- |
+| [Complete review](images/beta4/review-en.png) | [Komplet oversigt](images/beta4/review-da.png) |
+| [Mobile review](images/beta4/review-en-mobile.png) | [Mobil oversigt](images/beta4/review-da-mobile.png) |
+| [Missing contract after save](images/beta4/missing-saved-en.png) | [Rejected deletion confirmation](images/beta4/delete-confirmation-rejected-da-mobile.png) |
+| [Provisional mobile](images/beta4/provisional-en-mobile.png) | [Confirmed permanent deletion](images/beta4/deleted-da-mobile.png) |

@@ -6,7 +6,7 @@ Electricity prices for your home, including spot price, grid tariff, supplier
 markup, national charges and VAT. Energy Price Engine stores verified 15-minute
 prices in Home Assistant and supports independently configured sites.
 
-**Beta.4 candidate.** Use the published version shown on the
+**v0.1.0-beta.4.** Use the published version shown on the
 [releases page](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases).
 Beta software requires your own bill, tariff and restart acceptance checks.
 

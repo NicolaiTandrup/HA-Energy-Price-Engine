@@ -202,7 +202,6 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
         from homeassistant.setup import async_setup_component
 
         assert await async_setup_component(hass, "websocket_api", {})
-        client = await hass_client()
         hass.http.register_view(RepairView())
         for command in (
             commands.hacs_repository_info,
@@ -210,6 +209,7 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
             lists.hacs_repositories_list,
         ):
             websocket_api.async_register_command(hass, command)
+        client = await hass_client()
         response = await client.post("/api/pe_qa_channel")
         assert response.status == 200, await response.json()
         assert (await response.json())["latest"] == TAG

@@ -102,3 +102,38 @@ async def test_failed_save_cannot_certify_previous_ready_runtime(hass, freezer):
     assert "Verified" not in r["description_placeholders"]["table"]
     assert await hass.config_entries.async_unload(entry.entry_id)
     source.mock_state(hass, ConfigEntryState.NOT_LOADED)
+
+
+@pytest.mark.parametrize(
+    "admin,address",
+    [
+        (False, ("127.0.0.1", 8123)),
+        (True, ("8.8.8.8", 8123)),
+        (True, ("0.0.0.0", 8123)),
+        (True, ("224.0.0.1", 8123)),
+    ],
+)
+async def test_hacs_channel_never_forwards_credentials_to_nonlocal_socket(hass, admin, address):
+    from types import SimpleNamespace
+    from unittest.mock import Mock, patch
+
+    from homeassistant.helpers.http import current_request
+
+    from custom_components.ha_energy_price_engine.hacs_channel import enable_beta_channel
+
+    class Request(dict):
+        headers = {"Authorization": "Bearer synthetic-test-token", "Host": "attacker.invalid"}
+        transport = Mock()
+
+    request = Request(hass_user=SimpleNamespace(is_admin=admin))
+    request.transport.get_extra_info.return_value = address
+    token = current_request.set(request)
+    try:
+        with patch(
+            "custom_components.ha_energy_price_engine.hacs_channel.async_get_clientsession",
+            side_effect=AssertionError("No network allowed"),
+        ):
+            with pytest.raises(ValueError):
+                await enable_beta_channel(hass)
+    finally:
+        current_request.reset(token)
