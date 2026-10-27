@@ -122,6 +122,27 @@ review, bundled native HA/README/PE update branding works. National baselines ar
 not live legislation. Continue before closing unsent forms; HA entity naming uses
 system/registry language. No stable/main/live/control changes.
 
+
+## Beta.4 publication orchestration
+
+Authorized source **38973d88ad67758b419dfc45c193a8c85674afda**; immutable annotated
+v0.1.0-beta.4 tag object **90cb819f001fd390ca35e1c83f26d3c6303c4de1**. All **10** push/PR exact-source
+checks green before tagging. Final producer **221 passed per core**, 88% coverage,
+zero skips, two upstream HACS warnings. Current PyPI rechecked **2026.10.4**.
+Both final clean archive layouts independently installed on both cores.
+
+Fixed-source publisher rebuilds that tag, checks annotated tag identity and exact
+ZIP digests, requires all **15** source checks (push/PR/tag) green, independently
+installs both layouts and only then publishes prerelease/latest=false. Orchestration
+commit is separate from release source. Publication/post-public verification pending.
+SHA256 root: 8204ef21583927b0973d59becf33f66575618cde755371989ef835e5af183d58
+SHA256 manual: 1a2f196dde01f1a92c6dab3221d9306d45171688803a3ca22d1794ad869ae491
+
+Next: monitor publisher/tag CI, independently download public metadata/tag/main/all
+four assets, compare source/payload/hashes, run actual HACS and both native installs
+on BOTH HA cores, record final receipt/handoff and update PR. Stop after beta.4
+publication verification; no main merge or further features. Owner acceptance pending.
+
 ---
 
 ## Completed beta.3 software publication
