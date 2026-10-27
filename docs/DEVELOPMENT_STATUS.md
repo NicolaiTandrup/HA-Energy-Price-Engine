@@ -74,6 +74,48 @@ card still needs persisted Show beta versions; PE semantic release entity never
 offers commits. Native Close still does not submit keystrokes: Continue before Close.
 No owner HA, no main merge, stable, CM release or control operations.
 
+## Beta.3 release-gate checkpoint
+
+Checkpoint subject: `test: prove functional onboarding and native failure recovery`.
+PR #11 on feat/beta3-functional-onboarding, previous source 2f8beea. No beta.3
+publication yet. Both local cores passed 199 tests before the final shared eligibility/
+DST diagnostic fix; latest targeted 24 pricing/acceptance cases pass. Final count is
+expected 200; full both-core/consumer/package/HACS/hassfest CI remains mandatory.
+
+Committed docs/images/beta3 gallery and docs/receipts/v0.1.0-beta.3-simulation.json
+record synthetic native EN/DA setup, actual .6675 final / .100 raw / 66.75 øre with
+96 quarters per day, exact missing supplier + raw READY, grid outage, source cached
+STALE, partial source, and recovery. Restart preserves both 192-row ledgers' exact
+UTC rows/amounts/revisions. Final desktop/mobile Review in EN/DA has no console/page
+errors and no mobile horizontal overflow (390px). System language English while
+native user language Danish verified. Source/calc/diagnostic data are synthetic;
+owner acceptance remains pending. Real default person/recorder enabled in fixture;
+only decorative brand images substituted. Provider setup in this fixture explicitly
+rechecks after synthetic registration, distinct from actual official dependency tests.
+
+Native Review now verifies source immediately after site/location and shows coverage
+on the grid step. New Danish official-source sites visibly suggest bounded public
+baselines; existing choices stay unchanged. No private/grid connection inference.
+Early Review handles incomplete site safely. Component coverage uses actual civil
+hours (spring's absent hour is not required) and the SAME extracted eligibility
+predicate as canonical composition, so verified heating evidence cannot contradict
+final readiness. No arithmetic change or eligibility invention. Stale source/grid
+reports now preserve their corrective problem category instead of showing none.
+
+Guides describe exact HACS update/retest, all raw/final outcomes, native language
+switching, source-vs-display units, contract dates, runtime storage verification and
+limitations. HA names follow system language/registry, not per-user renaming; new
+lowercase enum status entities follow user language while original uppercase codes
+stay compatible. All human wizard prose is native resource text; canonical technical
+keys and provider exceptions retain their original conventions. No native Close
+keystroke autosave; press Continue first. HACS's own hash card requires persisted
+Show beta versions; own release entity filters semantic tags/channels/drafts.
+
+Next: complete final tests/CI and clean package integrity; tag exact tested source,
+runner-publish authorized beta.3 prerelease only, independently download/verify public
+source/main/assets/HACS/native install on both cores, leave permanent receipt/PR
+update and stop. No main merge, stable release, production HA/Node-RED or controls.
+
 ## Completed PE beta.2 — final receipt
 
 Public **prerelease**:

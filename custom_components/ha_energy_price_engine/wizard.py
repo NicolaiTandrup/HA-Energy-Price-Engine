@@ -328,6 +328,8 @@ class Wizard:
                     self.draft.update({k: v for k, v in user_input.items() if k != "navigation"})
                     self.draft["nordpool_entry"] = ""
             if not errors:
+                if self._initial and official and self.draft.get("area") in {"DK1", "DK2"}:
+                    self.draft.setdefault("danish_public_rates", True)
                 return await self._move(
                     "wizard_source", user_input, "wizard_location", "wizard_site"
                 )
@@ -639,7 +641,17 @@ class Wizard:
                 for d, r in reports.items()
             )
         result["technical"] = (
-            "\n\n".join(f"{d}: {r['reason']}" for d, r in reports.items() if r.get("reason")) or "—"
+            "\n\n".join(
+                f"{d}: "
+                + (
+                    str(r.get("affected_period", d)) + " · " + ", ".join(r["missing_components"])
+                    if r.get("missing_components")
+                    else r["reason"]
+                )
+                for d, r in reports.items()
+                if r.get("reason")
+            )
+            or "—"
         )
         return result
 

@@ -1,7 +1,7 @@
 # Home Assistant Energy Price Engine
 
-**v0.1.0-beta.2 — read-only native Home Assistant beta.**
-Install the exact [published prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.2)
+**v0.1.0-beta.3 — functional onboarding and independent raw spot visibility.**
+Install the exact [published prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.3)
 through HACS as category **Integration**, then configure **Energy Price Engine**
 under Devices & services. Follow the [exact PAHA02-DEV HACS procedure](docs/HACS_DISTRIBUTION.md).
 The release page and verification receipt establish publication/source identity;
@@ -26,6 +26,12 @@ rates, units and VAT in a resumable native six-stage wizard. Review also opens t
 advanced dated-rate, time-of-use, locks/fallbacks and subscription editor. Sites have stable IDs and no hardcoded count limit; no private contract is
 copied to another site. Safe discovery suggests only an unambiguous official Nord
 Pool entry for confirmation, and rejects a legacy custom component shadowing it.
+
+Raw current/next spot and today/tomorrow source coverage remain visible independently
+when supplier/grid/tax configuration prevents final prices. Review actually reads
+sources and runs the canonical calculator, then offers direct corrective navigation.
+A localized final-status/problem entity distinguishes missing periods from source,
+grid and storage failures; canonical existing entities/API are preserved.
 
 Final inclusive DKK/kWh prices use immutable UTC quarters, 92/96/100-slot local DST
 days, negative prices, transactional SQLite persistence, revision/correction history

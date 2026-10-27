@@ -1,13 +1,13 @@
-# Install Energy Price Engine beta.2 with HACS
+# Install Energy Price Engine beta.3 with HACS
 
 Repository: **NicolaiTandrup/HA-Energy-Price-Engine**
 HACS category: **Integration**
 HACS and native integration name: **Energy Price Engine**
-Release: **v0.1.0-beta.2**, manifest version `0.1.0-beta.2`
-[Public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.2)
+Release: **v0.1.0-beta.3**, manifest version `0.1.0-beta.3`
+[Public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.3)
 
-The owner authorizes beta.2 publication after mandatory checks. Its source is the
-validated tag on PR #9's development branch; main stays on the previously approved
+The owner authorizes beta.3 publication after mandatory checks. Its source is the
+validated tag on PR #11's development branch; main stays on the previously approved
 beta.1 implementation. HACS uses main for registration and the exact selected beta
 tag for download. No main merge, stable release, CM release or live control operation
 is included. Confirm the public release is **Pre-release**, not a draft.
@@ -23,7 +23,7 @@ is included. Confirm the public release is **Pre-release**, not a draft.
    **Integration**, then **Add**. Do not append a branch URL or enter a ZIP URL.
 3. Find and open **Energy Price Engine** in HACS. Open **Download** (or the
    repository menu's **Redownload/Download again** for an existing installation).
-   Enable **Show beta versions** if beta.2 is hidden. Choose **v0.1.0-beta.2** in
+   Enable **Show beta versions** if beta.3 is hidden. Choose **v0.1.0-beta.3** in
    the available-version selector and download. HACS UI wording can vary by version;
    the required actions are enable beta versions and select this exact release.
    Do not accidentally select the moving `main` development version.
@@ -52,7 +52,7 @@ is included. Confirm the public release is **Pre-release**, not a draft.
    fields are lost by HA's Close/reload. Final **Save & verify** applies the draft.
    Missing components remain unavailable; saved does not mean READY.
 10. Inspect the original seven DKK/readiness entities and five preferred-display
-    sensors. Device info shows **0.1.0-beta.2**. Readiness attributes identify missing
+    sensors. Device info shows **0.1.0-beta.3**. Readiness attributes identify missing
     components, affected period, source/error and corrective action. Review →
     **Dated rates / manual overrides → Inspect a stored quarter-hour price** shows
     applied components, VAT, sources, periods and revision.
@@ -84,7 +84,7 @@ an authenticated session on PAHA02-DEV. See the release's verification receipt.
 
 ```sh
 .venv-ha-current/bin/python tools/verify_public_release.py \
-  --expected-commit THE_VALIDATED_RELEASE_COMMIT --output /tmp/pe-public-beta2
+  --expected-commit THE_VALIDATED_RELEASE_COMMIT --output /tmp/pe-public-beta3
 ```
 
 `BUILD_MANIFEST.json` describes the clean build; its `published: false` means the
@@ -116,3 +116,26 @@ snapshots are retained in `contracts/hacs-default-branches.json` and tests repro
 that exact HACS rejection. A `/tree/branch` suffix is discarded by HACS's normal add
 workflow. PE's authorized main bootstrap resolves its own structure gate; it does
 not change, merge or publish EV Charge Manager.
+
+## Beta.3 retest and the short-hash update card
+
+Beta.2 failed owner acceptance. This candidate adds actual Review source/calculation
+checks and independent raw source entities; screenshots/tests remain isolated
+simulation, not PAHA02-DEV success. Follow [the focused retest](WIZARD_GUIDE.md).
+
+The recorded `installed v0.1.0-beta.2 / latest 56cdb3c` card belongs to HACS. Actual
+pinned HACS code reproduces it when **Show beta versions is off** and the repository
+has no stable release: its available-version property falls back to main's commit.
+Selecting a beta download alone does not prove this subscription flag remains on.
+Keep **Show beta versions enabled in HACS's repository controls**, refresh repository
+information, then confirm latest is a semantic beta tag. Do not choose main/commits.
+Beta.3 sets hide_default_branch metadata; main registration remains compatible.
+
+PE additionally exposes a read-only **Published PE release (update through HACS)**
+UpdateEntity. It compares only published semantic tags, follows beta/stable according
+to the installed package, filters drafts/commits, and links exact release notes. It
+does not install files or change HACS settings. Stable installs never follow beta.
+GitHub failure makes that metadata unavailable; it never affects price readiness.
+HACS owns its separate card; PE does not monkey-patch it or publish a stable release
+to conceal this upstream fallback. If it still shows a hash, record HACS version and
+its persisted beta visibility; use the exact release download rather than the hash.

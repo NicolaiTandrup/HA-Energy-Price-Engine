@@ -706,6 +706,15 @@
           "energinet_system": "Energinet system tariff missing for affected period — Configure its dated rate",
           "electricity_tax": "Electricity tax missing for affected period — Configure its dated rate"
         }
+      },
+      "final_status": {
+        "name": "Final pricing status (localized)",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete — configure missing periods or await publication",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
       }
     },
     "update": {

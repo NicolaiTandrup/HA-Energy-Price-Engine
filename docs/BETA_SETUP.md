@@ -1,9 +1,9 @@
-# Install and configure v0.1.0-beta.2
+# Install and configure v0.1.0-beta.3
 
 Use the [exact HACS / PAHA02-DEV procedure](HACS_DISTRIBUTION.md) to add the PE
-repository as Integration and select **v0.1.0-beta.2** with beta versions enabled.
-The owner authorizes beta.2 prerelease publication after mandatory checks. Main
-already supports HACS registration; beta.2 installs from its exact tag without
+repository as Integration and select **v0.1.0-beta.3** with beta versions enabled.
+The owner authorizes beta.3 prerelease publication after mandatory checks. Main
+already supports HACS registration; beta.3 installs from its exact tag without
 merging its development PR. No production or control operation is included.
 Everyday pricing setup is native UI, not YAML.
 
@@ -184,3 +184,40 @@ test scaffolding only, not the deployed integration's runtime dependencies.
 Passing these automated tests does not approve real charging control or prove live
 provider availability. Complete the [acceptance and rollback checklist](BETA_ACCEPTANCE.md)
 with the owner before a real source/controller switchover.
+
+## Beta.3 raw source versus final price
+
+New raw current/next **DKK/kWh before additions** and today/tomorrow raw-source enum
+sensors expose actual verified quarters and timestamps independently from final
+composition. Official DKK/MWh is converted once; 100 DKK/MWh becomes 0.100 DKK/kWh.
+Raw spot is never a total electricity price. An all-in entity provider is not falsely
+labelled raw spot. No raw quarter is fabricated. Raw observations are operational
+and bounded to recent days; authoritative final SQLite history retains its existing
+policy. On restart raw observations are fetched again, not invented from final totals.
+
+The new localized final status and pricing-problem entities give corrective guidance.
+Existing uppercase readiness codes and canonical DKK entities/API remain compatible.
+Missing supplier/national periods are INCOMPLETE, with component/date/action; source,
+Radius and storage failures are distinct. Final valid_slots counts final records,
+not raw provider input. Raw READY 96 + final INCOMPLETE 0 is legitimate when a required
+contract is missing. Cached raw source can be STALE after a failed refresh, retains
+its original timestamp, and expires within two hours; final API remains fail-closed.
+
+New Danish official-source sites suggest the documented bounded national baseline
+with a visible editable checkbox. Existing choices/overrides remain unchanged. No
+Radius connection is inferred merely from DK2: confirm the grid product. No private
+EWII amount or heating eligibility is defaulted.
+
+Review uses the actual source adapters and the same canonical calculate() function
+in a transient in-memory sink; drafts never write price ledgers. Save rechecks and
+applies the complete configuration through normal runtime/transactional persistence.
+Preview calculation success is not proof that a later disk write succeeded: inspect
+final status/problem and verified slot counts after Save. Storage failures retain
+old history and identify disk/recovery action. There is no extra hidden Save.
+
+Native English/Danish forms, selectors, validation, Repairs and enum states follow
+the user's selected UI language. HA entity names follow the **system language** and
+existing registry names, as standard native HA behavior; changing a user's profile
+does not rename entities for everyone. Both name resources are shipped. New enum
+status entities localize per user; legacy uppercase state codes remain unchanged.
+Technical details retain canonical source/API keys and provider exception text.

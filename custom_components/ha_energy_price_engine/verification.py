@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 
 from homeassistant.util import dt as dt_util
 
-from .price_components import REQUIRED, active_hours, danish_public_components
+from .price_components import REQUIRED, active_hours, danish_public_components, eligible
 from .price_engine import calculate, day_bounds
 from .price_update import PriceUpdater
 
@@ -39,6 +39,11 @@ def component_coverage(site, day):
     rules = list(site.get("dated_components", []))
     if site.get("danish_public_rates"):
         rules += danish_public_components()
+    start, end = day_bounds(day, site["timezone"])
+    expected_hours = set()
+    while start < end:
+        expected_hours.add(start.astimezone(ZoneInfo(site["timezone"])).hour)
+        start += timedelta(minutes=15)
     result = {}
     for key in sorted(REQUIRED | {"dso"}):
         hours = set().union(
@@ -47,10 +52,10 @@ def component_coverage(site, day):
                 for r in rules
                 if r["id"] == key
                 and r["valid_from"] <= str(day) < r["valid_to"]
-                and r.get("eligibility", "all") == "all"
+                and eligible(r, site, day)
             )
         )
-        result[key] = len(hours) == 24
+        result[key] = expected_hours <= hours
     return result
 
 

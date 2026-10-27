@@ -23,6 +23,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
             RawSpotSensor(c, 1),
             RawReadinessSensor(c),
             RawReadinessSensor(c, 1),
+            FinalStatusSensor(c),
             PricingProblemSensor(c),
             ReadinessSensor(c),
             NextPriceSensor(c),
@@ -261,7 +262,7 @@ class RawSpotSensor(BaseSensor):
 class RawReadinessSensor(BaseSensor):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_device_class = "enum"
-    _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
+    _attr_options = ["ready", "incomplete", "stale", "error"]
 
     def __init__(self, coordinator, offset=0):
         super().__init__(coordinator)
@@ -287,8 +288,8 @@ class RawReadinessSensor(BaseSensor):
             and verified
             and (dt_util.utcnow() - verified).total_seconds() >= 7200
         ):
-            return "STALE"
-        return report.get("status", "INCOMPLETE")
+            return "stale"
+        return report.get("status", "INCOMPLETE").lower()
 
     @property
     def extra_state_attributes(self):
@@ -343,3 +344,18 @@ class PricingProblemSensor(BaseSensor):
                 "failure_stage",
             )
         }
+
+
+class FinalStatusSensor(ReadinessSensor):
+    """Localized enum alongside preserved legacy uppercase status/API contracts."""
+
+    _attr_options = ["ready", "incomplete", "stale", "error"]
+    _attr_translation_key = "final_status"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_final_status"
+
+    @property
+    def native_value(self):
+        return str(self.current_result().status).lower()

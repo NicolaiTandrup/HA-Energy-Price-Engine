@@ -119,12 +119,14 @@ async def test_ledger_failure_does_not_hide_spot_source(hass, freezer):
 def test_release_channels_never_offer_commit_or_draft():
     data = [
         {"tag_name": "56cdb3c", "prerelease": False},
+        {"tag_name": "v0.0.8-preview.1", "prerelease": False},
         {"tag_name": "v0.1.0-beta.3", "prerelease": True},
         {"tag_name": "v0.1.0-beta.4", "prerelease": True, "draft": True},
         {"tag_name": "v0.0.9", "prerelease": False},
     ]
     assert release_for(data, "0.1.0-beta.2")["tag_name"] == "v0.1.0-beta.3"
     assert release_for(data, "0.1.0") is None
+    assert release_for([{"tag_name": "v9.0.0-preview.1", "prerelease": False}], "0.1.0") is None
     assert release_for(data, "0.1.0-beta.3")["tag_name"] == "v0.1.0-beta.3"
 
 
@@ -168,3 +170,50 @@ async def test_native_translations_follow_requested_locale_and_fall_back(hass):
     assert english[key] == "3 / 6 · Supplier contract"
     assert danish[key] == "3 / 6 · Leverandørkontrakt"
     assert unknown[key] == english[key]
+
+
+@pytest.mark.parametrize("failure", ["partial", "outage"])
+async def test_source_degradation_is_independent_and_not_old_component_error(
+    hass,
+    freezer,
+    price_service,  # noqa: F811
+    failure,
+):
+    freezer.move_to("2026-10-23T12:00:00Z")
+    entry = await setup(hass)
+    c = entry.runtime_data
+    before = c.price_engine.records["home"]
+    if failure == "partial":
+        price_service["partial"] = True
+    else:
+        hass.services.async_remove("nordpool", "get_prices_for_date")
+    await c.schedule.startup()
+    await c.async_refresh()
+    report = c.price_updater.raw_reports["2026-10-23"]
+    assert report["status"] == ("INCOMPLETE" if failure == "partial" else "STALE")
+    assert c.data["status"] != "READY"
+    assert not c.data.get("missing_components")
+    assert c.data["failure_stage"] == "source"
+    assert c.price_engine.records["home"] == before
+    assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_review_coverage_matches_canonical_heating_and_spring_missing_hour(hass, freezer):
+    from custom_components.ha_energy_price_engine.price_components import danish_public_components
+
+    freezer.move_to("2026-03-29T10:00:00Z")
+    data = model()
+    data.update(
+        danish_public_rates=False, heating_registered=True, annual_usage_kwh=5000, usage_year=2026
+    )
+    data["dated_components"] += danish_public_components()
+    for rule in data["dated_components"]:
+        rule["hours"] = [hour for hour in range(24) if hour != 2]
+        if rule["id"] == "electricity_tax":
+            rule["eligibility"] = "heating_above_4000"
+    result = (await verify_site(hass, data))["2026-03-29"]
+    assert result["calculated_slots"] == 92 and all(result["coverage"].values())
+    data["heating_registered"] = False
+    result = (await verify_site(hass, data))["2026-03-29"]
+    assert result["calculated_slots"] == 0 and not result["coverage"]["electricity_tax"]

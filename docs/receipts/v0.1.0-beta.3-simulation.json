@@ -1,0 +1,464 @@
+{
+  "scope": "Isolated synthetic first-run simulation, NOT owner PAHA02-DEV acceptance",
+  "captured_at": "2026-10-27T15:47:48.198449+01:00",
+  "ha": "2026.10.4",
+  "frontend": "20260930.5",
+  "browser": "Chromium via Playwright; Browser plugin absent",
+  "viewports": {
+    "desktop": [
+      1440,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ]
+  },
+  "system_language": "en",
+  "user_languages": [
+    "en",
+    "da"
+  ],
+  "native_first_run_save_both_languages": "passed",
+  "read_only_source": "Synthetic Nord Pool get_prices_for_date action and synthetic Radius fixture",
+  "formula": {
+    "spot_ex_vat": 0.1,
+    "grid_ex_vat_synthetic": 0.2,
+    "supplier_ex_vat_fictional": 0.111,
+    "energinet_net_ex_vat": 0.043,
+    "energinet_system_ex_vat": 0.072,
+    "tax_ex_vat": 0.008,
+    "vat": 0.25,
+    "final_dkk_kwh": 0.6675,
+    "display_ore_kwh": 66.75
+  },
+  "ledgers": [
+    {
+      "site": "qa_complete_da",
+      "rows": 192,
+      "amounts": [
+        0.6675
+      ],
+      "rows_and_revisions_unchanged_across_restarts": true,
+      "rows_sha256": "2bca0f78daa74aec8381082d0eacfe8ac7ae166379d1280ae96271180ea5df24"
+    },
+    {
+      "site": "qa_complete_en",
+      "rows": 192,
+      "amounts": [
+        0.6675
+      ],
+      "rows_and_revisions_unchanged_across_restarts": true,
+      "rows_sha256": "501615409eb6f52ccd7fc18fad83d72f49e6e534b1c96d43ec85dea0b8c6bf33"
+    }
+  ],
+  "runtime_scenarios": {
+    "normal": {
+      "current_final_electricity_price": {
+        "state": "0.6675",
+        "attributes": {}
+      },
+      "current_raw_spot_price_before_additions": {
+        "state": "0.1",
+        "attributes": {}
+      },
+      "today_raw_source_readiness": {
+        "state": "ready",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:46:03.311044+00:00",
+          "reason": null
+        }
+      },
+      "tomorrow_raw_source_readiness": {
+        "state": "ready",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:46:03.311044+00:00",
+          "reason": null
+        }
+      },
+      "final_pricing_status_localized": {
+        "state": "ready",
+        "attributes": {
+          "last_error": null,
+          "required_action": null,
+          "missing_components": [],
+          "affected_period": null,
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "pricing_problem_corrective_action": {
+        "state": "none",
+        "attributes": {
+          "affected_period": null,
+          "missing_components": [],
+          "reason": null,
+          "required_action": null,
+          "failure_stage": null
+        }
+      },
+      "price_readiness": {
+        "state": "READY",
+        "attributes": {
+          "last_error": null,
+          "required_action": null,
+          "missing_components": [],
+          "affected_period": null,
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "tomorrow_price_readiness": {
+        "state": "READY",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "reason": null
+        }
+      },
+      "current_final_price_preferred_display": {
+        "state": "66.75",
+        "attributes": {}
+      }
+    },
+    "grid_outage": {
+      "current_final_electricity_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "current_raw_spot_price_before_additions": {
+        "state": "0.1",
+        "attributes": {}
+      },
+      "today_raw_source_readiness": {
+        "state": "ready",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:46:03.203712+00:00",
+          "reason": null
+        }
+      },
+      "tomorrow_raw_source_readiness": {
+        "state": "ready",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:46:03.203712+00:00",
+          "reason": null
+        }
+      },
+      "final_pricing_status_localized": {
+        "state": "error",
+        "attributes": {
+          "last_error": "SYNTHETIC QA Radius coverage unavailable",
+          "required_action": "Check the selected source and its availability, units and verification timestamp, then Configure → guided setup and Save & verify. Retained prices are not certified READY.",
+          "missing_components": [],
+          "affected_period": "2026-10-27",
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "pricing_problem_corrective_action": {
+        "state": "grid",
+        "attributes": {
+          "affected_period": "2026-10-27",
+          "missing_components": [],
+          "reason": "SYNTHETIC QA Radius coverage unavailable",
+          "required_action": "Check the selected source and its availability, units and verification timestamp, then Configure → guided setup and Save & verify. Retained prices are not certified READY.",
+          "failure_stage": "grid"
+        }
+      },
+      "price_readiness": {
+        "state": "ERROR",
+        "attributes": {
+          "last_error": "SYNTHETIC QA Radius coverage unavailable",
+          "required_action": "Check the selected source and its availability, units and verification timestamp, then Configure → guided setup and Save & verify. Retained prices are not certified READY.",
+          "missing_components": [],
+          "affected_period": "2026-10-27",
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "tomorrow_price_readiness": {
+        "state": "ERROR",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "reason": "SYNTHETIC QA Radius coverage unavailable"
+        }
+      },
+      "current_final_price_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      }
+    },
+    "source_outage": {
+      "current_final_electricity_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "current_raw_spot_price_before_additions": {
+        "state": "0.1",
+        "attributes": {}
+      },
+      "today_raw_source_readiness": {
+        "state": "stale",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:45:37.225314+00:00",
+          "reason": "Nord Pool refresh failed; cached raw source retained"
+        }
+      },
+      "tomorrow_raw_source_readiness": {
+        "state": "stale",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:45:37.225314+00:00",
+          "reason": "Nord Pool refresh failed; cached raw source retained"
+        }
+      },
+      "final_pricing_status_localized": {
+        "state": "stale",
+        "attributes": {
+          "last_error": "Nord Pool refresh failed; retained verified intervals",
+          "required_action": "Check official Nord Pool availability and recheck. Retained raw intervals have their original verification timestamp; final prices are not READY.",
+          "missing_components": [],
+          "affected_period": null,
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "pricing_problem_corrective_action": {
+        "state": "source",
+        "attributes": {
+          "affected_period": null,
+          "missing_components": [],
+          "reason": "Nord Pool refresh failed; retained verified intervals",
+          "required_action": "Check official Nord Pool availability and recheck. Retained raw intervals have their original verification timestamp; final prices are not READY.",
+          "failure_stage": "source"
+        }
+      },
+      "price_readiness": {
+        "state": "STALE",
+        "attributes": {
+          "last_error": "Nord Pool refresh failed; retained verified intervals",
+          "required_action": "Check official Nord Pool availability and recheck. Retained raw intervals have their original verification timestamp; final prices are not READY.",
+          "missing_components": [],
+          "affected_period": null,
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "tomorrow_price_readiness": {
+        "state": "STALE",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "reason": "Nord Pool refresh failed; retained verified intervals"
+        }
+      },
+      "current_final_price_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      }
+    },
+    "partial": {
+      "current_final_electricity_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "current_raw_spot_price_before_additions": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_raw_source_readiness": {
+        "state": "incomplete",
+        "attributes": {
+          "valid_slots": 1,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:46:03.112661+00:00",
+          "reason": null
+        }
+      },
+      "tomorrow_raw_source_readiness": {
+        "state": "incomplete",
+        "attributes": {
+          "valid_slots": 1,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:46:03.112661+00:00",
+          "reason": null
+        }
+      },
+      "final_pricing_status_localized": {
+        "state": "incomplete",
+        "attributes": {
+          "last_error": "Requested day source series is incomplete",
+          "required_action": "Check raw source coverage; verify the selected Nord Pool area and wait for publication or recheck the source.",
+          "missing_components": [],
+          "affected_period": null,
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "pricing_problem_corrective_action": {
+        "state": "source",
+        "attributes": {
+          "affected_period": null,
+          "missing_components": [],
+          "reason": "Requested day source series is incomplete",
+          "required_action": "Check raw source coverage; verify the selected Nord Pool area and wait for publication or recheck the source.",
+          "failure_stage": "source"
+        }
+      },
+      "price_readiness": {
+        "state": "INCOMPLETE",
+        "attributes": {
+          "last_error": "Requested day source series is incomplete",
+          "required_action": "Check raw source coverage; verify the selected Nord Pool area and wait for publication or recheck the source.",
+          "missing_components": [],
+          "affected_period": null,
+          "valid_slots": 96,
+          "expected_slots": 96
+        }
+      },
+      "tomorrow_price_readiness": {
+        "state": "INCOMPLETE",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "reason": "Requested day source series is incomplete"
+        }
+      },
+      "current_final_price_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      }
+    },
+    "missing_supplier": {
+      "current_final_electricity_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "current_raw_spot_price_before_additions": {
+        "state": "0.1",
+        "attributes": {}
+      },
+      "next_quarter_raw_spot_price": {
+        "state": "0.1",
+        "attributes": {}
+      },
+      "today_raw_source_readiness": {
+        "state": "ready",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:32:52.597541+00:00"
+        }
+      },
+      "tomorrow_raw_source_readiness": {
+        "state": "ready",
+        "attributes": {
+          "valid_slots": 96,
+          "expected_slots": 96,
+          "verified_at": "2026-10-27T14:32:52.597541+00:00"
+        }
+      },
+      "final_pricing_status_localized": {
+        "state": "incomplete",
+        "attributes": {
+          "last_error": "Missing verified components: supplier for 2026-10-27T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+          "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+          "missing_components": [
+            "supplier"
+          ],
+          "affected_period": "2026-10-27T00:00:00+01:00",
+          "valid_slots": 0,
+          "expected_slots": 96
+        }
+      },
+      "pricing_problem_corrective_action": {
+        "state": "supplier",
+        "attributes": {
+          "affected_period": "2026-10-27T00:00:00+01:00",
+          "missing_components": [
+            "supplier"
+          ],
+          "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+          "failure_stage": "configuration"
+        }
+      },
+      "price_readiness": {
+        "state": "INCOMPLETE",
+        "attributes": {
+          "last_error": "Missing verified components: supplier for 2026-10-27T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+          "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+          "missing_components": [
+            "supplier"
+          ],
+          "affected_period": "2026-10-27T00:00:00+01:00",
+          "valid_slots": 0,
+          "expected_slots": 96
+        }
+      },
+      "next_quarter_final_electricity_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_minimum_final_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_maximum_final_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_average_final_price": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "tomorrow_price_readiness": {
+        "state": "INCOMPLETE",
+        "attributes": {
+          "valid_slots": 0,
+          "expected_slots": 96
+        }
+      },
+      "current_final_price_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "next_quarter_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_minimum_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_maximum_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      },
+      "today_average_preferred_display": {
+        "state": "unknown",
+        "attributes": {}
+      }
+    }
+  },
+  "mobile_horizontal_overflow": false,
+  "screenshots": "docs/images/beta3/",
+  "limits": [
+    "Synthetic read-only provider data, not live provider credentials or owner contract.",
+    "Fixture rechecks after its synthetic provider registration; actual official-provider ordering/recovery covered separately by core integration tests.",
+    "Native enum messages follow user language; HA entity names follow system language/registry.",
+    "Continue before closing: native Close does not submit keystrokes.",
+    "No owner hardware, billing, source or physical mobile acceptance inferred."
+  ]
+}

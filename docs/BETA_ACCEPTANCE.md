@@ -1,23 +1,27 @@
 # PE + CM beta acceptance, source migration and rollback
 
-Target: **v0.1.0-beta.2 read-only PE prerelease**. Publication is owner-authorized
+Target: **v0.1.0-beta.3 read-only PE prerelease**. Publication is owner-authorized
 once mandatory software checks pass; no stable, main merge or production cutover.
 
-## Beta.2 software acceptance
+## Beta.3 software and owner acceptance
 
-- [x] Pricing adapters, immutable SQLite history, multi-site identity and CM API retained.
-- [x] 185 producer tests on HA 2026.10.3 and 2026.10.4; migration uses actual beta.1 code.
-- [x] Invalid/Back/submitted drafts resume without applying active changes.
-- [x] Desktop and 390px mobile native wizard navigation/screenshots with real HA frontend.
-- [x] HACS, hassfest, independent installed wizard/Options/reload/delete/recreate CI.
-- [x] Clear Close/reload warning: HA cannot persist unsubmitted keystrokes. Continue first.
-- [x] Exact tagged source CI and public source/asset/HACS verification passed;
-  see docs/receipts/v0.1.0-beta.2.json.
-- [ ] Owner PAHA02-DEV upgrade/configuration, current contracts and real Pi observations.
+- [x] Real isolated native EN/DA new-site flows save complete verified fixtures.
+- [x] Runtime final .6675 DKK/kWh / 66.75 øre, source .100, 96 quarters on both days.
+- [x] Missing contract: raw 96 READY, final 0 INCOMPLETE, exact supplier period/action.
+- [x] Radius/source/partial/ledger failures distinguished without manufacturing prices.
+- [x] Actual beta.1/.2 source creates upgrade fixtures; ledger rows/revisions preserved.
+- [x] Native user-language switch/fallback, submitted draft/Back/Discard/reload coverage.
+- [x] HACS SHA fallback reproduced, beta subscription/semantic release behavior tested.
+- [ ] Final exact-source both-core/consumer/HACS/hassfest/package CI.
+- [ ] Published beta.3 source/assets verified independently on both cores.
+- [ ] Owner PAHA02-DEV installation and focused [retest](WIZARD_GUIDE.md) recorded.
+- [ ] Owner current contracts/source/billing and Raspberry Pi resource acceptance.
 
-The final public receipt records completed distribution checks; owner hardware
-acceptance remains separate. See [HACS instructions](HACS_DISTRIBUTION.md) and
-[illustrated wizard](WIZARD_GUIDE.md). No production/Node-RED/control changes.
+Beta.1/.2 automated software checks did **not** establish owner acceptance. Beta.3
+simulations likewise do not check those owner boxes. Main is unchanged, PR unmerged,
+no stable or control operation. Native Close does not submit typed fields: Continue
+first. Entity names obey HA system language/registry; native enum states and wizard
+follow individual user language. Technical provenance keys remain canonical.
 
 ## Before touching the owner's installation
 

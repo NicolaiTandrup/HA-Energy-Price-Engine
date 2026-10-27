@@ -706,6 +706,15 @@
           "energinet_system": "Energinets systemtarif mangler i perioden — konfigurér dateret sats",
           "electricity_tax": "Elafgift mangler i perioden — konfigurér dateret sats"
         }
+      },
+      "final_status": {
+        "name": "Slutprisstatus (lokaliseret)",
+        "state": {
+          "ready": "Klar",
+          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
+          "stale": "Forældet — kilden skal kontrolleres igen",
+          "error": "Kontrol fejlet — se prisproblem"
+        }
       }
     },
     "update": {

@@ -26,19 +26,20 @@ URL = "https://api.github.com/repos/NicolaiTandrup/HA-Energy-Price-Engine/releas
 def release_for(releases, installed):
     """Installed beta follows published beta/stable; stable never follows beta/SHA."""
     current = AwesomeVersion(installed.removeprefix("v"))
+    beta_channel = "-" in installed.split("+", 1)[0]
     eligible = []
     for release in releases:
+        if not isinstance(release, dict):
+            continue
         tag = release.get("tag_name", "")
-        if release.get("draft") or not re.fullmatch(r"v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?", tag):
+        if release.get("draft") or not re.fullmatch(
+            r"v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?", tag
+        ):
             continue
         version = AwesomeVersion(tag.removeprefix("v"))
-        if (
-            release.get("prerelease")
-            or version.beta
-            or version.alpha
-            or version.dev
-            or version.release_candidate
-        ) and not (current.beta or current.alpha or current.dev or current.release_candidate):
+        if not version.valid:
+            continue
+        if (release.get("prerelease") or "-" in tag.split("+", 1)[0]) and not beta_channel:
             continue
         if version >= current:
             eligible.append((version, release))

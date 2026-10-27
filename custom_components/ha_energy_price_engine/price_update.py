@@ -244,9 +244,16 @@ class PriceUpdater:
                     report.update(
                         status="STALE",
                         reason="Nord Pool refresh failed; retained verified intervals",
+                        failure_stage="source",
+                        required_action="Check official Nord Pool availability and recheck. Retained raw intervals have their original verification timestamp; final prices are not READY.",
                     )
                 if source.get("dso", {}).get("warning"):
-                    report.update(status="STALE", reason=source["dso"]["warning"])
+                    report.update(
+                        status="STALE",
+                        reason=source["dso"]["warning"],
+                        failure_stage="grid",
+                        required_action="Recheck Radius/grid coverage and cache age, or configure verified dated manual tariffs. Cached/fallback prices are not certified READY.",
+                    )
                 return changed
             except (
                 ValueError,

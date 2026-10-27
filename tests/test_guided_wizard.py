@@ -36,6 +36,7 @@ async def test_new_official_wizard_source_defaults_review_save_incomplete(hass, 
     defaults = {str(k): k.default() for k in r["data_schema"].schema if callable(k.default)}
     assert defaults["area"] == "DK2" and defaults["timezone"] == "Europe/Copenhagen"
     assert defaults["vat_percent"] == 25
+    assert hass.config_entries.flow._progress[fid].draft["danish_public_rates"] is True
     r = await hass.config_entries.flow.async_configure(
         fid, {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25}
     )
