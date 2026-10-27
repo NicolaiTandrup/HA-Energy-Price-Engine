@@ -1,31 +1,34 @@
 # First setup
 
-Install beta.5 using the [exact HACS procedure](HACS_DISTRIBUTION.md), restart HA,
-and follow the [illustrated native setup](WIZARD_GUIDE.md). Existing installations
-use Configure on their existing site. Back up first. Tested cores: 2026.10.3/.4;
-cloud validation does not establish Raspberry Pi performance.
+Back up your development Home Assistant, install beta.6 using the
+[HACS procedure](HACS_DISTRIBUTION.md), restart HA and reload the browser/app.
+Existing users configure their existing site; no deletion/recreation is needed.
+Tested cores: 2026.10.3 and 2026.10.4. Hardware performance remains your acceptance check.
 
-You need your installed **official Nord Pool** entry, actual area/grid product and
-supplier agreement (markup, VAT convention and optional monthly subscription).
-Ordinary setup needs no dates. Public EWII suggestions require agreement confirmation;
-custom rates never assume a private contract. National defaults are bounded dated
-baselines, not an automatic promise of future rates or heating eligibility.
+You need an installed **official Nord Pool** entry, your actual grid product/class
+and your supplier's actual per-kWh markup/VAT convention. Fixed subscriptions are
+not marginal costs. No private agreement or heating eligibility is guessed.
 
-Five stages: site/source → grid → supplier → taxes → review. **Save and continue**
-applies each accepted page. Close/reopen Configure to resume the next stage. Review
-needs no final save. Click any component for correction; use Check prices for a
-fresh verification. Raw coverage and final readiness are separate.
+Three stages: **source → grid → markup**. Select Radius C only if it is your product.
+Enter fractional **øre/kWh**, using a point or comma, and indicate whether the amount
+includes VAT. Save confirms your actual agreement. Leave markup blank if unknown;
+an existing rate is kept. No dates, monthly fees or product selection are required.
+Verified public national defaults are automatic within their effective periods.
 
-A new current agreement starts at the next complete quarter, open-ended until
-changed. No earlier unknown price is filled and no settled row is rewritten.
-The first day can have only remaining-day final coverage; full-day consumer reads
-remain INCOMPLETE until full coverage exists. Missing values never become zero.
-Estimates require explicit approval, remain separate from ledger/API READY and
-must never control charging. Monthly subscriptions are excluded from marginal prices.
+Each accepted page is saved. Close/reopen Configure to resume. Review is already
+saved; click components to revisit them. Native forms cannot save unsubmitted typing
+and have no separate per-page Back button. Avoid simultaneous edits of one site.
 
-One entry is one independently configurable site. Upgrading preserves IDs, mappings,
-entities, advanced dated rules, SQLite rows and revisions. Canonical stored/API prices
-remain DKK/kWh including VAT; ordinary review defaults to øre/kWh including VAT.
-Inspect a stored breakdown, restart, compare with your bill and complete the
-[owner acceptance checklist](BETA_ACCEPTANCE.md). Your credentials, providers,
-invoice and actual hardware are not certified by synthetic software tests.
+New current values start next complete quarter, open-ended until changed, preserving
+historical prices and future scheduled overrides. A new site's initial day can have
+only remaining-day final coverage. Full-day API queries still need all that day's
+quarters. Tomorrow may not yet be published. Raw coverage and final readiness differ.
+
+Final prices opens Diagnostics and shows the selected current/future stored calculation.
+An optional cost estimate takes one kWh value per consecutive quarter and a planned/
+measured designation. Unknown energy/prices are not zero; all prices must be verified.
+Provisional prices support visualization only and never make the CM API READY.
+
+Follow the [illustrated guide](WIZARD_GUIDE.md) and [acceptance checklist](BETA_ACCEPTANCE.md).
+Your real agreement, sources, bill, physical mobile experience and Raspberry Pi
+performance are not established by synthetic software tests.

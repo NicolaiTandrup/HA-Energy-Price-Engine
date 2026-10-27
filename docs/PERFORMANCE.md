@@ -47,3 +47,9 @@ Beta.5 repeat during concurrent cloud validation: 35,136 rows, 18,239,488 bytes;
 implementation is retained. Load/concurrency affect timings; these remain cloud
 measurements and do not establish Raspberry Pi performance. Recovery, revision,
 migration and multi-site failure/isolation tests run in both supported core suites.
+
+Beta.6 repeat during concurrent cloud validation: 35,136 rows, 18,239,488 bytes;
+96-row append 0.0288 s, reload 1.066 s, lookup mean 5.29 µs; process peak 243,580 KiB.
+[Raw receipt](benchmarks/beta6-sqlite-1year.json). Transactional touched-row SQLite
+writes remain unchanged. These cloud timings do not establish Raspberry Pi
+performance. Both-core suites exercise recovery, migration and revision isolation.

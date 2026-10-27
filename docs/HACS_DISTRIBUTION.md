@@ -1,8 +1,8 @@
 # Install and update with HACS
 
 Repository: **NicolaiTandrup/HA-Energy-Price-Engine**. Category: **Integration**.
-Target: **v0.1.0-beta.5** (manifest `0.1.0-beta.5`). The
-[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.5)
+Target: **v0.1.0-beta.6** (manifest `0.1.0-beta.6`). The
+[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.6)
 is the installation source. The reproducible package and release receipt identify the exact immutable
 source and checksums; a moving branch is not a release.
 
@@ -11,9 +11,9 @@ source and checksums; a moving branch is not a release.
 2. **HACS → Custom repositories**: add
    `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine`, category **Integration**.
 3. Open Energy Price Engine in HACS. Persist **Show beta versions**, refresh
-   repository information, select **v0.1.0-beta.5**, then Download.
+   repository information, select **v0.1.0-beta.6**, then Download.
 4. Restart HA. HACS must show the installed semantic beta version. Device info must
-   show manifest version **0.1.0-beta.5**. Clear browser cache if old forms remain.
+   show manifest version **0.1.0-beta.6**. Reload the browser/app after restart so it loads the new fields and translations.
 5. Configure the official Home Assistant **Nord Pool** integration with your actual
    area first. PE needs no additional credentials. A legacy custom component
    shadowing the official domain is rejected. Recorded legacy comparisons are
@@ -21,12 +21,12 @@ source and checksums; a moving branch is not a release.
 6. New site: **Settings → Devices & services → Add integration → Energy Price
    Engine**. Upgrade: existing site's **Configure**; IDs, source mapping, dated
    contracts, overrides, entities, SQLite rows and revisions are preserved.
-7. Follow the [five-stage guide](WIZARD_GUIDE.md). Confirm your supplier agreement
+7. Follow the [three-stage guide](WIZARD_GUIDE.md). Confirm your supplier agreement
    or enter a custom markup in øre/kWh and its VAT basis. No dates are needed.
    Save and continue applies each page; Configure resumes after closing. Review
    needs no final save. Inspect raw/final coverage and a stored breakdown, then
    complete the [acceptance checklist](BETA_ACCEPTANCE.md), including restart and
-   your invoice comparison. Close cannot submit fields still being typed.
+   comparison of the marginal components from your agreement/bill. Close cannot submit fields still being typed.
 
 HACS uses compliant main for registration and the exact selected release tag for
 installation. Beta distribution does not require merging development into main.
@@ -44,7 +44,7 @@ version falls back to main's short commit. Selecting a beta download alone is no
 the same as subscribing to beta updates. PE's `hide_default_branch` hides a branch
 choice but cannot override HACS's update property.
 
-Beta.4 provides **Configure → Final prices → Diagnostics → Advanced → Storage / site management → Repair HACS beta channel**, explicitly
+PE provides **Configure → Final prices → Advanced settings → Storage / site management → HACS beta channel**, explicitly
 approved by an administrator. It uses supported HACS repository WebSocket commands
 against the same local HA socket, enables beta only for PE, refreshes and verifies
 the semantic available version, then persists HACS's own repository state. It does

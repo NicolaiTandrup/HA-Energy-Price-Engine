@@ -1,48 +1,91 @@
 # Development handoff
 
-Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 active**, explicitly authorized by
-new owner mission after beta.5 acceptance feedback. Continuing existing PR#14 on `feat/beta5-simple-onboarding` (beta.6 target); topic
-foundation retained as `feat/beta6-marginal-pricing`. This continues final beta.5 checkpoint **a7a6b04**; all10 prior handoff CI jobs verified
-successful. Main/prior tags/releases remain unchanged. No worktree, production HA,
-Node-RED, Tesla/Easee/CM controls, stable release or main merge. Owner authorizes
-beta.6 prerelease only after mandatory gates; stop after publication/verification.
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 release candidate complete;
+publication still pending.** Continue existing draft [PR #14](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/14)
+on `feat/beta5-simple-onboarding`; no restart/worktree/main merge. Owner explicitly
+authorizes beta.6 prerelease after gates. Stop after publication and independent
+verification. Production HA, Node-RED, CM, vehicles and charging controls untouched.
+Main remains `56cdb3c10993179371483812cbc36f651ba3ad8e`; prior releases preserved.
 
-## Beta.6 fractional markup and three-step foundation
+## Beta.6 validated implementation and native evidence
 
-Checkpoint subject: **feat: accept fractional charging markup in three-step setup**.
-Issues#8/#12 read including final owner scope corrections: marginal per-quarter
-charging prices, not household invoice reconstruction. Issue#10 graphs deferred.
+Runtime checkpoint **a9ef054966b09815a29d819cc99417a32a90bf63**. Current evidence/doc
+checkpoint subject: **docs: record beta.6 native acceptance simulations and setup**.
+Foundations continue beta.5 final checkpoint a7a6b04; preserve existing PR history.
 
-- Source → confirmed grid product → actual fractional supplier markup → Review.
-  Ordinary form has markup and VAT basis only: no product/monthly subscription,
-  dates, heating eligibility or technical source contract. Public national defaults
-  stay bounded to verified periods; no private rates/eligibility inferred.
-- Text-based decimal input deliberately accepts point/comma across browser locales;
-  decimal parsing rejects ambiguous/nonfinite/negative values, persists exact decimal
-  strings and converts ore to numeric DKK through Decimal. Canonical pricing/VAT
-  composition/API remain unchanged. Source/grid shape, SQLite and refresh engine
-  retained. Existing subscriptions/future overrides/history preserved.
-- Server-resolved menu dictionaries ensure nonempty human labels independent of
-  client translation cache. Fresh beta.5 en/en-GB/da resources all resolve correctly;
-  owner log references older draft_status wording. Add explicit compatibility
-  placeholder and complete en-GB resources; actual frontend cache-path checks pending.
-  Official advanced source schema hides entity-only fields and validates source,
-  area/timezone with field-specific errors while retaining entered data.
-- Focused new fractional native flows, real HA translation resolution and current
-  contract regression **32 passed**. Core/contract/locale foundation18 passed. Ruff
-  check/format pass. Full older flow tests still require navigation adaptation;
-  no full-suite/remote green claim for this changed checkpoint.
-- Local GitHub API remains proxy-blocked; public GitHub web/Git work. Initial
-  authorized GitHub runner opens a draft beta.6 PR; publication later uses the
-  proven immutable source/hash gates and independent public verification. No beta.6
-  tag/release yet. Manifest still beta.5 during this in-progress foundation.
+- Three ordinary stages: official Nord Pool source → confirmed grid product →
+  actual fractional markup/VAT. No normal monthly/product/date/heating decisions.
+  Verified national defaults remain bounded. Exact decimal strings/comma accepted;
+  0.25/0.50/0.75/3.125 both VAT bases tested. Current rates begin next complete
+  quarter without rewriting settled/unknown past or future scheduled overrides.
+- Canonical stored current/future breakdown, source/period/status and VAT once.
+  Estimated rows are separate transient canonical records, never verified ledger/API.
+  Stale retained rows cannot mask a new approved visual estimate. Optional supplied
+  quarter-energy cost calculator is read-only and requires every price READY;
+  future energy must be planned. Fixed subscriptions excluded; CM owns planning.
+- Server-resolved named menus, en/en-GB/da resources, old draft_status compatibility,
+  field-specific source/timezone errors and provider-mode-specific forms. Actual
+  beta.5 interrupted agreement resumes the simple markup form. Advanced offers,
+  explicit estimate approval, dated rules and safe selected-site reset retained.
+- Price engine/SQLite/API v1/source normalizers/refresh schedule remain established
+  implementation. Preserve 13:05/13:20/13:40/23:59/00:01 local refresh requirements.
+- Full producer **277 passed per HA 2026.10.3 / current 2026.10.4**, **88% coverage**,
+  zero skips, two unchanged upstream HACS deprecation warnings. Current stable .4
+  independently checked. Four unchanged consumer suites **153/176/227/228 per core**,
+  two coupled runtime startup-order/revision/unload cases per reference/core passed.
+  Focused final markup/native/locale/diagnostic/distribution/docs: **44 passed**.
+  Ruff check/format pass; official hassfest **one integration / zero invalid**.
+- All **10 runtime exact-source push/PR checks green** at a9ef054. Includes full
+  unchanged consumers, real pinned HACS2.0.5/upstream install/update/reinstall,
+  release channel repair, native package installation and translations. Final
+  documentation-source push/PR/tag checks still needed before publication.
+- Actual disposable HA2026.10.4/frontend20260930.5, desktop1440×1000/mobile390×844,
+  English/British-English/Danish. Source/grid/fractional/save/close-resume, wrong
+  input, official/alternate field redraw, old cache missing-label/draft_status
+  compatibility, missing/provisional/verified, future components/cost, outage and
+  recovery all exercised. No frontend errors/warnings. Browser plugin absent;
+  existing Playwright/system Chromium used. Synthetic/recorded provider boundaries,
+  no owner system or credentials. Exact normal runtime restored after cache fixture.
+- Beta.5 **10 configurations / 1,000 original decoded SQLite rows/revisions**
+  preserved exactly. Actual restart preserved **14 configs / 1,106 rows**. Confirmed
+  selected-site deletion removed **109 rows** and all owned files; wrong ID rejected,
+  recreation had new entry identity, no private supplier/history inheritance;
+  other ledgers/global recorder preserved. Full released beta.1–.5 migration matrix
+  uses actual pinned source outside candidate tree. Owner acceptance remains false.
+- **26 screenshots** and permanent simulation receipt:
+  `docs/receipts/v0.1.0-beta.6-simulation.json`; illustrated `docs/WIZARD_GUIDE.md`.
+  Recorded Radius normal/fall/spring **96/100/92** quarters, each quarter's own TOU,
+  seasonal midnight revisions, negative NP, VAT and readonly canonical guard tests.
+  Native future 0.5ore exVAT peak **147.946625ore**, following normal **68.3155ore**;
+  supplied1.25/2kWh cost **3.2156428125DKK**. Current .25ore inclVAT example67.9405ore.
+- Cloud SQLite repeat35,136 rows/18,239,488 bytes:96-row append.0288s/reload1.066s/
+  lookup5.29µs; original touched-row writes preserved. **Not Pi measurements**.
+  Raw benchmark in docs/benchmarks/beta6-sqlite-1year.json.
 
-Next: adapt/re-run existing flow/package regression; canonical stored current/future
-component diagnostics, allocated-energy read-only charging cost estimate, real Radius
-TOU/midnight/DST/fractional tests, beta.5 source migration, native EN/en-GB/DA mobile/
-desktop evidence, full both-core/consumer/SQLite/HACS/hassfest/package/CI gates, clean
-source/tag and authorized beta.6 prerelease, public verification and final stop handoff.
-Only this document is the permanent handoff. Owner real-HA acceptance remains false.
+## Next: authorized immutable beta.6 publication
+
+Commit evidence/source, await all10 source push/PR jobs, build clean deterministic
+both ZIPs and native smoke both cores/layouts. Annotate v0.1.0-beta.6 at that exact
+source; await all15 source push/PR/tag jobs. New dedicated publish-beta6 workflow
+must verify source/tag object/hashes/checks, prerelease-only/latest=false four assets,
+then two fresh core jobs download actual public metadata/assets/tag/main and run
+actual pinned HACS plus both native layouts and semantic beta5→6 selection. Record
+receipt/update existing draft PR14, independently verify local public downloads and
+HACS replay, final handoff/checklist commit. Never move tags/overwrite assets.
+
+Cloud GitHub API is CONNECT403 via managed proxy; public Git/web/downloads work.
+Authorized GitHub runners provide supported authenticated PR/publication/API
+verification (as beta.5). Initial new PR runner failed; no inferred reason claimed;
+existing draft14 continues instead, topic foundation branch retained. No beta.6
+release/tag exists at this checkpoint. No owner publication gate is outstanding:
+only required software/integrity gates. Do not stop at the candidate checkpoint.
+
+Known limits: no native per-page Back; accepted pages persist, unsubmitted typing
+cannot. New sites can have partial first days. Automatic DSO starts Radius C;
+other products/future national periods need verified rules. Private rate/VAT and
+heating eligibility never guessed. HACS external catalog image may fall back;
+entity names follow registry/system language. Cloud benchmarks are not hardware
+acceptance. Issue#10 graphs and household invoice reconstruction remain out of scope.
 
 ## Earlier beta.5 handoff (historical)
 

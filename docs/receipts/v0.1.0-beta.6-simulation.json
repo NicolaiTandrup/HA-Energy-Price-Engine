@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "synthetic": true,
+  "owner_acceptance": false,
+  "verified_at": "2026-10-27T20:38:46.205714+00:00",
+  "ha_core": "2026.10.4",
+  "frontend": "20260930.5",
+  "runtime_commit": "a9ef054966b09815a29d819cc99417a32a90bf63",
+  "provider_boundaries": "Disposable Home Assistant only. Synthetic official Nord Pool read-only 100 DKK/MWh ex VAT; actual normalize_tariffs over recorded Radius C DatahubPricelist fixture; fictional private supplier agreement or explicitly approved estimate; bounded national baselines. Older beta.5 QA sites retain their original synthetic provider output for exact historical comparison. No owner HA, credentials, equipment or controls accessed.",
+  "browser": "Playwright/system Chromium because Browser plugin unavailable; native local PE brand route, only unrelated decorative brands mocked.",
+  "frontend_cases": {
+    "three_normal_stages": true,
+    "normal_markup_fields": [
+      "amount",
+      "vat_included"
+    ],
+    "en_enGB_da": true,
+    "desktop": [
+      1440,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "mobile_document_width": 390,
+    "fractional_comma_ex_vat_saved": "0.5",
+    "fractional_comma_incl_vat_saved": "0.25",
+    "invalid_fraction_preserved_for_correction": true,
+    "close_resume_after_saved_grid": true,
+    "beta5_pending_contract_resumes_new_markup_without_saving": true,
+    "official_source_hides_entity_fields": true,
+    "alternate_mode_redraws_entity_contract": true,
+    "invalid_timezone_field_error": true,
+    "all_observed_menu_payloads_have_nonempty_labels": true,
+    "legacy_draft_status_description_and_missing_client_labels_fixture_passed": true,
+    "exact_normal_translation_files_restored": true,
+    "explicit_provisional_approval_required": true,
+    "canonical_future_provisional_peak_ore_incl_vat": 148.071625,
+    "provisional_cost_unavailable": true,
+    "source_outage_and_recovery": true,
+    "console_errors": [],
+    "console_warnings": []
+  },
+  "canonical_examples": {
+    "current_da_site_0_25_ore_incl_vat": {
+      "quarter": "2026-10-27T21:30:00+01:00",
+      "spot_ore_ex_vat": 10,
+      "grid_ore_ex_vat": 31.8524,
+      "energinet_network_ore_ex_vat": 4.3,
+      "energinet_system_ore_ex_vat": 7.2,
+      "supplier_ore_ex_vat": 0.2,
+      "tax_ore_ex_vat": 0.8,
+      "subtotal_ore_ex_vat": 54.3524,
+      "vat_ore": 13.5881,
+      "final_ore_incl_vat": 67.9405
+    },
+    "selected_future_0_5_ore_ex_vat": {
+      "quarter": "2026-10-28T20:45:00+01:00",
+      "spot_ore_ex_vat": 10,
+      "grid_ore_ex_vat": 95.5573,
+      "energinet_network_ore_ex_vat": 4.3,
+      "energinet_system_ore_ex_vat": 7.2,
+      "supplier_ore_ex_vat": 0.5,
+      "tax_ore_ex_vat": 0.8,
+      "subtotal_ore_ex_vat": 118.3573,
+      "vat_ore": 29.589325,
+      "final_ore_incl_vat": 147.946625,
+      "following_normal_final_ore_incl_vat": 68.3155
+    },
+    "allocated_session": {
+      "starts": "2026-10-28T20:45:00+01:00",
+      "quarter_kwh": [
+        "1.25",
+        "2.0"
+      ],
+      "energy_kind": "planned",
+      "estimated_cost_dkk": "3.2156428125",
+      "displayed_dkk": "3.2156",
+      "fixed_subscriptions_included": false,
+      "is_settled_accounting": false
+    }
+  },
+  "runtime_restart": {
+    "same_sites": 14,
+    "same_configurations": true,
+    "same_decoded_sqlite_rows": 1106,
+    "same_revisions_and_source_components": true,
+    "all_tracked_runtime_files_match_distribution_source": true
+  },
+  "beta5_upgrade": {
+    "sites": 10,
+    "same_configurations": true,
+    "same_historical_rows": 1000,
+    "all_original_rows_and_revisions_preserved": true
+  },
+  "native_deletion": {
+    "owned_rows_before": 109,
+    "old_entry_id": "01M5ZDZ0VJ69V5829FWQXRXXJN",
+    "new_entry_id": "01M5ZH9C3DZE3FYGPCV9WQW4MJ",
+    "typed_wrong_id_rejected": true,
+    "owned_files_removed": true,
+    "recreated_supplier_empty": true,
+    "recreated_history_empty": true,
+    "other_ledgers_unchanged": true,
+    "global_recorder_inode_preserved": true
+  },
+  "quarter_grid_validation": {
+    "actual_recorded_radius_normalizer": true,
+    "normal_fall_spring_quarters": [
+      96,
+      100,
+      92
+    ],
+    "each_stored_quarter_uses_own_grid_band": true,
+    "seasonal_versions_across_midnight": true,
+    "autumn_repeated_hours_distinguished_by_utc_offset": true,
+    "spring_nonexistent_hours_not_invented": true,
+    "test": "tests/test_beta6_diagnostics.py"
+  },
+  "fractional_matrix": {
+    "amounts_ore": [
+      "0.25",
+      "0.50",
+      "0.75",
+      "3.125"
+    ],
+    "vat_bases": [
+      "including",
+      "excluding"
+    ],
+    "canonical_decimal_persistence": true,
+    "test": "tests/test_beta6_markup.py"
+  },
+  "screenshots": {
+    "docs/images/beta6/site-enGB.png": "b19a4012b41b91b78490136b6d3d48ce703ed03bfa82fbb81eac4d5ff241fe80",
+    "docs/images/beta6/grid-enGB.png": "201b07552d3abed07c8a93d691539dbaa5b3fb43d42ecc6f5bc53231e248f075",
+    "docs/images/beta6/fractional-markup-mobile-enGB.png": "0fd94e1119f807dbd81f8052ee70ed8673ef4d9ace3315dca1e03b0aebb7c4bd",
+    "docs/images/beta6/saved-markup-mobile-enGB.png": "5ff90242dcbe89593a54f5a9d5489dec87532da730ef738a33d49a2831eb676e",
+    "docs/images/beta6/markup-da-mobile.png": "ceb82e869b217849c0138184c2dbd552deebb5c655c360b98376a67b2f9d0424",
+    "docs/images/beta6/saved-markup-da-mobile.png": "711c17268f5ab58901b646d50f0df4d294570a9c5510a21ac1e3df9f84ee4905",
+    "docs/images/beta6/review-mobile-enGB.png": "9ebcb124b36123aff780df6019204fcf763db98d6abf6fc775d8ad01da73e94d",
+    "docs/images/beta6/review-da-mobile.png": "3ad47c5acdcd54323409fc9b8576421fc460a964bc51c95e351ce9e385b9aaf6",
+    "docs/images/beta6/current-quarter-mobile-enGB.png": "e9cefc811412b04311b84d42bb16964bb3f0ad37839363d2c6d2e4785d03b0a9",
+    "docs/images/beta6/verified-quarter-mobile-enGB.png": "f35ce33dfd01eed1ed6bd687ec06c76b2f7dd82a398567845ddf59b7481fa6fc",
+    "docs/images/beta6/cost-estimate-mobile-enGB.png": "041ef46e9c2864170be8c635931c33cfb7eda810da23590c316b112de049cbbc",
+    "docs/images/beta6/missing-review-mobile-en.png": "1c416592e0c14c29b654479eaabad2465cac1f4448f053d2de98fec72d857bab",
+    "docs/images/beta6/provisional-review-da-mobile.png": "f961c8a4044257bbce8b843970cbdf9f7730ca66784ef23d30463e3e08dcab2b",
+    "docs/images/beta6/provisional-future-mobile-en.png": "e77826edc8063da35902f40dae1bb6121433d5b459fdf0106dc8fefd8e91c8b5",
+    "docs/images/beta6/provisional-cost-unavailable-da.png": "b779ceebbd4f6ecc211471d387be7bf44678b5e7e07204ddb66a7da785660b30",
+    "docs/images/beta6/legacy-description-compat-enGB.png": "8b99283fc840b6f181d40f5d484234aa87153bbd89f9f1e01db49cc3cfa89af3",
+    "docs/images/beta6/legacy-menu-compat-enGB.png": "e5801440d97ba727900a247381e2fe0a7d789e644e7247292857396e08e0a5de",
+    "docs/images/beta6/official-source-fields-en.png": "00eb4e93e8b9733c037c30a1b47aa206712ab9ae4b3440746d75c794a7dbe6fc",
+    "docs/images/beta6/alternate-source-fields-en.png": "0db19ffc05ad9bd76ea3a027c7bc3933e12b94d46ed95c6fd31e7f8d717875ae",
+    "docs/images/beta6/invalid-timezone-en.png": "d84f4f68387fbe15592f0bb26b8df9cc8fb009ee3f0767b884eebacdc640d345",
+    "docs/images/beta6/beta5-resumed-markup-en.png": "ff7f0cf3788c1a2680c9288939776013522ce355a87b57069ed28b5ee11c1daa",
+    "docs/images/beta6/outage-review-en.png": "41e9d671d3313add62917d729426a9ee0f592d6a044e7c617b2b6119ad6aea53",
+    "docs/images/beta6/recovered-review-en.png": "27c3a9d5fbeb24e1448e5034ef4d5f5e567cb51848a8805473816c577e5b2181",
+    "docs/images/beta6/delete-confirmation-error-en.png": "164a8fda95d8ccdd08a2ffa3888c4f4c00a7837fe4d0243c7533560f4b49d49e",
+    "docs/images/beta6/deleted-site-en.png": "1f33ceecc718c783eb85dc3174cd2b35df6dc0926923a5c410e73a93aafe59d7",
+    "docs/images/beta6/recreated-empty-supplier-en.png": "4bd4bee0aa365edb204420a14b2f8e328227c900a5c05cca18b19583c7d970b0"
+  },
+  "production_controls_touched": false
+}

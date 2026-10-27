@@ -2,64 +2,57 @@
 
 ![Energy Price Engine](custom_components/ha_energy_price_engine/brand/icon.png)
 
-Electricity prices for your home, including spot price, grid tariff, supplier
-markup, national charges and VAT. Energy Price Engine stores verified 15-minute
-prices in Home Assistant and supports independently configured sites.
+Verified **15-minute marginal electricity prices** for EV charging optimization and
+estimated charging costs. Prices include spot, grid time-of-use tariffs, supplier
+markup, Energinet charges, electricity tax and VAT. Fixed subscriptions are excluded.
+Each pricing site has independent settings and persistent SQLite history.
 
-**v0.1.0-beta.5.** Use the published version shown on the
-[releases page](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases).
-Beta software requires your own bill, tariff and restart acceptance checks.
+**v0.1.0-beta.6** · [Prereleases](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases)
 
-## Install with HACS
+## Install or upgrade
 
-1. In **HACS → Custom repositories**, add
-   `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` as **Integration**.
-2. Open Energy Price Engine in HACS, enable **Show beta versions**, refresh its
-   information and select **v0.1.0-beta.5**. Download and restart HA.
-3. Open **Settings → Devices & services → Add integration → Energy Price Engine**.
-   Existing users choose **Configure** on their existing site to preserve history.
+1. Add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` to **HACS → Custom
+   repositories**, category **Integration**.
+2. Open Energy Price Engine, persist **Show beta versions**, refresh information,
+   choose **v0.1.0-beta.6**, download and restart Home Assistant. Reload the browser/app.
+3. Existing sites: choose **Configure** on the existing entry. New sites: install
+   Home Assistant's **official Nord Pool** integration first, then **Settings →
+   Devices & services → Add integration → Energy Price Engine**.
 
-[Installation and updates](docs/HACS_DISTRIBUTION.md) ·
-[Step-by-step setup](docs/WIZARD_GUIDE.md) ·
-[Acceptance checklist](docs/BETA_ACCEPTANCE.md)
+[Exact HACS procedure](docs/HACS_DISTRIBUTION.md) · [Setup and screenshots](docs/WIZARD_GUIDE.md)
 
-## Complete your pricing
+## Three setup stages
 
-The native setup has five stages: site/source, grid, supplier agreement, taxes,
-and a numerical review. Install Home Assistant's **official Nord Pool integration**
-first. Its DKK/MWh excluding-VAT input convention is detected independently of the
-preferred **øre/kWh** display.
+1. Name the site and select its installed Nord Pool source/area.
+2. Confirm the actual grid product: automatic **Radius C**, or a verified manual rate.
+3. Enter your actual supplier markup in **øre/kWh** and its VAT basis.
 
-Confirm Radius C only if it is your actual grid product. Verified Danish national
-baselines apply within their documented periods. Select a freshly verified public
-EWII offer and confirm your actual agreement, or enter your own **supplier markup
-in øre/kWh**, VAT convention and optional monthly fee. Ordinary setup needs no dates.
-Monthly fees remain separate from marginal prices. Private terms and heating
-eligibility are never guessed.
+Fractional amounts such as **0.25**, **0.50**, **0.75** and **3.125** work, including
+Danish decimal commas. Ordinary setup needs no dates, subscriptions, product choice
+or heating eligibility. Verified Danish national defaults apply within documented
+periods. Private agreements and grid classes are never inferred from DK1/DK2.
 
-**Save and continue** applies each accepted step immediately. Close and reopen
-Configure to resume; there is no final draft commit. The compact review shows each
-component's rate, source and status, with direct settings links and one **Check
-prices** action. Unknown components never become zero. New current agreements
-start at the next complete quarter without backfilling earlier unknown prices.
+Each accepted page saves immediately. Close and reopen Configure to resume.
+Review needs no final save; tap a component to edit and use **Check prices** to
+verify sources. New rates start at the next complete quarter without rewriting
+settled history or filling earlier unknown prices.
 
-You may explicitly approve a provisional supplier amount for **ESTIMATED /
-UNVERIFIED visualization only**. These sensors are separate from verified history
-and the read-only consumer API. Never use estimate sensors for charging control.
+## Understand and use prices
 
-## Keep control of your data
+Final prices opens current/future quarter diagnostics: actual stored component
+amounts, sources, periods and verification, with VAT applied once. An optional
+charging-cost calculator uses **supplied quarter-hour kWh allocations**, labelled
+planned or measured. It does not create a charging plan, discover energy usage or
+reconstruct a household bill. CM owns vehicles, sessions, planning and control.
 
-Submit each page before closing: Home Assistant cannot save unsubmitted keystrokes.
-Use final price → Diagnostics → Advanced for dated overrides, display, backups
-and site management. Ordinary removal retains an identified history archive.
-Permanent selected-site cleanup requires explicit confirmation. HACS upgrades and
-uninstalls preserve history; upgrades retain existing IDs, mappings and entities.
+Unknown rates never become zero. Raw spot prices remain visible independently.
+Explicitly approved visualization estimates stay **Provisional**, outside verified
+history and API READY; they cannot provide authoritative prices or session costs.
 
-The integration provides prices and a [read-only API](docs/API.md). It contains no
-vehicle, charger or heating controls. Public components are verified independently
-of your private contract. English and Danish wizard text follows your HA interface
-language. Existing entity names follow HA's registry and system-language rules.
+The [read-only API v1](docs/API.md) and canonical entities remain **DKK/kWh including
+VAT**. Normal display is **øre/kWh**. Upgrades preserve site IDs, source mappings,
+entities, dated rules and SQLite rows/revisions. Advanced retains manual contracts,
+dated overrides, display settings and controlled site removal/reset.
 
-[Storage and recovery](docs/ADR-002-ledger-storage.md) ·
-[Performance limits](docs/PERFORMANCE.md) ·
-[Contributing and implementation provenance](CONTRIBUTING.md) · [License](LICENSE)
+[Owner acceptance](docs/BETA_ACCEPTANCE.md) · [Storage/recovery](docs/ADR-002-ledger-storage.md) ·
+[Performance limits](docs/PERFORMANCE.md) · [Contributing/provenance](CONTRIBUTING.md) · [License](LICENSE)

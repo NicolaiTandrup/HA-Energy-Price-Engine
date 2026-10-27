@@ -83,3 +83,22 @@ Pinned actual CM #15 and #16 decoders consume the same machine-tested snapshots.
 in a disposable HA harness, verifies future revisions after HA's bounded coordinator
 debounce, duplicate-replan suppression, and invalid forecasts after producer unload.
 All data and provider/device observations are synthetic; no real controls are called.
+
+
+## Optional read-only charging-cost helper (beta.6)
+
+API v1 and canonical DKK/kWh values are unchanged. `charging_cost.estimate_charging_cost`
+accepts `get_api(hass)`, a site ID, consecutive `(aware_quarter_start, kwh_decimal)`
+allocations and `energy_kind="planned"` or`"measured"`. Optional `producer_entry_id`
+scopes the selected entry. CM/caller owns energy measurement/allocation and planning;
+this helper never creates a plan, sends commands or persists an energy/cost ledger.
+Future energy cannot be labelled measured. Explicit zero kWh is accepted; absent,
+gapped,negative or nonfinite energy is rejected. Both decimal separators work.
+
+All requested prices must be API READY; otherwise `estimated_cost_dkk` is null with
+the unchanged price status/reason. Provisional visual prices are never substituted.
+Successful output identifies planned/measured energy and each original price revision,
+uses decimal weighted addition without per-quarter rounding, and explicitly marks
+`fixed_subscriptions_included=false` and`is_settled_accounting=false`. It is a session
+cost estimate using supplied energy, not settlement or household invoice reconstruction.
+Native access: Final prices → Diagnostics → Charging cost estimate.
