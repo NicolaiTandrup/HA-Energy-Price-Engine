@@ -191,7 +191,10 @@
           "wizard_charges": "Ret Energinet / elafgift",
           "wizard_recheck": "Kontrollér kilder og beregning igen",
           "wizard_site": "Ret stedets navn",
-          "wizard_location": "Ret område / tidszone / moms"
+          "wizard_location": "Ret område / tidszone / moms",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "wizard_resume": {
@@ -241,7 +244,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "wizard_recheck": {
@@ -271,7 +277,7 @@
         }
       },
       "setup_site": {
-        "title": "1 / 5 · Sted og Nord Pool",
+        "title": "1 / 3 · Sted og Nord Pool",
         "description": "{saved}\n\nVælg din installerede Nord Pool-kilde. Område og enheder findes automatisk.",
         "data": {
           "name": "Stedets navn",
@@ -299,7 +305,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_area": {
@@ -329,11 +338,14 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_grid": {
-        "title": "2 / 5 · Nettarif",
+        "title": "2 / 3 · Nettarif",
         "description": "{saved}\n\nBekræft dit faktiske netprodukt én gang. Elområdet kan ikke alene bestemme det.",
         "data": {
           "grid": "Netselskab og tarif"
@@ -359,7 +371,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_grid_rate": {
@@ -391,38 +406,24 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_supplier": {
-        "title": "3 / 5 · Elleverandør",
-        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
+        "title": "3 / 3 · Leverandørtillæg",
+        "description": "{saved}\n\nIndtast dit faktiske tillæg oven i spotprisen. Gem bekræfter beløbet og momsvalget. Lad feltet stå tomt, hvis du ikke kender tillægget; en eksisterende aftale bevares. Offentlige afgifter tilføjes automatisk for verificerede perioder.",
         "data": {
-          "product": "Elleverandør og aftale"
+          "amount": "Leverandørtillæg (øre/kWh)",
+          "vat_included": "Beløbet er inkl. moms"
         },
-        "submit": "Gem og fortsæt",
-        "menu_options": {
-          "setup_review": "Tilbage til priser",
-          "setup_check": "Kontrollér priser",
-          "setup_site": "Sted og kilde",
-          "setup_grid": "Nettarif",
-          "setup_supplier": "Elleverandør og aftale",
-          "setup_tax": "Elafgift / elvarme",
-          "setup_diagnostics": "Komponentdiagnostik",
-          "advanced": "Avancerede indstillinger",
-          "rates": "Datoperioder og tilsidesættelser",
-          "source_details": "Kildedetaljer",
-          "setup_display": "Visningsenhed",
-          "storage_tools": "Lager / håndtering af sted",
-          "add_rate": "Tilføj datoperiode",
-          "edit_rate": "Ret datoperiode",
-          "remove_rate": "Fjern datoperiode",
-          "storage": "Sikkerhedskopiér historik",
-          "breakdown": "Gemt prisopdeling pr. kvarter",
-          "site_management": "Fjern / slet det valgte sted",
-          "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
-        }
+        "data_description": {
+          "amount": "Fx 0,25 eller 3,125. Ingen datoer eller faste abonnementer.",
+          "vat_included": "Brug momsgrundlaget fra din aftale. Offentlig dansk moms er 25 %."
+        },
+        "submit": "Gem tillæg"
       },
       "setup_contract": {
         "title": "3 / 5 · Bekræft din sats",
@@ -456,7 +457,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         },
         "data_description": {
           "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
@@ -489,7 +493,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_heating": {
@@ -521,11 +528,14 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_review": {
-        "title": "5 / 5 · Dine elpriser",
+        "title": "Dine ladepriser",
         "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er øre/kWh inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Gem og fortsæt",
@@ -549,7 +559,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_diagnostics": {
@@ -577,7 +590,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_tax_details": {
@@ -605,7 +621,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_display": {
@@ -635,7 +654,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "source_details": {
@@ -675,7 +697,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         },
         "data_description": {}
       },
@@ -704,7 +729,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "rates": {
@@ -732,7 +760,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "storage_tools": {
@@ -760,7 +791,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "add_rate": {
@@ -822,16 +856,59 @@
         "data": {
           "slot": "Kvarter (lokal dato/tid og UTC-forskydning)"
         }
+      },
+      "setup_offers": {
+        "title": "3 / 5 · Elleverandør",
+        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
+        "data": {
+          "product": "Elleverandør og aftale"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
+        }
+      },
+      "setup_estimate": {
+        "title": "Foreløbigt visualiseringsestimat",
+        "description": "Kun visualisering. Disse priser gemmes ikke som verificerede og gør aldrig CM-priser READY.",
+        "data": {
+          "amount": "Foreløbigt leverandørtillæg (øre/kWh)",
+          "vat_included": "Beløbet er inkl. moms",
+          "confirm": "Jeg godkender kun et uverificeret visualiseringsestimat"
+        },
+        "submit": "Gem estimat"
       }
     },
     "error": {
-      "invalid_configuration": "Kontrollér sted-ID, officiel Nord Pool, tidszone, enheder, datoer og overlappende satser.",
+      "invalid_configuration": "Kontrollér de markerede felter: {error_detail}",
       "name_required": "Indtast et genkendeligt navn.",
       "invalid_id": "Brug små bogstaver a-z, tal og underscore; start med bogstav/tal.",
       "duplicate_id": "ID tilhører allerede et sted. Vælg et andet ID eller konfigurér det eksisterende sted.",
-      "source_required": "Vælg en installeret, aktiveret kilde; tilføj evt. officiel Nord Pool først.",
+      "source_required": "Vælg den installerede officielle Nord Pool-integration.",
       "legacy_source": "En gammel HACS Nordpool skygger for den officielle integration. Brug den officielle kilde i godkendt testopsætning; erstat ikke kilden ubemærket.",
-      "invalid_timezone": "Indtast gyldig IANA-tidszone, fx Europe/Copenhagen.",
+      "invalid_timezone": "Indtast en gyldig IANA-tidszone, fx Europe/Copenhagen.",
       "area_required": "Bekræft prisområdet, fx DK2 for Østdanmark.",
       "unsupported_area": "Området er ikke konfigureret i den valgte Nord Pool. Vælg understøttet område/kilde.",
       "rate_required": "Påkrævet ved Tilføj kontrakt. Indtast en verificeret værdi, eller slå fra for at beholde perioderne.",
@@ -845,7 +922,9 @@
       "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger.",
       "confirmation_required": "Bekræft aftalen eller det godkendte estimat.",
       "invalid_source": "Vælg en officiel Nord Pool-kilde med et understøttet dansk område.",
-      "grid_required": "Vælg dit faktiske netprodukt."
+      "grid_required": "Vælg dit faktiske netprodukt.",
+      "invalid_decimal": "Indtast et ikke-negativt decimaltal, fx 0,25 eller 3,125.",
+      "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde."
     },
     "abort": {
       "already_configured": "Dette sted-ID er allerede konfigureret.",
@@ -877,7 +956,10 @@
           "save": "Gem ændringer",
           "supplier": "Leverandør og aftalehjælp",
           "storage": "Lager og kontrolleret sikkerhedskopi",
-          "breakdown": "Se en gemt kvarterspris"
+          "breakdown": "Se en gemt kvarterspris",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "site": {
@@ -1140,7 +1222,10 @@
           "wizard_charges": "Ret Energinet / elafgift",
           "wizard_recheck": "Kontrollér kilder og beregning igen",
           "wizard_site": "Ret stedets navn",
-          "wizard_location": "Ret område / tidszone / moms"
+          "wizard_location": "Ret område / tidszone / moms",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "wizard_resume": {
@@ -1190,7 +1275,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "wizard_recheck": {
@@ -1220,7 +1308,7 @@
         }
       },
       "setup_site": {
-        "title": "1 / 5 · Sted og Nord Pool",
+        "title": "1 / 3 · Sted og Nord Pool",
         "description": "{saved}\n\nVælg din installerede Nord Pool-kilde. Område og enheder findes automatisk.",
         "data": {
           "name": "Stedets navn",
@@ -1248,7 +1336,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_area": {
@@ -1278,11 +1369,14 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_grid": {
-        "title": "2 / 5 · Nettarif",
+        "title": "2 / 3 · Nettarif",
         "description": "{saved}\n\nBekræft dit faktiske netprodukt én gang. Elområdet kan ikke alene bestemme det.",
         "data": {
           "grid": "Netselskab og tarif"
@@ -1308,7 +1402,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_grid_rate": {
@@ -1340,38 +1437,24 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_supplier": {
-        "title": "3 / 5 · Elleverandør",
-        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
+        "title": "3 / 3 · Leverandørtillæg",
+        "description": "{saved}\n\nIndtast dit faktiske tillæg oven i spotprisen. Gem bekræfter beløbet og momsvalget. Lad feltet stå tomt, hvis du ikke kender tillægget; en eksisterende aftale bevares. Offentlige afgifter tilføjes automatisk for verificerede perioder.",
         "data": {
-          "product": "Elleverandør og aftale"
+          "amount": "Leverandørtillæg (øre/kWh)",
+          "vat_included": "Beløbet er inkl. moms"
         },
-        "submit": "Gem og fortsæt",
-        "menu_options": {
-          "setup_review": "Tilbage til priser",
-          "setup_check": "Kontrollér priser",
-          "setup_site": "Sted og kilde",
-          "setup_grid": "Nettarif",
-          "setup_supplier": "Elleverandør og aftale",
-          "setup_tax": "Elafgift / elvarme",
-          "setup_diagnostics": "Komponentdiagnostik",
-          "advanced": "Avancerede indstillinger",
-          "rates": "Datoperioder og tilsidesættelser",
-          "source_details": "Kildedetaljer",
-          "setup_display": "Visningsenhed",
-          "storage_tools": "Lager / håndtering af sted",
-          "add_rate": "Tilføj datoperiode",
-          "edit_rate": "Ret datoperiode",
-          "remove_rate": "Fjern datoperiode",
-          "storage": "Sikkerhedskopiér historik",
-          "breakdown": "Gemt prisopdeling pr. kvarter",
-          "site_management": "Fjern / slet det valgte sted",
-          "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
-        }
+        "data_description": {
+          "amount": "Fx 0,25 eller 3,125. Ingen datoer eller faste abonnementer.",
+          "vat_included": "Brug momsgrundlaget fra din aftale. Offentlig dansk moms er 25 %."
+        },
+        "submit": "Gem tillæg"
       },
       "setup_contract": {
         "title": "3 / 5 · Bekræft din sats",
@@ -1405,7 +1488,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         },
         "data_description": {
           "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
@@ -1438,7 +1524,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_heating": {
@@ -1470,11 +1559,14 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_review": {
-        "title": "5 / 5 · Dine elpriser",
+        "title": "Dine ladepriser",
         "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er øre/kWh inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Gem og fortsæt",
@@ -1498,7 +1590,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_diagnostics": {
@@ -1526,7 +1621,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_tax_details": {
@@ -1554,7 +1652,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "setup_display": {
@@ -1584,7 +1685,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "source_details": {
@@ -1624,7 +1728,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         },
         "data_description": {}
       },
@@ -1653,7 +1760,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "rates": {
@@ -1681,7 +1791,10 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
       },
       "storage_tools": {
@@ -1709,20 +1822,66 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk"
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
         }
+      },
+      "setup_offers": {
+        "title": "3 / 5 · Elleverandør",
+        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
+        "data": {
+          "product": "Elleverandør og aftale"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk",
+          "setup_offers": "Offentlige leverandøraftaler",
+          "setup_estimate": "Foreløbigt visualiseringsestimat",
+          "setup_tax_details": "Energinet, elafgift og moms"
+        }
+      },
+      "setup_estimate": {
+        "title": "Foreløbigt visualiseringsestimat",
+        "description": "Kun visualisering. Disse priser gemmes ikke som verificerede og gør aldrig CM-priser READY.",
+        "data": {
+          "amount": "Foreløbigt leverandørtillæg (øre/kWh)",
+          "vat_included": "Beløbet er inkl. moms",
+          "confirm": "Jeg godkender kun et uverificeret visualiseringsestimat"
+        },
+        "submit": "Gem estimat"
       }
     },
     "error": {
-      "invalid_configuration": "Ugyldig opsætning. Kontrollér kilde, enheder/moms, datoer, overlap og officiel Nord Pool.",
+      "invalid_configuration": "Kontrollér de markerede felter: {error_detail}",
       "site_not_loaded": "Indlæs prisstedet før oprettelse af sikkerhedskopi.",
       "backup_failed": "Sikkerhedskopien fejlede, eller prisarkivet bestod ikke kontrollen. Bevar alle filer og undersøg lagerdiagnostik.",
       "name_required": "Indtast et genkendeligt navn.",
       "invalid_id": "Brug små bogstaver a-z, tal og underscore; start med bogstav/tal.",
       "duplicate_id": "ID tilhører allerede et sted. Vælg et andet ID eller konfigurér det eksisterende sted.",
-      "source_required": "Vælg en installeret, aktiveret kilde; tilføj evt. officiel Nord Pool først.",
+      "source_required": "Vælg den installerede officielle Nord Pool-integration.",
       "legacy_source": "En gammel HACS Nordpool skygger for den officielle integration. Brug den officielle kilde i godkendt testopsætning; erstat ikke kilden ubemærket.",
-      "invalid_timezone": "Indtast gyldig IANA-tidszone, fx Europe/Copenhagen.",
+      "invalid_timezone": "Indtast en gyldig IANA-tidszone, fx Europe/Copenhagen.",
       "area_required": "Bekræft prisområdet, fx DK2 for Østdanmark.",
       "unsupported_area": "Området er ikke konfigureret i den valgte Nord Pool. Vælg understøttet område/kilde.",
       "rate_required": "Påkrævet ved Tilføj kontrakt. Indtast en verificeret værdi, eller slå fra for at beholde perioderne.",
@@ -1736,7 +1895,9 @@
       "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger.",
       "confirmation_required": "Bekræft aftalen eller det godkendte estimat.",
       "invalid_source": "Vælg en officiel Nord Pool-kilde med et understøttet dansk område.",
-      "grid_required": "Vælg dit faktiske netprodukt."
+      "grid_required": "Vælg dit faktiske netprodukt.",
+      "invalid_decimal": "Indtast et ikke-negativt decimaltal, fx 0,25 eller 3,125.",
+      "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde."
     },
     "abort": {
       "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",

@@ -66,7 +66,11 @@ def site_schema(value=None, *, initial=False):
             ),
         }
     )
-    return vol.Schema(fields)
+    entity_only = {"price_entity", "price_unit", "price_basis", "price_attribute", "stale_minutes"}
+    hidden = {"nordpool_entry"} if value.get("source_type") == "entity" else entity_only
+    return vol.Schema(
+        {key: validator for key, validator in fields.items() if key.schema not in hidden}
+    )
 
 
 def rule_schema(value=None):

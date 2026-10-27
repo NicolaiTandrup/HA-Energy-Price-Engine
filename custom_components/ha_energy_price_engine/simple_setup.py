@@ -1,4 +1,4 @@
-"""Five ordinary native stages. Every accepted page updates the actual site."""
+"""Source, grid and markup: accepted pages update the actual site immediately."""
 
 from copy import deepcopy
 from uuid import uuid4
@@ -13,7 +13,8 @@ from homeassistant.util import slugify
 from .configuration import settings, validate_site
 from .const import DOMAIN
 from .contracts import current_contract
-from .flow_tools import FlowTools, choice, number
+from .flow_tools import FlowTools, choice, money_input, number
+from .money import decimal_amount
 from .sources import async_source_defaults, ensure_official_nordpool
 
 
@@ -21,6 +22,9 @@ class SimpleSetup(FlowTools):
     """Current settings, not a hidden draft. Advanced rules remain explicit."""
 
     async def _start_setup(self, entry=None):
+        from .localization import flow_labels
+
+        self._flow_labels = await flow_labels(self.hass)
         self._wizard_entry = entry
         self._initial = entry is None
         self._editing = False
@@ -45,6 +49,10 @@ class SimpleSetup(FlowTools):
         progress = await self._progress_store.async_load() or {}
         self._saved_step = progress.get("saved", "")
         target = progress.get("next", "setup_review")
+        if target == "setup_tax":
+            # Public national defaults need no redundant confirmation. Existing
+            # accepted heating evidence/rules remain unchanged and editable.
+            target = "setup_review"
         if target not in {
             "setup_site",
             "setup_area",
@@ -181,7 +189,7 @@ class SimpleSetup(FlowTools):
                         **({"default": site["area"]} if site.get("area") in available else {}),
                     )
                 ] = choice([(a, a) for a in sorted(available)])
-        return await self._simple_form("setup_site", fields, "1 / 5", user_input, errors)
+        return await self._simple_form("setup_site", fields, "1 / 3", user_input, errors)
 
     async def async_step_setup_area(self, user_input=None):
         source = self.hass.config_entries.async_get_entry(self.draft.get("nordpool_entry", ""))
@@ -194,7 +202,7 @@ class SimpleSetup(FlowTools):
         return await self._simple_form(
             "setup_area",
             {vol.Required("area"): choice([(k, k) for k in areas if k in {"DK1", "DK2"}])},
-            "1 / 5",
+            "1 / 3",
             user_input,
             {"area": "unsupported_area"} if user_input else {},
         )
@@ -249,7 +257,7 @@ class SimpleSetup(FlowTools):
                     else vol.UNDEFINED,
                 ): choice(options, "simple_grid")
             },
-            "2 / 5",
+            "2 / 3",
             user_input,
             errors,
         )
@@ -302,14 +310,77 @@ class SimpleSetup(FlowTools):
                 vol.Required("vat_included", default=True): bool,
                 vol.Required("confirm", default=False): bool,
             },
-            "2 / 5",
+            "2 / 3",
             user_input,
             errors,
         )
 
     async def async_step_setup_supplier(self, user_input=None):
+        """Ordinary charging setup asks for a markup, not an invoice/product model."""
         if self.draft.get("price_basis") == "all_in":
-            return await self._save_step(self.draft, "setup_tax", "supplier")
+            return await self._save_step(self.draft, "setup_review", "supplier")
+        errors = {}
+        if user_input is not None:
+            raw = user_input.get("amount", "").strip()
+            if raw:
+                try:
+                    amount = decimal_amount(raw)
+                    site = current_contract(
+                        self.draft,
+                        amount,
+                        user_input["vat_included"],
+                        None,
+                        False,
+                        dt_util.utcnow(),
+                        source="user_confirmed_current_supplier",
+                    )
+                    # An ordinary markup edit preserves optional accounting data.
+                    site["dated_components"] = [
+                        r for r in site["dated_components"] if r["id"] != "supplier_subscription"
+                    ] + [
+                        r
+                        for r in self.draft.get("dated_components", [])
+                        if r["id"] == "supplier_subscription"
+                    ]
+                    return await self._save_step(site, "setup_review", "supplier")
+                except (ValueError, KeyError, TypeError) as err:
+                    self._error_detail = str(err)
+                    errors["amount"] = "invalid_decimal"
+            else:
+                return await self._save_step(self.draft, "setup_review", "supplier")
+        today = str(dt_util.utcnow().astimezone(ZoneInfo(self.draft["timezone"])).date())
+        existing = [
+            r
+            for r in self.draft.get("dated_components", [])
+            if r["id"] == "supplier"
+            and r["valid_from"] <= today < r["valid_to"]
+            and not r.get("hours")
+            and r.get("eligibility", "all") == "all"
+        ]
+        known = existing[0] if len(existing) == 1 else None
+        if known:
+            from decimal import Decimal
+
+            value = Decimal(str(known["amount"])) * (100 if known["unit"] == "DKK/kWh" else 1)
+            amount_default = {"default": format(value, "f")}
+        else:
+            amount_default = {}
+        return await self._simple_form(
+            "setup_supplier",
+            {
+                vol.Optional("amount", **amount_default): money_input(),
+                vol.Required(
+                    "vat_included", default=known["vat_included"] if known else True
+                ): bool,
+            },
+            "3 / 3",
+            user_input,
+            errors,
+        )
+
+    async def async_step_setup_offers(self, user_input=None):
+        if self.draft.get("price_basis") == "all_in":
+            return await self._save_step(self.draft, "setup_review", "supplier")
         from .localization import review_labels
 
         labels = await review_labels(self.hass)
@@ -328,9 +399,9 @@ class SimpleSetup(FlowTools):
         if user_input:
             selected = user_input["product"]
             if selected == "keep":
-                return await self._save_step(self.draft, "setup_tax", "supplier")
+                return await self._save_step(self.draft, "setup_review", "supplier")
             if selected == "missing":
-                return await self._save_step(self.draft, "setup_tax", "supplier")
+                return await self._save_step(self.draft, "setup_review", "supplier")
             if selected in self._offers or selected in {"custom", "ewii_other"}:
                 return await self._save_step(
                     {
@@ -342,7 +413,7 @@ class SimpleSetup(FlowTools):
                     "supplier_selection",
                 )
         return await self._simple_form(
-            "setup_supplier",
+            "setup_offers",
             {
                 vol.Required(
                     "product", default="keep" if choices[0][0] == "keep" else vol.UNDEFINED
@@ -353,6 +424,48 @@ class SimpleSetup(FlowTools):
             availability="" if self._offers else labels.get("offers_unavailable", ""),
         )
 
+    async def async_step_setup_estimate(self, user_input=None):
+        errors = {}
+        if user_input is not None:
+            if not user_input.get("confirm"):
+                errors["confirm"] = "confirmation_required"
+            else:
+                try:
+                    amount = decimal_amount(user_input["amount"])
+                    site = current_contract(
+                        self.draft,
+                        amount,
+                        user_input["vat_included"],
+                        None,
+                        True,
+                        dt_util.utcnow(),
+                        source="user_approved_provisional_NOT_verified",
+                    )
+                    site["dated_components"] = [
+                        r for r in site["dated_components"] if r["id"] != "supplier_subscription"
+                    ] + [
+                        r
+                        for r in self.draft.get("dated_components", [])
+                        if r["id"] == "supplier_subscription"
+                    ]
+                    return await self._save_step(site, "setup_review", "supplier")
+                except ValueError, TypeError, KeyError:
+                    errors["amount"] = "invalid_decimal"
+        estimate = self.draft.get("provisional_supplier", {})
+        return await self._simple_form(
+            "setup_estimate",
+            {
+                vol.Required(
+                    "amount", **({"default": str(estimate["amount"])} if estimate else {})
+                ): money_input(),
+                vol.Required("vat_included", default=estimate.get("vat_included", True)): bool,
+                vol.Required("confirm", default=False): bool,
+            },
+            "",
+            user_input,
+            errors,
+        )
+
     async def async_step_setup_contract(self, user_input=None):
         from .supplier_offers import get_offers
 
@@ -360,14 +473,14 @@ class SimpleSetup(FlowTools):
         offers = await get_offers(self.hass)
         offer = offers.get(selected)
         if selected not in {"custom", "ewii_other"} and not offer:
-            return await self.async_step_setup_supplier()
+            return await self.async_step_setup_offers()
         errors = {}
         if user_input:
             if not user_input.get("confirm"):
                 errors["confirm"] = "confirmation_required"
             else:
                 try:
-                    amount = offer["markup_ore"] if offer else user_input["amount"]
+                    amount = offer["markup_ore"] if offer else decimal_amount(user_input["amount"])
                     vat_included = (
                         (user_input["vat_basis"] == "included")
                         if offer and offer["vat_included"] is None
@@ -393,7 +506,7 @@ class SimpleSetup(FlowTools):
                         }
                     else:
                         site.pop("supplier_offer", None)
-                    return await self._save_step(site, "setup_tax", "supplier")
+                    return await self._save_step(site, "setup_review", "supplier")
                 except ValueError, KeyError, TypeError:
                     errors["base"] = "invalid_rate"
         today = str(dt_util.utcnow().astimezone(ZoneInfo(self.draft["timezone"])).date())
@@ -415,7 +528,7 @@ class SimpleSetup(FlowTools):
             {}
             if offer
             else {
-                vol.Required("amount", **amount_default): number(),
+                vol.Required("amount", **amount_default): money_input(),
                 vol.Required(
                     "vat_included", default=known["vat_included"] if known else True
                 ): bool,
@@ -584,6 +697,9 @@ class SimpleSetup(FlowTools):
                 "rates",
                 "source_details",
                 "setup_display",
+                "setup_offers",
+                "setup_estimate",
+                "setup_tax_details",
                 "storage_tools",
             ],
         )
@@ -623,21 +739,47 @@ class SimpleSetup(FlowTools):
         from .config_flow import site_schema
 
         errors = {}
+        value = getattr(self, "_source_form", self.draft)
         if user_input:
+            changed = {**value, **user_input}
+            if changed.get("source_type") != value.get("source_type"):
+                self._source_form = changed
+                return await self.async_step_source_details()
             try:
-                return await self._save_step({**self.draft, **user_input}, "setup_review", "site")
-            except ValueError, KeyError, TypeError, ZoneInfoNotFoundError:
+                if changed["source_type"] == "nordpool":
+                    source = self.hass.config_entries.async_get_entry(
+                        changed.get("nordpool_entry", "")
+                    )
+                    if not source or source.domain != "nordpool":
+                        errors["nordpool_entry"] = "source_required"
+                    else:
+                        await ensure_official_nordpool(self.hass)
+                        areas = source.options.get("areas", source.data.get("areas", []))
+                        if areas and changed["area"] not in areas:
+                            errors["area"] = "unsupported_area"
+                    changed.update(price_unit="DKK/MWh", price_basis="spot_ex_vat")
+                elif not changed.get("price_entity"):
+                    errors["price_entity"] = "entity_required"
+                try:
+                    ZoneInfo(changed["timezone"])
+                except ValueError, ZoneInfoNotFoundError:
+                    errors["timezone"] = "invalid_timezone"
+                if not errors:
+                    return await self._save_step(changed, "setup_review", "site")
+            except (ValueError, KeyError, TypeError, ZoneInfoNotFoundError) as err:
+                self._error_detail = str(err)
                 errors["base"] = "invalid_configuration"
         return self.async_show_form(
             step_id="source_details",
-            data_schema=site_schema({**self.draft, **(user_input or {})}),
+            data_schema=site_schema({**value, **(user_input or {})}),
             errors=errors,
         )
 
     async def _stage(self, step, changes, schema):
         try:
             return await self._save_step({**self.draft, **changes}, "rates", "advanced")
-        except ValueError, KeyError, TypeError:
+        except (ValueError, KeyError, TypeError) as err:
+            self._error_detail = str(err)
             return self.async_show_form(
                 step_id=step, data_schema=schema, errors={"base": "invalid_configuration"}
             )

@@ -1,6 +1,7 @@
 """Shared native selectors and preserved selected-site management actions."""
 
 import voluptuous as vol
+from homeassistant.core import callback
 from homeassistant.helpers import selector
 
 
@@ -24,10 +25,47 @@ def number(minimum=0, maximum=None):
     )
 
 
+def money_input():
+    # Text is deliberate: native HTML number controls do not consistently accept
+    # a decimal comma across browser locales. Parsing/validation is server-side.
+    return selector.TextSelector(selector.TextSelectorConfig(suffix="øre/kWh"))
+
+
 class FlowTools:
     """Safe management actions reused by ordinary saved-step configuration."""
 
     _wizard_entry = None
+
+    @callback
+    def async_show_menu(self, *, step_id=None, menu_options, **kwargs):
+        """Every row has an explicit, non-empty human label, independent of cache."""
+        labels = getattr(self, "_flow_labels", {})
+        resolved = {}
+        for key in menu_options:
+            label = menu_options[key] if isinstance(menu_options, dict) else None
+            label = (
+                label
+                or labels.get(
+                    f"component.ha_energy_price_engine.config.step.{step_id}.menu_options.{key}"
+                )
+                or labels.get(f"component.ha_energy_price_engine.config.step.{key}.title")
+            )
+            if not label or not label.strip():
+                raise ValueError(f"Missing native navigation label: {step_id}/{key}")
+            resolved[key] = label
+        placeholders = {"draft_status": "", **(kwargs.pop("description_placeholders", None) or {})}
+        return super().async_show_menu(
+            step_id=step_id, menu_options=resolved, description_placeholders=placeholders, **kwargs
+        )
+
+    @callback
+    def async_show_form(self, **kwargs):
+        kwargs["description_placeholders"] = {
+            "draft_status": "",
+            "error_detail": getattr(self, "_error_detail", ""),
+            **(kwargs.get("description_placeholders") or {}),
+        }
+        return super().async_show_form(**kwargs)
 
     async def async_step_site_management(self, user_input=None):
         from .site_lifecycle import owned_files, permanently_remove

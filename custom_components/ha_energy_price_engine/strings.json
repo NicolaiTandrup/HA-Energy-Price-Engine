@@ -191,7 +191,10 @@
           "wizard_charges": "Correct national charges / tax",
           "wizard_recheck": "Recheck sources and calculation",
           "wizard_site": "Correct site name",
-          "wizard_location": "Correct area / timezone / VAT"
+          "wizard_location": "Correct area / timezone / VAT",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "wizard_resume": {
@@ -241,7 +244,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "wizard_recheck": {
@@ -271,7 +277,7 @@
         }
       },
       "setup_site": {
-        "title": "1 / 5 · Site and Nord Pool",
+        "title": "1 / 3 · Site and Nord Pool",
         "description": "{saved}\n\nChoose your installed Nord Pool source. Its area and units are detected automatically.",
         "data": {
           "name": "Site name",
@@ -299,7 +305,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_area": {
@@ -329,11 +338,14 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_grid": {
-        "title": "2 / 5 · Grid tariff",
+        "title": "2 / 3 · Grid tariff",
         "description": "{saved}\n\nConfirm your actual grid product once. Nord Pool area alone cannot identify it.",
         "data": {
           "grid": "Grid operator and tariff"
@@ -359,7 +371,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_grid_rate": {
@@ -391,38 +406,24 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_supplier": {
-        "title": "3 / 5 · Electricity supplier",
-        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
+        "title": "3 / 3 · Supplier markup",
+        "description": "{saved}\n\nEnter your actual markup above spot. Saving confirms this amount and VAT choice. Leave blank if unknown; an existing agreement is kept. Verified public charges are applied automatically within their effective periods.",
         "data": {
-          "product": "Supplier agreement"
+          "amount": "Supplier markup above spot (øre/kWh)",
+          "vat_included": "This amount includes VAT"
         },
-        "submit": "Save and continue",
-        "menu_options": {
-          "setup_review": "Back to prices",
-          "setup_check": "Check prices",
-          "setup_site": "Site and source",
-          "setup_grid": "Grid tariff",
-          "setup_supplier": "Supplier agreement",
-          "setup_tax": "Tax / heating eligibility",
-          "setup_diagnostics": "Component diagnostics",
-          "advanced": "Advanced settings",
-          "rates": "Dated rates and overrides",
-          "source_details": "Provider details",
-          "setup_display": "Display unit",
-          "storage_tools": "Storage / site management",
-          "add_rate": "Add dated rate",
-          "edit_rate": "Edit dated rate",
-          "remove_rate": "Remove dated rate",
-          "storage": "Back up history",
-          "breakdown": "Stored quarter breakdown",
-          "site_management": "Remove / delete selected site",
-          "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
-        }
+        "data_description": {
+          "amount": "For example 0.25 or 3.125. No dates or fixed subscriptions.",
+          "vat_included": "Use the VAT basis in your agreement. Public Danish VAT is 25%."
+        },
+        "submit": "Save markup"
       },
       "setup_contract": {
         "title": "3 / 5 · Confirm your rate",
@@ -456,7 +457,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         },
         "data_description": {
           "vat_basis": "The product page does not state this offer’s VAT basis. Confirm it from your agreement; PE does not guess."
@@ -489,7 +493,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_heating": {
@@ -521,11 +528,14 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_review": {
-        "title": "5 / 5 · Your prices",
+        "title": "Your charging prices",
         "description": "**{name}** · Settings saved. Tap to edit. Prices are øre/kWh including VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Save and continue",
@@ -549,7 +559,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_diagnostics": {
@@ -577,7 +590,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_tax_details": {
@@ -605,7 +621,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_display": {
@@ -635,7 +654,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "source_details": {
@@ -675,7 +697,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         },
         "data_description": {}
       },
@@ -704,7 +729,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "rates": {
@@ -732,7 +760,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "storage_tools": {
@@ -760,7 +791,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "add_rate": {
@@ -822,16 +856,59 @@
         "data": {
           "slot": "Quarter (local date/time and UTC offset)"
         }
+      },
+      "setup_offers": {
+        "title": "3 / 5 · Electricity supplier",
+        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
+        "data": {
+          "product": "Supplier agreement"
+        },
+        "submit": "Save and continue",
+        "menu_options": {
+          "setup_review": "Back to prices",
+          "setup_check": "Check prices",
+          "setup_site": "Site and source",
+          "setup_grid": "Grid tariff",
+          "setup_supplier": "Supplier agreement",
+          "setup_tax": "Tax / heating eligibility",
+          "setup_diagnostics": "Component diagnostics",
+          "advanced": "Advanced settings",
+          "rates": "Dated rates and overrides",
+          "source_details": "Provider details",
+          "setup_display": "Display unit",
+          "storage_tools": "Storage / site management",
+          "add_rate": "Add dated rate",
+          "edit_rate": "Edit dated rate",
+          "remove_rate": "Remove dated rate",
+          "storage": "Back up history",
+          "breakdown": "Stored quarter breakdown",
+          "site_management": "Remove / delete selected site",
+          "hacs_channel": "HACS beta channel",
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
+        }
+      },
+      "setup_estimate": {
+        "title": "Provisional visualization estimate",
+        "description": "Visualization only. These prices never enter verified history or make CM prices READY.",
+        "data": {
+          "amount": "Estimated supplier markup (øre/kWh)",
+          "vat_included": "This amount includes VAT",
+          "confirm": "I approve an unverified visualization estimate only"
+        },
+        "submit": "Save estimate"
       }
     },
     "error": {
-      "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap.",
+      "invalid_configuration": "Check the highlighted values: {error_detail}",
       "name_required": "Enter a friendly site name.",
       "invalid_id": "Use lowercase a-z, digits and underscores, starting with a letter/digit.",
       "duplicate_id": "This ID already belongs to a site. Use another ID or configure that existing site.",
-      "source_required": "Select an installed enabled source; add official Nord Pool first if needed.",
+      "source_required": "Select the installed official Nord Pool integration.",
       "legacy_source": "A legacy HACS Nordpool shadows the official integration. Use the official source in an approved test setup; do not silently substitute it.",
-      "invalid_timezone": "Enter a valid IANA timezone, e.g. Europe/Copenhagen.",
+      "invalid_timezone": "Enter a valid IANA timezone, for example Europe/Copenhagen.",
       "area_required": "Confirm the delivery area, e.g. DK2 for east Denmark.",
       "unsupported_area": "This area is not configured in the selected Nord Pool entry. Select a supported area/source.",
       "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
@@ -845,7 +922,9 @@
       "hacs_channel_failed": "HACS could not confirm the beta channel. Sign in as an administrator. Open PE in HACS, enable Show beta versions and refresh information.",
       "confirmation_required": "Confirm your agreement or approved estimate.",
       "invalid_source": "Choose an official Nord Pool source with a supported Danish area.",
-      "grid_required": "Choose your actual grid product."
+      "grid_required": "Choose your actual grid product.",
+      "invalid_decimal": "Enter a non-negative decimal amount, for example 0.25 or 3.125.",
+      "entity_required": "Select a timestamped price entity for this alternate source."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
@@ -877,7 +956,10 @@
           "save": "Save changes",
           "supplier": "Supplier and contract guidance",
           "storage": "Storage and verified backup",
-          "breakdown": "Inspect a stored quarter-hour price"
+          "breakdown": "Inspect a stored quarter-hour price",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "site": {
@@ -1140,7 +1222,10 @@
           "wizard_charges": "Correct national charges / tax",
           "wizard_recheck": "Recheck sources and calculation",
           "wizard_site": "Correct site name",
-          "wizard_location": "Correct area / timezone / VAT"
+          "wizard_location": "Correct area / timezone / VAT",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "wizard_resume": {
@@ -1190,7 +1275,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "wizard_recheck": {
@@ -1220,7 +1308,7 @@
         }
       },
       "setup_site": {
-        "title": "1 / 5 · Site and Nord Pool",
+        "title": "1 / 3 · Site and Nord Pool",
         "description": "{saved}\n\nChoose your installed Nord Pool source. Its area and units are detected automatically.",
         "data": {
           "name": "Site name",
@@ -1248,7 +1336,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_area": {
@@ -1278,11 +1369,14 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_grid": {
-        "title": "2 / 5 · Grid tariff",
+        "title": "2 / 3 · Grid tariff",
         "description": "{saved}\n\nConfirm your actual grid product once. Nord Pool area alone cannot identify it.",
         "data": {
           "grid": "Grid operator and tariff"
@@ -1308,7 +1402,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_grid_rate": {
@@ -1340,38 +1437,24 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_supplier": {
-        "title": "3 / 5 · Electricity supplier",
-        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
+        "title": "3 / 3 · Supplier markup",
+        "description": "{saved}\n\nEnter your actual markup above spot. Saving confirms this amount and VAT choice. Leave blank if unknown; an existing agreement is kept. Verified public charges are applied automatically within their effective periods.",
         "data": {
-          "product": "Supplier agreement"
+          "amount": "Supplier markup above spot (øre/kWh)",
+          "vat_included": "This amount includes VAT"
         },
-        "submit": "Save and continue",
-        "menu_options": {
-          "setup_review": "Back to prices",
-          "setup_check": "Check prices",
-          "setup_site": "Site and source",
-          "setup_grid": "Grid tariff",
-          "setup_supplier": "Supplier agreement",
-          "setup_tax": "Tax / heating eligibility",
-          "setup_diagnostics": "Component diagnostics",
-          "advanced": "Advanced settings",
-          "rates": "Dated rates and overrides",
-          "source_details": "Provider details",
-          "setup_display": "Display unit",
-          "storage_tools": "Storage / site management",
-          "add_rate": "Add dated rate",
-          "edit_rate": "Edit dated rate",
-          "remove_rate": "Remove dated rate",
-          "storage": "Back up history",
-          "breakdown": "Stored quarter breakdown",
-          "site_management": "Remove / delete selected site",
-          "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
-        }
+        "data_description": {
+          "amount": "For example 0.25 or 3.125. No dates or fixed subscriptions.",
+          "vat_included": "Use the VAT basis in your agreement. Public Danish VAT is 25%."
+        },
+        "submit": "Save markup"
       },
       "setup_contract": {
         "title": "3 / 5 · Confirm your rate",
@@ -1405,7 +1488,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         },
         "data_description": {
           "vat_basis": "The product page does not state this offer’s VAT basis. Confirm it from your agreement; PE does not guess."
@@ -1438,7 +1524,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_heating": {
@@ -1470,11 +1559,14 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_review": {
-        "title": "5 / 5 · Your prices",
+        "title": "Your charging prices",
         "description": "**{name}** · Settings saved. Tap to edit. Prices are øre/kWh including VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Save and continue",
@@ -1498,7 +1590,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_diagnostics": {
@@ -1526,7 +1621,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_tax_details": {
@@ -1554,7 +1652,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "setup_display": {
@@ -1584,7 +1685,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "source_details": {
@@ -1624,7 +1728,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         },
         "data_description": {}
       },
@@ -1653,7 +1760,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "rates": {
@@ -1681,7 +1791,10 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
       },
       "storage_tools": {
@@ -1709,20 +1822,66 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close"
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
         }
+      },
+      "setup_offers": {
+        "title": "3 / 5 · Electricity supplier",
+        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
+        "data": {
+          "product": "Supplier agreement"
+        },
+        "submit": "Save and continue",
+        "menu_options": {
+          "setup_review": "Back to prices",
+          "setup_check": "Check prices",
+          "setup_site": "Site and source",
+          "setup_grid": "Grid tariff",
+          "setup_supplier": "Supplier agreement",
+          "setup_tax": "Tax / heating eligibility",
+          "setup_diagnostics": "Component diagnostics",
+          "advanced": "Advanced settings",
+          "rates": "Dated rates and overrides",
+          "source_details": "Provider details",
+          "setup_display": "Display unit",
+          "storage_tools": "Storage / site management",
+          "add_rate": "Add dated rate",
+          "edit_rate": "Edit dated rate",
+          "remove_rate": "Remove dated rate",
+          "storage": "Back up history",
+          "breakdown": "Stored quarter breakdown",
+          "site_management": "Remove / delete selected site",
+          "hacs_channel": "HACS beta channel",
+          "setup_done": "Close",
+          "setup_offers": "Public supplier offers",
+          "setup_estimate": "Provisional visualization estimate",
+          "setup_tax_details": "Energinet, electricity tax and VAT"
+        }
+      },
+      "setup_estimate": {
+        "title": "Provisional visualization estimate",
+        "description": "Visualization only. These prices never enter verified history or make CM prices READY.",
+        "data": {
+          "amount": "Estimated supplier markup (øre/kWh)",
+          "vat_included": "This amount includes VAT",
+          "confirm": "I approve an unverified visualization estimate only"
+        },
+        "submit": "Save estimate"
       }
     },
     "error": {
-      "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry.",
+      "invalid_configuration": "Check the highlighted values: {error_detail}",
       "site_not_loaded": "Load this pricing site before creating a backup.",
       "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics.",
       "name_required": "Enter a friendly site name.",
       "invalid_id": "Use lowercase a-z, digits and underscores, starting with a letter/digit.",
       "duplicate_id": "This ID already belongs to a site. Use another ID or configure that existing site.",
-      "source_required": "Select an installed enabled source; add official Nord Pool first if needed.",
+      "source_required": "Select the installed official Nord Pool integration.",
       "legacy_source": "A legacy HACS Nordpool shadows the official integration. Use the official source in an approved test setup; do not silently substitute it.",
-      "invalid_timezone": "Enter a valid IANA timezone, e.g. Europe/Copenhagen.",
+      "invalid_timezone": "Enter a valid IANA timezone, for example Europe/Copenhagen.",
       "area_required": "Confirm the delivery area, e.g. DK2 for east Denmark.",
       "unsupported_area": "This area is not configured in the selected Nord Pool entry. Select a supported area/source.",
       "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
@@ -1736,7 +1895,9 @@
       "hacs_channel_failed": "HACS could not confirm the beta channel. Sign in as an administrator. Open PE in HACS, enable Show beta versions and refresh information.",
       "confirmation_required": "Confirm your agreement or approved estimate.",
       "invalid_source": "Choose an official Nord Pool source with a supported Danish area.",
-      "grid_required": "Choose your actual grid product."
+      "grid_required": "Choose your actual grid product.",
+      "invalid_decimal": "Enter a non-negative decimal amount, for example 0.25 or 3.125.",
+      "entity_required": "Select a timestamped price entity for this alternate source."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",

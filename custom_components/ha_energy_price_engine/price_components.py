@@ -4,6 +4,8 @@ from datetime import date
 from math import isfinite
 from zoneinfo import ZoneInfo
 
+from .money import per_kwh
+
 REQUIRED = {"energinet_net", "energinet_system", "electricity_tax", "supplier"}
 
 
@@ -77,7 +79,7 @@ def normalize_component(rule):
         raise ValueError("Component source and verification date required")
     date.fromisoformat(rule["verified_on"])
     hours = active_hours(rule)
-    amount /= 100 if rule["unit"] == "ore/kWh" else 1
+    amount = per_kwh(rule["amount"], rule["unit"])
     ex = amount / (1 + rate) if rule["vat_included"] else amount
     gross = amount if rule["vat_included"] else amount * (1 + rate)
     return {

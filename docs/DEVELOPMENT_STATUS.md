@@ -1,9 +1,50 @@
 # Development handoff
 
-Updated 2026-10-27 (Europe/Copenhagen). **Beta.5 published and independently verified. STOP.**
-Owner authorized this prerelease only. No further feature development, beta.6,
-stable publication, main merge or production/charging-control operations. Resume
-only on owner feedback. Read AGENTS.md first; use this existing checkout.
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 active**, explicitly authorized by
+new owner mission after beta.5 acceptance feedback. Branch `feat/beta6-marginal-pricing`
+continues final beta.5 checkpoint **a7a6b04**; all10 prior handoff CI jobs verified
+successful. Main/prior tags/releases remain unchanged. No worktree, production HA,
+Node-RED, Tesla/Easee/CM controls, stable release or main merge. Owner authorizes
+beta.6 prerelease only after mandatory gates; stop after publication/verification.
+
+## Beta.6 fractional markup and three-step foundation
+
+Checkpoint subject: **feat: accept fractional charging markup in three-step setup**.
+Issues#8/#12 read including final owner scope corrections: marginal per-quarter
+charging prices, not household invoice reconstruction. Issue#10 graphs deferred.
+
+- Source → confirmed grid product → actual fractional supplier markup → Review.
+  Ordinary form has markup and VAT basis only: no product/monthly subscription,
+  dates, heating eligibility or technical source contract. Public national defaults
+  stay bounded to verified periods; no private rates/eligibility inferred.
+- Text-based decimal input deliberately accepts point/comma across browser locales;
+  decimal parsing rejects ambiguous/nonfinite/negative values, persists exact decimal
+  strings and converts ore to numeric DKK through Decimal. Canonical pricing/VAT
+  composition/API remain unchanged. Source/grid shape, SQLite and refresh engine
+  retained. Existing subscriptions/future overrides/history preserved.
+- Server-resolved menu dictionaries ensure nonempty human labels independent of
+  client translation cache. Fresh beta.5 en/en-GB/da resources all resolve correctly;
+  owner log references older draft_status wording. Add explicit compatibility
+  placeholder and complete en-GB resources; actual frontend cache-path checks pending.
+  Official advanced source schema hides entity-only fields and validates source,
+  area/timezone with field-specific errors while retaining entered data.
+- Focused new fractional native flows, real HA translation resolution and current
+  contract regression **32 passed**. Core/contract/locale foundation18 passed. Ruff
+  check/format pass. Full older flow tests still require navigation adaptation;
+  no full-suite/remote green claim for this changed checkpoint.
+- Local GitHub API remains proxy-blocked; public GitHub web/Git work. Initial
+  authorized GitHub runner opens a draft beta.6 PR; publication later uses the
+  proven immutable source/hash gates and independent public verification. No beta.6
+  tag/release yet. Manifest still beta.5 during this in-progress foundation.
+
+Next: adapt/re-run existing flow/package regression; canonical stored current/future
+component diagnostics, allocated-energy read-only charging cost estimate, real Radius
+TOU/midnight/DST/fractional tests, beta.5 source migration, native EN/en-GB/DA mobile/
+desktop evidence, full both-core/consumer/SQLite/HACS/hassfest/package/CI gates, clean
+source/tag and authorized beta.6 prerelease, public verification and final stop handoff.
+Only this document is the permanent handoff. Owner real-HA acceptance remains false.
+
+## Earlier beta.5 handoff (historical)
 
 ## Completed beta.5 publication
 

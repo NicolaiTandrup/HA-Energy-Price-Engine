@@ -7,13 +7,30 @@ from homeassistant.helpers.translation import async_get_translations
 from .const import DOMAIN
 
 
-async def review_labels(hass):
+async def user_language(hass):
     language = hass.config.language
     request = current_request.get()
     if request is not None and (user := request.get("hass_user")):
         store = await async_user_store(hass, user.id)
         language = store.data.get("language", {}).get("language", language)
-    translations = await async_get_translations(hass, language, "selector", {DOMAIN})
+    return language
+
+
+async def flow_labels(hass):
+    """Server-resolved labels prevent empty menu rows with stale client resources."""
+    language = await user_language(hass)
+    result = {}
+    for locale in dict.fromkeys(("en", language.split("-")[0], language)):
+        for category in ("config", "options"):
+            result.update(await async_get_translations(hass, locale, category, {DOMAIN}))
+    return result
+
+
+async def review_labels(hass):
+    language = await user_language(hass)
+    translations = {}
+    for locale in dict.fromkeys(("en", language.split("-")[0], language)):
+        translations.update(await async_get_translations(hass, locale, "selector", {DOMAIN}))
     prefix = f"component.{DOMAIN}.selector.review.options."
     return {
         key.removeprefix(prefix): value
