@@ -51,6 +51,13 @@ def source_status(coordinator, now=None):
         "missing_components": report.get("missing_components", []),
         "affected_period": report.get("affected_period"),
         "valid_slots": result.valid_slots,
+        "stored_slots": result.valid_slots,
+        "verified_final_slots": report.get("valid_slots", 0),
+        "raw_status": coordinator.price_updater.raw_reports.get(today, {}).get("status"),
+        "raw_valid_slots": coordinator.price_updater.raw_reports.get(today, {}).get(
+            "valid_slots", 0
+        ),
+        "raw_verified_at": coordinator.price_updater.raw_reports.get(today, {}).get("verified_at"),
         "expected_slots": result.expected_slots,
         "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
         "dso_mode": site.get("dso_mode", "manual"),

@@ -116,6 +116,22 @@ runner-publish authorized beta.3 prerelease only, independently download/verify 
 source/main/assets/HACS/native install on both cores, leave permanent receipt/PR
 update and stop. No main merge, stable release, production HA/Node-RED or controls.
 
+## Final beta.3 diagnostic compatibility checkpoint
+
+Release candidate 221bf119c50808594f516160841da979051bbde3: **200 passed on both
+HA 2026.10.3 / 2026.10.4**, 89% coverage, zero skips. Local hassfest valid and clean
+HACS/manual archives installed outside source on both cores. Native final EN/DA
+Review and mobile missing-contract snapshots show no page/console errors. Public
+verification/source release remain gated; no tag created yet.
+
+Checkpoint subject: `fix: distinguish verified coverage from retained history`.
+Final UI attributes now explicitly distinguish verified_final_slots from stored_slots
+and expose raw_status/raw_valid_slots/raw_verified_at. Legacy API valid_slots retains
+its old meaning/contracts; cached historical rows are not called fresh READY prices.
+Existing source-degradation regressions verify stored 96 versus verified 0. Provider
+interval validation is categorized as source, not private contract configuration.
+Final both-core regression/CI/build gate reruns on this exact source before tagging.
+
 ## Completed PE beta.2 — final receipt
 
 Public **prerelease**:

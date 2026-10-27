@@ -221,3 +221,8 @@ existing registry names, as standard native HA behavior; changing a user's profi
 does not rename entities for everyone. Both name resources are shipped. New enum
 status entities localize per user; legacy uppercase state codes remain unchanged.
 Technical details retain canonical source/API keys and provider exception text.
+
+Legacy readiness/API valid_slots can count retained stored rows even during an outage;
+always check status. Diagnostic verified_final_slots counts currently certified final
+quarters, stored_slots preserves the retained count, and raw_valid_slots/raw_status
+explain the independent input. Historical/API contracts are unchanged.

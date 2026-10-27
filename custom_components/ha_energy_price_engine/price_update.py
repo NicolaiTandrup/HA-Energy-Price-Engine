@@ -138,7 +138,6 @@ class PriceUpdater:
                         if fresh
                         else "Nord Pool refresh failed; cached raw source retained",
                     }
-                stage = "configuration"
                 if dates:
                     verified_slots = []
                     for day in dates:
@@ -164,7 +163,9 @@ class PriceUpdater:
                     if site.get("nordpool_entry") and len(verified_slots) != len(slots):
                         raise ValueError("Source returned intervals outside the requested dates")
                     slots = verified_slots
+                stage = "configuration"
                 if site.get("grid_tariff_entity"):
+                    stage = "grid"
                     state = self.state(
                         site["grid_tariff_entity"], now, site.get("stale_minutes", 40)
                     )

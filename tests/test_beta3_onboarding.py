@@ -194,6 +194,11 @@ async def test_source_degradation_is_independent_and_not_old_component_error(
     assert c.data["status"] != "READY"
     assert not c.data.get("missing_components")
     assert c.data["failure_stage"] == "source"
+    from custom_components.ha_energy_price_engine.status import source_status
+
+    status = source_status(c)
+    assert status["stored_slots"] == 96 and status["verified_final_slots"] == 0
+    assert status["raw_status"] == report["status"]
     assert c.price_engine.records["home"] == before
     assert await hass.config_entries.async_unload(entry.entry_id)
 
