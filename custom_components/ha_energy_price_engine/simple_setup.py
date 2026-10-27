@@ -755,7 +755,6 @@ class SimpleSetup(FlowTools):
         from .api import ConsumerAPI
         from .charging_cost import estimate_charging_cost
         from .charging_diagnostics import quarter_choices
-        from .component_status import safe
         from .localization import review_labels
 
         labels = await review_labels(self.hass)
@@ -781,7 +780,7 @@ class SimpleSetup(FlowTools):
                 )
                 self._session_report = report
                 if report["estimated_cost_dkk"] is None:
-                    result = labels["cost_unavailable"] + " " + safe(report["reason"] or "")
+                    result = labels["cost_unavailable"]
                 else:
                     cost = f"{Decimal(report['estimated_cost_dkk']):.4f}".replace(
                         ".", labels["decimal_separator"]

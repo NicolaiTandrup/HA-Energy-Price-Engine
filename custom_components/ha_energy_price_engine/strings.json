@@ -2288,7 +2288,10 @@
         "cost_unavailable": "Cannot estimate cost without verified prices for every quarter.",
         "cost_estimate": "Estimated charging cost",
         "energy_planned": "Planned energy",
-        "energy_measured": "Measured energy"
+        "energy_measured": "Measured energy",
+        "provisional_guidance": "This is an unverified visualization estimate only. CM does not receive verified prices from it.",
+        "check_guidance": "Check the price sources again. Previously stored prices are not a new verification.",
+        "provisional_source": "User-approved visualization estimate"
       }
     },
     "contract_mode": {

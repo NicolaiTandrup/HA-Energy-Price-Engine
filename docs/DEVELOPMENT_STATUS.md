@@ -1109,3 +1109,22 @@ Next: copy/refetch final runtime into disposable HA, EN/DA mobile/desktop/old-ca
 source-mode, missing/provisional/restart/reset evidence; accurate beta.6 docs and
 receipt; final full both-core/unchanged-consumer/metadata/package/SQLite gates, exact
 source CI, immutable prerelease, independent public validation and stop handoff.
+
+## Beta.6 final diagnostics safety refinement
+
+Checkpoint subject: **fix: prefer approved visual estimates over stale UI records**.
+Known prior2dc1550. Refined current/future diagnostics keep stale authoritative
+ledger rows intact but prefer explicitly approved transient visualization components
+when final API is not READY. This avoids showing an old verified amount instead of
+the newly approved estimate. API/ledger are unchanged and cannot become READY from
+an estimate. A dedicated regression proves old rows unchanged and cost unavailable.
+Public-input freshness remains mandatory for transient estimates.
+
+User-facing source check timestamps use the site's timezone. Native missing/stale/
+provisional guidance is localized without displaying English API error prose in DA;
+API machine reasons remain unchanged. Source/DSO periods use stored quarter bounds
+where normalized automatic components have no standalone date fields. Provisional
+sources say user-approved estimate rather than confirmed agreement. Focused native/
+canonical/decimal/old-flow gate rerun before this checkpoint; final full matrix after
+these last UI refinements is still required. Native DA/compatibility/restart/reset
+and final artifact/docs/publication gates remain pending. No beta.6 tag/release yet.

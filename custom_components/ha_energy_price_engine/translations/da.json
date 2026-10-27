@@ -2288,7 +2288,10 @@
         "cost_unavailable": "Kan ikke beregnes uden verificerede priser for alle kvarterer.",
         "cost_estimate": "Anslået ladepris",
         "energy_planned": "Planlagt energi",
-        "energy_measured": "Målt energi"
+        "energy_measured": "Målt energi",
+        "provisional_guidance": "Dette er kun et uverificeret visualiseringsestimat. CM modtager ikke verificerede priser fra estimatet.",
+        "check_guidance": "Kontrollér priskilderne igen. Tidligere gemte priser er ikke en ny verificering.",
+        "provisional_source": "Brugergodkendt visualiseringsestimat"
       }
     },
     "contract_mode": {

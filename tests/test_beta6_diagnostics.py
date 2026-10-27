@@ -173,3 +173,36 @@ async def test_recorded_season_version_changes_at_local_midnight(hass, freezer):
         != json.loads(result.records[1].source_json)["dso"]["version"]
     )
     assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_approved_estimate_overrides_stale_ui_record_but_not_authoritative_history(
+    hass, freezer
+):
+    from custom_components.ha_energy_price_engine import apply_settings
+    from custom_components.ha_energy_price_engine.charging_cost import estimate_charging_cost
+    from custom_components.ha_energy_price_engine.configuration import settings
+    from custom_components.ha_energy_price_engine.contracts import current_contract
+
+    freezer.move_to("2026-10-27T12:07:00Z")
+    entry = await setup(hass)
+    old = entry.runtime_data.price_engine.records["home"]
+    site = current_contract(
+        settings(entry),
+        "0.5",
+        False,
+        None,
+        True,
+        datetime(2026, 10, 27, 12, 7, tzinfo=UTC),
+        source="Explicit fictional visual estimate",
+    )
+    assert await apply_settings(hass, entry, site)
+    point = datetime(2026, 10, 27, 12, 15, tzinfo=UTC)
+    snapshot = component_snapshot(hass, entry, reference=point)
+    assert snapshot["components"]["supplier"]["value"] == pytest.approx(0.5)
+    assert snapshot["components"]["final"]["status"] == "provisional"
+    assert snapshot["api_status"] == "INCOMPLETE"
+    assert entry.runtime_data.price_engine.records["home"] == old
+    cost = estimate_charging_cost(get_api(hass), "home", [(point, "1")], energy_kind="planned")
+    assert cost["estimated_cost_dkk"] is None
+    assert await hass.config_entries.async_unload(entry.entry_id)

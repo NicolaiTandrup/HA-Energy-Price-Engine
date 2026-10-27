@@ -186,8 +186,8 @@ def component_snapshot(hass, entry, reference=None):
     )
     record = stored
     provisional_record = False
-    if not record and runtime and fresh and raw.get("status") == "READY":
-        record = next(
+    if str(lookup.status) != "READY" and runtime and fresh and raw.get("status") == "READY":
+        provisional = next(
             (
                 r
                 for r in runtime.price_updater.estimated_records.get(day, ())
@@ -195,7 +195,8 @@ def component_snapshot(hass, entry, reference=None):
             ),
             None,
         )
-        provisional_record = record is not None
+        if provisional:
+            record, provisional_record = provisional, True
     canonical_vat = canonical_ex = None
     if record:
         components = json.loads(record.components_json)
@@ -230,7 +231,16 @@ def component_snapshot(hass, entry, reference=None):
                     status="verified" if provisional_record and key != "supplier" else state,
                     effective_period=(
                         part.get("valid_from", "") + " → " + part.get("valid_to", "")
-                    ).strip(" →"),
+                    ).strip(" →")
+                    or (
+                        record.start.astimezone(ZoneInfo(site["timezone"])).isoformat(
+                            timespec="minutes"
+                        )
+                        + " → "
+                        + record.end.astimezone(ZoneInfo(site["timezone"])).isoformat(
+                            timespec="minutes"
+                        )
+                    ),
                     vat_value=part["vat"] * 100,
                 )
             elif "external_all_in" in components:
@@ -263,6 +273,9 @@ def component_snapshot(hass, entry, reference=None):
             if r["id"] == "supplier_subscription" and r["valid_from"] <= day < r["valid_to"]
         ],
         "coverage": runtime.schedule.days.get(site["id"], {}) if runtime else {},
+        "failure_stage": runtime.schedule.days.get(site["id"], {}).get(day, {}).get("failure_stage")
+        if runtime
+        else None,
     }
 
 

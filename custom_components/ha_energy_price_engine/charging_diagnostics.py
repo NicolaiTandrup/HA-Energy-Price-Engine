@@ -58,7 +58,9 @@ async def charging_breakdown(hass, entry, start):
         row = data["components"][key]
         name = "Nord Pool" if key == "source" else text(key)
         source = row["source"]
-        if source.startswith("user_") or source == "provisional_contract":
+        if row["status"] == "provisional":
+            source = text("provisional_source")
+        elif source.startswith("user_") or source == "provisional_contract":
             source = text("own_source_details")
         elif source.startswith("Rate specified by owner"):
             source = text("public_baseline")
@@ -82,7 +84,24 @@ async def charging_breakdown(hass, entry, start):
             text("starts_at") + " " + activation.astimezone(zone).isoformat(timespec="minutes")
         )
     if data["reason"]:
-        lines.append(safe(data["reason"]))
+        stage = data["failure_stage"]
+        if stage == "grid":
+            lines.append(text("fix_dso"))
+        elif stage == "source":
+            lines.append(text("fix_source"))
+        elif final["status"] == "provisional":
+            lines.append(text("provisional_guidance"))
+        else:
+            missing = [
+                text("fix_" + key)
+                for key, row in data["components"].items()
+                if key != "final" and row["status"] in {"missing", "expired"}
+            ]
+            lines.extend(dict.fromkeys(missing or [text("check_guidance")]))
     if data["verified_at"]:
-        lines.append(text("checked_at") + " " + data["verified_at"])
+        stamp = dt_util.parse_datetime(data["verified_at"])
+        if stamp:
+            lines.append(
+                text("checked_at") + " " + stamp.astimezone(zone).isoformat(timespec="minutes")
+            )
     return "\n\n---\n\n".join(lines)
