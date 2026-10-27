@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "verified_at": "2026-10-27T20:52:55.358652+00:00",
+  "verified_at": "2026-10-27T20:56:02.525033+00:00",
   "tag": "v0.1.0-beta.6",
   "source_commit": "f5a18152748205906bfd5e7ae7a72b592943e742",
   "tag_object": "570a889b653acbabff7a590c542f5b70b3901cf6",
@@ -78,7 +78,8 @@
     "html_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/40581684602",
     "head_sha": "9bcb2ff77624c955c50939f3c30f04de6d1b161b",
     "publication_and_both_verification_jobs": "success",
-    "workflow_final_conclusion": "pending audit completion"
+    "workflow_final_conclusion": "success",
+    "all_orchestration_push_and_pr_checks": "success"
   },
   "exact_source_checks": [
     {
@@ -900,5 +901,24 @@
     "Entity names follow system/registry language; forms follow user language. HACS external brand catalog can show fallback.",
     "Cloud SQLite measurements do not establish Raspberry Pi performance; history remains in memory for APIv1."
   ],
-  "production_controls_touched": false
+  "production_controls_touched": false,
+  "independent_local_verification": {
+    "verified_at": "2026-10-27T20:52:13.311974+00:00",
+    "unauthenticated_release_page_http": 200,
+    "prerelease_badge": true,
+    "source_commit": "f5a18152748205906bfd5e7ae7a72b592943e742",
+    "tag_object": "570a889b653acbabff7a590c542f5b70b3901cf6",
+    "main_and_prior_tags_preserved": true,
+    "all_four_public_assets_match_clean_local_build": true,
+    "all_runtime_bytes_match_public_tag_and_exact_git_source": true,
+    "all_asset_sha256": {
+      "ha_energy_price_engine.zip": "909c75c26649e91f6dfb4d908f36db8dd65cd83c4a72153be9beef6d890630de",
+      "ha_energy_price_engine-manual.zip": "d0b3672ddfe0a984adae40a75e6f8fc66a15c371263d93cd783409812b83e2ea",
+      "BUILD_MANIFEST.json": "aca8705aab1c025cd110bc8a51153c7dad21b227321288ecac4e6262b501788b",
+      "SHA256SUMS": "4d979e8e6e6015030dda6d07acaf2aa9f012eb8d629a95ef7c28e69b7b243d69"
+    },
+    "hacs_and_native_replay": "passed on both HA2026.10.3/2026.10.4: both HACS pins and both native ZIP layouts",
+    "public_api_metadata": "Fresh independent authorized GitHub runners captured API metadata; local managed proxy blocks direct GitHub API. Local replay uses those metadata with independently downloaded/verified public tag and main bytes; no credential/proxy replacement.",
+    "owner_acceptance": false
+  }
 }
