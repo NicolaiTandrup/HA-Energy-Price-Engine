@@ -1,8 +1,152 @@
 # Development handoff
 
-Updated 2026-10-26 (Europe/Copenhagen). Read AGENTS.md first. This is the single
-permanent handoff. Continue existing branch `feat/standalone-price-engine` and
-existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
+Updated 2026-10-27 (Europe/Copenhagen). Read AGENTS.md first. This is the single
+permanent handoff. Beta.2 mission is complete: **published and independently verified**.
+Stop here unless the owner requests further development. Existing history and PRs
+are preserved; no worktree, force push, main merge or production change occurred.
+
+## Completed PE beta.2 — final receipt
+
+Public **prerelease**:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.2
+
+- Exact source: **0c93d2bfac88878cff46e7726f59accbeababf85**.
+- Annotated tag object: **985ad4af194bb0b261ed73dcb22ea4d8c1bb5952**, never moved.
+- Branch **feat/beta2-guided-setup**, draft **PR #9** remains unmerged/reviewable.
+  Main remains beta.1 **56cdb3c10993179371483812cbc36f651ba3ad8e**. HACS registers
+  from compliant main, then downloads the exact beta.2 tag. No main change was needed.
+- Publisher orchestration **34cb19e** checks out the immutable tag, verifies successful
+  exact-source CI, deterministic ZIP hashes and independent native installs, then
+  publishes with `--prerelease --latest=false`. Actual run succeeded:
+  https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/40467818996
+- All **15 actual source checks** (push/PR/tag) passed: both-core tests, unchanged
+  consumer suites/coupled runtimes, HACS, official hassfest and independent installs.
+  Both local HA **2026.10.3 / 2026.10.4: 185 passed**, 88% coverage, zero skips.
+  Current PyPI core rechecked: 2026.10.4. Two upstream HACS deprecation warnings.
+- Independently downloaded actual public metadata, source ZIP, main ZIP and all four
+  assets on BOTH cores. Tag/source/manifest/per-file payload/GitHub digests/checksums
+  match. Public unauthenticated page HTTP200, non-draft prerelease confirmed.
+- Unchanged pinned HACS 2.0.5/upstream methods passed registration using actual beta.1
+  main bytes separately from beta.2 selected tag, beta discovery, download/extraction,
+  update, uninstall/reinstall. Both public ZIP layouts passed outside-source native
+  wizard setup/Options/SQLite reload/delete/recreate on both cores.
+- Machine-readable evidence: **docs/receipts/v0.1.0-beta.2.json**. Final checkpoint
+  subject: `docs: record independently verified beta.2 publication`.
+
+SHA-256:
+
+```text
+968a3436d7d44f20b4e86db405dcd26b553b9baa2a81dcfbf6eb9daf70776d91  ha_energy_price_engine.zip
+a53f5a2ede9416b2eccf41a3f54f174410456e89e930001740a0de3465d80845  ha_energy_price_engine-manual.zip
+```
+
+## Delivered beta.2 scope
+
+Six native stages: site/official source, grid, supplier, national charges/tax,
+display, Review/Save & verify. Source-specific controls hide entity/unit fields for
+official Nord Pool; verified configured area hints suggest DK2/Copenhagen where
+supported; input is automatic DKK/MWh ex VAT, spot/grid VAT input 25 means 25%.
+EWII and heating never infer private values. Advanced dated rates, locks/time bands,
+manual overrides, backups and price breakdown remain accessible from Review.
+
+Submitted drafts, invalid inputs and Back edits persist separately from active
+settings; explicit Discard requires confirmation; Save returns to unapplied pages.
+Unchanged Save triggers one reload/verification too. Existing incomplete sites
+resume. Config v3 migration preserves IDs/names/source refs/rules and SQLite history;
+tests execute actual released beta.1 code to seed bytes/rows/revisions before upgrade.
+Canonical DKK sensors/statistics/storage and read-only CM API v1 remain unchanged.
+Five unit-specific preferred-display entities default to øre/kWh; switching units
+never reinterprets old statistics. Device sw_version derives from installed manifest.
+Missing-component diagnostics report date/offset, source/failure and corrective action.
+No fabricated zero, tariff arithmetic or persistence algorithm rewrite.
+
+Actual real HA .4 frontend 20260930.5 + Playwright/system Chromium checks passed at
+1440x1000 desktop and 390x844 mobile: all stages/Back, confirmed source defaults,
+invalid-timezone retention/recovery, draft close/reopen, explicit Discard, new-site
+Save, mobile Options Save and device version. Mobile has no horizontal overflow;
+final mobile console/errors empty. Browser plugin absent; only decorative icon
+requests substituted to avoid unavailable external requests blocking JS downloads.
+Synthetic read-only sources; no owner login. This found/fixed ZoneInfo validation
+import/disk work on HA's loop; regression asserts executor-thread validation.
+
+## Exact owner update and limits
+
+HACS → Energy Price Engine → Download/Redownload → Show beta versions → select
+**v0.1.0-beta.2** → Download → restart HA. Existing site: Devices & services →
+Energy Price Engine → **Configure**, not delete/recreate. Check device version,
+review the six stages, **Continue** each draft page, then **Save & verify**; confirm
+readiness before consuming prices. Guides: docs/HACS_DISTRIBUTION.md,
+docs/WIZARD_GUIDE.md (actual synthetic QA screenshots), docs/BETA_SETUP.md and
+explicit docs/BETA_ACCEPTANCE.md checklist.
+
+No software publication blocker remains. Important native HA limit: Close/reload
+never submits fields still being typed. Every page explicitly warns to Continue
+first; submitted error/Back drafts survive interruption/restart. This is not
+keystroke autosave. Avoid simultaneous browser editing flows for the same site.
+Owner PAHA02-DEV/hardware/source/billing acceptance remains separate; isolated QA
+is not a claim of owner access or physical mobile/Pi performance. All price history
+remains in RAM and is not silently pruned. Unknown future/private rates remain
+unavailable; EWII household .030 DKK/kWh ex VAT is June–September 2026 only.
+No stable release, main merge, CM release, production HA, Node-RED or controls.
+
+The remaining sections preserve completed beta.1 history and earlier measurements.
+Their old next-step instructions are historical and do not reopen the completed mission.
+
+## Completed PE beta.1 publication — final receipt
+
+**Published and independently verified**, 2026-10-26. Public prerelease:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.1
+
+- PR #7 merged normally at **56cdb3c10993179371483812cbc36f651ba3ad8e**.
+- Main is HACS-compliant and remains at that release source. No history rewrite,
+  force push, protection bypass or default-branch setting change occurred.
+- Annotated tag **v0.1.0-beta.1** resolves to exactly that source; tag object
+  **b971f31855c9fb9386eaa679a9c26cd94d4273a8**. Tag was never moved.
+- Non-draft GitHub **prerelease** includes both ZIPs, BUILD_MANIFEST and SHA256SUMS.
+  No stable release or CM publication. All ten actual source checks (main/tag)
+  succeeded, including HACS, hassfest, both-core full tests and independent install.
+- **177 tests per HA 2026.10.3/2026.10.4**, 91% coverage, zero skips. Full pinned
+  consumer suites/coupled runtimes remain green, with both startup orders.
+- Independently downloaded actual public metadata, source ZIP and all four assets.
+  Tag/source, GitHub digests, ZIP SHA256SUMS, manifest provenance and every runtime
+  file match. Unauthenticated public release HTTP200. Actual pinned HACS code passed
+  add/beta discovery/exact tag capability/download/extraction/update/uninstall/
+  reinstall using those public bytes on BOTH HA cores. Both downloaded ZIP layouts
+  passed outside-source native setup/Options/SQLite reload/delete/recreate on both.
+- Machine receipt: **docs/receipts/v0.1.0-beta.1.json**. Exact owner instructions:
+  **docs/HACS_DISTRIBUTION.md**. No owner HA session was accessed; isolated testing
+  does not assert authenticated PAHA02-DEV/frontend or Pi hardware acceptance.
+
+The cloud upload restriction was resolved by the narrowly scoped publisher run
+40392618234 on the preserved development branch. Main/tag source remain immutable.
+Final receipt/handoff-only checkpoint subject: `docs: record published beta.1 verification`;
+this development checkpoint is not a different release source and creates no release.
+Publication mission is complete. Stop; do not start CM work or unrelated features.
+Any production/cutover/stable/CM publication requires separate authorization.
+
+## Publication execution checkpoint — 2026-10-26
+
+PR #7 is merged normally (history preserved, no protection bypass) at
+**56cdb3c10993179371483812cbc36f651ba3ad8e**. Actual merged main passes all five
+remote checks, 177 local tests on both HA cores, Ruff, official hassfest and clean
+both-layout independent native install. Main now contains the full integration.
+Annotated tag **v0.1.0-beta.1** points to that exact source; tag object
+b971f31855c9fb9386eaa679a9c26cd94d4273a8. No tag was moved/force-pushed.
+
+Cloud `gh release create` could create its temporary release but asset upload to
+uploads.github.com returned Forbidden; the CLI removed its incomplete draft. No
+prerelease was published by that failed attempt. Public asset download/codeload
+network preflights work. A narrowly scoped GitHub Actions publisher on this preserved
+development branch now targets ONLY the existing authorized tag/source, waits for
+all exact-source CI checks, rebuilds clean, smokes both archives and publishes the
+prerelease with four provenance assets from the runner's supported upload route.
+It cannot publish a stable/CM release or change/move a tag. Workflow change is part
+of this authorized PE publication mission; main/tag source remain unchanged.
+
+Checkpoint subject: `ci: publish authorized beta through GitHub runner`.
+Next: verify the publisher completes, independently download actual public
+metadata/source/assets with tools/verify_public_release.py, run HACS/native public
+byte tests, then record the final receipt. Do not stop at a draft/failed upload.
 
 ## Authorized PE beta.1 publication mission
 

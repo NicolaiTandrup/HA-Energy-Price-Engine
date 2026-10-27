@@ -76,6 +76,9 @@ class PriceSchedule:
             "stored_slots": len(rows),
             "expected_slots": int((end - start).total_seconds() / 900),
             "reason": report.get("reason"),
+            "required_action": report.get("required_action"),
+            "missing_components": report.get("missing_components", []),
+            "affected_period": report.get("affected_period"),
         }
         # Keep a bounded operational log; price history has independent retention.
         self.days[key] = {

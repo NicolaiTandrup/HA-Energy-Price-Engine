@@ -10,3 +10,5 @@ dist/
 .venv-ha-current/
 
 hacs-references/
+
+.venv-ui/

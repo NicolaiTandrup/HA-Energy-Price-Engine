@@ -7,6 +7,18 @@ from zoneinfo import ZoneInfo
 REQUIRED = {"energinet_net", "energinet_system", "electricity_tax", "supplier"}
 
 
+class MissingPriceComponents(ValueError):
+    """Structured corrective guidance without changing calculation/fail-closed rules."""
+
+    def __init__(self, components, local):
+        self.components = sorted(components)
+        self.period = local.isoformat()
+        self.action = "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify."
+        super().__init__(
+            f"Missing verified{' DSO' if self.components == ['dso'] else ''} components: {', '.join(self.components)} for {self.period}. {self.action} Prices remain unavailable, never zero."
+        )
+
+
 def danish_public_components():
     """Issue #8 verified policy periods only; never extrapolate unknown years.
 
@@ -139,7 +151,7 @@ def compose_dated(slot, tariff):
                 continue
         active[name] = component
     if not REQUIRED <= active.keys():
-        raise ValueError("Missing verified component for requested date/contract")
+        raise MissingPriceComponents(REQUIRED - active.keys(), local)
     vat = float(tariff["vat"])
     if not isfinite(vat) or not 0 <= vat <= 1:
         raise ValueError("Invalid spot/grid VAT")
@@ -147,7 +159,7 @@ def compose_dated(slot, tariff):
     manual_dso = active.get("dso")
     if not manual_dso or (not manual_dso["locked"] and "grid_slots" in tariff):
         if "grid" not in tariff and "grid_slots" not in tariff:
-            raise ValueError("Missing verified DSO component")
+            raise MissingPriceComponents({"dso"}, local)
         grid = float(tariff.get("grid", 0))
         if "grid_slots" in tariff:
             matching = [

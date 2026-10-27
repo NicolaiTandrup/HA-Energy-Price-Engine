@@ -23,6 +23,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
             NextPriceSensor(c),
             *[DayStatisticSensor(c, kind) for kind in ("minimum", "maximum", "average")],
             TomorrowSensor(c),
+            *[
+                DisplaySensor(c, kind)
+                for kind in ("current", "next", "minimum", "maximum", "average")
+            ],
         ]
     )
 
@@ -37,6 +41,7 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
             identifiers={(DOMAIN, self.site["id"])},
             name=self.site["name"],
             manufacturer="Energy Price Engine",
+            sw_version=getattr(coordinator, "integration_version", None),
         )
 
     async def async_added_to_hass(self):
@@ -160,4 +165,41 @@ class TomorrowSensor(BaseSensor):
             "expected_slots": result.expected_slots,
             "last_success": result.last_success,
             "reason": result.reason,
+        }
+
+
+class DisplaySensor(BaseSensor):
+    """Unit-specific presentation identity: canonical sensors/statistics never change."""
+
+    _attr_suggested_display_precision = 6
+
+    def __init__(self, coordinator, kind):
+        super().__init__(coordinator)
+        self.kind = kind
+        self.unit = self.site.get("display_unit", "øre/kWh")
+        self._attr_native_unit_of_measurement = self.unit
+        suffix = "ore" if self.unit == "øre/kWh" else "dkk"
+        self._attr_unique_id = f"{self.site['id']}_display_{kind}_{suffix}"
+        self._attr_translation_key = f"display_{kind}"
+
+    @property
+    def native_value(self):
+        if self.kind in {"current", "next"}:
+            result = self.current_result(1 if self.kind == "next" else 0)
+            value = (
+                result.records[0].final_price_incl_vat
+                if str(result.status) == "READY" and result.records
+                else None
+            )
+        else:
+            value = DayStatisticSensor(self.coordinator, self.kind).native_value
+        return value * (100 if self.unit == "øre/kWh" else 1) if value is not None else None
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            "site_id": self.site["id"],
+            "stored_and_api_unit": "DKK/kWh",
+            "vat_included": True,
+            "presentation_only": True,
         }

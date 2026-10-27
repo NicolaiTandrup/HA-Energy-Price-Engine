@@ -187,6 +187,9 @@ class PriceUpdater:
                     else "INCOMPLETE",
                     last_success=source["verified_at"],
                     reason=None,
+                    missing_components=[],
+                    required_action=None,
+                    affected_period=None,
                     changed=changed,
                 )
                 if site.get("nordpool_entry") and self.official.last_errors:
@@ -205,5 +208,16 @@ class PriceUpdater:
                 HomeAssistantError,
                 TimeoutError,
             ) as err:
-                report.update(reason=str(err), changed=False)
+                period = ", ".join(map(str, dates)) if dates else "current/next delivery day"
+                report.update(
+                    reason=str(err),
+                    changed=False,
+                    affected_period=getattr(err, "period", period),
+                    missing_components=getattr(err, "components", []),
+                    required_action=getattr(
+                        err,
+                        "action",
+                        "Check the selected source and its availability, units and verification timestamp, then Configure → guided setup and Save & verify. Retained prices are not certified READY.",
+                    ),
+                )
                 return False  # Keep the last durable verified prices, never invent zeros.

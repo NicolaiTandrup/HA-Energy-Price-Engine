@@ -17,6 +17,7 @@ from custom_components.ha_energy_price_engine.sources import source_defaults
 
 from .test_integration import model, price_service, setup  # noqa: F401
 from .test_price_engine import rows
+from .wizard_helpers import options_advanced, source_page
 
 
 async def test_official_discovery_requires_confirmation_when_ambiguous(hass):
@@ -119,7 +120,7 @@ async def test_upgrade_preserves_rates_and_refuses_future_entry_versions(hass):
     )
     entry.add_to_hass(hass)
     assert await async_migrate_entry(hass, entry)
-    assert entry.version == 2 and entry.data["source_type"] == "nordpool"
+    assert entry.version == 3 and entry.data["source_type"] == "nordpool"
     assert entry.options["dated_components"] == data["dated_components"]
     assert not hass.data.get(DOMAIN)  # Upgrade does not start sources or alter history.
     future = MockConfigEntry(domain=DOMAIN, data=data, version=99)
@@ -138,14 +139,19 @@ async def test_reconfigure_and_remove_keep_identity_and_other_site(hass, freezer
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "reconfigure", "entry_id": home.entry_id}
     )
-    input_ = {
-        "name": "Renamed",
-        "area": "DK2",
-        "timezone": "Europe/Copenhagen",
-        "vat": 0.25,
-        "nordpool_entry": "np",
-    }
-    result = await hass.config_entries.flow.async_configure(result["flow_id"], input_)
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"name": "Renamed", "source_type": "nordpool"}
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"nordpool_entry": "np"}
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25, "navigation": "review"},
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"next_step_id": "wizard_save"}
+    )
     await hass.async_block_till_done()
     assert result["type"] == "abort" and result["reason"] == "reconfigure_successful"
     assert (
@@ -196,15 +202,17 @@ async def test_native_verified_backup_and_supplier_label_do_not_mutate_rates(has
     freezer.move_to("2026-10-23T12:00:00Z")
     entry = await setup(hass)
     before = entry.runtime_data.price_engine.records["home"]
-    flow = await hass.config_entries.options.async_init(entry.entry_id)
+    flow = await options_advanced(hass, entry.entry_id)
     fid = flow["flow_id"]
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "storage"})
     result = await hass.config_entries.options.async_configure(fid, {})
     assert result["type"] == "menu"
-    assert "Verified backup saved" in result["description_placeholders"]["pricing_summary"]
+    assert "Verified backup saved" in result["description_placeholders"]["draft_status"]
     assert list(entry.runtime_data.price_engine.database.path.parent.glob("*.backup-*"))
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "supplier"})
-    result = await hass.config_entries.options.async_configure(fid, {"supplier": "ewii"})
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "wizard_supplier"})
+    result = await hass.config_entries.options.async_configure(
+        fid, {"supplier": "ewii", "navigation": "review"}
+    )
     assert result["type"] == "menu"
     assert entry.runtime_data.price_engine.records["home"] == before
     assert not entry.options  # Both editor actions leave saved business rates unchanged.
@@ -231,9 +239,8 @@ async def test_legacy_hacs_domain_is_never_discovered_as_official_nordpool(hass)
     mock_integration(hass, MockModule("nordpool"), built_in=False)
     MockConfigEntry(domain="nordpool", entry_id="legacy", data={"areas": ["DK2"]}).add_to_hass(hass)
     assert await async_source_defaults(hass) == {}
-    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
-    data = {k: v for k, v in model().items() if k in {"id", "name", "area", "timezone", "vat"}}
+    result = await source_page(hass, "Legacy test")
     result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], {**data, "nordpool_entry": "legacy"}
+        result["flow_id"], {"nordpool_entry": "legacy"}
     )
-    assert result["errors"]["base"] == "invalid_configuration"
+    assert result["errors"]["nordpool_entry"] == "legacy_source"
