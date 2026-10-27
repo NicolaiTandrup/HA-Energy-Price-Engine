@@ -7,6 +7,18 @@ from zoneinfo import ZoneInfo
 REQUIRED = {"energinet_net", "energinet_system", "electricity_tax", "supplier"}
 
 
+class MissingPriceComponents(ValueError):
+    """Structured corrective guidance without changing calculation/fail-closed rules."""
+
+    def __init__(self, components, local):
+        self.components = sorted(components)
+        self.period = local.isoformat()
+        self.action = "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify."
+        super().__init__(
+            f"Missing verified{' DSO' if self.components == ['dso'] else ''} components: {', '.join(self.components)} for {self.period}. {self.action} Prices remain unavailable, never zero."
+        )
+
+
 def danish_public_components():
     """Issue #8 verified policy periods only; never extrapolate unknown years.
 
@@ -95,6 +107,21 @@ def validate_rules(rules):
             raise ValueError("Invalid component effective range")
 
 
+def eligible(rule, tariff, day):
+    """Shared dated eligibility predicate for composition and setup diagnostics."""
+    if rule.get("eligibility", "all") == "heating_above_4000":
+        if not isfinite(float(tariff.get("annual_usage_kwh", 0))):
+            raise ValueError("Invalid verified annual usage")
+        return bool(
+            tariff.get("heating_registered")
+            and tariff.get("usage_year") == day.year
+            and tariff.get("annual_usage_kwh", 0) > 4000
+        )
+    if rule.get("eligibility", "all") != "all":
+        raise ValueError("Unverified eligibility class")
+    return True
+
+
 def compose_dated(slot, tariff):
     if tariff.get("mode") not in {"spot_ex_vat", "spot_incl_vat"}:
         raise ValueError("Dated components cannot be added to all-in input")
@@ -113,17 +140,8 @@ def compose_dated(slot, tariff):
             raise ValueError("Invalid component effective period")
         if not start <= day < end or local.hour not in active_hours(rule):
             continue
-        if rule.get("eligibility", "all") == "heating_above_4000":
-            if not isfinite(float(tariff.get("annual_usage_kwh", 0))):
-                raise ValueError("Invalid verified annual usage")
-            if (
-                not tariff.get("heating_registered")
-                or tariff.get("usage_year") != day.year
-                or tariff.get("annual_usage_kwh", 0) <= 4000
-            ):
-                continue
-        elif rule.get("eligibility", "all") != "all":
-            raise ValueError("Unverified eligibility class")
+        if not eligible(rule, tariff, day):
+            continue
         component = normalize_component(rule)
         if rule["unit"] == "DKK/month":
             fixed.append(component)
@@ -139,7 +157,7 @@ def compose_dated(slot, tariff):
                 continue
         active[name] = component
     if not REQUIRED <= active.keys():
-        raise ValueError("Missing verified component for requested date/contract")
+        raise MissingPriceComponents(REQUIRED - active.keys(), local)
     vat = float(tariff["vat"])
     if not isfinite(vat) or not 0 <= vat <= 1:
         raise ValueError("Invalid spot/grid VAT")
@@ -147,7 +165,7 @@ def compose_dated(slot, tariff):
     manual_dso = active.get("dso")
     if not manual_dso or (not manual_dso["locked"] and "grid_slots" in tariff):
         if "grid" not in tariff and "grid_slots" not in tariff:
-            raise ValueError("Missing verified DSO component")
+            raise MissingPriceComponents({"dso"}, local)
         grid = float(tariff.get("grid", 0))
         if "grid_slots" in tariff:
             matching = [

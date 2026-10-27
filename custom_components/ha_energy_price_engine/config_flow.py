@@ -19,7 +19,9 @@ from .status import slot_breakdown, source_status
 
 def select(options):
     return selector.SelectSelector(
-        selector.SelectSelectorConfig(options=list(options), mode="dropdown")
+        selector.SelectSelectorConfig(
+            options=list(options), mode="dropdown", translation_key="values"
+        )
     )
 
 
@@ -113,7 +115,7 @@ def rule_schema(value=None):
     )
 
 
-class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class LegacyEnergyPriceConfigFlow(config_entries.ConfigFlow):
     VERSION = 2
 
     @staticmethod
@@ -172,7 +174,7 @@ class EnergyPriceConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(step_id="reconfigure", data_schema=site_schema(settings(entry)))
 
 
-class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
+class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
     def __init__(self):
         self.draft = None
         self.index = None
@@ -328,7 +330,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
     async def _choose(self, step, user_input):
         rules = self.draft.get("dated_components", [])
         if not rules:
-            return self.async_abort(reason="no_rates")
+            return await self.async_step_advanced()
         options = [
             {
                 "value": str(i),
@@ -381,7 +383,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         start, _ = day_bounds(day, runtime.site["timezone"])
         _, end = day_bounds(day + timedelta(days=1), runtime.site["timezone"])
         rows = runtime.price_engine.lookup(runtime.site["id"], start, end)
-        explanation = "Select a stored quarter to inspect its original amounts and verification. No source is fetched."
+        explanation = "—"
         if user_input:
             try:
                 selected = datetime.fromisoformat(user_input["slot"])
@@ -389,11 +391,9 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
                     raise ValueError("Slot not in displayed range")
                 explanation = slot_breakdown(runtime, selected, now)
             except ValueError, KeyError, TypeError:
-                explanation = (
-                    "Select an available quarter from the list. Missing prices are not zero."
-                )
+                explanation = "✕"
         if not rows:
-            explanation = "No stored quarters for today/tomorrow. Configure required components and check source readiness."
+            explanation = "—"
         return self.async_show_form(
             step_id="breakdown",
             data_schema=vol.Schema(
@@ -413,7 +413,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         )
 
     async def async_step_storage(self, user_input=None):
-        result = "No backup created in this editor session."
+        result = "—"
         errors = {}
         if user_input is not None:
             runtime = getattr(self.config_entry, "runtime_data", None)
@@ -426,7 +426,7 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
                 destination = database.path.with_name(database.path.name + ".backup-" + uuid4().hex)
                 try:
                     await database.async_backup(destination)
-                    self.backup_result = f"Verified backup saved in .storage/{destination.name}. Include it in an HA configuration backup."
+                    self.backup_result = f"✓ .storage/{destination.name}"
                     return await self.async_step_init()
                 except OSError:
                     errors["base"] = "backup_failed"
@@ -441,3 +441,90 @@ class EnergyPriceOptionsFlow(config_entries.OptionsFlow):
         # ConfigEntry options are HA-managed durable storage; the update listener
         # audits the old/new configuration and reprices affected future rows.
         return self.async_create_entry(title="", data=validate_site(self.draft))
+
+
+from .wizard import Wizard  # noqa: E402
+
+
+class EnergyPriceConfigFlow(Wizard, LegacyEnergyPriceConfigFlow, domain=DOMAIN):
+    VERSION = 3
+
+    async def async_step_user(self, user_input=None):
+        return await self._start_wizard()
+
+    async def async_step_reconfigure(self, user_input=None):
+        return await self._start_wizard(self._get_reconfigure_entry())
+
+    _rate = LegacyEnergyPriceOptionsFlow._rate
+    _stage = LegacyEnergyPriceOptionsFlow._stage
+    _choose = LegacyEnergyPriceOptionsFlow._choose
+    async_step_add_rate = LegacyEnergyPriceOptionsFlow.async_step_add_rate
+    async_step_edit_rate = LegacyEnergyPriceOptionsFlow.async_step_edit_rate
+    async_step_rate = LegacyEnergyPriceOptionsFlow.async_step_rate
+    async_step_remove_rate = LegacyEnergyPriceOptionsFlow.async_step_remove_rate
+
+    async def async_step_init(self, user_input=None):
+        await self._persist("advanced")
+        return await self.async_step_advanced()
+
+    async def async_step_advanced(self, user_input=None):
+        return self.async_show_menu(
+            step_id="advanced",
+            description_placeholders={
+                "draft_status": self._state()
+                + ("\n" + self.backup_result if getattr(self, "backup_result", None) else "")
+            },
+            menu_options=[
+                "wizard_review",
+                "wizard_grid",
+                "wizard_supplier",
+                "wizard_charges",
+                "wizard_site",
+                "wizard_location",
+                "wizard_source",
+                "wizard_display",
+                "wizard_recheck",
+                "wizard_discard",
+                "hacs_channel",
+                "add_rate",
+                "edit_rate",
+                "remove_rate",
+            ],
+        )
+
+
+class EnergyPriceOptionsFlow(Wizard, LegacyEnergyPriceOptionsFlow):
+    async def async_step_init(self, user_input=None):
+        if self.draft is None:
+            return await self._start_wizard(self.config_entry)
+        await self._persist("advanced")
+        return await self.async_step_advanced()
+
+    async def async_step_advanced(self, user_input=None):
+        self._advanced = True
+        return self.async_show_menu(
+            step_id="advanced",
+            description_placeholders={
+                "draft_status": self._state()
+                + ("\n" + self.backup_result if getattr(self, "backup_result", None) else "")
+            },
+            menu_options=[
+                "wizard_review",
+                "wizard_grid",
+                "wizard_supplier",
+                "wizard_charges",
+                "wizard_site",
+                "wizard_location",
+                "wizard_source",
+                "wizard_display",
+                "wizard_recheck",
+                "wizard_discard",
+                "hacs_channel",
+                "add_rate",
+                "edit_rate",
+                "remove_rate",
+                "storage",
+                "breakdown",
+                "site_management",
+            ],
+        )

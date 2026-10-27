@@ -47,7 +47,17 @@ def source_status(coordinator, now=None):
         "last_success": result.last_success,
         "last_attempt": report.get("last_attempt"),
         "last_error": result.reason,
+        "required_action": report.get("required_action"),
+        "missing_components": report.get("missing_components", []),
+        "affected_period": report.get("affected_period"),
         "valid_slots": result.valid_slots,
+        "stored_slots": result.valid_slots,
+        "verified_final_slots": report.get("valid_slots", 0),
+        "raw_status": coordinator.price_updater.raw_reports.get(today, {}).get("status"),
+        "raw_valid_slots": coordinator.price_updater.raw_reports.get(today, {}).get(
+            "valid_slots", 0
+        ),
+        "raw_verified_at": coordinator.price_updater.raw_reports.get(today, {}).get("verified_at"),
         "expected_slots": result.expected_slots,
         "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
         "dso_mode": site.get("dso_mode", "manual"),
@@ -55,44 +65,25 @@ def source_status(coordinator, now=None):
 
 
 def slot_breakdown(coordinator, start, now=None):
-    """Explain one stored UTC quarter, retaining degraded status and original revision."""
+    """Canonical technical facts; native UI resources supply all explanatory prose."""
     now = now or dt_util.utcnow()
     result = interval_result(coordinator, start, start + timedelta(minutes=15), now)
-    if not result.records:
-        return f"{start.isoformat()}: {result.status}. No stored price. Missing is not zero."
-    row = result.records[0]
-    payload = json.loads(row.components_json)
-    source = json.loads(row.source_json)
-    lines = [
-        f"{row.start.isoformat()} – {row.end.isoformat()} (UTC)",
-        f"Status: {result.status}; revision: {row.revision}; verified: {result.last_success or 'unverified'}",
-        f"Stored final: {row.final_price_incl_vat:.6f} DKK/kWh including VAT",
-    ]
-    lines.append(
-        f"Stored source: {source.get('kind', 'recorded provider')}; "
-        f"input unit: {source.get('input_unit', 'provider contract')}; "
-        f"input VAT: {source.get('input_vat', 'provider contract')}; "
-        f"original verification: {source.get('verified_at', 'see diagnostics')}"
-    )
-    if source.get("dso"):
-        dso = source["dso"]
-        lines.append(
-            f"Grid source: {dso.get('provider')}; product: {dso.get('product')}; "
-            f"verified: {dso.get('fetched_at')}; effective ranges: {dso.get('effective_ranges')}"
+    facts = {
+        "start": start.isoformat(),
+        "status": str(result.status),
+        "records": len(result.records),
+    }
+    if result.records:
+        row = result.records[0]
+        unit = coordinator.site.get("display_unit", "øre/kWh")
+        facts.update(
+            end=row.end.isoformat(),
+            revision=row.revision,
+            final_price_incl_vat=row.final_price_incl_vat,
+            canonical_unit="DKK/kWh",
+            display_value=row.final_price_incl_vat * (100 if unit == "øre/kWh" else 1),
+            display_unit=unit,
+            source=json.loads(row.source_json),
+            components=json.loads(row.components_json),
         )
-    for name, part in payload.get("components", {}).items():
-        lines.append(
-            f"{name}: {part['ex_vat']:.6f} ex VAT + {part['vat']:.6f} VAT = "
-            f"{part['incl_vat']:.6f} DKK/kWh; verified {part.get('verified_on', 'see source')}; "
-            f"period {part.get('valid_from', 'source interval')} – {part.get('valid_to', 'source interval')}; "
-            f"locked {part.get('locked', False)}; source: {part.get('source', 'see input/grid source')}"
-        )
-    if "external_all_in" in payload:
-        lines.append("Provider final all-in price; no additional tariff or VAT applied.")
-    if payload.get("fixed_subscriptions_excluded"):
-        lines.append("Fixed subscriptions excluded from this marginal price (DKK/month):")
-        for part in payload["fixed_subscriptions_excluded"]:
-            lines.append(f"{part['id']}: {part['incl_vat']:.6f} including VAT")
-    if result.reason:
-        lines.append(f"Verification issue: {result.reason}")
-    return "\n".join(lines)
+    return "```json\n" + json.dumps(facts, indent=2, ensure_ascii=False) + "\n```"

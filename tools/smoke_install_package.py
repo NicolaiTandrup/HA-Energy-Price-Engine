@@ -19,6 +19,12 @@ from custom_components import ha_energy_price_engine as integration
 from custom_components.ha_energy_price_engine.api import get_api
 from custom_components.ha_energy_price_engine.price_engine import day_bounds
 
+@pytest.fixture(autouse=True)
+def release_metadata():
+    from unittest.mock import AsyncMock,patch
+    with patch("custom_components.ha_energy_price_engine.update.fetch_releases",AsyncMock(return_value=[])):
+        yield
+
 @pytest.fixture
 def hass_config_dir():
     return os.environ["PE_PACKAGE_ROOT"]
@@ -27,7 +33,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
-    assert manifest["version"]=="0.1.0-beta.1"
+    assert manifest["version"]=="0.1.0-beta.4"
     freezer.move_to("2026-10-24T10:00:00Z")
     now=datetime(2026,10,24,10,tzinfo=UTC)
     slots=[]
@@ -43,7 +49,22 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
         "id":"installed","name":"Installed package","source_type":"entity","price_entity":"sensor.package_source",
         "price_unit":"DKK/kWh","price_basis":"all_in","price_attribute":"slots","stale_minutes":40,
         "area":"DK2","timezone":"Europe/Copenhagen","vat":.25}
-    created=await hass.config_entries.flow.async_configure(form["flow_id"],configuration)
+    async def complete_wizard(form):
+        flow=form["flow_id"]
+        if form["step_id"]=="wizard_resume":
+            form=await hass.config_entries.flow.async_configure(flow,{"draft":"new"})
+        pages=[
+            {"id":"installed","name":"Installed package","source_type":"entity"},
+            {k:configuration[k] for k in ("price_entity","price_unit","price_basis","price_attribute","stale_minutes")},
+            {"area":"DK2","timezone":"Europe/Copenhagen","vat_percent":25},
+            {}, {}, {}, {"display_unit":"øre/kWh"},
+        ]
+        for values in pages:
+            form=await hass.config_entries.flow.async_configure(flow,{**values,"navigation":"next"})
+            assert form["type"] in ("form","menu"),form
+        assert form["step_id"]=="wizard_review"
+        return await hass.config_entries.flow.async_configure(flow,{"next_step_id":"wizard_save"})
+    created=await complete_wizard(form)
     assert created["type"]=="create_entry"
     await hass.async_block_till_done()
     entry=created["result"]
@@ -57,7 +78,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     await hass.async_block_till_done()
     assert get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now).records==before
     options=await hass.config_entries.options.async_init(entry.entry_id)
-    assert options["type"]=="menu"
+    assert options["type"]=="form" and options["step_id"]=="wizard_site"
     hass.config_entries.options.async_abort(options["flow_id"])
     old_id=entry.entry_id
     old_ledger=entry.runtime_data.price_engine.database.path
@@ -65,7 +86,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     assert result["require_restart"] is False
     assert old_ledger.is_file()  # Removal cannot erase accounting references.
     form=await hass.config_entries.flow.async_init("ha_energy_price_engine",context={"source":"user"})
-    created=await hass.config_entries.flow.async_configure(form["flow_id"],configuration)
+    created=await complete_wizard(form)
     assert created["type"]=="create_entry"
     await hass.async_block_till_done()
     replacement=created["result"]

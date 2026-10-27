@@ -1,6 +1,7 @@
 """Civil-time publication refresh, conditional retries and restart recovery."""
 
 import logging
+from asyncio import Lock
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
@@ -24,6 +25,7 @@ class PriceSchedule:
         self.store = Store(
             self.hass, 1, f"ha_energy_price_engine.{coordinator.entry.entry_id}.price_schedule"
         )
+        self.work_lock = Lock()
         self.days = {}
         self.cancel = None
         self.active = False
@@ -47,6 +49,12 @@ class PriceSchedule:
         )
 
     async def refresh_day(self, site, day, now, *, force=True):
+        async with self.work_lock:
+            if getattr(self.coordinator, "stopped", False):
+                return False
+            return await self._refresh_day(site, day, now, force=force)
+
+    async def _refresh_day(self, site, day, now, *, force=True):
         key = site["id"]
         changed = await self.coordinator.price_updater.refresh(site, now, force=force, dates=[day])
         start, end = day_bounds(day, site["timezone"])
@@ -70,12 +78,16 @@ class PriceSchedule:
             "last_success": report.get("last_success")
             if state == "READY"
             else previous.get("last_success"),
-            "valid_slots": report["source_slots"]
-            if report.get("source_slots") is not None
-            else (len(rows) if report.get("status") not in {"ERROR", "STALE"} else 0),
+            "valid_slots": len(rows) if state == "READY" else 0,
             "stored_slots": len(rows),
             "expected_slots": int((end - start).total_seconds() / 900),
             "reason": report.get("reason"),
+            "failure_stage": report.get("failure_stage"),
+            "source_slots": report.get("source_slots"),
+            "grid_status": report.get("grid_status"),
+            "required_action": report.get("required_action"),
+            "missing_components": report.get("missing_components", []),
+            "affected_period": report.get("affected_period"),
         }
         # Keep a bounded operational log; price history has independent retention.
         self.days[key] = {

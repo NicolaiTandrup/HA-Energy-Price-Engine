@@ -15,6 +15,8 @@ def settings(entry):
 
 def validate_site(value):
     site = deepcopy(value)
+    if site.setdefault("display_unit", "øre/kWh") not in {"øre/kWh", "DKK/kWh"}:
+        raise ValueError("Display unit must be øre/kWh or DKK/kWh; provider input is separate")
     source_type = site.setdefault("source_type", "nordpool")
     site.setdefault("nordpool_entry", "")
     site.setdefault("price_basis", "spot_ex_vat")
@@ -106,6 +108,24 @@ def validate_site(value):
         "annual_usage_kwh", 0
     ) < float("inf"):
         raise ValueError("Invalid annual usage")
+    if provisional := site.get("provisional_supplier"):
+        from .price_components import normalize_component
+
+        if provisional.get("approved") is not True or not provisional.get("approved_on"):
+            raise ValueError("Provisional rates require explicit visualization-only approval")
+        rule = {
+            **provisional,
+            "id": "supplier",
+            "verified_on": provisional["approved_on"],
+            "source": "user_approved_provisional_NOT_verified",
+            "eligibility": "all",
+            "locked": True,
+        }
+        normalize_component(rule)
+        from datetime import date
+
+        if date.fromisoformat(rule["valid_to"]) <= date.fromisoformat(rule["valid_from"]):
+            raise ValueError("Invalid provisional period")
     return site
 
 

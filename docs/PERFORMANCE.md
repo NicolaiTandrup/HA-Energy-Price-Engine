@@ -34,3 +34,9 @@ history/sites on every Raspberry Pi. Native hardware commissioning and multi-sit
 Pi measurements remain owner-run acceptance gates, not claimed completed tests.
 If limits are reached, design a backward-compatible async historical paging API;
 do not silently prune prices referenced by recorded consumer accounting.
+
+Beta.4 repeat (same cloud host class): 35,136 synthetic rows, 18,239,488 bytes,
+96-row append 0.0293 s, reload 0.891 s, lookup mean 6.65 µs; process peak RSS
+244,264 KiB. [Raw receipt](benchmarks/beta4-sqlite-1year.json). Transactional touched-row
+writes and original historical revisions are retained. These cloud results do not
+establish Raspberry Pi performance; measure append/recovery on the target hardware.

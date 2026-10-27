@@ -1,0 +1,135 @@
+name: Publish authorized PE beta.4
+on:
+  push:
+    branches: [feat/beta4-complete-pricing]
+    paths: [.github/workflows/publish-beta4.yml]
+permissions:
+  contents: write
+  checks: read
+  actions: read
+concurrency:
+  group: publish-pe-v0.1.0-beta.4
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PE_SOURCE: 38973d88ad67758b419dfc45c193a8c85674afda
+      PE_TAG: v0.1.0-beta.4
+      PE_TAG_OBJECT: 90cb819f001fd390ca35e1c83f26d3c6303c4de1
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: v0.1.0-beta.4
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: astral-sh/setup-uv@v6
+      - name: Verify immutable authorized source and successful checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PE_SOURCE"
+          test "$(git rev-parse "$PE_TAG")" = "$PE_TAG_OBJECT"
+          test "$(git cat-file -t "$PE_TAG")" = "tag"
+          test "$(git rev-parse "$PE_TAG^{commit}")" = "$PE_SOURCE"
+          python - <<'PY_CHECK'
+          import json, os, subprocess, time
+          sha=os.environ['PE_SOURCE']
+          for attempt in range(30):
+              result=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/commits/{sha}/check-runs']))
+              checks=result['check_runs']
+              if len(checks)>=15 and all(c['status']=='completed' and c['conclusion']=='success' for c in checks):
+                  break
+              if any(c['status']=='completed' and c['conclusion'] not in ('success',) for c in checks):
+                  raise SystemExit('Exact-source CI did not pass; publication prohibited')
+              time.sleep(10)
+          else:
+              raise SystemExit('Exact-source CI is still pending; publication prohibited')
+          PY_CHECK
+      - name: Build clean source and independently install both layouts
+        run: |
+          set -euo pipefail
+          uv venv
+          uv pip sync --require-hashes requirements-ha-current.lock
+          uv run --no-project python tools/build_beta.py
+          python - <<'PY_INTEGRITY'
+          import hashlib,json,os
+          from pathlib import Path
+          manifest=json.loads(Path('dist/BUILD_MANIFEST.json').read_text())
+          assert manifest['commit']==os.environ['PE_SOURCE'] and not manifest['dirty']
+          expected={'ha_energy_price_engine.zip':'8204ef21583927b0973d59becf33f66575618cde755371989ef835e5af183d58', 'ha_energy_price_engine-manual.zip':'1a2f196dde01f1a92c6dab3221d9306d45171688803a3ca22d1794ad869ae491'}
+          assert manifest['archives']==expected
+          for name,digest in expected.items():
+              assert hashlib.sha256((Path('dist')/name).read_bytes()).hexdigest()==digest
+          PY_INTEGRITY
+          uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine.zip
+          uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
+      - name: Publish authorized immutable beta.4 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta4-notes.md" <<'PE_NOTES'
+          Beta.4 helps complete electricity pricing from the native setup wizard. It asks directly for the supplier markup in øre/kWh, compares Today/Tomorrow in a compact review, offers direct corrections and verifies actual persisted prices before showing complete setup success.
+          
+          **Prerelease for development Home Assistant acceptance testing.** Software simulations do not establish your own source, contract, bill or hardware acceptance.
+          
+          Source: **38973d88ad67758b419dfc45c193a8c85674afda**. Immutable tag: **v0.1.0-beta.4**. [Reviewable draft PR #13](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/13) remains unmerged. Previous releases and main are preserved.
+          
+          ## Install or update
+          
+          1. Back up your development HA. In HACS add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` as **Integration** if needed.
+          2. Open Energy Price Engine in HACS, persist **Show beta versions**, refresh information, select **v0.1.0-beta.4**, download, then restart HA.
+          3. Existing users choose their existing site's **Configure**. New users choose **Add integration → Energy Price Engine**. Device info derives **0.1.0-beta.4** from the installed manifest.
+          4. Follow site/official Nord Pool → grid → supplier → national charges → display → Review. Confirm your actual area/grid product. Enter the real per-kWh markup, VAT convention and effective dates from your bill/contract. Supplier selection creates no private rate.
+          5. Save & verify. If verified prices are unavailable, the saved-incomplete screen offers corrections or intentional incomplete completion. Inspect raw/final coverage and a stored price breakdown, then restart and compare with your bill.
+          
+          [Illustrated wizard](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.4/docs/WIZARD_GUIDE.md) · [Exact HACS procedure](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.4/docs/HACS_DISTRIBUTION.md) · [Acceptance checklist](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.4/docs/BETA_ACCEPTANCE.md) · [Native simulation receipt](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.4/docs/receipts/v0.1.0-beta.4-simulation.json)
+          
+          ## Changes
+          
+          - Direct bill/contract guidance, blank supplier amount, default øre/kWh and explicit verification. Dated overlap replacement preserves unaffected periods. Historical EWII household .030 DKK/kWh excluding VAT is June–September 2026 only; it is never a current or other-site default.
+          - Explicitly approved provisional supplier amounts create separate **ESTIMATED / UNVERIFIED visualization-only** sensors. They never enter verified SQLite history, publish verified revisions or make the read-only consumer API READY. Never use estimate sensors for charging control.
+          - Compact localized Today/Tomorrow component table. One Save action waits for runtime persistence. Missing/source/grid/storage failures remain fail-closed; raw spot prices remain observable independently.
+          - Submitted drafts, errors and navigation remain resumable. Incomplete setup returns direct corrections without claiming successful complete pricing.
+          - Confirmed selected-site permanent deletion stops writers, clears exact-owned configuration/history/drafts/registry entries and records interrupted cleanup intent. Normal removal explicitly archives history; HACS upgrades/uninstalls preserve it. Another site's files and HA's global recorder database are never deleted.
+          - Actual HACS short-hash cause fixed through a PE-only, explicitly approved **Advanced → Repair HACS beta channel** action. It uses supported authenticated local HACS WebSocket commands, persists beta visibility and verifies semantic versions. No HACS patch, disabled update entity, installation or global setting change. If unavailable, use HACS's Show beta versions control and refresh.
+          - Supported native HA local branding, consistent software device metadata, public user README and English/Danish user-language forms. Existing canonical DKK entities, site IDs, mappings, verified overrides, SQLite rows/revisions and read-only API v1 are preserved.
+          
+          ## Validation and integrity
+          
+          - **221 producer tests per core**, HA **2026.10.3 / current 2026.10.4**, zero skips, 88% coverage; two deprecation warnings originate in pinned upstream HACS code.
+          - Four full unchanged consumer suites **153 / 176 / 227 / 228** cases per core; actual producer/consumer runtime tests cover both startup orders for each reference.
+          - Official Nord Pool service/config discovery, actual pinned HACS registration/tag download/update/uninstall/reinstall and authenticated repair with real store persistence/restore. Hassfest, translations, HACS validation and independent installs of both archive layouts outside source.
+          - Negative prices, 92/96/100-quarter DST dates, dated component expiry, missing verification, provisional API/ledger exclusion, interrupted setup, storage recovery, historical revisions and actual beta.1–.3 source migration fixtures.
+          - Actual disposable HA frontend EN/DA desktop/mobile flows, incorrect approval, resume, verified/missing/provisional results, destructive confirmation and clean recreation. All four verified ledgers retain decoded SQL rows/amounts/provenance/revisions across restart; provisional history stays absent. Mobile viewport/document width390, no final frontend errors.
+          - Synthetic fixture example: .100 spot + .200 grid + **fictional .111 supplier** + .043 net + .072 system + .008 tax = .534 ex VAT; ×1.25 = **.6675 DKK/kWh / 66.75 øre/kWh**. These are test inputs, not your private contract.
+          - Exact-source CI must pass before the publisher can proceed. The runner rebuilds the immutable clean tag, verifies these hashes and independently installs both layouts before uploading.
+          
+          ```text
+          8204ef21583927b0973d59becf33f66575618cde755371989ef835e5af183d58  ha_energy_price_engine.zip
+          1a2f196dde01f1a92c6dab3221d9306d45171688803a3ca22d1794ad869ae491  ha_energy_price_engine-manual.zip
+          ```
+          
+          BUILD_MANIFEST identifies clean source/runtime files; its `published: false` means the builder itself does not publish. This GitHub prerelease is created separately after all gates. HACS downloads the exact selected tag's integration directory. For manual placement, extract the manual ZIP at HA's configuration root; the smaller root-layout ZIP belongs inside `custom_components/ha_energy_price_engine/`.
+          
+          ## Limits and acceptance
+          
+          Continue before closing: native HA cannot submit fields still being typed. Submitted drafts persist; simultaneous editing of one site is unsupported. Entity names follow system language/existing registry, while forms and new diagnostic enums follow the current user's interface language.
+          
+          Automatic grid verification currently supports confirmed Radius C. National baselines are bounded dated data, not live legislation discovery: Energinet .043/.072 DKK/kWh ex VAT for 2026, tax .008 for 2026–2027. Later periods/other products require verified rates. Heating eligibility is never guessed.
+          
+          HA serves the bundled PE icon locally. HACS's own external brands-CDN icon may still fall back until that separate catalog accepts the domain; PE cannot populate it by shipping a local image. No global frontend patch ships.
+          
+          One-year cloud SQLite repeat: 35,136 rows, 18,239,488 bytes, 96-row append .0293s, reload .891s, mean lookup6.65µs. **Cloud timings do not establish Raspberry Pi performance.** Full history remains in memory without silent pruning. Your live source, bill, hardware and physical mobile acceptance remain unchecked.
+          
+          No production HA, Node-RED, vehicles or charging equipment were changed. No main merge or stable release. Stop after this prerelease's independent publication verification; owner acceptance is a separate step.
+          PE_NOTES
+          if gh release view "$PE_TAG" >/dev/null 2>&1; then
+            echo "Release already exists; never replace published assets"
+            exit 1
+          fi
+          gh release create "$PE_TAG" dist/ha_energy_price_engine.zip dist/ha_energy_price_engine-manual.zip dist/BUILD_MANIFEST.json dist/SHA256SUMS --prerelease --latest=false --verify-tag --title 'v0.1.0-beta.4 — complete pricing setup and safe site reset' --notes-file "$RUNNER_TEMP/pe-beta4-notes.md"
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$PE_TAG" --jq '{html_url,tag_name,draft,prerelease,assets:[.assets[].name]}'

@@ -1,8 +1,494 @@
 # Development handoff
 
-Updated 2026-10-26 (Europe/Copenhagen). Read AGENTS.md first. This is the single
-permanent handoff. Continue existing branch `feat/standalone-price-engine` and
-existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
+Updated 2026-10-27. **Beta.4 is published and independently verified. Stop unless
+the owner requests further development.** Read AGENTS.md first. Software/synthetic
+validation does not establish owner acceptance. No main merge, stable release or
+live HA/Node-RED/charging operation occurred.
+
+## Completed beta.4 publication
+
+Public prerelease:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.4
+
+- Exact source **38973d88ad67758b419dfc45c193a8c85674afda**.
+- Immutable annotated tag **90cb819f001fd390ca35e1c83f26d3c6303c4de1**.
+- Branch **feat/beta4-complete-pricing**, draft **PR #13**, unmerged.
+- Main remains **56cdb3c10993179371483812cbc36f651ba3ad8e** (beta.1).
+  Beta.1–.3 tags/releases/assets preserved; beta.3 tag remains 73b9e9e48d4cb17c69ecff4f77d9c992a5307516.
+- All **15 exact-source push/PR/tag checks green** before upload. **221 producer
+  tests per HA 2026.10.3 / current 2026.10.4**, 88% coverage, zero skips, two pinned
+  upstream HACS deprecation warnings. PyPI latest .4 independently rechecked.
+- Full unchanged consumer suites **153/176/227/228 per core**, two actual coupled
+  runtime/startup-order cases per consumer per core. No consumer code rewritten.
+- HACS registration/install/update/uninstall/reinstall uses unchanged pinned stable
+  2.0.5/upstream code. PE-only beta repair traverses authenticated local HTTP/
+  WebSocket commands, actual HACS store write AND restore; semantic update values.
+- Official hassfest **one integration, zero invalid**, HACS metadata/translations,
+  deterministic clean packaging and independent installs of BOTH layouts passed.
+- Publisher **40543649671**, orchestration source a18e2a45d6744d4851bf8c4ec6b52b6aa977daf8,
+  succeeded. It rebuilt immutable source, checked tag object and exact ZIP digests,
+  awaited all 15 source checks and installed both layouts before prerelease/latest=false.
+- Public release **425732368**, non-draft prerelease, unauthenticated page HTTP200.
+  Public main/tag/source and all FOUR assets independently downloaded and verified
+  on BOTH cores: digests, source/file payload, manifest/clean commit match. Actual
+  public HACS plus root/manual native imports/install/reload/remove/recreate passed.
+- Actual public release feed chooses beta.4 for beta.3, stays beta.4 when installed,
+  excludes prereleases and hashes for stable users.
+- Permanent receipt: **docs/receipts/v0.1.0-beta.4.json**.
+  Final checkpoint subject: **docs: record verified beta.4 publication and permanent handoff**.
+
+SHA256:
+- ha_energy_price_engine.zip: 8204ef21583927b0973d59becf33f66575618cde755371989ef835e5af183d58
+- ha_energy_price_engine-manual.zip: 1a2f196dde01f1a92c6dab3221d9306d45171688803a3ca22d1794ad869ae491
+
+## Functional acceptance evidence and limits
+
+Direct blank supplier markup in øre/kWh, bill/contract VAT/date guidance, explicit
+verification and separately approved provisional visualization. Missing amounts
+never become zero. Estimates reuse canonical calculation transiently, never enter
+verified ledger/revisions/API READY, and must never control charging.
+
+Native compact Today/Tomorrow table has direct missing corrections and one Save;
+actual reload/persistence is awaited. Incomplete/failed persistence returns a
+saved-incomplete corrective form, never success based on stale/preflight results.
+Archive removal identifies retained history; confirmed permanent selected-entry
+cleanup quiesces writers, clears exact-owned configuration/SQLite/backups/drafts/
+registries and blocks interrupted restart. Other sites/global recorder preserved.
+
+Real disposable HA .4/frontend 20260930.5 EN/DA desktop/mobile complete/missing/
+provisional journeys, invalid verification, interrupted resume, wrong deletion
+confirmation and actual 192-row permanent deletion/recreation passed. Fixed a
+browser-discovered selection reset after error; destructive choice/typed ID now
+persist. Native PE branding served without PE image substitution. Final console
+errors 0, viewport 390 = document 390. Source .100 DKK/kWh plus synthetic .200 grid,
+FICTIONAL .111 supplier, bounded .043/.072/.008 national rates and 25%VAT produce
+.6675 DKK/kWh (66.75øre). Do not copy fictional private rates.
+
+Full restart preserves every decoded row/amount/provenance/revision in four
+verified ledgers; provisional ledger remains absent, raw READY 96, estimate.6675,
+authoritative INCOMPLETE. Beta.3 inherited past rows unchanged; actual immutable
+beta.1/.2/.3 source migration fixtures pass. Negative prices and 92/96/100 DST
+quarters, missing/expired rates, SQLite failure/recovery/migration and historical
+revisions covered. Required 13:05/13:20/13:40/23:59/00:01 schedule preserved.
+Evidence **docs/receipts/v0.1.0-beta.4-simulation.json**, **docs/images/beta4/**.
+
+One-year cloud SQLite repeat 35,136 rows: append 96 .0293s, reload .891s, lookup 6.65µs,
+18,239,488bytes. **Cloud benchmarks do not establish Raspberry Pi performance**.
+History remains in memory without silent pruning; measure target hardware.
+
+No software publication blocker remains. Owner installation/current contract,
+public source/bill and hardware acceptance remain UNCHECKED. Public national
+baselines are dated, not live legislation; later periods/other grid products need
+verified rates. Private contracts/heating eligibility are never guessed. Native HA
+Close cannot submit keystrokes: Continue first. Entity names follow system language/
+registry; forms/selectors/new enums follow the current user language. HACS's own
+external brands CDN may use a fallback pending separate catalog review; supported
+bundled HA/README/PE update branding works. No global HACS patch ships.
+
+## Exact owner update/retest
+
+HACS → Energy Price Engine → persist **Show beta versions** → refresh → select
+**v0.1.0-beta.4** → download → restart. Existing site **Configure**, not Delete/Add.
+Device info must show 0.1.0-beta.4. Follow six stages with your actual supplier
+markup/unit/VAT/effective dates; Review and Save & verify. Inspect raw/final coverage,
+one stored breakdown, restart and compare to invoice. If HACS latest is a hash,
+Advanced → Repair HACS beta channel (explicit admin approval) or HACS's own beta
+visibility control. The action installs nothing. Guides: WIZARD_GUIDE.md,
+HACS_DISTRIBUTION.md, BETA_SETUP.md and BETA_ACCEPTANCE.md. All are public and neutral.
+
+## Earlier beta.4 checkpoints (historical, before completed publication)
+
+## Beta.4 checkpoint
+
+Checkpoint subject: **feat: add explicit supplier estimates and persisted setup verification**.
+Based on beta.3 final handoff 4560ec6; draft PR #13.
+
+- Direct supplier markup defaults to øre/kWh, blank amount, explicit bill/contract
+  verification; optional separately approved provisional amounts. Existing periods
+  retain their identities; explicit replacement splits overlaps without losing
+  unrelated dates. Historical EWII is never a current preset.
+- Provisional calculation reuses the canonical calculator in transient memory.
+  Dedicated ESTIMATED/UNVERIFIED sensors cannot enter ledger/API READY or revisions.
+  Real runtime tests cover normal/92/100 quarters and restart isolation.
+- Compact native translated Today/Tomorrow comparison with conditional correction
+  choices. Advanced holds manual edits, diagnostic steps and draft discard.
+- Save awaits exactly one normal reload/persistence; initial HA post-create hook
+  and Options return a corrective saved-incomplete form until actual runtime/API
+  has complete verified current-day prices. Tomorrow publication remains separate.
+- Default removal records identified archives and clears stale entry/initial
+  drafts. Explicit confirmed permanent removal quiesces schedule/writers before
+  deleting exact-owned files; durable ID-only intent blocks interrupted restart.
+  Tested second-site/recorder/symlink isolation and clean same-name recreation.
+- PE-only HACS channel repair uses its supported authenticated local WebSocket
+  commands with explicit user approval. No HACS patch, global settings change,
+  package installation or remote credential forwarding. Both pinned HACS lines
+  passed native authenticated HTTP/WebSocket repair, actual HACS store persistence,
+  semantic UpdateEntity values and tag download/update/uninstall/reinstall tests.
+
+Second checkpoint subject: **fix: complete beta.4 review reporting and public setup guides**.
+Known implementation commit e95152d pushed; PR #13 stays draft/unmerged.
+
+- Full producer run before final edge fixes: **213 passed** on HA .4 (88% coverage),
+  **211 passed** on .3 before two newly added direct-flow cases. Zero skips; two
+  upstream HACS warnings. Complete final runs remain required.
+- Four unchanged consumer full suites on current core: **153/176/227/228 passed**;
+  actual coupled-runtime tests **2 passed per consumer**. Supported-core repeats pending.
+- Official local hassfest: **1 integration, zero invalid**. Both ZIP layouts built
+  dirty for development and independently installed outside source: **1 passed each**.
+- Native actual frontend EN complete, missing supplier and provisional journeys
+  passed without console errors using synthetic source/Radius. Complete setup 96
+  raw/final quarters each day; incomplete/provisional saved forms show no success.
+  Browser exposed lost grid_status after save; now retained in durable day report.
+- Final edge gate **16 passed**, including failed-save rejection of old READY
+  runtime, concurrent deletion intents, direct øre markup verification and native
+  destructive confirmation. New regression fixture includes actual beta.3 source.
+- Public README and four setup guides rewritten without private hostnames/internal
+  PR details; contributor documentation separate and public-doc lint added.
+- Beta.4 manifest/version/package verification targets updated. Local HA native
+  brand renders with no PE image substitution; HACS external CDN fallback explicitly
+  documented. No unsupported HACS/HA frontend patch ships.
+- Repeated one-year SQLite benchmark: 35,136 rows, 18,239,488 bytes; append 96 .0293s,
+  reload .891s, mean lookup 6.65us. Cloud x86_64, explicitly not Pi performance.
+
+CI on first e95152d checkpoint correctly failed stale schedule/review tests now fixed;
+HACS/hassfest/independent install CI passed. One supported-core job failed dependency
+preparation before tests. Do not report initial CI green. Next push reruns all gates.
+
+Next: final source tests/core matrix and unchanged consumers, disposable native DA/
+mobile/restart/delete/recreate checks and screenshots; clean packages and CI; only
+then immutable source/tag and authorized beta.4 publication/integrity verification.
+No beta.4 tag/release/assets have been published. Owner acceptance remains pending.
+
+Third checkpoint subject: **fix: retain destructive form choices and fetch beta.3 migration source**.
+Known second checkpoint 9512a77. Both full local suites now **217 passed**, 88%
+coverage, zero skips, two upstream HACS warnings. Four unchanged consumer suites
+153/176/227/228 and paired runtime cases2 each passed on BOTH HA cores. Both ZIP
+layouts passed independent imports/install on both cores; local hassfest0 invalid.
+Native DA desktop/mobile table follows user language with system EN; mobile width
+390=document390, no console errors. Verified synthetic all-in .6675 DKK/kWh.
+
+CI failure at 9512a77 precisely diagnosed via check annotations: shallow checkout
+lacks the newly added immutable beta.3 migration source; preparer fetched only
+beta.1/.2. Added beta.3 source to the same preparer (no weakening of migration test).
+
+Actual mobile reset exposed operation resetting to archive after confirmation
+error. It safely archived the disposable provisional entry but violated selected
+intent. Preserve operation/typed ID/confirmation on validation errors; native test
+asserts retained defaults. Five focused tests passed, including actual HACS store
+restore with semantic version values after restart. Native destructive retest with
+an actual ledger and fresh recreation is in progress. Final CI/screenshots/release
+integrity remain pending. No beta.4 publication yet.
+
+
+Fourth checkpoint subject: **test: record beta.4 native acceptance simulations and deterministic HACS fixture**.
+Known implementation commit **4e98db6cb0782be2131ce40ca30ad8e049c5c8df**.
+Final runtime source unchanged from that commit; next changes are tests/docs only.
+Actual release source is not yet selected/tagged.
+
+- Both final local producer suites: **217 passed**, 88%, zero skips, two upstream
+  HACS warnings. Added four further credential-boundary cases (non-admin/public/
+  wildcard/multicast socket rejected before any network); focused both-core gate **9 passed each** (two HACS warnings).
+- Both-core unchanged consumer and runtime suites passed; clean independent ZIP
+  installs passed on both. Local hassfest0 invalid, remote HACS/hassfest/package green.
+- Real frontend EN/DA desktop/mobile complete/missing/provisional journeys, invalid
+  supplier approval, interrupted/resumed draft and actual destructive confirmation
+  tested. Corrected operation remains permanent after wrong ID error; final mobile
+  deletion removed an actual 192-row ledger and its config/drafts/registries.
+  Same-name fresh creation has new entry ID and no old accounting references.
+- Native final screens no page/console errors, mobile390=document390, systemEN/userDA
+  translation verified. Native PE branding loaded without PE image mocks.
+- Restart preserved all four verified ledgers' complete decoded SQL rows/checksums;
+  provisional site's ledger absent, raw.100, visualization.6675, authoritative
+  readiness INCOMPLETE. Beta.3 inherited past rows unchanged. Evidence:
+  docs/receipts/v0.1.0-beta.4-simulation.json and docs/images/beta4/.
+- CI4e98 current-core push passed full job; supported-core push exposed test-only
+  race registering HTTP view after test client freezes router. Fixed registration
+  ordering (view/commands before client); real HACS code unchanged. Both PR matrix
+  jobs in progress at checkpoint. Do not publish until exact-source all green.
+
+Next: finish focused both-core checks, push evidence/test fixture checkpoint, await
+all mandatory source checks. Then build immutable clean source, tag/package hashes,
+authorized prerelease publisher and independent public install/source verification.
+Owner acceptance remains unchecked; HACS external CDN icon requires separate catalog
+review, bundled native HA/README/PE update branding works. National baselines are dated,
+not live legislation. Continue before closing unsent forms; HA entity naming uses
+system/registry language. No stable/main/live/control changes.
+
+
+## Beta.4 publication orchestration
+
+Authorized source **38973d88ad67758b419dfc45c193a8c85674afda**; immutable annotated
+v0.1.0-beta.4 tag object **90cb819f001fd390ca35e1c83f26d3c6303c4de1**. All **10** push/PR exact-source
+checks green before tagging. Final producer **221 passed per core**, 88% coverage,
+zero skips, two upstream HACS warnings. Current PyPI rechecked **2026.10.4**.
+Both final clean archive layouts independently installed on both cores.
+
+Fixed-source publisher rebuilds that tag, checks annotated tag identity and exact
+ZIP digests, requires all **15** source checks (push/PR/tag) green, independently
+installs both layouts and only then publishes prerelease/latest=false. Orchestration
+commit is separate from release source. Publication/post-public verification pending.
+SHA256 root: 8204ef21583927b0973d59becf33f66575618cde755371989ef835e5af183d58
+SHA256 manual: 1a2f196dde01f1a92c6dab3221d9306d45171688803a3ca22d1794ad869ae491
+
+Next: monitor publisher/tag CI, independently download public metadata/tag/main/all
+four assets, compare source/payload/hashes, run actual HACS and both native installs
+on BOTH HA cores, record final receipt/handoff and update PR. Stop after beta.4
+publication verification; no main merge or further features. Owner acceptance pending.
+
+---
+
+## Completed beta.3 software publication
+
+Public prerelease:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.3
+
+- Source: **78ef9ba4d02ccb85b9395991d1376fbdec34bb84**.
+- Annotated tag: **73b9e9e48d4cb17c69ecff4f77d9c992a5307516**, never moved.
+- Branch **feat/beta3-functional-onboarding**, draft **PR #11** unmerged.
+- Main remains beta.1 **56cdb3c10993179371483812cbc36f651ba3ad8e**. Beta.1/.2 tags,
+  releases and assets unchanged. HACS registers compliant main and installs exact tag.
+- All **15 final source check runs** green: producer/unchanged consumers/coupled
+  runtime orders on both HA cores, HACS, official hassfest and independent installs.
+  **200 passed per HA 2026.10.3 / 2026.10.4**, 89% coverage, zero skips. Two
+  upstream HACS deprecation warnings. Current PyPI core rechecked: 2026.10.4.
+- Tag current-core job initially failed preparing pinned dependencies BEFORE tests.
+  Supported-core tag job and all push/PR jobs passed. Failed job rerun with debug
+  succeeded without source changes (run 40526919031, attempt 2). Publication guard
+  correctly stopped before uploading until all source checks passed.
+- Fixed-source publisher run **40527012490 attempt 2** succeeded; orchestration
+  commit **13218d3**, not release source. It rebuilt immutable tag, checked exact
+  ZIP hashes and both native installs, then published prerelease/latest=false.
+- Actual public repository/main/tag/source and all FOUR assets independently
+  downloaded and verified on BOTH HA cores. Digests, checksums, source/file payload,
+  manifest/clean commit match. Unauthenticated release page HTTP200, non-draft
+  prerelease. No software distribution blocker remains.
+- Unchanged pinned HACS 2.0.5/upstream registration with actual main bytes, beta
+  discovery, selected tag download/extraction/update/uninstall/reinstall passed on
+  both cores. Both public ZIP layouts passed outside-source native wizard/Options/
+  SQLite reload/delete/recreate. Actual public release metadata selects beta.3 for
+  beta.2, stays beta.3 for current install, and excludes beta/commit candidates for
+  stable users.
+- Permanent receipt: **docs/receipts/v0.1.0-beta.3.json**.
+  Final checkpoint subject: **docs: record verified beta.3 publication and retest handoff**.
+
+SHA-256:
+- ha_energy_price_engine.zip: 300741806e86d5566b6ab025f814aac1c52d21c50bc2273c3a5ff4b20387c3e9
+- ha_energy_price_engine-manual.zip: 37b4af805818de1a200e34b7eb3a8c225b0624ef4003e0303485b0bf6bef8c5e
+
+## Functional evidence and scope
+
+Latest #8 feedback read fully. Reported generic failure path reproduced: valid
+96-quarter source + verified Radius can still fail final composition when supplier/
+national rules are missing. No claim of knowing the owner's private missing values.
+New raw current/next and daily source readiness/coverage/timestamps remain observable
+independently. Missing periods are INCOMPLETE; source/grid/storage failures have
+separate corrective categories. Final verified coverage versus retained historical
+rows is explicit without changing API v1 valid_slots semantics.
+
+Review reads actual source adapters and the canonical calculate() in a transient
+sink; no draft ledger writes. It shows all dated components and direct correction
+steps, then Save rechecks/applies once through normal runtime persistence. No hidden
+extra Save. Source validation appears on grid step. New Danish official-source sites
+visibly suggest bounded national baselines, never private/grid connection inference.
+Canonical eligibility predicate is shared with diagnostics; civil-hour coverage
+handles spring's absent hour and verified heating evidence consistently. Arithmetic,
+SQLite performance improvement and scheduled 13:05/13:20/13:40/23:59/00:01 retained.
+
+Real disposable HA .4/frontend 20260930.5 native EN/DA new-site journeys persisted
+96 raw and final quarters per day: synthetic .100 spot + .200 grid + FICTIONAL .111
+supplier + .043/.072/.008 national components, 25% VAT = .6675 DKK/kWh / 66.75 øre.
+Missing supplier retained raw READY 96 and final INCOMPLETE 0 with exact period.
+Radius outage, source cached STALE, partial source and recovery distinguished;
+ledger failure covered in actual runtime tests. Both 192-row ledgers retained
+identical UTC rows/amounts/revisions across restart. Actual beta.1/.2 released source
+seeds migration fixtures. Tests cover negative prices, normal/92/100 slots and
+eligible-heating/spring-hour UI consistency.
+
+Final native desktop 1440x1000 and mobile 390x844 Review/correction checks EN/DA:
+no page/console errors; mobile document width=390px. User Danish/system English
+verified. Browser plugin absent: regular Playwright/system Chromium. Only decorative
+brand images substituted; real native HA forms/runtime. Synthetic source/Radius
+boundaries, not owner credentials/live rates. Fixture rechecks after adding its
+synthetic provider; actual official dependency/recovery tested separately.
+Evidence: **docs/receipts/v0.1.0-beta.3-simulation.json**, **docs/images/beta3/**.
+
+## Exact owner update/retest and remaining limitations
+
+HACS -> Energy Price Engine -> persist **Show beta versions** -> refresh information
+-> select **v0.1.0-beta.3** -> download -> restart HA. Existing site's **Configure**,
+not delete/recreate. Confirm manifest-derived Device info .3; review source/grid/
+supplier/national/display, Continue pages, then Save & verify. Check actual raw/final
+coverage, problem/affected period and one stored breakdown. Guides:
+**docs/WIZARD_GUIDE.md**, **docs/HACS_DISTRIBUTION.md**, **docs/BETA_SETUP.md** and
+**docs/BETA_ACCEPTANCE.md**. Owner PAHA02-DEV source/contract/billing/Pi acceptance
+remains unchecked. Isolated tests/screenshots are NOT owner acceptance.
+
+Native HA limits are explicit: Close/reload does not submit keystrokes; Continue
+first. Submitted drafts/errors/Back edits persist; avoid simultaneous flows for one
+site. HA entity names follow system language/existing registry, not per-user global
+renaming. Both name resources ship; wizard/validation/Repairs/new lowercase enum
+messages follow user UI language. Legacy uppercase state/API contracts preserved.
+Canonical technical keys and provider exception text retain original conventions.
+
+Actual HACS short-hash root cause reproduced: show_beta false + no stable release
+falls back to main commit. PE does not patch HACS; keep its beta visibility on.
+hide_default_branch prevents explicit development selection. PE-owned read-only
+UpdateEntity offers only published valid SemVer releases in the installed channel;
+no draft/hash/update installation. GitHub metadata failure is independent of prices.
+
+No private contract/heating eligibility invented. EWII household .030 ex-VAT fact
+is June-September 2026 only. Future/other-site terms remain unknown. Public periods
+bounded; automatic grid initially confirmed Radius C, others manual. Cloud results
+are not Raspberry Pi evidence; all authoritative history stays in RAM, never silently
+pruned. No owner/production HA, PAHA01, Node-RED, Tesla, Easee, charging commands,
+main merge, stable or CM release operation. Disposable QA instance is shut down
+before the final response. Stop after this handoff.
+
+Following beta.2/beta.1 sections are historical; old next-step instructions do not
+reopen their completed development missions or establish owner acceptance.
+
+## Completed PE beta.2 — final receipt
+
+Public **prerelease**:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.2
+
+- Exact source: **0c93d2bfac88878cff46e7726f59accbeababf85**.
+- Annotated tag object: **985ad4af194bb0b261ed73dcb22ea4d8c1bb5952**, never moved.
+- Branch **feat/beta2-guided-setup**, draft **PR #9** remains unmerged/reviewable.
+  Main remains beta.1 **56cdb3c10993179371483812cbc36f651ba3ad8e**. HACS registers
+  from compliant main, then downloads the exact beta.2 tag. No main change was needed.
+- Publisher orchestration **34cb19e** checks out the immutable tag, verifies successful
+  exact-source CI, deterministic ZIP hashes and independent native installs, then
+  publishes with `--prerelease --latest=false`. Actual run succeeded:
+  https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/40467818996
+- All **15 actual source checks** (push/PR/tag) passed: both-core tests, unchanged
+  consumer suites/coupled runtimes, HACS, official hassfest and independent installs.
+  Both local HA **2026.10.3 / 2026.10.4: 185 passed**, 88% coverage, zero skips.
+  Current PyPI core rechecked: 2026.10.4. Two upstream HACS deprecation warnings.
+- Independently downloaded actual public metadata, source ZIP, main ZIP and all four
+  assets on BOTH cores. Tag/source/manifest/per-file payload/GitHub digests/checksums
+  match. Public unauthenticated page HTTP200, non-draft prerelease confirmed.
+- Unchanged pinned HACS 2.0.5/upstream methods passed registration using actual beta.1
+  main bytes separately from beta.2 selected tag, beta discovery, download/extraction,
+  update, uninstall/reinstall. Both public ZIP layouts passed outside-source native
+  wizard setup/Options/SQLite reload/delete/recreate on both cores.
+- Machine-readable evidence: **docs/receipts/v0.1.0-beta.2.json**. Final checkpoint
+  subject: `docs: record independently verified beta.2 publication`.
+
+SHA-256:
+
+```text
+968a3436d7d44f20b4e86db405dcd26b553b9baa2a81dcfbf6eb9daf70776d91  ha_energy_price_engine.zip
+a53f5a2ede9416b2eccf41a3f54f174410456e89e930001740a0de3465d80845  ha_energy_price_engine-manual.zip
+```
+
+## Delivered beta.2 scope
+
+Six native stages: site/official source, grid, supplier, national charges/tax,
+display, Review/Save & verify. Source-specific controls hide entity/unit fields for
+official Nord Pool; verified configured area hints suggest DK2/Copenhagen where
+supported; input is automatic DKK/MWh ex VAT, spot/grid VAT input 25 means 25%.
+EWII and heating never infer private values. Advanced dated rates, locks/time bands,
+manual overrides, backups and price breakdown remain accessible from Review.
+
+Submitted drafts, invalid inputs and Back edits persist separately from active
+settings; explicit Discard requires confirmation; Save returns to unapplied pages.
+Unchanged Save triggers one reload/verification too. Existing incomplete sites
+resume. Config v3 migration preserves IDs/names/source refs/rules and SQLite history;
+tests execute actual released beta.1 code to seed bytes/rows/revisions before upgrade.
+Canonical DKK sensors/statistics/storage and read-only CM API v1 remain unchanged.
+Five unit-specific preferred-display entities default to øre/kWh; switching units
+never reinterprets old statistics. Device sw_version derives from installed manifest.
+Missing-component diagnostics report date/offset, source/failure and corrective action.
+No fabricated zero, tariff arithmetic or persistence algorithm rewrite.
+
+Actual real HA .4 frontend 20260930.5 + Playwright/system Chromium checks passed at
+1440x1000 desktop and 390x844 mobile: all stages/Back, confirmed source defaults,
+invalid-timezone retention/recovery, draft close/reopen, explicit Discard, new-site
+Save, mobile Options Save and device version. Mobile has no horizontal overflow;
+final mobile console/errors empty. Browser plugin absent; only decorative icon
+requests substituted to avoid unavailable external requests blocking JS downloads.
+Synthetic read-only sources; no owner login. This found/fixed ZoneInfo validation
+import/disk work on HA's loop; regression asserts executor-thread validation.
+
+## Exact owner update and limits
+
+HACS → Energy Price Engine → Download/Redownload → Show beta versions → select
+**v0.1.0-beta.2** → Download → restart HA. Existing site: Devices & services →
+Energy Price Engine → **Configure**, not delete/recreate. Check device version,
+review the six stages, **Continue** each draft page, then **Save & verify**; confirm
+readiness before consuming prices. Guides: docs/HACS_DISTRIBUTION.md,
+docs/WIZARD_GUIDE.md (actual synthetic QA screenshots), docs/BETA_SETUP.md and
+explicit docs/BETA_ACCEPTANCE.md checklist.
+
+No software publication blocker remains. Important native HA limit: Close/reload
+never submits fields still being typed. Every page explicitly warns to Continue
+first; submitted error/Back drafts survive interruption/restart. This is not
+keystroke autosave. Avoid simultaneous browser editing flows for the same site.
+Owner PAHA02-DEV/hardware/source/billing acceptance remains separate; isolated QA
+is not a claim of owner access or physical mobile/Pi performance. All price history
+remains in RAM and is not silently pruned. Unknown future/private rates remain
+unavailable; EWII household .030 DKK/kWh ex VAT is June–September 2026 only.
+No stable release, main merge, CM release, production HA, Node-RED or controls.
+
+The remaining sections preserve completed beta.1 history and earlier measurements.
+Their old next-step instructions are historical and do not reopen the completed mission.
+
+## Completed PE beta.1 publication — final receipt
+
+**Published and independently verified**, 2026-10-26. Public prerelease:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.1
+
+- PR #7 merged normally at **56cdb3c10993179371483812cbc36f651ba3ad8e**.
+- Main is HACS-compliant and remains at that release source. No history rewrite,
+  force push, protection bypass or default-branch setting change occurred.
+- Annotated tag **v0.1.0-beta.1** resolves to exactly that source; tag object
+  **b971f31855c9fb9386eaa679a9c26cd94d4273a8**. Tag was never moved.
+- Non-draft GitHub **prerelease** includes both ZIPs, BUILD_MANIFEST and SHA256SUMS.
+  No stable release or CM publication. All ten actual source checks (main/tag)
+  succeeded, including HACS, hassfest, both-core full tests and independent install.
+- **177 tests per HA 2026.10.3/2026.10.4**, 91% coverage, zero skips. Full pinned
+  consumer suites/coupled runtimes remain green, with both startup orders.
+- Independently downloaded actual public metadata, source ZIP and all four assets.
+  Tag/source, GitHub digests, ZIP SHA256SUMS, manifest provenance and every runtime
+  file match. Unauthenticated public release HTTP200. Actual pinned HACS code passed
+  add/beta discovery/exact tag capability/download/extraction/update/uninstall/
+  reinstall using those public bytes on BOTH HA cores. Both downloaded ZIP layouts
+  passed outside-source native setup/Options/SQLite reload/delete/recreate on both.
+- Machine receipt: **docs/receipts/v0.1.0-beta.1.json**. Exact owner instructions:
+  **docs/HACS_DISTRIBUTION.md**. No owner HA session was accessed; isolated testing
+  does not assert authenticated PAHA02-DEV/frontend or Pi hardware acceptance.
+
+The cloud upload restriction was resolved by the narrowly scoped publisher run
+40392618234 on the preserved development branch. Main/tag source remain immutable.
+Final receipt/handoff-only checkpoint subject: `docs: record published beta.1 verification`;
+this development checkpoint is not a different release source and creates no release.
+Publication mission is complete. Stop; do not start CM work or unrelated features.
+Any production/cutover/stable/CM publication requires separate authorization.
+
+## Publication execution checkpoint — 2026-10-26
+
+PR #7 is merged normally (history preserved, no protection bypass) at
+**56cdb3c10993179371483812cbc36f651ba3ad8e**. Actual merged main passes all five
+remote checks, 177 local tests on both HA cores, Ruff, official hassfest and clean
+both-layout independent native install. Main now contains the full integration.
+Annotated tag **v0.1.0-beta.1** points to that exact source; tag object
+b971f31855c9fb9386eaa679a9c26cd94d4273a8. No tag was moved/force-pushed.
+
+Cloud `gh release create` could create its temporary release but asset upload to
+uploads.github.com returned Forbidden; the CLI removed its incomplete draft. No
+prerelease was published by that failed attempt. Public asset download/codeload
+network preflights work. A narrowly scoped GitHub Actions publisher on this preserved
+development branch now targets ONLY the existing authorized tag/source, waits for
+all exact-source CI checks, rebuilds clean, smokes both archives and publishes the
+prerelease with four provenance assets from the runner's supported upload route.
+It cannot publish a stable/CM release or change/move a tag. Workflow change is part
+of this authorized PE publication mission; main/tag source remain unchanged.
+
+Checkpoint subject: `ci: publish authorized beta through GitHub runner`.
+Next: verify the publisher completes, independently download actual public
+metadata/source/assets with tools/verify_public_release.py, run HACS/native public
+byte tests, then record the final receipt. Do not stop at a draft/failed upload.
 
 ## Authorized PE beta.1 publication mission
 
