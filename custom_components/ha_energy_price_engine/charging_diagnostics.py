@@ -71,16 +71,17 @@ async def charging_breakdown(hass, entry, start):
             f"**{name}: {amount(row['value'])} {price_unit('unit_ex_vat')}** · {text(row['status'])}\n\n{safe(source) or '—'} · {period or '—'}"
         )
     final = data["components"]["final"]
+    if data["canonical_ex_vat_ore"] is not None:
+        lines.append(
+            f"**{text('subtotal')}: {amount(data['canonical_ex_vat_ore'])} {price_unit('unit_ex_vat')}**"
+        )
     lines.append(
         f"**{text('vat_amount')}: {amount(data['canonical_vat_ore'])} {unit}** · {text(data['components']['vat']['status'])} · {text('confirmed_vat_label')}"
     )
     lines.append(
         f"**{text('final')}: {amount(final['display_value'])} {price_unit('unit_incl_vat')}** · {text(final['status'])}"
     )
-    if data["canonical_ex_vat_ore"] is not None:
-        lines.append(
-            f"{amount(data['canonical_ex_vat_ore'])} + {amount(data['canonical_vat_ore'])} = {amount(final['display_value'])} {unit}"
-        )
+    lines.append(text("rounding_note"))
     lines.append(text("marginal_only"))
     activation = dt_util.parse_datetime(data.get("scope_start") or "")
     if activation and start < activation:

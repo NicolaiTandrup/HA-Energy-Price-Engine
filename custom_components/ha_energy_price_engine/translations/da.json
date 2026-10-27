@@ -2127,19 +2127,19 @@
         }
       },
       "display_current": {
-        "name": "Aktuel samlet pris (valgt visning)"
+        "name": "Samlet pris nu (inkl. moms)"
       },
       "display_next": {
-        "name": "Næste kvarter (valgt visning)"
+        "name": "Samlet pris næste kvarter (inkl. moms)"
       },
       "display_minimum": {
-        "name": "Døgnminimum (valgt visning)"
+        "name": "Dagens minimum (inkl. moms)"
       },
       "display_maximum": {
-        "name": "Døgnmaksimum (valgt visning)"
+        "name": "Dagens maksimum (inkl. moms)"
       },
       "display_average": {
-        "name": "Døgngennemsnit (valgt visning)"
+        "name": "Dagens gennemsnit (inkl. moms)"
       },
       "raw_current": {
         "name": "Kanonisk teknisk værdi: Aktuel rå spotpris (før tillæg) (DKK/kWh)"
@@ -2226,6 +2226,18 @@
           "stale": "Forældet — kilden skal kontrolleres igen",
           "error": "Kontrol fejlet — se prisproblem"
         }
+      },
+      "display_raw_current_ex_vat": {
+        "name": "Spot nu (ekskl. moms)"
+      },
+      "display_raw_current_incl_vat": {
+        "name": "Spot nu (inkl. moms)"
+      },
+      "display_raw_next_ex_vat": {
+        "name": "Spot næste kvarter (ekskl. moms)"
+      },
+      "display_raw_next_incl_vat": {
+        "name": "Spot næste kvarter (inkl. moms)"
       }
     },
     "update": {
@@ -2391,7 +2403,9 @@
         "readiness_not_loaded": "Integration ikke indlæst",
         "activation_history": "Tidligere kvarterer før opsætningen mangler med vilje. Det blokerer ikke et fremtidigt tidsrum, hvor alle priser er verificerede.",
         "horizon_label": "Kontrollér fremtidigt tidsrum",
-        "horizon_unavailable": "Kun et komplet tidsrum med verificerede priser er klar. Kontrollér komponentdiagnostik og kildens tilgængelighed; manglende priser er aldrig nul."
+        "horizon_unavailable": "Kun et komplet tidsrum med verificerede priser er klar. Kontrollér komponentdiagnostik og kildens tilgængelighed; manglende priser er aldrig nul.",
+        "subtotal": "Sum ekskl. moms",
+        "rounding_note": "Kun visningen afrundes. Totaler og ladeomkostninger bruger de uafrundede gemte priser."
       }
     },
     "contract_mode": {

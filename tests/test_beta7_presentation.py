@@ -106,6 +106,7 @@ async def test_review_diagnostics_and_technical_picker_follow_one_unit(
         assert expected.replace(".", separator) + " " + unit in summary["rows"]["setup_final"]
         text = await charging_breakdown(hass, entry, datetime(2026, 10, 27, 12, tzinfo=UTC))
         assert expected.replace(".", separator) + " " + unit in text
+        assert "afrundes" in text if language == "da" else "Rounded for display only" in text
         assert ("øre/kWh" not in text) if unit == "DKK/kWh" else ("DKK/kWh" not in text)
         result = await options_advanced(hass, entry.entry_id)
         result = await hass.config_entries.options.async_configure(
@@ -121,3 +122,26 @@ async def test_review_diagnostics_and_technical_picker_follow_one_unit(
         hass.config_entries.options.async_abort(result["flow_id"])
     assert entry.runtime_data.price_engine.records["home"] == before
     assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.parametrize(
+    "language,mode,separator",
+    [("en", "decimal_comma", ","), ("da", "comma_decimal", "."), ("en-GB", "quote_decimal", ".")],
+)
+async def test_native_user_number_format_overrides_language(hass, language, mode, separator):
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock
+
+    from custom_components.ha_energy_price_engine.localization import review_labels
+
+    request = {"hass_user": SimpleNamespace(id="fictional-qa-user")}
+    store = SimpleNamespace(data={"language": {"language": language, "number_format": mode}})
+    with (
+        patch("custom_components.ha_energy_price_engine.localization.current_request") as context,
+        patch(
+            "custom_components.ha_energy_price_engine.localization.async_user_store",
+            AsyncMock(return_value=store),
+        ),
+    ):
+        context.get.return_value = request
+        assert (await review_labels(hass))["decimal_separator"] == separator

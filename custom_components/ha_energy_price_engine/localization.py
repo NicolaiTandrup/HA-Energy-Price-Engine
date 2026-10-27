@@ -40,8 +40,27 @@ async def review_labels(hass):
     for locale in dict.fromkeys(("en", language.split("-")[0], language)):
         translations.update(await async_get_translations(hass, locale, "selector", {DOMAIN}))
     prefix = f"component.{DOMAIN}.selector.review.options."
-    return {
+    result = {
         key.removeprefix(prefix): value
         for key, value in translations.items()
         if key.startswith(prefix)
     }
+
+    request = current_request.get()
+    if request is not None and (user := request.get("hass_user")):
+        store = await async_user_store(hass, user.id)
+        mode = store.data.get("language", {}).get("number_format", "language")
+        if mode in {"decimal_comma", "space_comma"}:
+            result["decimal_separator"] = ","
+        elif mode in {"comma_decimal", "quote_decimal", "none"}:
+            result["decimal_separator"] = "."
+        elif mode == "system":
+            from babel.core import UnknownLocaleError
+            from babel.numbers import get_decimal_symbol
+
+            locale = request.headers.get("Accept-Language", language).split(",")[0].split(";")[0]
+            try:
+                result["decimal_separator"] = get_decimal_symbol(locale.replace("-", "_"))
+            except UnknownLocaleError, ValueError:
+                pass
+    return result

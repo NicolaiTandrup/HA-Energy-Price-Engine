@@ -209,4 +209,41 @@ async def test_missing_tomorrow_component_does_not_invalidate_current_quarter(ha
         snapshot["requested"]["valid_slots"] == 7 and snapshot["requested"]["expected_slots"] == 9
     )
     assert snapshot["history_tomorrow"]["valid_slots"] == 0
+    freezer.move_to("2026-10-27T22:55:00Z")
+    assert NextReadinessSensor(entry.runtime_data).native_value == "incomplete"
+    assert NextReadinessSensor(entry.runtime_data).extra_state_attributes["health"] == "INCOMPLETE"
+    assert (
+        HistoricalCoverageSensor(entry.runtime_data).extra_state_attributes["health"]
+        == "INCOMPLETE"
+    )
+    assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_current_next_radius_transition_keeps_cost_precision(hass, freezer, price_service):  # noqa: F811
+    from custom_components.ha_energy_price_engine.charging_diagnostics import charging_breakdown
+    from custom_components.ha_energy_price_engine.sensor import NextPriceSensor, PriceSensor
+
+    freezer.move_to("2026-10-27T15:50:00Z")  # 16:45 normal quarter, then17:00 peakCET
+    price_service["amount"] = 100
+    with patch(
+        "custom_components.ha_energy_price_engine.tariff_source.TariffSource.get",
+        side_effect=recorded_grid,
+    ):
+        entry = await setup(hass, charging_site())
+    c = entry.runtime_data
+    assert PriceSensor(c).native_value == pytest.approx(0.683155)
+    assert NextPriceSensor(c).native_value == pytest.approx(1.47946625)
+    first = datetime(2026, 10, 27, 15, 45, tzinfo=UTC)
+    for start, shown in [(first, "68.32"), (first + timedelta(minutes=15), "147.95")]:
+        text = await charging_breakdown(hass, entry, start)
+        assert shown + " øre/kWh" in text
+    result = estimate_charging_cost(
+        get_api(hass),
+        "home",
+        [(first, "1.25"), (first + timedelta(minutes=15), "2.0")],
+        energy_kind="planned",
+    )
+    assert float(result["estimated_cost_dkk"]) == pytest.approx(3.81287625, abs=1e-12)
+    assert float(result["estimated_cost_dkk"]) != 0.6832 * 1.25 + 1.4795 * 2
     assert await hass.config_entries.async_unload(entry.entry_id)

@@ -204,6 +204,9 @@ class DisplaySensor(BaseSensor):
         suffix = "ore" if self.unit == "øre/kWh" else "dkk"
         self._attr_unique_id = f"{self.site['id']}_display_{kind}_{suffix}"
         self._attr_translation_key = f"display_{kind}"
+        if kind.startswith("raw_"):
+            basis = "incl_vat" if self.site.get("price_basis") == "spot_incl_vat" else "ex_vat"
+            self._attr_translation_key += "_" + basis
 
     @property
     def native_value(self):
@@ -400,6 +403,7 @@ class FinalStatusSensor(ReadinessSensor):
 
     _attr_options = ["ready", "incomplete", "stale", "error"]
     _attr_translation_key = "final_status"
+    _readiness_scope = "current_quarter"
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -408,6 +412,16 @@ class FinalStatusSensor(ReadinessSensor):
     @property
     def native_value(self):
         return str(self.current_result().status).lower()
+
+    @property
+    def extra_state_attributes(self):
+        result = self.current_result()
+        return {
+            **source_status(self.coordinator),
+            "health": str(result.status),
+            "health_scope": self._readiness_scope,
+            "last_error": result.reason,
+        }
 
 
 class EstimatedPriceSensor(BaseSensor):
@@ -457,6 +471,7 @@ class EstimatedPriceSensor(BaseSensor):
 
 
 class NextReadinessSensor(FinalStatusSensor):
+    _readiness_scope = "next_quarter"
     _attr_translation_key = "next_quarter_status"
 
     def __init__(self, coordinator):
@@ -468,6 +483,7 @@ class NextReadinessSensor(FinalStatusSensor):
 
 
 class HistoricalCoverageSensor(FinalStatusSensor):
+    _readiness_scope = "historical_full_day"
     _attr_translation_key = "historical_day_status"
 
     def __init__(self, coordinator):

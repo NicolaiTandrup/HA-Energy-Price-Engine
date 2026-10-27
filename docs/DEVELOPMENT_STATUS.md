@@ -7,6 +7,34 @@ worktree, main merge, stable or production/Node-RED/CM/physical-control changes.
 Owner authorizes immutable beta.7 prerelease after mandatory gates; stop after
 publication and independent verification. Prior beta.6 STOP is historical below.
 
+## Beta.7 render and package follow-up
+
+Checkpoint subject: **fix: align localized presentation and beta.7 package validation**.
+First implementation commit **abfaaba796f3363b7a064a0d60ac77ddf3da2111**.
+
+- Full **303 passed/core**, HA2026.10.3/.4,88% coverage,zero skips,two upstream HACS
+  warnings. Both four-consumer full suites153/176/227/228 plus two coupled cases/ref/
+  core passed locally. Official hassfest1integration/0invalid. Remote first-checkpoint
+  nine jobs green, two independent-package jobs failed on one missed beta.6 version
+  assertion in tools/smoke_install_package.py. Assertion corrected to7; both layouts
+  pass actual outside-source install locally. New CI/package rebuild still pending.
+- Follow-up35 focused cases passed: explicit HA number-format overrides now match
+  user locale; monetary rows fixed2/4, rounded subtotal/total fields labelled without
+  a false rounded-value equality. Canonical prices/costs remain unrounded. Raw display
+  names label VAT basis; current/next/history readiness attributes match their scopes.
+- New fixed-clock current16:45/next17:00CET Radius transition:synthetic100DKK/MWh spot,
+  fictional0.5ore exVAT supplier, canonical .683155→1.47946625DKK (68.32→147.95ore display).
+  Supplied1.25/2kWh cost3.81287625DKK, not cost from rounded display prices. Test fixture
+  official source and recorded Radius; no live market/private-rate claim.
+- Native first EN/en-GB mobile journey passed ore2/DKK4, current/selected future,
+  READY requested midnight window with historical7/96 INCOMPLETE, missing future
+  INCOMPLETE. HA's own formatter renders canonical .683155 as0.6832DKK, raw .1 as
+  0.1000DKK. More-info capture confirms native numeric presentation. DA4 commas render
+  correctly. Journey paused on a harness-only missing compact_final fallback (app
+  healthy); fix harness and finish DA2/desktop/custom-number-format/restart evidence.
+- New pending total307/core (four added locale/transition cases). Original ledger/
+  calculation/API files unchanged. No beta.7 tag/release. Await all mandatory gates.
+
 ## Beta.7 first implementation checkpoint
 
 Checkpoint subject: **feat: standardize price display and expose future-window readiness**.

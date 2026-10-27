@@ -2127,19 +2127,19 @@
         }
       },
       "display_current": {
-        "name": "Current final price (preferred display)"
+        "name": "Final now (incl. VAT)"
       },
       "display_next": {
-        "name": "Next quarter (preferred display)"
+        "name": "Final next quarter (incl. VAT)"
       },
       "display_minimum": {
-        "name": "Today minimum (preferred display)"
+        "name": "Today minimum (incl. VAT)"
       },
       "display_maximum": {
-        "name": "Today maximum (preferred display)"
+        "name": "Today maximum (incl. VAT)"
       },
       "display_average": {
-        "name": "Today average (preferred display)"
+        "name": "Today average (incl. VAT)"
       },
       "raw_current": {
         "name": "Canonical technical: Current raw spot price (before additions) (DKK/kWh)"
@@ -2226,6 +2226,18 @@
           "stale": "Stale — source recheck required",
           "error": "Verification failed — inspect pricing problem"
         }
+      },
+      "display_raw_current_ex_vat": {
+        "name": "Spot now (excl. VAT)"
+      },
+      "display_raw_current_incl_vat": {
+        "name": "Spot now (incl. VAT)"
+      },
+      "display_raw_next_ex_vat": {
+        "name": "Spot next quarter (excl. VAT)"
+      },
+      "display_raw_next_incl_vat": {
+        "name": "Spot next quarter (incl. VAT)"
       }
     },
     "update": {
@@ -2391,7 +2403,9 @@
         "readiness_not_loaded": "Integration not loaded",
         "activation_history": "Earlier quarters before setup are intentionally unavailable. This does not block a future window whose prices are all verified.",
         "horizon_label": "Check future window",
-        "horizon_unavailable": "Only a complete window of verified prices is ready. Check component diagnostics and source availability; missing prices are never zero."
+        "horizon_unavailable": "Only a complete window of verified prices is ready. Check component diagnostics and source availability; missing prices are never zero.",
+        "subtotal": "Subtotal",
+        "rounding_note": "Rounded for display only. Totals and charging costs use the unrounded stored prices."
       }
     },
     "contract_mode": {
