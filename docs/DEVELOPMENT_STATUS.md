@@ -1,6 +1,6 @@
 # Development handoff
 
-Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 release candidate complete;
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 immutable tag created;
 publication still pending.** Continue existing draft [PR #14](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/14)
 on `feat/beta5-simple-onboarding`; no restart/worktree/main merge. Owner explicitly
 authorizes beta.6 prerelease after gates. Stop after publication and independent
@@ -66,6 +66,26 @@ Publication receipt/handoff links in the immutable acceptance guide point to the
 permanent development branch, where postpublication evidence can actually exist.
 Candidate software gates are checked; publication and all owner boxes remain open.
 
+## Immutable source and publication orchestration
+
+- Source **f5a18152748205906bfd5e7ae7a72b592943e742**; all10 exact-source
+  push/PR jobs passed before tagging. Documentation-only checkpoint e5cf150 also
+  passed all10. Clean build manifest is dirty=false; both ZIP layouts installed
+  outside source on both supported cores. Original engine/ledger/API/scheduler/
+  tariff normalizer/spot normalization files are byte-identical to beta.5.
+- Annotated **v0.1.0-beta.6** object **570a889b653acbabff7a590c542f5b70b3901cf6**,
+  pushed without moving any existing tag. Tag's five CI jobs are pending.
+- HACS ZIP SHA256 `909c75c26649e91f6dfb4d908f36db8dd65cd83c4a72153be9beef6d890630de`;
+  manual ZIP `d0b3672ddfe0a984adae40a75e6f8fc66a15c371263d93cd783409812b83e2ea`.
+- Checkpoint subject **ci: publish authorized immutable beta.6 with public verification**.
+  Dedicated publish-beta6 workflow checks all15 exact-source jobs, exact tag/source,
+  main/prior release IDs/tags/digests and draft PR14, rebuilds clean expected hashes,
+  native-installs both layouts, publishes prerelease-only/latest=false. Two fresh
+  core jobs download real public metadata/assets/source and exercise pinned HACS
+  and native layouts; audit then records receipt and updates existing PR14.
+  Old release workflows/assets unchanged. Workflow is committed after the release
+  source; pushing its own path triggers only the already authorized beta.6.
+
 ## Next: authorized immutable beta.6 publication
 
 Commit evidence/source, await all10 source push/PR jobs, build clean deterministic
@@ -80,8 +100,7 @@ HACS replay, final handoff/checklist commit. Never move tags/overwrite assets.
 Cloud GitHub API is CONNECT403 via managed proxy; public Git/web/downloads work.
 Authorized GitHub runners provide supported authenticated PR/publication/API
 verification (as beta.5). Initial new PR runner failed; no inferred reason claimed;
-existing draft14 continues instead, topic foundation branch retained. No beta.6
-release/tag exists at this checkpoint. No owner publication gate is outstanding:
+existing draft14 continues instead, topic foundation branch retained. Beta.6 tag exists; no beta.6 release yet at this orchestration checkpoint. No owner publication gate is outstanding:
 only required software/integrity gates. Do not stop at the candidate checkpoint.
 
 Known limits: no native per-page Back; accepted pages persist, unsubmitted typing
