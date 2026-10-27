@@ -12,8 +12,9 @@ once mandatory software checks pass; no stable, main merge or production cutover
 - [x] Actual beta.1/.2 source creates upgrade fixtures; ledger rows/revisions preserved.
 - [x] Native user-language switch/fallback, submitted draft/Back/Discard/reload coverage.
 - [x] HACS SHA fallback reproduced, beta subscription/semantic release behavior tested.
-- [ ] Final exact-source both-core/consumer/HACS/hassfest/package CI.
-- [ ] Published beta.3 source/assets verified independently on both cores.
+- [x] Final exact-source both-core/consumer/HACS/hassfest/package CI: 200 producer tests per core.
+- [x] Published beta.3 source/assets verified independently on both cores; see
+  docs/receipts/v0.1.0-beta.3.json.
 - [ ] Owner PAHA02-DEV installation and focused [retest](WIZARD_GUIDE.md) recorded.
 - [ ] Owner current contracts/source/billing and Raspberry Pi resource acceptance.
 
