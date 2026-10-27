@@ -39,7 +39,7 @@
       },
       "wizard_site": {
         "title": "1 / 6 · Site and source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "name": "Site name (required)",
           "id": "Permanent site ID (optional)",
@@ -56,7 +56,7 @@
       },
       "wizard_source": {
         "title": "1 / 6 · Installed source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "nordpool_entry": "Installed official Nord Pool (required)",
           "navigation": "Navigation",
@@ -79,7 +79,7 @@
       },
       "wizard_location": {
         "title": "1 / 6 · Area and VAT",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "area": "Delivery area (required)",
           "timezone": "Delivery timezone (required)",
@@ -96,7 +96,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Grid tariffs",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Grid tariff source",
@@ -115,7 +115,7 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Supplier contract",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "supplier": "Supplier",
@@ -146,7 +146,7 @@
       },
       "wizard_charges": {
         "title": "4 / 6 · National charges and tax",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "danish_public_rates": "Use documented bounded Danish baseline",
@@ -165,7 +165,7 @@
       },
       "wizard_display": {
         "title": "5 / 6 · Display preference",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "display_unit": "Preferred display unit"
@@ -223,7 +223,10 @@
           "edit_rate": "Edit dated rate",
           "remove_rate": "Remove dated rate",
           "storage": "Verified backup",
-          "breakdown": "Inspect stored quarter"
+          "breakdown": "Inspect stored quarter",
+          "wizard_grid": "Grid tariff step",
+          "wizard_supplier": "Supplier contract step",
+          "wizard_charges": "National charges step"
         }
       }
     },
@@ -239,7 +242,8 @@
       "unsupported_area": "This area is not configured in the selected Nord Pool entry. Select a supported area/source.",
       "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
       "invalid_rate": "Check dates, explicit units/VAT, source and overlap. Edit an old end date in Dated rates before adding an overlapping period.",
-      "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates."
+      "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates.",
+      "pending_page": "Confirm these preserved page edits with Continue/Next before saving. Active settings remain unchanged."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
@@ -376,7 +380,7 @@
       },
       "wizard_site": {
         "title": "1 / 6 · Site and source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "name": "Site name (required)",
           "id": "Permanent site ID (optional)",
@@ -393,7 +397,7 @@
       },
       "wizard_source": {
         "title": "1 / 6 · Installed source",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "nordpool_entry": "Installed official Nord Pool (required)",
           "navigation": "Navigation",
@@ -416,7 +420,7 @@
       },
       "wizard_location": {
         "title": "1 / 6 · Area and VAT",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "area": "Delivery area (required)",
           "timezone": "Delivery timezone (required)",
@@ -433,7 +437,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Grid tariffs",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Grid tariff source",
@@ -452,7 +456,7 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Supplier contract",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "supplier": "Supplier",
@@ -483,7 +487,7 @@
       },
       "wizard_charges": {
         "title": "4 / 6 · National charges and tax",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "danish_public_rates": "Use documented bounded Danish baseline",
@@ -502,7 +506,7 @@
       },
       "wizard_display": {
         "title": "5 / 6 · Display preference",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nChoose Next/Back, then Continue. Continue preserves staged work. This page must be submitted before closing; earlier steps can be resumed.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Unsubmitted fields are lost on Close or browser reload. Choose Continue before closing.** Continue preserves this page in a resumable draft; only Save & verify changes active settings.",
         "data": {
           "navigation": "Navigation",
           "display_unit": "Preferred display unit"
@@ -560,7 +564,10 @@
           "edit_rate": "Edit dated rate",
           "remove_rate": "Remove dated rate",
           "storage": "Verified backup",
-          "breakdown": "Inspect stored quarter"
+          "breakdown": "Inspect stored quarter",
+          "wizard_grid": "Grid tariff step",
+          "wizard_supplier": "Supplier contract step",
+          "wizard_charges": "National charges step"
         }
       }
     },
@@ -578,7 +585,8 @@
       "unsupported_area": "This area is not configured in the selected Nord Pool entry. Select a supported area/source.",
       "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
       "invalid_rate": "Check dates, explicit units/VAT, source and overlap. Edit an old end date in Dated rates before adding an overlapping period.",
-      "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates."
+      "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates.",
+      "pending_page": "Confirm these preserved page edits with Continue/Next before saving. Active settings remain unchanged."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",

@@ -54,6 +54,7 @@ class Wizard:
             self.hass, 1, f"{DOMAIN}.wizard.{entry.entry_id if entry else 'initial'}"
         )
         self._forms, self._added = {}, {}
+        self._pending = []
         saved = await self._wizard_store.async_load() or {}
         if entry is None:
             existing = {e.unique_id for e in self.hass.config_entries.async_entries(DOMAIN)}
@@ -97,6 +98,7 @@ class Wizard:
             self.draft = deepcopy(saved.get("draft", active))
             self._forms = deepcopy(saved.get("forms", {}))
             self._added = deepcopy(saved.get("added", {}))
+            self._pending = list(saved.get("pending", []))
             if saved:
                 return await getattr(self, "async_step_" + saved.get("step", "wizard_site"))()
         return await self.async_step_wizard_site()
@@ -136,6 +138,7 @@ class Wizard:
             self.draft = deepcopy(saved["draft"])
             self._forms = deepcopy(saved.get("forms", {}))
             self._added = deepcopy(saved.get("added", {}))
+            self._pending = list(saved.get("pending", []))
             return await getattr(self, "async_step_" + saved.get("step", "wizard_site"))()
         return await self.async_step_wizard_site()
 
@@ -146,6 +149,7 @@ class Wizard:
             "added": deepcopy(self._added or {}),
             "step": step,
             "submitted": submitted,
+            "pending": list(self._pending),
         }
         if self._initial:
             # Serialize read/modify/write across independent site drafts.
@@ -199,15 +203,24 @@ class Wizard:
             },
         )
 
+    async def _remember_error(self, step, data):
+        self._forms[step] = deepcopy(data)
+        if step not in self._pending:
+            self._pending.append(step)
+        await self._persist(step)
+
     async def _back(self, step, data, previous):
         if data is not None and data.get("navigation") == "back":
             self._forms[step] = deepcopy(data)
+            if any(k != "navigation" for k in data) and step not in self._pending:
+                self._pending.append(step)
             await self._persist(previous)
             return await getattr(self, "async_step_" + previous)()
         return None
 
     async def _move(self, step, data, next_step, back_step):
         self._forms[step] = deepcopy(data)
+        self._pending = [p for p in self._pending if p != step]
         target = {"next": next_step, "back": back_step, "review": "wizard_review"}[
             data.get("navigation", "next")
         ]
@@ -242,6 +255,8 @@ class Wizard:
             if not errors:
                 self.draft.update(name=name, id=site_id, source_type=user_input["source_type"])
                 return await self._move("wizard_site", user_input, "wizard_source", "wizard_site")
+        if errors:
+            await self._remember_error("wizard_site", user_input)
         fields = {
             vol.Required("name", default=self.draft.get("name", "")): str,
             vol.Required("source_type", default=self.draft.get("source_type", "nordpool")): choice(
@@ -302,6 +317,8 @@ class Wizard:
                 return await self._move(
                     "wizard_source", user_input, "wizard_location", "wizard_site"
                 )
+        if errors:
+            await self._remember_error("wizard_source", user_input)
         v = {**self.draft, **(user_input or {})}
         if official:
             fields = {
@@ -372,6 +389,8 @@ class Wizard:
                     return await self._move(
                         "wizard_location", user_input, "wizard_grid", "wizard_source"
                     )
+        if errors:
+            await self._remember_error("wizard_location", user_input)
         v = {**self.draft, **(user_input or {})}
         return self._form(
             "wizard_location",
@@ -395,6 +414,7 @@ class Wizard:
             try:
                 validate_site(self.draft)
             except ValueError:
+                await self._remember_error("wizard_grid", user_input)
                 return self._grid_form({"dso_tariff_class": "invalid_tariff_class"})
             return await self._move("wizard_grid", user_input, "wizard_supplier", "wizard_location")
         return self._grid_form()
@@ -503,6 +523,8 @@ class Wizard:
                 return await self._move(
                     "wizard_supplier", user_input, "wizard_charges", "wizard_grid"
                 )
+        if errors:
+            await self._remember_error("wizard_supplier", user_input)
         fields = (
             {}
             if self.draft.get("price_basis") == "all_in"
@@ -616,7 +638,16 @@ class Wizard:
                     f"{day}: "
                     + (
                         "Missing full-day coverage: "
-                        + ", ".join(missing)
+                        + ", ".join(
+                            {
+                                "supplier": "supplier contract",
+                                "dso": "grid tariff",
+                                "energinet_net": "Energinet network tariff",
+                                "energinet_system": "Energinet system tariff",
+                                "electricity_tax": "electricity tax",
+                            }.get(k, k.replace("_", " "))
+                            for k in missing
+                        )
                         + ". Add verified dated periods; no zero fallback."
                         if missing
                         else "Configured component periods cover the day; source verification still required."
@@ -625,6 +656,10 @@ class Wizard:
         lines.append(
             "Save applies this draft once and starts actual source verification. Site saved does not mean prices READY; inspect readiness and precise errors after verification."
         )
+        if self._pending:
+            lines.append(
+                "Preserved page edits need Continue before they can be applied. Save will return to the pending page; no typed draft is silently discarded."
+            )
         return "\n\n".join(lines)
 
     async def async_step_wizard_review(self, user_input=None):
@@ -636,6 +671,10 @@ class Wizard:
         )
 
     async def async_step_wizard_save(self, user_input=None):
+        if self._pending:
+            result = await getattr(self, "async_step_" + self._pending[0])()
+            result["errors"] = {"base": "pending_page"}
+            return result
         try:
             site = validate_site(self.draft)
         except ValueError, KeyError, TypeError, ZoneInfoNotFoundError:

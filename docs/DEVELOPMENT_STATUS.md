@@ -1,8 +1,8 @@
 # Development handoff
 
 Updated 2026-10-27 (Europe/Copenhagen). Read AGENTS.md first. This is the single
-permanent handoff. Continue existing branch `feat/standalone-price-engine` and
-existing draft PR #7. Do not restart architecture, reset branches or create worktrees.
+permanent handoff. Beta.2 continues branch `feat/beta2-guided-setup` and
+draft PR #9; the completed beta.1 PR #7 history is preserved. Do not restart architecture, reset branches or create worktrees.
 
 ## Beta.2 guided setup mission in progress
 
@@ -24,19 +24,33 @@ presentation entities avoid reinterpreting statistics when display units change.
 Owned device sw_version derives from installed manifest metadata. Missing component
 exceptions now identify component/date/action without changing calculations.
 
-Targeted new wizard, legacy time-band and native lifecycle cases: **12 passed**;
-separate existing pricing/component tests passed, Ruff clean, official local hassfest
-valid. Whole legacy flow suite is being adapted to the intentionally changed UI;
-first sweep had 11 old-navigation expectations to update, not a passing release.
-Do not publish until complete suites, migration/error/restart/draft cases and CI pass.
-Browser plugin absent; using frontend-testing-debugging skill with regular Playwright
-and system Chromium, disposable local HA .4 at /tmp/pe-beta2-ui (no owner access).
-Its HA frontend dependency is pinned to core's required 20260930.5 in ignored .venv-ui;
-all UI credentials/fixtures/screenshots remain in /tmp. Desktop/mobile checks pending.
+Checkpoint subject: `test: preserve wizard drafts and verify released beta migration`.
+All **184 producer tests** passed on fixture-supported HA 2026.10.3 before the
+beta.2 manifest bump; rerun both cores on final source remains mandatory. Seven new
+wizard cases cover source defaults, initial/resumed/invalid/Back drafts, explicit
+Discard, stable entities/device metadata/display units, and actual immutable beta.1
+source creating SQLite history then migrating without changing bytes/rows/revisions.
+Legacy flow tests retain their pricing/recovery assertions through the new navigation.
+CI preparation fetches the immutable beta.1 commit for shallow checkouts.
 
-Next: finish native regression adaptation and draft edge cases, real frontend QA,
-version beta.2/package/public-release tooling, exact-source CI and public verification.
-No CM development. Preserve source/ledger/API and beta.1 tag/assets.
+Browser plugin absent; regular Playwright/system Chromium against disposable real
+HA 2026.10.4 frontend 20260930.5. Desktop native pages and review rendered correctly.
+External brand icons blocked the browser's HTTP connection pool; QA substitutes
+only decorative icons, never integration forms/data. Mobile and final save/restart
+still pending. IMPORTANT native HA limitation: Close/reload never submits fields
+still being typed. Every wizard page now explicitly warns to Continue before Close;
+Continue/Back/validation errors persist raw drafts. No claim of keystroke autosave.
+No custom frontend patch or owner HA access. Credentials and raw QA files in /tmp.
+
+Manifest is proposed 0.1.0-beta.2. Development dirty archive passed independent
+outside-tree native install/reload/Options/delete/recreate smoke after adapting it
+to the wizard (not a release integrity build). Release verification now checks main
+HACS structure independently from exact tag source; no main merge is authorized.
+
+Next: finish mobile/native save/error/restart QA; complete clean both-core suites,
+HACS/hassfest/consumer/packaging CI; setup guide and acceptance checklist; then exact
+source tag, prerelease runner publication and independent public asset verification.
+Preserve beta.1 tag/assets, engine/ledger/API. No release has been published yet.
 
 ## Completed PE beta.1 publication — final receipt
 

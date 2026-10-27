@@ -470,8 +470,19 @@ class EnergyPriceConfigFlow(Wizard, LegacyEnergyPriceConfigFlow, domain=DOMAIN):
     async def async_step_advanced(self, user_input=None):
         return self.async_show_menu(
             step_id="advanced",
-            description_placeholders={"draft_status": self._state()},
-            menu_options=["wizard_review", "add_rate", "edit_rate", "remove_rate"],
+            description_placeholders={
+                "draft_status": self._state()
+                + ("\n" + self.backup_result if getattr(self, "backup_result", None) else "")
+            },
+            menu_options=[
+                "wizard_review",
+                "wizard_grid",
+                "wizard_supplier",
+                "wizard_charges",
+                "add_rate",
+                "edit_rate",
+                "remove_rate",
+            ],
         )
 
 
@@ -486,9 +497,15 @@ class EnergyPriceOptionsFlow(Wizard, LegacyEnergyPriceOptionsFlow):
         self._advanced = True
         return self.async_show_menu(
             step_id="advanced",
-            description_placeholders={"draft_status": self._state()},
+            description_placeholders={
+                "draft_status": self._state()
+                + ("\n" + self.backup_result if getattr(self, "backup_result", None) else "")
+            },
             menu_options=[
                 "wizard_review",
+                "wizard_grid",
+                "wizard_supplier",
+                "wizard_charges",
                 "add_rate",
                 "edit_rate",
                 "remove_rate",

@@ -39,7 +39,7 @@
       },
       "wizard_site": {
         "title": "1 / 6 · Sted og kilde",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "name": "Stedets navn (påkrævet)",
           "id": "Permanent sted-ID (valgfrit)",
@@ -56,7 +56,7 @@
       },
       "wizard_source": {
         "title": "1 / 6 · Installeret kilde",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "nordpool_entry": "Installeret officiel Nord Pool (påkrævet)",
           "navigation": "Navigation",
@@ -79,7 +79,7 @@
       },
       "wizard_location": {
         "title": "1 / 6 · Område og moms",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "area": "Prisområde (påkrævet)",
           "timezone": "Tidszone (påkrævet)",
@@ -96,7 +96,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Nettariffer",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Nettariffens kilde",
@@ -115,7 +115,7 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Leverandørkontrakt",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "supplier": "Elleverandør",
@@ -146,7 +146,7 @@
       },
       "wizard_charges": {
         "title": "4 / 6 · Nationale satser og afgifter",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "danish_public_rates": "Brug dokumenterede danske satser i afgrænsede perioder",
@@ -165,7 +165,7 @@
       },
       "wizard_display": {
         "title": "5 / 6 · Visning",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "display_unit": "Foretrukken visningsenhed"
@@ -223,7 +223,10 @@
           "edit_rate": "Ret dateret sats",
           "remove_rate": "Fjern dateret sats",
           "storage": "Verificeret sikkerhedskopi",
-          "breakdown": "Undersøg gemt kvarter"
+          "breakdown": "Undersøg gemt kvarter",
+          "wizard_grid": "Trin for nettariffer",
+          "wizard_supplier": "Trin for leverandørkontrakt",
+          "wizard_charges": "Trin for nationale satser"
         }
       }
     },
@@ -239,7 +242,8 @@
       "unsupported_area": "Området er ikke konfigureret i den valgte Nord Pool. Vælg understøttet område/kilde.",
       "rate_required": "Påkrævet ved Tilføj kontrakt. Indtast en verificeret værdi, eller slå fra for at beholde perioderne.",
       "invalid_rate": "Kontrollér datoer, enheder/moms, kilde og overlap. Ret gammel slutdato i Daterede satser før overlappende periode.",
-      "invalid_tariff_class": "Automatisk Radius understøtter kun verificeret C. Andre grupper kræver manuelle daterede satser."
+      "invalid_tariff_class": "Automatisk Radius understøtter kun verificeret C. Andre grupper kræver manuelle daterede satser.",
+      "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
@@ -376,7 +380,7 @@
       },
       "wizard_site": {
         "title": "1 / 6 · Sted og kilde",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "name": "Stedets navn (påkrævet)",
           "id": "Permanent sted-ID (valgfrit)",
@@ -393,7 +397,7 @@
       },
       "wizard_source": {
         "title": "1 / 6 · Installeret kilde",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "nordpool_entry": "Installeret officiel Nord Pool (påkrævet)",
           "navigation": "Navigation",
@@ -416,7 +420,7 @@
       },
       "wizard_location": {
         "title": "1 / 6 · Område og moms",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "area": "Prisområde (påkrævet)",
           "timezone": "Tidszone (påkrævet)",
@@ -433,7 +437,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Nettariffer",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Nettariffens kilde",
@@ -452,7 +456,7 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Leverandørkontrakt",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "supplier": "Elleverandør",
@@ -483,7 +487,7 @@
       },
       "wizard_charges": {
         "title": "4 / 6 · Nationale satser og afgifter",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "danish_public_rates": "Brug dokumenterede danske satser i afgrænsede perioder",
@@ -502,7 +506,7 @@
       },
       "wizard_display": {
         "title": "5 / 6 · Visning",
-        "description": "{progress} · {draft_status}\n\n{context}\n\nVælg Næste/Tilbage og derefter Fortsæt. Fortsæt bevarer kladden. Indsend denne side før lukning; tidligere trin kan genoptages.",
+        "description": "{progress} · {draft_status}\n\n{context}\n\n**Ikke indsendte felter går tabt ved Luk eller genindlæsning. Tryk Fortsæt før lukning.** Fortsæt bevarer siden i en kladde; kun Gem og kontrollér ændrer aktive indstillinger.",
         "data": {
           "navigation": "Navigation",
           "display_unit": "Foretrukken visningsenhed"
@@ -560,7 +564,10 @@
           "edit_rate": "Ret dateret sats",
           "remove_rate": "Fjern dateret sats",
           "storage": "Verificeret sikkerhedskopi",
-          "breakdown": "Undersøg gemt kvarter"
+          "breakdown": "Undersøg gemt kvarter",
+          "wizard_grid": "Trin for nettariffer",
+          "wizard_supplier": "Trin for leverandørkontrakt",
+          "wizard_charges": "Trin for nationale satser"
         }
       }
     },
@@ -578,7 +585,8 @@
       "unsupported_area": "Området er ikke konfigureret i den valgte Nord Pool. Vælg understøttet område/kilde.",
       "rate_required": "Påkrævet ved Tilføj kontrakt. Indtast en verificeret værdi, eller slå fra for at beholde perioderne.",
       "invalid_rate": "Kontrollér datoer, enheder/moms, kilde og overlap. Ret gammel slutdato i Daterede satser før overlappende periode.",
-      "invalid_tariff_class": "Automatisk Radius understøtter kun verificeret C. Andre grupper kræver manuelle daterede satser."
+      "invalid_tariff_class": "Automatisk Radius understøtter kun verificeret C. Andre grupper kræver manuelle daterede satser.",
+      "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",

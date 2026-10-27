@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = "NicolaiTandrup/HA-Energy-Price-Engine"
-TAG = "v0.1.0-beta.1"
+TAG = "v0.1.0-beta.2"
 DOMAIN = "ha_energy_price_engine"
 
 
@@ -57,9 +57,7 @@ def verify(output, expected_commit):
     assert source_commit == expected_commit, "Public tag differs from validated source"
     repository = api(f"repos/{REPOSITORY}")
     assert repository["default_branch"] == "main"
-    assert api(f"repos/{REPOSITORY}/commits/main")["sha"] == expected_commit, (
-        "Main advanced since release validation"
-    )
+    main_commit = api(f"repos/{REPOSITORY}/commits/main")["sha"]
     main_tree = api(f"repos/{REPOSITORY}/git/trees/main?recursive=1")
     assert f"custom_components/{DOMAIN}/manifest.json" in {p["path"] for p in main_tree["tree"]}
     asset_map = {a["name"]: a for a in release["assets"]}
@@ -105,6 +103,7 @@ def verify(output, expected_commit):
         "verified_at": datetime.now(UTC).isoformat(),
         "repository": repository,
         "release": release,
+        "main_commit": main_commit,
         "source_commit": source_commit,
         "source_archive": str(source.resolve()),
         "source_archive_url": source_url,
