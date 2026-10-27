@@ -115,32 +115,30 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Leverandørkontrakt",
-        "description": "{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nPåkrævet til slutpriser: din leverandørs tillæg pr. kWh, enhed, moms, fra-/til-dato og kontrolreference. EWII er kun et navn. Aktivér afkrydsningen og udfyld felterne for at tilføje en periode. Lad den være slået fra for at bevare eksisterende perioder eller gemme en ufuldstændig opsætning; rå spotpriser virker stadig. Ingen privat sats gættes.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
+        "description": "{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nHvad er dit tillæg oven i spotprisen? Indtast beløbet fra din regning eller aftale, helst i øre/kWh. Bekræft moms og gyldighedsdatoer. EWII og andre leverandører kræver dine egne vilkår.\n\nDu kan også vælge et udtrykkeligt godkendt foreløbigt estimat eller afslutte med manglende oplysninger. Ingen manglende pris bliver til 0.\n\nFortsæt gemmer siden som kladde; Gem & verificér anvender. Indtastede felter sendes ikke, når du lukker dialogen. Vælg Fortsæt først.",
         "data": {
           "navigation": "Navigation",
           "supplier": "Elleverandør",
-          "add_contract": "Tilføj/ret kontraktperioden i kladden",
-          "amount": "Kontrakttillæg (påkrævet ved tilføjelse)",
-          "unit": "Enhed for kontraktsats",
-          "vat_included": "Kontraktsatsen indeholder allerede moms",
-          "rate_vat_percent": "Kontraktmoms (%)",
-          "valid_from": "Gælder fra (inklusive)",
-          "valid_to": "Gælder indtil (eksklusive)",
-          "verified_on": "Vilkår verificeret den",
-          "source": "Kontraktreference (ingen kundeoplysninger)"
+          "contract_mode": "Hvordan skal tillægget angives?",
+          "amount": "Hvad er dit tillæg oven i spotprisen?",
+          "unit": "Enhed for tillæg",
+          "vat_included": "Beløbet indeholder allerede moms",
+          "rate_vat_percent": "Moms på tillæg (%)",
+          "valid_from": "Gælder fra og med",
+          "valid_to": "Gælder indtil (datoen er ikke med)",
+          "contract_reference": "Valgfri reference uden kundenumre",
+          "confirm_verified": "Jeg har kontrolleret beløb, moms og datoer i regning/aftale",
+          "approve_estimate": "Jeg godkender et UVERIFICERET estimat kun til visning",
+          "replace_periods": "Erstat overlappende gemte leverandørperioder"
         },
         "data_description": {
-          "navigation": "Vælg Næste, Tilbage eller Oversigt og tryk Fortsæt. Siden bevares i en kladde; aktive priser ændres først med Gem og kontrollér.",
-          "supplier": "EWII er et navn, ikke en kontraktsats. Den historiske husstandssats 0,030 DKK/kWh uden moms gælder kun juni–september 2026. Antag ikke nutidige eller andre steders vilkår.",
-          "add_contract": "Fra bevarer eksisterende perioder. Slå til for at indtaste en verificeret periode. Manglende nødvendig dækning forbliver utilgængelig.",
-          "amount": "Din faktisk verificerede sats i den valgte enhed. Private kontraktvilkår udfyldes ikke automatisk.",
-          "unit": "Denne enhed gælder kontraktsatsen, ikke Nord Pool-input eller visningsenheden.",
-          "vat_included": "Bekræft fakturaens konvention, så moms ikke tilføjes to gange.",
-          "rate_vat_percent": "25 betyder 25 %; skriv ikke 0,25 for 25 %.",
-          "valid_from": "Påkrævet ved ny periode. Lokal leveringsdato.",
-          "valid_to": "Påkrævet ved ny periode. Satsen gælder ikke på denne dato; forlæng ikke ud over verificerede vilkår.",
-          "verified_on": "Påkrævet ved ny periode. Angiv datoen for kontrol af kontrakten/kilden.",
-          "source": "Påkrævet ved ny periode, fx verificeret kontrakt. Undlad adresser, kundenumre og hemmeligheder."
+          "amount": "Find tillægget i din elaftale eller på regningen under handelstillæg, spotpristillæg eller variabel elpris. Medtag ikke faste månedsabonnementer. Indtast kun 0, hvis aftalen udtrykkeligt siger 0.",
+          "unit": "Standard er øre/kWh: 3 øre = 0,030 DKK. Dette er aftalens enhed, ikke Nord Pools inputenhed.",
+          "vat_included": "Kontrollér om beløbet er inkl. eller ekskl. moms, så moms ikke lægges til to gange.",
+          "valid_to": "Eksklusiv slutdato: en aftale til og med 30. september slutter 1. oktober. Forlæng ikke ud over kendte vilkår.",
+          "replace_periods": "Kun de overlappende dele erstattes. Andre datoer og tariffer bevares. Se gemte perioder under Avanceret.",
+          "approve_estimate": "Foreløbige priser er ESTIMEREDE/UVERIFICEREDE. De gemmes ikke som verificerede priser, ændrer ikke API til READY og må ikke bruges til ladestyring.",
+          "supplier": "Valget opretter intet tillæg. Historisk EWII-tillæg på 0,030 DKK ekskl. moms gælder kun juni–september 2026."
         },
         "submit": "Fortsæt"
       },
@@ -178,7 +176,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Oversigt, Gem og kontrollér",
-        "description": "Sted/kilde valideret: {site_validation}. Ikke anvendte sideændringer: {pending}. Ret sted/kilde før kontrol; Gem sender dig tilbage til ikke anvendte sider.\n\n{draft_status} · ✓ svarer til aktive indstillinger; ✎ kladdeændringer. Intet anvendes før Gem og kontrollér.\n\n**Sted:** {name} · {site_id}\n**Kilde:** {source} · {area} · {timezone}\n**Visning:** {display_unit} · moms {vat}% · lager/API DKK/kWh\n\n**Rå kilde — ✓ fuldstændig, ✕ mangler/fejlet, ⚠ forældet:**\n{raw}\n\n**Beregnet slutpris — kontrollerede kvarterer:**\n{final}\n\n**Leverandøraftale (kontrolleret dateret tillæg):** {supplier}\n**Nettarif (Radius-kontrol eller daterede manuelle satser):** {dso}\n**Energinet net:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Elafgift:** {electricity_tax}\n\n✓ perioden er dækket; ✕ mangler/ikke kontrolleret på den viste dato. Ret hvert ✕ via dets trin nedenfor. Manglende satser gør slutpriser utilgængelige; gyldige rå spotpriser vises stadig. Gem og kontrollér anvender kladden og kontrollerer kilder igen; der er ingen ekstra Gem-menu.\n\nTekniske kilde-/beregningsoplysninger:\n{technical}",
+        "description": "**{name}** · {area} · {display_unit} · moms {vat}%\n\n{draft_status} (✓ gemt / ✎ kladde). Ikke anvendte sider: {pending}.\n\n{table}\n\nRet manglende eller udløbne komponenter nedenfor. Gem & verificér anvender én gang og kontrollerer de faktisk gemte priser. Foreløbige priser er kun til visning. Avanceret indeholder alle trin, manuelle perioder og diagnostik.",
         "data": {},
         "data_description": {},
         "submit": "Fortsæt",
@@ -231,13 +229,44 @@
           "remove_rate": "Fjern dateret sats",
           "storage": "Verificeret sikkerhedskopi",
           "breakdown": "Undersøg gemt kvarter",
-          "wizard_grid": "Trin for nettariffer",
-          "wizard_supplier": "Trin for leverandørkontrakt",
-          "wizard_charges": "Trin for nationale satser"
+          "wizard_grid": "Ret nettarif / Radius",
+          "wizard_supplier": "Ret leverandøraftale",
+          "wizard_charges": "Ret Energinet / elafgift",
+          "wizard_save": "Gem og kontrollér",
+          "wizard_display": "Tilbage til visning",
+          "wizard_discard": "Kassér kladde…",
+          "wizard_source": "Ret spotkilde",
+          "wizard_recheck": "Kontrollér kilder og beregning igen",
+          "wizard_site": "Ret stedets navn",
+          "wizard_location": "Ret område / tidszone / moms",
+          "hacs_channel": "Ret HACS-betakanal"
         }
       },
       "wizard_recheck": {
         "title": "Kontrollér igen"
+      },
+      "wizard_saved": {
+        "title": "Gemt – verificerede priser mangler",
+        "description": "Opsætningen er gemt, men der er endnu ingen komplette verificerede priser for i dag. Dette er ikke en bekræftelse på færdig prisopsætning. Ret komponenterne nedenfor eller afslut bevidst med ufuldstændig opsætning. Estimater er kun til visning.\n\n{table}",
+        "data": {
+          "action": "Næste handling"
+        }
+      },
+      "site_management": {
+        "title": "Fjern eller slet dette sted",
+        "description": "Sted: **{site_id}**. Fjern med arkiv bevarer prishistorikken på nedenstående stier og opretter en arkivoversigt. Det gendannes aldrig automatisk. Permanent sletning kræver både sted-ID og bekræftelse. Kun dette aktive steds PE-filer, kladder og registerposter slettes. Tidligere arkiver og HA’s globale historik/backup slettes ikke. HACS-afinstallation sletter ikke historik.\n\n{files}",
+        "data": {
+          "operation": "Handling",
+          "site_id": "Skriv sted-ID for permanent sletning",
+          "confirm": "Jeg godkender permanent sletning af dette steds PE-data"
+        }
+      },
+      "hacs_channel": {
+        "title": "HACS – betaversioner",
+        "description": "Kun prereleases er udgivet. Når Vis betaversioner er slået fra i HACS, viser HACS en main-commit som seneste version. Denne handling slår betakanalen til KUN for Energy Price Engine via HACS’ egen API og opdaterer oplysningerne. Den installerer intet og ændrer ingen andre repositorier.\n\nVed fejl: åbn PE i HACS → Vis betaversioner → opdatér oplysninger.",
+        "data": {
+          "confirm": "Aktivér PE-betakanalen i HACS"
+        }
       }
     },
     "error": {
@@ -253,12 +282,21 @@
       "rate_required": "Påkrævet ved Tilføj kontrakt. Indtast en verificeret værdi, eller slå fra for at beholde perioderne.",
       "invalid_rate": "Kontrollér datoer, enheder/moms, kilde og overlap. Ret gammel slutdato i Daterede satser før overlappende periode.",
       "invalid_tariff_class": "Automatisk Radius understøtter kun verificeret C. Andre grupper kræver manuelle daterede satser.",
-      "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede."
+      "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede.",
+      "verification_required": "Kontrollér aftalen og markér bekræftelsen.",
+      "estimate_approval_required": "Godkend udtrykkeligt et estimat kun til visning.",
+      "deletion_confirmation": "Skriv sted-ID nøjagtigt og bekræft permanent sletning.",
+      "deletion_failed": "Oprydning mislykkedes. Stedet er stoppet. Ret filadgang og prøv igen; kontrollér diagnostik før geninstallation.",
+      "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger."
     },
     "abort": {
       "already_configured": "Dette sted-ID er allerede konfigureret.",
       "reconfigure_successful": "Stedets kilde er opdateret. Permanent identitet og daterede satser blev bevaret.",
-      "draft_discarded": "Kladden er kasseret; aktive priser, indstillinger og historik er bevaret."
+      "draft_discarded": "Kladden er kasseret; aktive priser, indstillinger og historik er bevaret.",
+      "saved_incomplete": "Opsætningen er gemt med manglende verificerede priser. Åbn Konfigurér for at fortsætte. Foreløbige estimater er kun til visning.",
+      "site_archived": "Stedet er fjernet. Identificeret prishistorik beholdes i PE-arkivoversigten.",
+      "site_deleted": "Dette steds PE-data er slettet permanent.",
+      "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}."
     },
     "create_entry": {
       "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten."
@@ -466,32 +504,30 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Leverandørkontrakt",
-        "description": "{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nPåkrævet til slutpriser: din leverandørs tillæg pr. kWh, enhed, moms, fra-/til-dato og kontrolreference. EWII er kun et navn. Aktivér afkrydsningen og udfyld felterne for at tilføje en periode. Lad den være slået fra for at bevare eksisterende perioder eller gemme en ufuldstændig opsætning; rå spotpriser virker stadig. Ingen privat sats gættes.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
+        "description": "{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nHvad er dit tillæg oven i spotprisen? Indtast beløbet fra din regning eller aftale, helst i øre/kWh. Bekræft moms og gyldighedsdatoer. EWII og andre leverandører kræver dine egne vilkår.\n\nDu kan også vælge et udtrykkeligt godkendt foreløbigt estimat eller afslutte med manglende oplysninger. Ingen manglende pris bliver til 0.\n\nFortsæt gemmer siden som kladde; Gem & verificér anvender. Indtastede felter sendes ikke, når du lukker dialogen. Vælg Fortsæt først.",
         "data": {
           "navigation": "Navigation",
           "supplier": "Elleverandør",
-          "add_contract": "Tilføj/ret kontraktperioden i kladden",
-          "amount": "Kontrakttillæg (påkrævet ved tilføjelse)",
-          "unit": "Enhed for kontraktsats",
-          "vat_included": "Kontraktsatsen indeholder allerede moms",
-          "rate_vat_percent": "Kontraktmoms (%)",
-          "valid_from": "Gælder fra (inklusive)",
-          "valid_to": "Gælder indtil (eksklusive)",
-          "verified_on": "Vilkår verificeret den",
-          "source": "Kontraktreference (ingen kundeoplysninger)"
+          "contract_mode": "Hvordan skal tillægget angives?",
+          "amount": "Hvad er dit tillæg oven i spotprisen?",
+          "unit": "Enhed for tillæg",
+          "vat_included": "Beløbet indeholder allerede moms",
+          "rate_vat_percent": "Moms på tillæg (%)",
+          "valid_from": "Gælder fra og med",
+          "valid_to": "Gælder indtil (datoen er ikke med)",
+          "contract_reference": "Valgfri reference uden kundenumre",
+          "confirm_verified": "Jeg har kontrolleret beløb, moms og datoer i regning/aftale",
+          "approve_estimate": "Jeg godkender et UVERIFICERET estimat kun til visning",
+          "replace_periods": "Erstat overlappende gemte leverandørperioder"
         },
         "data_description": {
-          "navigation": "Vælg Næste, Tilbage eller Oversigt og tryk Fortsæt. Siden bevares i en kladde; aktive priser ændres først med Gem og kontrollér.",
-          "supplier": "EWII er et navn, ikke en kontraktsats. Den historiske husstandssats 0,030 DKK/kWh uden moms gælder kun juni–september 2026. Antag ikke nutidige eller andre steders vilkår.",
-          "add_contract": "Fra bevarer eksisterende perioder. Slå til for at indtaste en verificeret periode. Manglende nødvendig dækning forbliver utilgængelig.",
-          "amount": "Din faktisk verificerede sats i den valgte enhed. Private kontraktvilkår udfyldes ikke automatisk.",
-          "unit": "Denne enhed gælder kontraktsatsen, ikke Nord Pool-input eller visningsenheden.",
-          "vat_included": "Bekræft fakturaens konvention, så moms ikke tilføjes to gange.",
-          "rate_vat_percent": "25 betyder 25 %; skriv ikke 0,25 for 25 %.",
-          "valid_from": "Påkrævet ved ny periode. Lokal leveringsdato.",
-          "valid_to": "Påkrævet ved ny periode. Satsen gælder ikke på denne dato; forlæng ikke ud over verificerede vilkår.",
-          "verified_on": "Påkrævet ved ny periode. Angiv datoen for kontrol af kontrakten/kilden.",
-          "source": "Påkrævet ved ny periode, fx verificeret kontrakt. Undlad adresser, kundenumre og hemmeligheder."
+          "amount": "Find tillægget i din elaftale eller på regningen under handelstillæg, spotpristillæg eller variabel elpris. Medtag ikke faste månedsabonnementer. Indtast kun 0, hvis aftalen udtrykkeligt siger 0.",
+          "unit": "Standard er øre/kWh: 3 øre = 0,030 DKK. Dette er aftalens enhed, ikke Nord Pools inputenhed.",
+          "vat_included": "Kontrollér om beløbet er inkl. eller ekskl. moms, så moms ikke lægges til to gange.",
+          "valid_to": "Eksklusiv slutdato: en aftale til og med 30. september slutter 1. oktober. Forlæng ikke ud over kendte vilkår.",
+          "replace_periods": "Kun de overlappende dele erstattes. Andre datoer og tariffer bevares. Se gemte perioder under Avanceret.",
+          "approve_estimate": "Foreløbige priser er ESTIMEREDE/UVERIFICEREDE. De gemmes ikke som verificerede priser, ændrer ikke API til READY og må ikke bruges til ladestyring.",
+          "supplier": "Valget opretter intet tillæg. Historisk EWII-tillæg på 0,030 DKK ekskl. moms gælder kun juni–september 2026."
         },
         "submit": "Fortsæt"
       },
@@ -529,7 +565,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Oversigt, Gem og kontrollér",
-        "description": "Sted/kilde valideret: {site_validation}. Ikke anvendte sideændringer: {pending}. Ret sted/kilde før kontrol; Gem sender dig tilbage til ikke anvendte sider.\n\n{draft_status} · ✓ svarer til aktive indstillinger; ✎ kladdeændringer. Intet anvendes før Gem og kontrollér.\n\n**Sted:** {name} · {site_id}\n**Kilde:** {source} · {area} · {timezone}\n**Visning:** {display_unit} · moms {vat}% · lager/API DKK/kWh\n\n**Rå kilde — ✓ fuldstændig, ✕ mangler/fejlet, ⚠ forældet:**\n{raw}\n\n**Beregnet slutpris — kontrollerede kvarterer:**\n{final}\n\n**Leverandøraftale (kontrolleret dateret tillæg):** {supplier}\n**Nettarif (Radius-kontrol eller daterede manuelle satser):** {dso}\n**Energinet net:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Elafgift:** {electricity_tax}\n\n✓ perioden er dækket; ✕ mangler/ikke kontrolleret på den viste dato. Ret hvert ✕ via dets trin nedenfor. Manglende satser gør slutpriser utilgængelige; gyldige rå spotpriser vises stadig. Gem og kontrollér anvender kladden og kontrollerer kilder igen; der er ingen ekstra Gem-menu.\n\nTekniske kilde-/beregningsoplysninger:\n{technical}",
+        "description": "**{name}** · {area} · {display_unit} · moms {vat}%\n\n{draft_status} (✓ gemt / ✎ kladde). Ikke anvendte sider: {pending}.\n\n{table}\n\nRet manglende eller udløbne komponenter nedenfor. Gem & verificér anvender én gang og kontrollerer de faktisk gemte priser. Foreløbige priser er kun til visning. Avanceret indeholder alle trin, manuelle perioder og diagnostik.",
         "data": {},
         "data_description": {},
         "submit": "Fortsæt",
@@ -582,13 +618,45 @@
           "remove_rate": "Fjern dateret sats",
           "storage": "Verificeret sikkerhedskopi",
           "breakdown": "Undersøg gemt kvarter",
-          "wizard_grid": "Trin for nettariffer",
-          "wizard_supplier": "Trin for leverandørkontrakt",
-          "wizard_charges": "Trin for nationale satser"
+          "wizard_grid": "Ret nettarif / Radius",
+          "wizard_supplier": "Ret leverandøraftale",
+          "wizard_charges": "Ret Energinet / elafgift",
+          "wizard_save": "Gem og kontrollér",
+          "wizard_display": "Tilbage til visning",
+          "wizard_discard": "Kassér kladde…",
+          "wizard_source": "Ret spotkilde",
+          "wizard_recheck": "Kontrollér kilder og beregning igen",
+          "wizard_site": "Ret stedets navn",
+          "wizard_location": "Ret område / tidszone / moms",
+          "hacs_channel": "Ret HACS-betakanal",
+          "site_management": "Fjern / slet dette sted…"
         }
       },
       "wizard_recheck": {
         "title": "Kontrollér igen"
+      },
+      "wizard_saved": {
+        "title": "Gemt – verificerede priser mangler",
+        "description": "Opsætningen er gemt, men der er endnu ingen komplette verificerede priser for i dag. Dette er ikke en bekræftelse på færdig prisopsætning. Ret komponenterne nedenfor eller afslut bevidst med ufuldstændig opsætning. Estimater er kun til visning.\n\n{table}",
+        "data": {
+          "action": "Næste handling"
+        }
+      },
+      "site_management": {
+        "title": "Fjern eller slet dette sted",
+        "description": "Sted: **{site_id}**. Fjern med arkiv bevarer prishistorikken på nedenstående stier og opretter en arkivoversigt. Det gendannes aldrig automatisk. Permanent sletning kræver både sted-ID og bekræftelse. Kun dette aktive steds PE-filer, kladder og registerposter slettes. Tidligere arkiver og HA’s globale historik/backup slettes ikke. HACS-afinstallation sletter ikke historik.\n\n{files}",
+        "data": {
+          "operation": "Handling",
+          "site_id": "Skriv sted-ID for permanent sletning",
+          "confirm": "Jeg godkender permanent sletning af dette steds PE-data"
+        }
+      },
+      "hacs_channel": {
+        "title": "HACS – betaversioner",
+        "description": "Kun prereleases er udgivet. Når Vis betaversioner er slået fra i HACS, viser HACS en main-commit som seneste version. Denne handling slår betakanalen til KUN for Energy Price Engine via HACS’ egen API og opdaterer oplysningerne. Den installerer intet og ændrer ingen andre repositorier.\n\nVed fejl: åbn PE i HACS → Vis betaversioner → opdatér oplysninger.",
+        "data": {
+          "confirm": "Aktivér PE-betakanalen i HACS"
+        }
       }
     },
     "error": {
@@ -606,12 +674,21 @@
       "rate_required": "Påkrævet ved Tilføj kontrakt. Indtast en verificeret værdi, eller slå fra for at beholde perioderne.",
       "invalid_rate": "Kontrollér datoer, enheder/moms, kilde og overlap. Ret gammel slutdato i Daterede satser før overlappende periode.",
       "invalid_tariff_class": "Automatisk Radius understøtter kun verificeret C. Andre grupper kræver manuelle daterede satser.",
-      "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede."
+      "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede.",
+      "verification_required": "Kontrollér aftalen og markér bekræftelsen.",
+      "estimate_approval_required": "Godkend udtrykkeligt et estimat kun til visning.",
+      "deletion_confirmation": "Skriv sted-ID nøjagtigt og bekræft permanent sletning.",
+      "deletion_failed": "Oprydning mislykkedes. Stedet er stoppet. Ret filadgang og prøv igen; kontrollér diagnostik før geninstallation.",
+      "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger."
     },
     "abort": {
       "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",
       "site_not_loaded": "Indlæs stedet for at se gemte priser.",
-      "draft_discarded": "Kladden er kasseret; aktive priser, indstillinger og historik er bevaret."
+      "draft_discarded": "Kladden er kasseret; aktive priser, indstillinger og historik er bevaret.",
+      "saved_incomplete": "Opsætningen er gemt med manglende verificerede priser. Åbn Konfigurér for at fortsætte. Foreløbige estimater er kun til visning.",
+      "site_archived": "Stedet er fjernet. Identificeret prishistorik beholdes i PE-arkivoversigten.",
+      "site_deleted": "Dette steds PE-data er slettet permanent.",
+      "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}."
     },
     "create_entry": {
       "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten."
@@ -715,6 +792,12 @@
           "stale": "Forældet — kilden skal kontrolleres igen",
           "error": "Kontrol fejlet — se prisproblem"
         }
+      },
+      "estimated_current": {
+        "name": "ESTIMERET / UVERIFICERET aktuel pris"
+      },
+      "estimated_next": {
+        "name": "ESTIMERET / UVERIFICERET pris næste kvarter"
       }
     },
     "update": {
@@ -787,6 +870,54 @@
         "grid_subscription": "Netabonnement",
         "all": "Alt forbrug",
         "heating_above_4000": "Dokumenteret berettiget elvarme over grænsen"
+      }
+    },
+    "review": {
+      "options": {
+        "today": "I dag",
+        "tomorrow": "I morgen",
+        "source": "Nord Pool",
+        "dso": "Nettarif",
+        "supplier": "Elleverandør",
+        "energinet_net": "Energinet net",
+        "energinet_system": "Energinet system",
+        "electricity_tax": "Elafgift",
+        "final": "Samlet pris",
+        "verified": "Verificeret",
+        "missing": "Mangler",
+        "expired": "Udløbet",
+        "provisional": "Foreløbig",
+        "unavailable": "Utilgængelig",
+        "included": "Inkluderet"
+      }
+    },
+    "contract_mode": {
+      "options": {
+        "retain": "Behold gemte aftaleperioder",
+        "verified": "Indtast verificeret tillæg fra regning/aftale",
+        "provisional": "Godkend foreløbigt estimat – kun visning",
+        "missing": "Jeg kender ikke mit tillæg endnu"
+      }
+    },
+    "saved_action": {
+      "options": {
+        "wizard_display": "Tilbage til visning",
+        "advanced": "Daterede satser / manuelle ændringer",
+        "wizard_discard": "Kassér kladde…",
+        "wizard_source": "Ret spotkilde",
+        "wizard_grid": "Ret nettarif / Radius",
+        "wizard_supplier": "Ret leverandøraftale",
+        "wizard_charges": "Ret Energinet / elafgift",
+        "wizard_recheck": "Kontrollér kilder og beregning igen",
+        "wizard_site": "Ret stedets navn",
+        "wizard_location": "Ret område / tidszone / moms",
+        "finish": "Afslut med ufuldstændig opsætning"
+      }
+    },
+    "site_removal": {
+      "options": {
+        "archive": "Fjern stedet, men behold identificeret arkiv",
+        "permanent": "Slet dette steds PE-data permanent"
       }
     }
   }

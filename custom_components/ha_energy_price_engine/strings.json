@@ -115,32 +115,30 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Supplier contract",
-        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nRequired for final prices: your supplier’s per-kWh markup, unit, VAT convention, start/end dates and verification reference. Select EWII as a label only. To add a period, enable the checkbox and complete its fields below. Leave it off to retain existing periods or save incomplete setup; raw spot prices will still work. No private rate is guessed.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nWhat is your supplier markup above the spot price? Enter the amount from your electricity bill or contract, preferably in øre/kWh. Confirm VAT and effective dates. EWII and other suppliers require your own terms.\n\nYou may explicitly approve a provisional estimate or finish with missing information. Missing prices never become 0.\n\nContinue preserves this page as a draft; Save & verify applies it. Closing does not submit typed fields. Choose Continue first.",
         "data": {
           "navigation": "Navigation",
-          "supplier": "Supplier",
-          "add_contract": "Add/update this draft contract period",
-          "amount": "Contract markup (required when adding)",
-          "unit": "Contract rate unit",
-          "vat_included": "Contract amount already includes VAT",
-          "rate_vat_percent": "Contract VAT (%)",
+          "supplier": "Electricity supplier",
+          "contract_mode": "How will you provide your markup?",
+          "amount": "What is your supplier markup above the spot price?",
+          "unit": "Markup unit",
+          "vat_included": "Amount already includes VAT",
+          "rate_vat_percent": "Markup VAT (%)",
           "valid_from": "Effective from (inclusive)",
           "valid_to": "Effective until (exclusive)",
-          "verified_on": "Terms verified on",
-          "source": "Contract reference (no customer identifiers)"
+          "contract_reference": "Optional reference without customer numbers",
+          "confirm_verified": "I checked the amount, VAT and dates against my bill/contract",
+          "approve_estimate": "I approve an UNVERIFIED estimate for visualization only",
+          "replace_periods": "Replace overlapping saved supplier periods"
         },
         "data_description": {
-          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
-          "supplier": "EWII is a label, not a contract preset. Historical household .030 DKK/kWh ex VAT applies June–September 2026 only. Never assume current/other-site terms.",
-          "add_contract": "Off retains all existing periods. Turn on to enter a verified period below. Missing required coverage remains unavailable.",
-          "amount": "Your actual verified amount in the selected unit. No private contract rate is filled automatically.",
-          "unit": "This unit belongs to the contract amount, not Nord Pool input or the display preference.",
-          "vat_included": "Confirm the invoice convention to prevent double VAT.",
-          "rate_vat_percent": "25 means 25%; do not type 0.25 for 25%.",
-          "valid_from": "Required when adding a period. Local delivery date.",
-          "valid_to": "Required when adding. The rule does not apply on this date; do not extend beyond verified terms.",
-          "verified_on": "Required when adding. Record when the actual contract/source was checked.",
-          "source": "Required when adding, e.g. verified contract. Do not enter addresses, account numbers or secrets."
+          "amount": "Find the per-kWh markup under trading fee, spot-price supplement or variable electricity price on your bill/contract. Exclude fixed monthly subscriptions. Enter 0 only if your contract explicitly says 0.",
+          "unit": "Default is øre/kWh: 3 øre = 0.030 DKK. This is your contract unit, separate from Nord Pool input.",
+          "vat_included": "Check whether the quoted amount includes VAT to avoid adding it twice.",
+          "valid_to": "Exclusive end: a contract through September 30 ends October 1. Do not extend beyond known terms.",
+          "replace_periods": "Replaces overlapping portions only. Other dates and tariffs are preserved. Inspect saved periods under Advanced.",
+          "approve_estimate": "Provisional prices are ESTIMATED/UNVERIFIED. They never enter verified history or make the consumer API READY. Do not use them for charging control.",
+          "supplier": "Selection creates no markup. Historical EWII .030 DKK excluding VAT applies only June–September 2026."
         },
         "submit": "Continue"
       },
@@ -178,7 +176,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Review, Save & verify",
-        "description": "Site/source configuration valid: {site_validation}. Unapplied page edits: {pending}. Complete site/source before verification; Save returns to unapplied pages.\n\n{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
+        "description": "**{name}** · {area} · {display_unit} · VAT {vat}%\n\n{draft_status} (✓ saved / ✎ draft). Unapplied pages: {pending}.\n\n{table}\n\nCorrect missing or expired components below. Save & verify applies once and checks actual persisted prices. Provisional prices are for visualization only. Advanced contains all steps, manual periods and diagnostics.",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -231,13 +229,44 @@
           "remove_rate": "Remove dated rate",
           "storage": "Verified backup",
           "breakdown": "Inspect stored quarter",
-          "wizard_grid": "Grid tariff step",
-          "wizard_supplier": "Supplier contract step",
-          "wizard_charges": "National charges step"
+          "wizard_grid": "Correct grid / Radius tariff",
+          "wizard_supplier": "Correct supplier contract",
+          "wizard_charges": "Correct national charges / tax",
+          "wizard_save": "Save & verify",
+          "wizard_display": "Back to display preference",
+          "wizard_discard": "Discard draft…",
+          "wizard_source": "Correct spot source",
+          "wizard_recheck": "Recheck sources and calculation",
+          "wizard_site": "Correct site name",
+          "wizard_location": "Correct area / timezone / VAT",
+          "hacs_channel": "Repair HACS beta channel"
         }
       },
       "wizard_recheck": {
         "title": "Recheck"
+      },
+      "wizard_saved": {
+        "title": "Saved – verified prices still unavailable",
+        "description": "Your settings are saved, but complete verified prices for today are still unavailable. Pricing setup is incomplete. Correct the components below or intentionally finish incomplete setup. Estimates are visualization only.\n\n{table}",
+        "data": {
+          "action": "Next action"
+        }
+      },
+      "site_management": {
+        "title": "Remove or delete this site",
+        "description": "Site: **{site_id}**. Remove with archive retains the price history at the paths below and records an archive inventory. It is never restored automatically. Permanent deletion requires both the site ID and confirmation. Only this active site’s PE files, drafts and registry entries are removed. Earlier archives and HA’s global history/backups are not deleted. HACS uninstall preserves history.\n\n{files}",
+        "data": {
+          "operation": "Operation",
+          "site_id": "Type the site ID for permanent deletion",
+          "confirm": "I confirm permanent deletion of this site’s PE data"
+        }
+      },
+      "hacs_channel": {
+        "title": "HACS beta updates",
+        "description": "Only prereleases are published. With Show beta versions off, HACS falls back to main’s commit as its available version. This action enables the beta channel ONLY for Energy Price Engine through HACS’s own API and refreshes information. It installs nothing and changes no other repository.\n\nIf unavailable: open PE in HACS → Show beta versions → refresh information.",
+        "data": {
+          "confirm": "Enable PE’s beta channel in HACS"
+        }
       }
     },
     "error": {
@@ -253,12 +282,21 @@
       "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
       "invalid_rate": "Check dates, explicit units/VAT, source and overlap. Edit an old end date in Dated rates before adding an overlapping period.",
       "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates.",
-      "pending_page": "Confirm these preserved page edits with Continue/Next before saving. Active settings remain unchanged."
+      "pending_page": "Confirm these preserved page edits with Continue/Next before saving. Active settings remain unchanged.",
+      "verification_required": "Check your contract and confirm verification.",
+      "estimate_approval_required": "Explicitly approve a visualization-only estimate.",
+      "deletion_confirmation": "Type the exact site ID and confirm permanent deletion.",
+      "deletion_failed": "Cleanup failed. The site stays stopped. Correct file access and retry; check diagnostics before reinstalling.",
+      "hacs_channel_failed": "HACS could not confirm the beta channel. Sign in as an administrator. Open PE in HACS, enable Show beta versions and refresh information."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
       "reconfigure_successful": "Site source updated. Stable site identity and dated business settings were preserved.",
-      "draft_discarded": "Draft discarded; active prices/configuration/history were preserved."
+      "draft_discarded": "Draft discarded; active prices/configuration/history were preserved.",
+      "saved_incomplete": "Settings saved with verified prices unavailable. Open Configure to continue. Provisional estimates are visualization only.",
+      "site_archived": "Site removed. Identified price history is retained in the PE archive inventory.",
+      "site_deleted": "This site’s PE data was permanently deleted.",
+      "hacs_channel_updated": "HACS beta channel saved. Latest published version: {version}."
     },
     "create_entry": {
       "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity."
@@ -466,32 +504,30 @@
       },
       "wizard_supplier": {
         "title": "3 / 6 · Supplier contract",
-        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nRequired for final prices: your supplier’s per-kWh markup, unit, VAT convention, start/end dates and verification reference. Select EWII as a label only. To add a period, enable the checkbox and complete its fields below. Leave it off to retain existing periods or save incomplete setup; raw spot prices will still work. No private rate is guessed.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
+        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nWhat is your supplier markup above the spot price? Enter the amount from your electricity bill or contract, preferably in øre/kWh. Confirm VAT and effective dates. EWII and other suppliers require your own terms.\n\nYou may explicitly approve a provisional estimate or finish with missing information. Missing prices never become 0.\n\nContinue preserves this page as a draft; Save & verify applies it. Closing does not submit typed fields. Choose Continue first.",
         "data": {
           "navigation": "Navigation",
-          "supplier": "Supplier",
-          "add_contract": "Add/update this draft contract period",
-          "amount": "Contract markup (required when adding)",
-          "unit": "Contract rate unit",
-          "vat_included": "Contract amount already includes VAT",
-          "rate_vat_percent": "Contract VAT (%)",
+          "supplier": "Electricity supplier",
+          "contract_mode": "How will you provide your markup?",
+          "amount": "What is your supplier markup above the spot price?",
+          "unit": "Markup unit",
+          "vat_included": "Amount already includes VAT",
+          "rate_vat_percent": "Markup VAT (%)",
           "valid_from": "Effective from (inclusive)",
           "valid_to": "Effective until (exclusive)",
-          "verified_on": "Terms verified on",
-          "source": "Contract reference (no customer identifiers)"
+          "contract_reference": "Optional reference without customer numbers",
+          "confirm_verified": "I checked the amount, VAT and dates against my bill/contract",
+          "approve_estimate": "I approve an UNVERIFIED estimate for visualization only",
+          "replace_periods": "Replace overlapping saved supplier periods"
         },
         "data_description": {
-          "navigation": "Choose Next, Back or Review, then Continue. Continue preserves this page in a resumable draft; active pricing changes only on Save & verify.",
-          "supplier": "EWII is a label, not a contract preset. Historical household .030 DKK/kWh ex VAT applies June–September 2026 only. Never assume current/other-site terms.",
-          "add_contract": "Off retains all existing periods. Turn on to enter a verified period below. Missing required coverage remains unavailable.",
-          "amount": "Your actual verified amount in the selected unit. No private contract rate is filled automatically.",
-          "unit": "This unit belongs to the contract amount, not Nord Pool input or the display preference.",
-          "vat_included": "Confirm the invoice convention to prevent double VAT.",
-          "rate_vat_percent": "25 means 25%; do not type 0.25 for 25%.",
-          "valid_from": "Required when adding a period. Local delivery date.",
-          "valid_to": "Required when adding. The rule does not apply on this date; do not extend beyond verified terms.",
-          "verified_on": "Required when adding. Record when the actual contract/source was checked.",
-          "source": "Required when adding, e.g. verified contract. Do not enter addresses, account numbers or secrets."
+          "amount": "Find the per-kWh markup under trading fee, spot-price supplement or variable electricity price on your bill/contract. Exclude fixed monthly subscriptions. Enter 0 only if your contract explicitly says 0.",
+          "unit": "Default is øre/kWh: 3 øre = 0.030 DKK. This is your contract unit, separate from Nord Pool input.",
+          "vat_included": "Check whether the quoted amount includes VAT to avoid adding it twice.",
+          "valid_to": "Exclusive end: a contract through September 30 ends October 1. Do not extend beyond known terms.",
+          "replace_periods": "Replaces overlapping portions only. Other dates and tariffs are preserved. Inspect saved periods under Advanced.",
+          "approve_estimate": "Provisional prices are ESTIMATED/UNVERIFIED. They never enter verified history or make the consumer API READY. Do not use them for charging control.",
+          "supplier": "Selection creates no markup. Historical EWII .030 DKK excluding VAT applies only June–September 2026."
         },
         "submit": "Continue"
       },
@@ -529,7 +565,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Review, Save & verify",
-        "description": "Site/source configuration valid: {site_validation}. Unapplied page edits: {pending}. Complete site/source before verification; Save returns to unapplied pages.\n\n{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
+        "description": "**{name}** · {area} · {display_unit} · VAT {vat}%\n\n{draft_status} (✓ saved / ✎ draft). Unapplied pages: {pending}.\n\n{table}\n\nCorrect missing or expired components below. Save & verify applies once and checks actual persisted prices. Provisional prices are for visualization only. Advanced contains all steps, manual periods and diagnostics.",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -582,13 +618,45 @@
           "remove_rate": "Remove dated rate",
           "storage": "Verified backup",
           "breakdown": "Inspect stored quarter",
-          "wizard_grid": "Grid tariff step",
-          "wizard_supplier": "Supplier contract step",
-          "wizard_charges": "National charges step"
+          "wizard_grid": "Correct grid / Radius tariff",
+          "wizard_supplier": "Correct supplier contract",
+          "wizard_charges": "Correct national charges / tax",
+          "wizard_save": "Save & verify",
+          "wizard_display": "Back to display preference",
+          "wizard_discard": "Discard draft…",
+          "wizard_source": "Correct spot source",
+          "wizard_recheck": "Recheck sources and calculation",
+          "wizard_site": "Correct site name",
+          "wizard_location": "Correct area / timezone / VAT",
+          "hacs_channel": "Repair HACS beta channel",
+          "site_management": "Remove / delete this site…"
         }
       },
       "wizard_recheck": {
         "title": "Recheck"
+      },
+      "wizard_saved": {
+        "title": "Saved – verified prices still unavailable",
+        "description": "Your settings are saved, but complete verified prices for today are still unavailable. Pricing setup is incomplete. Correct the components below or intentionally finish incomplete setup. Estimates are visualization only.\n\n{table}",
+        "data": {
+          "action": "Next action"
+        }
+      },
+      "site_management": {
+        "title": "Remove or delete this site",
+        "description": "Site: **{site_id}**. Remove with archive retains the price history at the paths below and records an archive inventory. It is never restored automatically. Permanent deletion requires both the site ID and confirmation. Only this active site’s PE files, drafts and registry entries are removed. Earlier archives and HA’s global history/backups are not deleted. HACS uninstall preserves history.\n\n{files}",
+        "data": {
+          "operation": "Operation",
+          "site_id": "Type the site ID for permanent deletion",
+          "confirm": "I confirm permanent deletion of this site’s PE data"
+        }
+      },
+      "hacs_channel": {
+        "title": "HACS beta updates",
+        "description": "Only prereleases are published. With Show beta versions off, HACS falls back to main’s commit as its available version. This action enables the beta channel ONLY for Energy Price Engine through HACS’s own API and refreshes information. It installs nothing and changes no other repository.\n\nIf unavailable: open PE in HACS → Show beta versions → refresh information.",
+        "data": {
+          "confirm": "Enable PE’s beta channel in HACS"
+        }
       }
     },
     "error": {
@@ -606,12 +674,21 @@
       "rate_required": "Required when Add contract is enabled. Enter a verified value or turn Add contract off to keep existing periods.",
       "invalid_rate": "Check dates, explicit units/VAT, source and overlap. Edit an old end date in Dated rates before adding an overlapping period.",
       "invalid_tariff_class": "Automatic Radius supports verified class C only. Other classes require manual dated rates.",
-      "pending_page": "Confirm these preserved page edits with Continue/Next before saving. Active settings remain unchanged."
+      "pending_page": "Confirm these preserved page edits with Continue/Next before saving. Active settings remain unchanged.",
+      "verification_required": "Check your contract and confirm verification.",
+      "estimate_approval_required": "Explicitly approve a visualization-only estimate.",
+      "deletion_confirmation": "Type the exact site ID and confirm permanent deletion.",
+      "deletion_failed": "Cleanup failed. The site stays stopped. Correct file access and retry; check diagnostics before reinstalling.",
+      "hacs_channel_failed": "HACS could not confirm the beta channel. Sign in as an administrator. Open PE in HACS, enable Show beta versions and refresh information."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
       "site_not_loaded": "Load this site to inspect stored prices.",
-      "draft_discarded": "Draft discarded; active prices/configuration/history were preserved."
+      "draft_discarded": "Draft discarded; active prices/configuration/history were preserved.",
+      "saved_incomplete": "Settings saved with verified prices unavailable. Open Configure to continue. Provisional estimates are visualization only.",
+      "site_archived": "Site removed. Identified price history is retained in the PE archive inventory.",
+      "site_deleted": "This site’s PE data was permanently deleted.",
+      "hacs_channel_updated": "HACS beta channel saved. Latest published version: {version}."
     },
     "create_entry": {
       "saved_pending_verification": "Configuration saved. Verification performed before saving:\n\nRaw source quarters:\n{raw}\n\nCalculated final quarters:\n{final}\n\nIf incomplete, reopen Configure and choose the marked supplier/grid/national step. Source data and calculation are rechecked by runtime; storage/source failures appear on the pricing problem entity."
@@ -715,6 +792,12 @@
           "stale": "Stale — source recheck required",
           "error": "Verification failed — inspect pricing problem"
         }
+      },
+      "estimated_current": {
+        "name": "ESTIMATED / UNVERIFIED current price"
+      },
+      "estimated_next": {
+        "name": "ESTIMATED / UNVERIFIED next-quarter price"
       }
     },
     "update": {
@@ -787,6 +870,54 @@
         "grid_subscription": "Grid subscription",
         "all": "All consumption",
         "heating_above_4000": "Verified eligible heating above threshold"
+      }
+    },
+    "review": {
+      "options": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "source": "Nord Pool",
+        "dso": "Grid tariff",
+        "supplier": "Supplier",
+        "energinet_net": "Energinet network",
+        "energinet_system": "Energinet system",
+        "electricity_tax": "Electricity tax",
+        "final": "Final prices",
+        "verified": "Verified",
+        "missing": "Missing",
+        "expired": "Expired",
+        "provisional": "Provisional",
+        "unavailable": "Unavailable",
+        "included": "Included"
+      }
+    },
+    "contract_mode": {
+      "options": {
+        "retain": "Keep saved contract periods",
+        "verified": "Enter verified markup from bill/contract",
+        "provisional": "Approve provisional estimate – visualization only",
+        "missing": "I do not know my markup yet"
+      }
+    },
+    "saved_action": {
+      "options": {
+        "wizard_display": "Back to display preference",
+        "advanced": "Dated rates / manual overrides",
+        "wizard_discard": "Discard draft…",
+        "wizard_source": "Correct spot source",
+        "wizard_grid": "Correct grid / Radius tariff",
+        "wizard_supplier": "Correct supplier contract",
+        "wizard_charges": "Correct national charges / tax",
+        "wizard_recheck": "Recheck sources and calculation",
+        "wizard_site": "Correct site name",
+        "wizard_location": "Correct area / timezone / VAT",
+        "finish": "Finish with incomplete setup"
+      }
+    },
+    "site_removal": {
+      "options": {
+        "archive": "Remove site and retain identified archive",
+        "permanent": "Permanently delete this site’s PE data"
       }
     }
   }

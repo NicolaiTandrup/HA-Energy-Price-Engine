@@ -51,8 +51,8 @@ async def test_config_flow_site_unique_source_and_invalid_timezone(hass):
             fid, {"next_step_id": "wizard_save"}
         )
         await hass.async_block_till_done()
-    assert result["type"] == FlowResultType.CREATE_ENTRY
-    assert result["data"]["dated_components"] == []
+    assert result["step_id"] == "wizard_saved"
+    assert hass.config_entries.async_entries(DOMAIN)[0].data["dated_components"] == []
     duplicate = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
     duplicate = await hass.config_entries.flow.async_configure(
         duplicate["flow_id"], {"name": "Duplicate", "id": "test_home", "source_type": "nordpool"}
@@ -88,7 +88,9 @@ async def test_options_edit_future_rate_reprice_once_and_survive_restart(hass, f
     # Staging changes does not mutate runtime or durable options.
     assert c.site["dated_components"][0]["amount"] == 11
     result = await save_options(hass, result["flow_id"])
-    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert (
+        result["step_id"] == "wizard_saved"
+    )  # New supplier starts tomorrow; today remains incomplete.
     await hass.async_block_till_done()
     c = entry.runtime_data
     assert entry.options["dated_components"][0]["amount"] == 33

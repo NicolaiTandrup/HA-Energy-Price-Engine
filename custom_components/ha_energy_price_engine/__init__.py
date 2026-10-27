@@ -32,6 +32,13 @@ async def async_migrate_entry(hass, entry):
 
 
 async def async_setup_entry(hass, entry):
+    from homeassistant.helpers.storage import Store
+
+    intents = await Store(hass, 1, f"{DOMAIN}.deletions").async_load() or {}
+    if entry.entry_id in intents:
+        raise ConfigEntryError(
+            "Permanent deletion interrupted. Configure this site to retry cleanup."
+        )
     try:
         coordinator = PriceCoordinator(hass, entry)
         coordinator.integration_version = str((await async_get_integration(hass, DOMAIN)).version)
@@ -54,19 +61,55 @@ async def async_setup_entry(hass, entry):
 
 
 async def async_update_options(hass, entry):
-    from .configuration import settings
+    waiter = hass.data.get(DOMAIN + "_save_waiters", {}).get(entry.entry_id)
+    try:
+        loaded = await hass.config_entries.async_reload(entry.entry_id)
+    except Exception:
+        if waiter and not waiter.done():
+            waiter.set_result(False)
+        raise
+    if waiter and not waiter.done():
+        waiter.set_result(loaded)
 
-    name = settings(entry).get("name", entry.title)
-    if entry.title != name:
-        hass.config_entries.async_update_entry(entry, title=name)
-        return  # The metadata notification invokes this listener once more.
-    await hass.config_entries.async_reload(entry.entry_id)
+
+async def apply_settings(hass, entry, site):
+    """Await one normal reload, including actual transactional persistence."""
+    import asyncio
+
+    waiters = hass.data.setdefault(DOMAIN + "_save_waiters", {})
+    if entry.entry_id in waiters:
+        return False
+    waiter = asyncio.get_running_loop().create_future()
+    waiters[entry.entry_id] = waiter
+    try:
+        had_listener = bool(entry.update_listeners)
+        changed = hass.config_entries.async_update_entry(entry, title=site["name"], options=site)
+        if not changed or not had_listener:
+            return await hass.config_entries.async_reload(entry.entry_id)
+        async with asyncio.timeout(90):
+            return await waiter
+    except TimeoutError, OSError:
+        return False
+    finally:
+        waiters.pop(entry.entry_id, None)
 
 
 async def async_unload_entry(hass, entry):
     if not await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         return False
     entry.runtime_data.stop()
+    async with entry.runtime_data.schedule.work_lock:
+        pass
+    async with entry.runtime_data.price_updater.lock:
+        pass
+    async with entry.runtime_data.price_engine.lock:
+        pass
     hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
     ir.async_delete_issue(hass, DOMAIN, entry.entry_id)
     return True
+
+
+async def async_remove_entry(hass, entry):
+    from .site_lifecycle import removed
+
+    await removed(hass, entry)

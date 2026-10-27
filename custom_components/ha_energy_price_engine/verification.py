@@ -72,6 +72,7 @@ async def verify_site(hass, site, entry_id="onboarding-preview"):
         report = dict(updater.status[site["id"]])
         report["raw"] = updater.raw_reports.get(str(day), {})
         report["coverage"] = component_coverage(site, day)
+        report["estimated_slots"] = len(updater.estimated_slots.get(str(day), ()))
         report["calculated_slots"] = (
             len(engine.records.get(site["id"], ())) if report["status"] == "READY" else 0
         )

@@ -1,6 +1,7 @@
 """Civil-time publication refresh, conditional retries and restart recovery."""
 
 import logging
+from asyncio import Lock
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
@@ -24,6 +25,7 @@ class PriceSchedule:
         self.store = Store(
             self.hass, 1, f"ha_energy_price_engine.{coordinator.entry.entry_id}.price_schedule"
         )
+        self.work_lock = Lock()
         self.days = {}
         self.cancel = None
         self.active = False
@@ -47,6 +49,12 @@ class PriceSchedule:
         )
 
     async def refresh_day(self, site, day, now, *, force=True):
+        async with self.work_lock:
+            if self.coordinator.stopped:
+                return False
+            return await self._refresh_day(site, day, now, force=force)
+
+    async def _refresh_day(self, site, day, now, *, force=True):
         key = site["id"]
         changed = await self.coordinator.price_updater.refresh(site, now, force=force, dates=[day])
         start, end = day_bounds(day, site["timezone"])

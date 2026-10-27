@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.core import callback
+from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.event import async_track_utc_time_change
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -19,6 +20,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(
         [
             PriceSensor(c),
+            EstimatedPriceSensor(c),
+            EstimatedPriceSensor(c, 1),
             RawSpotSensor(c),
             RawSpotSensor(c, 1),
             RawReadinessSensor(c),
@@ -47,6 +50,8 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
             identifiers={(DOMAIN, self.site["id"])},
             name=self.site["name"],
             manufacturer="Energy Price Engine",
+            model="Electricity pricing software",
+            entry_type=DeviceEntryType.SERVICE,
             sw_version=getattr(coordinator, "integration_version", None),
         )
 
@@ -359,3 +364,46 @@ class FinalStatusSensor(ReadinessSensor):
     @property
     def native_value(self):
         return str(self.current_result().status).lower()
+
+
+class EstimatedPriceSensor(BaseSensor):
+    """Unverified visualization only; not a producer API or control input."""
+
+    _attr_native_unit_of_measurement = "DKK/kWh"
+    _attr_suggested_display_precision = 6
+
+    def __init__(self, coordinator, offset=0):
+        super().__init__(coordinator)
+        self.offset = offset
+        self._attr_unique_id = f"{self.site['id']}_estimated_price_{offset}"
+        self._attr_translation_key = "estimated_current" if offset == 0 else "estimated_next"
+
+    @property
+    def native_value(self):
+        now = dt_util.utcnow()
+        target = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(
+            minutes=15 * self.offset
+        )
+        for day, rows in self.coordinator.price_updater.estimated_slots.items():
+            raw = self.coordinator.price_updater.raw_reports.get(day, {})
+            verified = dt_util.parse_datetime(raw.get("verified_at", ""))
+            if (
+                raw.get("status") != "READY"
+                or not verified
+                or not 0 <= (now - verified).total_seconds() < 7200
+            ):
+                continue
+            for row in rows:
+                if row.start == target:
+                    return row.price
+        return None
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            "verification": "ESTIMATED_UNVERIFIED",
+            "visualization_only": True,
+            "eligible_for_control": False,
+            "authoritative_api": False,
+            "vat_included": True,
+        }

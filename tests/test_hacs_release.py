@@ -61,7 +61,9 @@ def release_inputs():
 
 
 @pytest.mark.parametrize("line", list(PINS))
-async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_path, line):
+async def test_hacs_add_discover_beta_download_update_and_reinstall(
+    hass, tmp_path, line, hass_client
+):
     receipt, files, archive = release_inputs()
     main_files = files
     if main_archive := receipt.get("main_archive"):
@@ -165,11 +167,58 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         hacs.coordinators[enums.HacsCategory.INTEGRATION] = Mock()
         update_module = importlib.import_module(alias + ".update")
         native_update = update_module.HacsRepositoryUpdateEntity(hacs=hacs, repository=repo)
+        repo.data.installed = True
         repo.data.installed_version = TAG
         repo.data.last_commit = "56cdb3c"
         assert native_update.latest_version == "56cdb3c"
-        repo.data.show_beta = True  # Same state set by HACS's Show beta versions action.
-        await repo.update_repository(force=True)
+        # Exercise the supported native HACS commands through authenticated local
+        # HTTP -> WebSocket, including its require_admin checks and durable write.
+        import sys
+
+        from homeassistant.components import websocket_api
+        from homeassistant.components.http import HomeAssistantView
+
+        from custom_components.ha_energy_price_engine.hacs_channel import enable_beta_channel
+
+        hacs.data = importlib.import_module(alias + ".utils.data").HacsData(hacs)
+        hacs.common.categories = [enums.HacsCategory.INTEGRATION]
+        hass.data["hacs"] = hacs
+        with patch.dict(
+            sys.modules, {"custom_components.hacs.utils": importlib.import_module(alias + ".utils")}
+        ):
+            commands = importlib.import_module(alias + ".websocket.repository")
+            lists = importlib.import_module(alias + ".websocket.repositories")
+
+        class RepairView(HomeAssistantView):
+            url = "/api/pe_qa_channel"
+            name = "api:pe_qa_channel"
+
+            async def post(self, request):
+                try:
+                    return self.json({"latest": await enable_beta_channel(hass)})
+                except ValueError as err:
+                    return self.json({"error": str(err)}, status_code=400)
+
+        from homeassistant.setup import async_setup_component
+
+        assert await async_setup_component(hass, "websocket_api", {})
+        client = await hass_client()
+        hass.http.register_view(RepairView())
+        for command in (
+            commands.hacs_repository_info,
+            commands.hacs_repository_beta,
+            lists.hacs_repositories_list,
+        ):
+            websocket_api.async_register_command(hass, command)
+        response = await client.post("/api/pe_qa_channel")
+        assert response.status == 200, await response.json()
+        assert (await response.json())["latest"] == TAG
+        saved_hacs = await importlib.import_module(alias + ".utils.store").async_load_from_store(
+            hass, "repositories"
+        )
+        assert saved_hacs[str(repo.data.id)]["show_beta"] is True
+        assert repo.data.show_beta is True
+
         assert TAG in repo.data.published_tags
         assert native_update.latest_version == TAG
         assert native_update.installed_version == TAG

@@ -9,6 +9,7 @@ from homeassistant.helpers import entity_registry as er
 
 from .adapters import parse_prices
 from .configuration import tariff_for
+from .estimates import estimate
 from .price_components import active_hours, danish_public_components
 from .price_engine import day_bounds
 from .prices import OfficialPrices
@@ -23,6 +24,7 @@ class PriceUpdater:
         self.tariffs = TariffSource(hass, engine.entry_id)
         self.status = {}
         self.raw_reports, self.raw_slots = {}, {}
+        self.estimated_slots = {}
         self.lock = Lock()
         self.on_change = on_change
 
@@ -47,6 +49,15 @@ class PriceUpdater:
             self.raw_reports = {
                 day: report for day, report in self.raw_reports.items() if day >= cutoff
             }
+            self.estimated_slots = {
+                day: rows for day, rows in self.estimated_slots.items() if day >= cutoff
+            }
+            days = dates or [
+                now.astimezone(ZoneInfo(site["timezone"])).date() + timedelta(days=n)
+                for n in (0, 1)
+            ]
+            for day in days:
+                self.estimated_slots.pop(str(day), None)
             old = self.status.get(key, {})
             report = {
                 "last_success": old.get("last_success"),
@@ -219,6 +230,13 @@ class PriceUpdater:
                     )
                 stage = "composition"
                 report["grid_status"] = "STALE" if source.get("dso", {}).get("warning") else "READY"
+                if not (site.get("nordpool_entry") and self.official.last_errors):
+                    estimated = estimate(site, slots, tariff, source, now)
+                    for day in days:
+                        start, end = day_bounds(day, site["timezone"])
+                        self.estimated_slots[str(day)] = tuple(
+                            s for s in estimated if start <= s.start and s.end <= end
+                        )
                 before = {r.start: r.final_price_incl_vat for r in self.engine.records.get(key, ())}
                 changed = await self.engine.async_update(key, slots, tariff, source, now)
                 affected = tuple(

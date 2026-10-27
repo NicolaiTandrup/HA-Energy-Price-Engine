@@ -87,6 +87,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class PublishedRelease(CoordinatorEntity, UpdateEntity):
     _attr_has_entity_name = True
     _attr_translation_key = "published_release"
+    _attr_entity_picture = "/api/brands/integration/ha_energy_price_engine/icon.png"
 
     def __init__(self, coordinator, entry, installed):
         super().__init__(coordinator)

@@ -54,7 +54,8 @@ async def test_new_official_wizard_source_defaults_review_save_incomplete(hass, 
     assert "✕" in r["description_placeholders"]["supplier"]
     created = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "wizard_save"})
     await hass.async_block_till_done()
-    entry = created["result"]
+    assert created["step_id"] == "wizard_saved"  # Incomplete is never native success.
+    entry = hass.config_entries.async_entries(DOMAIN)[0]
     assert entry.unique_id == "sommerhus" and entry.version == 3
     assert entry.data["price_unit"] == "DKK/MWh" and entry.data["vat"] == 0.25
     assert entry.data["dated_components"] == []  # EWII label did not manufacture a rate.
@@ -93,6 +94,9 @@ async def test_interrupted_options_resume_back_discard_does_not_apply(hass, free
     r = await hass.config_entries.options.async_configure(
         r["flow_id"],
         {"name": "Changed draft name", "source_type": "nordpool", "navigation": "review"},
+    )
+    r = await hass.config_entries.options.async_configure(
+        r["flow_id"], {"next_step_id": "advanced"}
     )
     r = await hass.config_entries.options.async_configure(
         r["flow_id"], {"next_step_id": "wizard_discard"}

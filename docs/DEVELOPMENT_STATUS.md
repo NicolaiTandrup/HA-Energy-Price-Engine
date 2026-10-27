@@ -1,9 +1,51 @@
 # Development handoff
 
-Updated 2026-10-27 (Europe/Copenhagen). Read AGENTS.md first. **Beta.3 is published
-and independently verified. Stop unless the owner requests further development.**
-Beta.1/.2 failed owner acceptance; beta.3 software/simulation validation does NOT
-establish PAHA02-DEV acceptance. Existing history is preserved.
+Updated 2026-10-27. **Beta.4 implementation in progress on
+`feat/beta4-complete-pricing`; no beta.4 publication or owner acceptance yet.**
+Read AGENTS.md first. Resume this checkout and preserve beta.1–.3 tags/releases.
+Owner explicitly authorizes beta.4 prerelease only after mandatory gates pass.
+No main merge, stable release or live HA/control changes.
+
+## Beta.4 checkpoint
+
+Checkpoint subject: **feat: add explicit supplier estimates and persisted setup verification**.
+Based on beta.3 final handoff 4560ec6; new draft PR pending first push.
+
+- Direct supplier markup defaults to øre/kWh, blank amount, explicit bill/contract
+  verification; optional separately approved provisional amounts. Existing periods
+  retain their identities; explicit replacement splits overlaps without losing
+  unrelated dates. Historical EWII is never a current preset.
+- Provisional calculation reuses the canonical calculator in transient memory.
+  Dedicated ESTIMATED/UNVERIFIED sensors cannot enter ledger/API READY or revisions.
+  Real runtime tests cover normal/92/100 quarters and restart isolation.
+- Compact native translated Today/Tomorrow comparison with conditional correction
+  choices. Advanced holds manual edits, diagnostic steps and draft discard.
+- Save awaits exactly one normal reload/persistence; initial HA post-create hook
+  and Options return a corrective saved-incomplete form until actual runtime/API
+  has complete verified current-day prices. Tomorrow publication remains separate.
+- Default removal records identified archives and clears stale entry/initial
+  drafts. Explicit confirmed permanent removal quiesces schedule/writers before
+  deleting exact-owned files; durable ID-only intent blocks interrupted restart.
+  Tested second-site/recorder/symlink isolation and clean same-name recreation.
+- PE-only HACS channel repair uses its supported authenticated local WebSocket
+  commands with explicit user approval. No HACS patch, global settings change,
+  package installation or remote credential forwarding. Both pinned HACS lines
+  passed native authenticated HTTP/WebSocket repair, actual HACS store persistence,
+  semantic UpdateEntity values and tag download/update/uninstall/reinstall tests.
+
+Completed local gate: **37 passed**, two upstream HACS deprecation warnings
+(flows, provisional, lifecycle and real HACS channel/distribution).
+Ruff check/format passed; EN/DA source translations updated. Full producer/core matrix,
+unchanged CM suites/coupled runtimes, packaging, hassfest, HACS, actual frontend
+EN/DA/mobile, migration, release integrity and CI remain PENDING for beta.4.
+New UI/browser evidence must distinguish synthetic providers from owner acceptance.
+
+Next: finish native HACS HTTP/WebSocket tests, branding/public README, strengthen
+new flow/reset tests, run full gates, browser journeys, update guides/acceptance,
+then immutable source commit/tag/package and exact-source green CI before publisher.
+No beta.4 version bump/tag/assets exist at this checkpoint.
+
+---
 
 ## Completed beta.3 software publication
 
