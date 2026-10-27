@@ -137,7 +137,10 @@ async def test_review_before_completing_site_does_not_crash_or_certify(hass):
     result = await hass.config_entries.flow.async_configure(
         flow["flow_id"], {"name": "Unfinished", "nordpool_entry": "missing"}
     )
-    assert result["step_id"] == "setup_site" and result["errors"]["base"] == "invalid_source"
+    assert (
+        result["step_id"] == "setup_site"
+        and result["errors"]["nordpool_entry"] == "source_required"
+    )
     assert not hass.config_entries.async_entries(DOMAIN)
     hass.config_entries.flow.async_abort(flow["flow_id"])
 

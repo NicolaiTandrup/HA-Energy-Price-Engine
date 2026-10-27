@@ -128,6 +128,7 @@ class SimpleSetup(FlowTools):
             try:
                 name = user_input.get("name", "").strip()
                 if not name:
+                    errors["name"] = "name_required"
                     raise ValueError("name")
                 site["name"] = name
                 if not self._wizard_entry:
@@ -140,10 +141,16 @@ class SimpleSetup(FlowTools):
                 if not entity:
                     entry = self.hass.config_entries.async_get_entry(user_input["nordpool_entry"])
                     if not entry or entry.domain != "nordpool":
+                        errors["nordpool_entry"] = "source_required"
                         raise ValueError("source")
-                    await ensure_official_nordpool(self.hass)
+                    try:
+                        await ensure_official_nordpool(self.hass)
+                    except ValueError:
+                        errors["nordpool_entry"] = "official_required"
+                        raise
                     areas = entry.options.get("areas", entry.data.get("areas", []))
                     if not isinstance(areas, list) or not areas:
+                        errors["nordpool_entry"] = "source_area_required"
                         raise ValueError("area")
                     site.update(
                         nordpool_entry=entry.entry_id,
@@ -155,16 +162,20 @@ class SimpleSetup(FlowTools):
                         "area", areas[0] if len(areas) == 1 else site.get("area")
                     )
                     if selected_area not in areas:
+                        errors["area"] = "unsupported_area"
                         raise ValueError("area")
                     site["area"] = selected_area
                     if site["area"] not in {"DK1", "DK2"}:
+                        errors["area"] = "unsupported_area"
                         raise ValueError("unsupported_country")
                     site.setdefault("timezone", "Europe/Copenhagen")
                     if not self._wizard_entry:
                         site["danish_public_rates"] = True
                 return await self._create_or_save_site(site)
-            except ValueError, KeyError, TypeError:
-                errors["base"] = "invalid_source"
+            except (ValueError, KeyError, TypeError) as err:
+                self._error_detail = str(err)
+                if not errors:
+                    errors["base"] = "invalid_configuration"
         fields = {vol.Required("name", default=site.get("name", "")): str}
         if not entity:
             fields[
@@ -208,6 +219,7 @@ class SimpleSetup(FlowTools):
         )
 
     async def _create_or_save_site(self, site):
+        await self.hass.async_add_executor_job(ZoneInfo, site["timezone"])
         site = validate_site(site)
         if self._wizard_entry:
             return await self._save_step(site, "setup_grid", "site")
@@ -361,8 +373,13 @@ class SimpleSetup(FlowTools):
         if known:
             from decimal import Decimal
 
+            from .localization import review_labels
+
             value = Decimal(str(known["amount"])) * (100 if known["unit"] == "DKK/kWh" else 1)
-            amount_default = {"default": format(value, "f")}
+            labels = await review_labels(self.hass)
+            amount_default = {
+                "default": format(value, "f").replace(".", labels["decimal_separator"])
+            }
         else:
             amount_default = {}
         return await self._simple_form(
@@ -519,11 +536,17 @@ class SimpleSetup(FlowTools):
             and r.get("eligibility", "all") == "all"
         ]
         known = existing[0] if len(existing) == 1 else None
-        amount_default = (
-            {"default": float(known["amount"]) * (100 if known["unit"] == "DKK/kWh" else 1)}
-            if known
-            else {}
-        )
+        amount_default = {}
+        if known:
+            from decimal import Decimal
+
+            from .localization import review_labels
+
+            labels = await review_labels(self.hass)
+            amount = Decimal(str(known["amount"])) * (100 if known["unit"] == "DKK/kWh" else 1)
+            amount_default = {
+                "default": format(amount, "f").replace(".", labels["decimal_separator"])
+            }
         fields = (
             {}
             if offer
@@ -765,8 +788,12 @@ class SimpleSetup(FlowTools):
                     )
                     energy = report["energy_kwh"].replace(".", labels["decimal_separator"])
                     result = f"**{labels['cost_estimate']}: {cost} DKK** · {energy} kWh · {labels['energy_' + report['energy_kind']]}\n\n{labels['marginal_only']}"
-            except ValueError, TypeError, KeyError:
-                errors["energy"] = "invalid_energy"
+            except (ValueError, TypeError, KeyError) as err:
+                self._error_detail = str(err)
+                if str(err).startswith("Measured energy cannot"):
+                    errors["slot"] = "future_measurement"
+                else:
+                    errors["energy"] = "invalid_energy"
         return await self._simple_form(
             "session_estimate",
             {
@@ -856,7 +883,7 @@ class SimpleSetup(FlowTools):
                 elif not changed.get("price_entity"):
                     errors["price_entity"] = "entity_required"
                 try:
-                    ZoneInfo(changed["timezone"])
+                    await self.hass.async_add_executor_job(ZoneInfo, changed["timezone"])
                 except ValueError, ZoneInfoNotFoundError:
                     errors["timezone"] = "invalid_timezone"
                 if not errors:

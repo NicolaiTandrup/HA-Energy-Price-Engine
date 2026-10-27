@@ -957,7 +957,7 @@
     },
     "error": {
       "invalid_configuration": "Kontrollér de markerede felter: {error_detail}",
-      "name_required": "Indtast et genkendeligt navn.",
+      "name_required": "Indtast et navn til dette prissted.",
       "invalid_id": "Brug små bogstaver a-z, tal og underscore; start med bogstav/tal.",
       "duplicate_id": "ID tilhører allerede et sted. Vælg et andet ID eller konfigurér det eksisterende sted.",
       "source_required": "Vælg den installerede officielle Nord Pool-integration.",
@@ -980,7 +980,10 @@
       "invalid_decimal": "Indtast et ikke-negativt decimaltal, fx 0,25 eller 3,125.",
       "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde.",
       "invalid_energy": "Angiv et ikke-negativt kWh-tal for hvert sammenhængende kvarter, fx 0,5. Tomme eller manglende kvarterer er ikke nul.",
-      "invalid_quarter": "Vælg et kvarter fra listen."
+      "invalid_quarter": "Vælg et kvarter fra listen.",
+      "future_measurement": "Fremtidig energi er planlagt, ikke målt. Vælg planlagt energi eller et tidligere kvarter.",
+      "official_required": "Fjern den alternative integration, der bruger Nord Pool-domænet, og vælg den officielle Home Assistant-integration.",
+      "source_area_required": "Konfigurér DK1 eller DK2 i den valgte Nord Pool-integration først."
     },
     "abort": {
       "already_configured": "Dette sted-ID er allerede konfigureret.",
@@ -1988,7 +1991,7 @@
       "invalid_configuration": "Kontrollér de markerede felter: {error_detail}",
       "site_not_loaded": "Indlæs prisstedet før oprettelse af sikkerhedskopi.",
       "backup_failed": "Sikkerhedskopien fejlede, eller prisarkivet bestod ikke kontrollen. Bevar alle filer og undersøg lagerdiagnostik.",
-      "name_required": "Indtast et genkendeligt navn.",
+      "name_required": "Indtast et navn til dette prissted.",
       "invalid_id": "Brug små bogstaver a-z, tal og underscore; start med bogstav/tal.",
       "duplicate_id": "ID tilhører allerede et sted. Vælg et andet ID eller konfigurér det eksisterende sted.",
       "source_required": "Vælg den installerede officielle Nord Pool-integration.",
@@ -2011,7 +2014,10 @@
       "invalid_decimal": "Indtast et ikke-negativt decimaltal, fx 0,25 eller 3,125.",
       "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde.",
       "invalid_energy": "Angiv et ikke-negativt kWh-tal for hvert sammenhængende kvarter, fx 0,5. Tomme eller manglende kvarterer er ikke nul.",
-      "invalid_quarter": "Vælg et kvarter fra listen."
+      "invalid_quarter": "Vælg et kvarter fra listen.",
+      "future_measurement": "Fremtidig energi er planlagt, ikke målt. Vælg planlagt energi eller et tidligere kvarter.",
+      "official_required": "Fjern den alternative integration, der bruger Nord Pool-domænet, og vælg den officielle Home Assistant-integration.",
+      "source_area_required": "Konfigurér DK1 eller DK2 i den valgte Nord Pool-integration først."
     },
     "abort": {
       "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",
@@ -2200,11 +2206,13 @@
         "energinet_net": "Energinet net",
         "energinet_system": "Energinet system",
         "electricity_tax": "Elafgift",
-        "subscription": "Månedsabonnement",
-        "supplier_subscription": "Leverandørabonnement",
-        "grid_subscription": "Netabonnement",
+        "subscription": "Fast abonnement",
+        "supplier_subscription": "Fast leverandørabonnement",
+        "grid_subscription": "Fast netabonnement",
         "all": "Alt forbrug",
-        "heating_above_4000": "Dokumenteret berettiget elvarme over grænsen"
+        "heating_above_4000": "Dokumenteret berettiget elvarme over grænsen",
+        "nordpool": "Officiel Home Assistant Nord Pool",
+        "entity": "Alternativ verificeret entitetskilde"
       }
     },
     "review": {

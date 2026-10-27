@@ -1064,3 +1064,48 @@ Next: full both-core and unchanged consumer/HACS/package gates; actual native
 EN/en-GB/DA first run/fractional/quarter diagnostics/cost/missing/provisional/old-cache
 and upgrade/restart/delete evidence, final docs, immutable source/tag, authorized
 beta.6 prerelease and independent public verification. No beta.6 publication yet.
+
+## Beta.6 locale/source refinement and native first-run checkpoint
+
+Checkpoint subject: **fix: complete localized source forms and quarter validation**.
+Prior source8dddf64: full local producer **270 passed/core**, HA2026.10.3/.4,86%
+coverage,zero skips,two upstream HACS warnings; all11 push/PR/updater jobs green.
+Unchanged consumer153/176/227/228/core plus2 coupled runtime cases/reference/core
+passed. Hassfest1integration/0invalid; both layouts native-install on current core.
+PyPI current stable rechecked2026.10.4. Existing draft PR14 now explicitly beta.6;
+main/prior immutable tags and assets preserved. No beta.6 tag/release yet.
+
+Real native en-GB desktop/mobile first run passed: source→Radius C→markup. Close
+and Configure resumed the saved grid→markup stage; malformed text rejected without
+losing other settings; comma0,50 accepted with explicitly excluded VAT. No monthly,
+product,dates,eligibility or technical entity fields in ordinary setup. Review has
+no blank rows,390px viewport/document width,no frontend errors. Selected verified
+peak quarter:147.946625ore including VAT; supplied1.25+2.0kWh across peak→normal
+transition gives3.2156DKK planned estimate. Recorded public Radius boundaries,
+synthetic100DKK/MWh spot and fictional0.5oreexVAT confirmation; not owner/live data.
+
+- Refinement adds localized stored markup prefill, native enum labels, precise
+  name/source/area/timezone errors and executor-based timezone validation. A complete
+  source-type change redraws relevant fields before acceptance; failed/incomplete
+  source edits do not mutate accepted config. Shared old-cache draft_status context
+  remains explicit; native legacy-resource compatibility still to be exercised.
+- All advanced form/menu labels and every FormatJS description variable now checked
+  through actual HA flow managers in en/en-GB/da, including future measured-energy
+  rejection and read-only successful planned cost. Ordinary markup edits preserve
+  optional fixed subscription metadata. Existing pricing engine,SQLite schema/index,
+  API and mandatory schedules unchanged. Indexed quarter choices preserve DST offsets.
+- Recorded seasonal source versions change at local September30→October1 midnight;
+  every applied grid value matches its own quarter. New focused refinement44 passed;
+  final expanded locale/financial gate rerun before this checkpoint. Final full both
+  core matrix remains required after these changes.
+- Actual disposable clone upgrade preserves **all10 beta.5 configs and all1000 decoded
+  SQL rows**, including future rows,amounts,source JSON and original revisions. No
+  owner HA or controls accessed. QA server uses isolated `/tmp/pe-beta6-ui` and port8125;
+  explicit identity checked before browser actions. Camera optional turbojpeg warning
+  is unrelated to PE; native frontend had0errors. Local GitHub API still proxy403;
+  supported existing-PR runner path works and public check pages confirm results.
+
+Next: copy/refetch final runtime into disposable HA, EN/DA mobile/desktop/old-cache,
+source-mode, missing/provisional/restart/reset evidence; accurate beta.6 docs and
+receipt; final full both-core/unchanged-consumer/metadata/package/SQLite gates, exact
+source CI, immutable prerelease, independent public validation and stop handoff.

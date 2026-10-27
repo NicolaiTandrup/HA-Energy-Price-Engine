@@ -237,5 +237,5 @@ async def test_legacy_hacs_domain_is_never_discovered_as_official_nordpool(hass)
     MockConfigEntry(domain="nordpool", entry_id="legacy", data={"areas": ["DK2"]}).add_to_hass(hass)
     assert await async_source_defaults(hass) == {}
     result = await source_page(hass, "Legacy test")
-    assert result["errors"]["base"] == "invalid_source"
+    assert result["errors"]["nordpool_entry"] == "official_required"
     assert not hass.config_entries.async_entries(DOMAIN)

@@ -74,7 +74,13 @@ async def test_each_future_quarter_uses_its_own_recorded_grid_band(hass, freezer
             assert snapshot["components"]["final"]["value"] == record.final_price_incl_vat * 100
         text = await charging_breakdown(hass, entry, records[-1].start)
         assert "including VAT" in text and "Fixed subscriptions are excluded" in text
-    assert len(quarter_choices(hass, entry)) >= count
+    choices = quarter_choices(hass, entry)
+    assert len(choices) >= count
+    labels = [label for _, label in choices]
+    if count == 100:
+        assert "2026-10-25T02:00+02:00" in labels and "2026-10-25T02:00+01:00" in labels
+    elif count == 92:
+        assert not any(label.startswith("2026-03-29T02:") for label in labels)
     assert await hass.config_entries.async_unload(entry.entry_id)
 
 
@@ -128,6 +134,7 @@ async def test_session_energy_cost_across_peak_transition_is_not_invoice_or_plan
     "kind,allocations",
     [
         ("planned", []),
+        ("measured", [(datetime(2099, 1, 1, tzinfo=UTC), "1")]),
         ("unknown", [(datetime(2026, 10, 24, tzinfo=UTC), "1")]),
         ("measured", [(datetime(2026, 10, 24, tzinfo=UTC), "-1")]),
         ("planned", [(datetime(2026, 10, 24, 0, 1, tzinfo=UTC), "1")]),
@@ -143,3 +150,26 @@ async def test_session_energy_cost_across_peak_transition_is_not_invoice_or_plan
 def test_missing_invalid_or_unallocated_energy_never_becomes_zero(kind, allocations):
     with pytest.raises(ValueError):
         estimate_charging_cost(None, "home", allocations, energy_kind=kind)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_recorded_season_version_changes_at_local_midnight(hass, freezer):
+    freezer.move_to("2026-09-30T20:00:00Z")
+    with patch(
+        "custom_components.ha_energy_price_engine.tariff_source.TariffSource.get",
+        side_effect=recorded_grid,
+    ):
+        entry = await setup(hass, charging_site())
+    start = datetime(2026, 9, 30, 21, 45, tzinfo=UTC)  # 23:45 local, then October1 midnight
+    end = start + timedelta(minutes=30)
+    result = get_api(hass).lookup("home", start, end)
+    assert str(result.status) == "READY" and len(result.records) == 2
+    grids, source = normalize_tariffs(DATA, RADIUS_GLN, RADIUS_CODE, start, end)
+    assert len(source["effective_versions"]) == 2
+    for row, grid in zip(result.records, grids, strict=True):
+        assert json.loads(row.components_json)["components"]["dso"]["ex_vat"] == grid.price
+    assert (
+        json.loads(result.records[0].source_json)["dso"]["version"]
+        != json.loads(result.records[1].source_json)["dso"]["version"]
+    )
+    assert await hass.config_entries.async_unload(entry.entry_id)

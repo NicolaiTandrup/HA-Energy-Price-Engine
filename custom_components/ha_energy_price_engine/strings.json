@@ -957,7 +957,7 @@
     },
     "error": {
       "invalid_configuration": "Check the highlighted values: {error_detail}",
-      "name_required": "Enter a friendly site name.",
+      "name_required": "Enter a name for this pricing site.",
       "invalid_id": "Use lowercase a-z, digits and underscores, starting with a letter/digit.",
       "duplicate_id": "This ID already belongs to a site. Use another ID or configure that existing site.",
       "source_required": "Select the installed official Nord Pool integration.",
@@ -980,7 +980,10 @@
       "invalid_decimal": "Enter a non-negative decimal amount, for example 0.25 or 3.125.",
       "entity_required": "Select a timestamped price entity for this alternate source.",
       "invalid_energy": "Supply non-negative kWh for every consecutive quarter, for example 0.5. Blank or missing quarters are not zero.",
-      "invalid_quarter": "Choose a quarter from the list."
+      "invalid_quarter": "Choose a quarter from the list.",
+      "future_measurement": "Future energy is planned, not measured. Choose planned energy or an earlier quarter.",
+      "official_required": "Remove the alternate integration shadowing the Nord Pool domain and choose the official Home Assistant integration.",
+      "source_area_required": "Configure DK1 or DK2 in the selected Nord Pool integration first."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
@@ -1988,7 +1991,7 @@
       "invalid_configuration": "Check the highlighted values: {error_detail}",
       "site_not_loaded": "Load this pricing site before creating a backup.",
       "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics.",
-      "name_required": "Enter a friendly site name.",
+      "name_required": "Enter a name for this pricing site.",
       "invalid_id": "Use lowercase a-z, digits and underscores, starting with a letter/digit.",
       "duplicate_id": "This ID already belongs to a site. Use another ID or configure that existing site.",
       "source_required": "Select the installed official Nord Pool integration.",
@@ -2011,7 +2014,10 @@
       "invalid_decimal": "Enter a non-negative decimal amount, for example 0.25 or 3.125.",
       "entity_required": "Select a timestamped price entity for this alternate source.",
       "invalid_energy": "Supply non-negative kWh for every consecutive quarter, for example 0.5. Blank or missing quarters are not zero.",
-      "invalid_quarter": "Choose a quarter from the list."
+      "invalid_quarter": "Choose a quarter from the list.",
+      "future_measurement": "Future energy is planned, not measured. Choose planned energy or an earlier quarter.",
+      "official_required": "Remove the alternate integration shadowing the Nord Pool domain and choose the official Home Assistant integration.",
+      "source_area_required": "Configure DK1 or DK2 in the selected Nord Pool integration first."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
@@ -2197,14 +2203,16 @@
       "options": {
         "supplier": "Supplier markup",
         "dso": "Grid tariff",
-        "energinet_net": "Energinet network",
+        "energinet_net": "Energinet net",
         "energinet_system": "Energinet system",
         "electricity_tax": "Electricity tax",
-        "subscription": "Monthly subscription",
-        "supplier_subscription": "Supplier subscription",
-        "grid_subscription": "Grid subscription",
+        "subscription": "Fixed subscription",
+        "supplier_subscription": "Fixed supplier subscription",
+        "grid_subscription": "Fixed grid subscription",
         "all": "All consumption",
-        "heating_above_4000": "Verified eligible heating above threshold"
+        "heating_above_4000": "Verified eligible heating above threshold",
+        "nordpool": "Official Home Assistant Nord Pool",
+        "entity": "Verified alternate entity source"
       }
     },
     "review": {

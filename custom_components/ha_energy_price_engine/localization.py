@@ -21,7 +21,7 @@ async def flow_labels(hass):
     language = await user_language(hass)
     result = {}
     for locale in dict.fromkeys(("en", language.split("-")[0], language)):
-        for category in ("config", "options"):
+        for category in ("config", "options", "selector"):
             result.update(
                 {
                     k: v

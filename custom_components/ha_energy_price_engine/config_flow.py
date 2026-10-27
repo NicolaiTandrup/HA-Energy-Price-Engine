@@ -34,10 +34,7 @@ def site_schema(value=None, *, initial=False):
         {
             vol.Required("name", default=value.get("name", "")): str,
             vol.Required("source_type", default=value.get("source_type", "nordpool")): select(
-                [
-                    {"value": "nordpool", "label": "Official Home Assistant Nord Pool"},
-                    {"value": "entity", "label": "Verified provider entity"},
-                ]
+                ("nordpool", "entity")
             ),
             vol.Optional(
                 "price_entity",
@@ -77,9 +74,7 @@ def rule_schema(value=None):
     value = value or {}
     return vol.Schema(
         {
-            vol.Required("id", default=value.get("id", "supplier")): select(
-                [{"value": key, "label": key.replace("_", " ").capitalize()} for key in COMPONENTS]
-            ),
+            vol.Required("id", default=value.get("id", "supplier")): select(COMPONENTS),
             vol.Required("amount", default=value.get("amount", 0)): selector.NumberSelector(
                 selector.NumberSelectorConfig(min=0, step="any", mode="box")
             ),
@@ -338,7 +333,7 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
         options = [
             {
                 "value": str(i),
-                "label": f"{r['id']}: {r['amount']} {r['unit']} ({r['valid_from']} – {r['valid_to']})",
+                "label": f"{self._flow_labels.get(f'component.{DOMAIN}.selector.values.options.' + r['id'], r['id'].replace('_', ' '))}: {r['amount']} {r['unit'].replace('ore/', 'øre/')} ({r['valid_from']} – {r['valid_to']})",
             }
             for i, r in enumerate(rules)
         ]

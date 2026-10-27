@@ -15,7 +15,7 @@ class MissingPriceComponents(ValueError):
     def __init__(self, components, local):
         self.components = sorted(components)
         self.period = local.isoformat()
-        self.action = "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify."
+        self.action = "Open Configure and enter the supplier markup or confirm the grid product. For expired public charges, add verified effective rates under Advanced. Save the step, then Check prices."
         super().__init__(
             f"Missing verified{' DSO' if self.components == ['dso'] else ''} components: {', '.join(self.components)} for {self.period}. {self.action} Prices remain unavailable, never zero."
         )

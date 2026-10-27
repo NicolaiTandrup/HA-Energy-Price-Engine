@@ -23,4 +23,4 @@ def decimal_amount(value):
 
 def per_kwh(amount, unit):
     """Convert decimal øre without an intermediate binary division/rounding."""
-    return float(Decimal(str(amount)) / (100 if unit == "ore/kWh" else 1))
+    return float(Decimal(str(amount)) / 100) if unit == "ore/kWh" else float(amount)
