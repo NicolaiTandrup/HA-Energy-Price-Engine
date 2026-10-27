@@ -143,13 +143,12 @@ class SimpleSetup(FlowTools):
                         price_unit="DKK/MWh",
                         price_basis="spot_ex_vat",
                     )
-                    if len(areas) == 1:
-                        site["area"] = areas[0]
-                    elif site.get("area") not in areas:
-                        site.pop("area", None)
-                    if not site.get("area"):
-                        self.draft = site
-                        return await self.async_step_setup_area()
+                    selected_area = user_input.get(
+                        "area", areas[0] if len(areas) == 1 else site.get("area")
+                    )
+                    if selected_area not in areas:
+                        raise ValueError("area")
+                    site["area"] = selected_area
                     if site["area"] not in {"DK1", "DK2"}:
                         raise ValueError("unsupported_country")
                     site.setdefault("timezone", "Europe/Copenhagen")
@@ -168,6 +167,20 @@ class SimpleSetup(FlowTools):
             ] = selector.ConfigEntrySelector(
                 selector.ConfigEntrySelectorConfig(integration="nordpool")
             )
+        if not entity:
+            available = {
+                a
+                for e in self.hass.config_entries.async_entries("nordpool")
+                for a in e.options.get("areas", e.data.get("areas", []))
+                if a in {"DK1", "DK2"}
+            }
+            if len(available) > 1:
+                fields[
+                    vol.Required(
+                        "area",
+                        **({"default": site["area"]} if site.get("area") in available else {}),
+                    )
+                ] = choice([(a, a) for a in sorted(available)])
         return await self._simple_form("setup_site", fields, "1 / 5", user_input, errors)
 
     async def async_step_setup_area(self, user_input=None):

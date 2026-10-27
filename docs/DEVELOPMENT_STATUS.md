@@ -114,6 +114,14 @@ matrix must be rerun after refinements; final native DA/public product/diagnosti
 missing/provisional/restart/reset evidence and docs/publication remain pending.
 No beta.5 tag/release/publication yet.
 
+
+Source-step refinement: **fix: save ambiguous source areas in the first accepted step**.
+Source area is requested on the first page only when installed source metadata is
+ambiguous; no intermediate accepted-but-unpersisted source page. No DK2 guessing.
+Same-source unique area is automatic. Focused source/current/old-version flow gate
+**36 passed**. Prior current-rate refinement c08620d retained future schedules.
+Final runtime/UI refresh and remaining release gates continue; no tag/release yet.
+
 ## Earlier beta.4 handoff (historical)
 
 ## Completed beta.4 publication

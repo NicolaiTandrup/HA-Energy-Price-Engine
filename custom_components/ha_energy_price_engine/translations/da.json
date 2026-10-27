@@ -275,7 +275,8 @@
         "description": "{saved}\n\nVælg din installerede Nord Pool-kilde. Område og enheder findes automatisk.",
         "data": {
           "name": "Stedets navn",
-          "nordpool_entry": "Nord Pool-kilde"
+          "nordpool_entry": "Nord Pool-kilde",
+          "area": "Elområde"
         },
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -1223,7 +1224,8 @@
         "description": "{saved}\n\nVælg din installerede Nord Pool-kilde. Område og enheder findes automatisk.",
         "data": {
           "name": "Stedets navn",
-          "nordpool_entry": "Nord Pool-kilde"
+          "nordpool_entry": "Nord Pool-kilde",
+          "area": "Elområde"
         },
         "submit": "Gem og fortsæt",
         "menu_options": {

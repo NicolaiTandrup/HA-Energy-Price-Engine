@@ -275,7 +275,8 @@
         "description": "{saved}\n\nChoose your installed Nord Pool source. Its area and units are detected automatically.",
         "data": {
           "name": "Site name",
-          "nordpool_entry": "Nord Pool source"
+          "nordpool_entry": "Nord Pool source",
+          "area": "Electricity area"
         },
         "submit": "Save and continue",
         "menu_options": {
@@ -1223,7 +1224,8 @@
         "description": "{saved}\n\nChoose your installed Nord Pool source. Its area and units are detected automatically.",
         "data": {
           "name": "Site name",
-          "nordpool_entry": "Nord Pool source"
+          "nordpool_entry": "Nord Pool source",
+          "area": "Electricity area"
         },
         "submit": "Save and continue",
         "menu_options": {

@@ -147,3 +147,25 @@ async def test_confirmed_ewii_offer_requires_explicit_vat_without_dates(hass, fr
         assert snapshot["components"]["supplier"]["value"] == pytest.approx(13.2)
         assert snapshot["api_status"] == "READY"
         assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_ambiguous_area_is_confirmed_in_same_saved_first_step(hass, freezer):
+    freezer.move_to("2026-10-27T18:07:00Z")
+    source = MockConfigEntry(
+        domain="nordpool",
+        entry_id="both",
+        data={"areas": ["DK1", "DK2"]},
+        state=ConfigEntryState.LOADED,
+    )
+    source.add_to_hass(hass)
+    r = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    assert {str(k) for k in r["data_schema"].schema} == {"name", "nordpool_entry", "area"}
+    r = await hass.config_entries.flow.async_configure(
+        r["flow_id"], {"name": "Chosen area", "nordpool_entry": "both", "area": "DK2"}
+    )
+    assert r["step_id"] == "setup_grid"
+    entry = hass.config_entries.async_entries(DOMAIN)[0]
+    assert entry.data["area"] == "DK2"
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    source.mock_state(hass, ConfigEntryState.NOT_LOADED)
