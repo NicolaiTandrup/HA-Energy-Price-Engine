@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "verified_at": "2026-10-27T22:28:01.099917+00:00",
+  "verified_at": "2026-10-27T22:33:01.332851+00:00",
   "tag": "v0.1.0-beta.7",
   "source_commit": "9eb21fc300f9cfdc39b0e0405364bbf543bfc717",
   "tag_object": "51254125973257cbbfb1c13076964d9f4a10282c",
@@ -83,7 +83,8 @@
     "html_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/40594832172",
     "head_sha": "dd7ed9c449d06c3558e6c92bc28d1d65504138cc",
     "publication_and_both_verification_jobs": "success",
-    "workflow_final_conclusion": "pending audit completion"
+    "workflow_final_conclusion": "success",
+    "all_orchestration_push_and_pr_checks": "success"
   },
   "exact_source_checks": [
     {
@@ -911,5 +912,34 @@
     "Entity names follow system/registry language; forms follow user language. HACS external brand catalog can show fallback.",
     "Cloud SQLite measurements do not establish Raspberry Pi performance; history remains in memory for APIv1."
   ],
-  "production_controls_touched": false
+  "production_controls_touched": false,
+  "independent_local_verification": {
+    "verified_at": "2026-10-27T22:27:44.591877+00:00",
+    "unauthenticated_release_page_http": 200,
+    "prerelease_badge": true,
+    "source_commit": "9eb21fc300f9cfdc39b0e0405364bbf543bfc717",
+    "tag_object": "51254125973257cbbfb1c13076964d9f4a10282c",
+    "main_and_prior_tags_preserved": true,
+    "all_four_public_assets_match_clean_local_build": true,
+    "all_runtime_bytes_match_public_tag_and_exact_git_source": true,
+    "all_asset_sha256": {
+      "ha_energy_price_engine.zip": "b382f8d06901c72c2a305d9c09d700154d9f326fc8576266d599711fc820987b",
+      "ha_energy_price_engine-manual.zip": "dfdaa771932f011d9aeea8f07a00f932542d4788ef3aede2f89967b1f26d3b73",
+      "BUILD_MANIFEST.json": "6f91b292068601708c81e4f044047580ed0322fc3b09a3b01633f139bcc3f2e0",
+      "SHA256SUMS": "8077d95bf84363e50a96904ef38a11b1aa1dd9d60094e6c3e726df4003bb9d0a"
+    },
+    "hacs_and_native_replay": "passed: both pinned actual HACS implementations and both downloaded native layouts on each HA2026.10.3/2026.10.4",
+    "public_api_metadata": "Fresh authorized GitHub runners captured API metadata. Local managed proxy blocks direct GitHub API; local replay uses those metadata with independently downloaded/verified public tag/main bytes. No credential or proxy replacement.",
+    "owner_acceptance": false
+  },
+  "preserved_engine_runtime_sha256": {
+    "api.py": "01a16de472155d1dbe13af2b01ebd0a2b1c34ba5cdc7a8b9f0a5381643b0d425",
+    "price_engine.py": "3842c6d21f579b5dd25141ac66649b5f4d7ee19a5220cde57722171e5bb87ff2",
+    "ledger.py": "3fb161f450aa0e329e386c99e8498c7624f502415a0673edaaee98d76bf8acf4",
+    "price_schedule.py": "d924fa4e6cfa67813220443b8b4e8d928148319116a38096981e86029c456918",
+    "price_update.py": "ceb3955c0b96f743cc22a90d76ce6cd0868d4c53836afb2755a2fcbd9ec3610d",
+    "tariff_source.py": "dfdf30b8da837403da51998f2dc61c2cd8c940702404672af29254054fba73e5",
+    "prices.py": "fe5fdc82bc47d7d6404727a1d9ba53cf9c1a03b58f031019a467c6888fe1a21d",
+    "price_components.py": "d87fe36b36162f4d37af3da5c311879d03ef44c994071932e9854988c4ab31b9"
+  }
 }
