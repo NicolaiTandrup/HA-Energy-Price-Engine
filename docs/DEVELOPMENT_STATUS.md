@@ -132,6 +132,36 @@ Existing source-degradation regressions verify stored 96 versus verified 0. Prov
 interval validation is categorized as source, not private contract configuration.
 Final both-core regression/CI/build gate reruns on this exact source before tagging.
 
+## Beta.3 immutable source / publication in progress
+
+**78ef9ba4d02ccb85b9395991d1376fbdec34bb84** is the clean validated release source.
+All ten push/PR source checks passed: full both-core producer/unchanged consumer/
+runtime, HACS, official hassfest and independent install. Both local cores **200
+passed**, 89% coverage, zero skips; two upstream HACS deprecation warnings. Current
+Home Assistant rechecked: 2026.10.4. Prepublication actual beta.1 main / beta.3
+candidate tag HACS distinction passed on both pinned HACS lines; both clean ZIPs
+passed native install/configure/reload/delete/recreate outside checkout.
+
+Annotated **v0.1.0-beta.3** object **73b9e9e48d4cb17c69ecff4f77d9c992a5307516**
+points exactly to this source and is pushed. No previous tag moved. Fixed-source
+`.github/workflows/publish-beta3.yml` runs on GitHub because this cloud blocks
+uploads.github.com. It waits for successful source/tag CI, builds the exact tag,
+checks the prevalidated hashes and both independent installs, then publishes only
+with `--prerelease --latest=false --verify-tag`. The orchestration commit is later
+than the immutable release source. Main remains beta.1 and PR #11 is unmerged.
+
+Expected SHA-256:
+- ha_energy_price_engine.zip: 300741806e86d5566b6ab025f814aac1c52d21c50bc2273c3a5ff4b20387c3e9
+- ha_energy_price_engine-manual.zip: 37b4af805818de1a200e34b7eb3a8c225b0624ef4003e0303485b0bf6bef8c5e
+
+Next: inspect actual publisher result; after successful publication independently
+run tools/verify_public_release.py with expected source above on BOTH HA venvs and
+separate /tmp output dirs. Verify actual semantic public release metadata too.
+Commit permanent receipt/handoff, update release and PR #11, shut down disposable
+HA and stop. Do not claim publication/public validation before it succeeds. Owner
+PAHA02-DEV acceptance remains pending, and native language/Close/HACS channel limits
+remain explicit. No stable, main merge, production or controls.
+
 ## Completed PE beta.2 — final receipt
 
 Public **prerelease**:
