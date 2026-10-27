@@ -63,10 +63,31 @@ Previous exact source 373ea45 has all ten remote checks green and both local cor
 PyPI current Home Assistant rechecked: **2026.10.4**. Prepublication actual-main beta.1
 versus candidate-tag HACS transport test passed on both pinned HACS lines.
 
-Next: final clean both-core tests/CI and package integrity, immutable beta.2 tag,
-fixed-source prerelease runner publication, then independently download/verify all
-public assets and actual HACS/native install on both cores. Preserve beta.1 tag/assets,
-pricing engine/SQLite/API. Stop after verified publication, leaving receipt here.
+## Beta.2 immutable source and publication in progress
+
+Release source **0c93d2bfac88878cff46e7726f59accbeababf85** is clean and has all ten
+actual push/PR check runs successful (both-core producer/unchanged consumer/runtime,
+HACS, hassfest and independent install). Both local cores **185 passed**, 88%
+coverage, zero skips; two HACS upstream deprecation warnings. Clean ZIPs installed
+outside-tree on both cores. HACS actual-main beta.1 / candidate-tag distinction tested.
+
+Annotated **v0.1.0-beta.2** created at exactly that source and pushed without moving
+any existing tag. Fixed-source `.github/workflows/publish-beta2.yml` publishes from
+a GitHub runner because this cloud blocks uploads.github.com. It rechecks exact-source
+CI, builds the immutable tag, asserts both prevalidated ZIP hashes and independently
+installs both layouts before `gh release create --prerelease --latest=false`.
+The workflow itself is a later orchestration commit and is NOT the release source.
+Main remains approved beta.1; PR #9 unmerged. No production/control/stable operations.
+
+Expected release ZIP SHA-256:
+- ha_energy_price_engine.zip: 968a3436d7d44f20b4e86db405dcd26b553b9baa2a81dcfbf6eb9daf70776d91
+- ha_energy_price_engine-manual.zip: a53f5a2ede9416b2eccf41a3f54f174410456e89e930001740a0de3465d80845
+
+Next: inspect actual publisher result. After successful publication run
+`tools/verify_public_release.py --expected-commit 0c93d2bfac88878cff46e7726f59accbeababf85
+--output /tmp/pe-public-beta2` on BOTH supported venvs (different output directories),
+then commit permanent receipt/checkpoint and update release/PR #9 with actual evidence.
+Do not claim published or verified until those actions complete. Stop after verification.
 
 ## Completed PE beta.1 publication — final receipt
 
