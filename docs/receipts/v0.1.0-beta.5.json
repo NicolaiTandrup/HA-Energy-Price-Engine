@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "verified_at": "2026-10-27T18:27:33.041451+00:00",
+  "verified_at": "2026-10-27T18:29:10.454499+00:00",
   "tag": "v0.1.0-beta.5",
   "source_commit": "a4ede923e42573def49026a8d1d817c37a979171",
   "tag_object": "7a919061010e1a018a54235e96711ff4295622a7",
@@ -51,7 +51,7 @@
     "html_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/40559712967",
     "head_sha": "ec2ad995f2d5b59b5ee031daf2a68f1db7d859b9",
     "publication_and_both_verification_jobs": "success",
-    "workflow_final_conclusion": "pending audit completion"
+    "workflow_final_conclusion": "success"
   },
   "exact_source_checks": [
     {
@@ -873,5 +873,21 @@
     "Entity names follow system/registry language; forms follow user language. HACS external brand catalog can show fallback.",
     "Cloud SQLite measurements do not establish Raspberry Pi performance; history remains in memory for APIv1."
   ],
-  "production_controls_touched": false
+  "production_controls_touched": false,
+  "independent_local_verification": {
+    "verified_at": "2026-10-27T18:25:57.942029+00:00",
+    "source_commit": "a4ede923e42573def49026a8d1d817c37a979171",
+    "tag_object": "7a919061010e1a018a54235e96711ff4295622a7",
+    "main_preserved": "56cdb3c10993179371483812cbc36f651ba3ad8e",
+    "public_asset_hashes": {
+      "ha_energy_price_engine.zip": "9f8ea839a04b5d67f61dc0e49f11611abcb4c85cdfced809f813937548dc0ad0",
+      "ha_energy_price_engine-manual.zip": "422c5d1bb39c4596a4af36db2e325ad56b642b8287e2bc09409d96a5928d3036"
+    },
+    "public_tag_payload_and_local_source_match": true,
+    "unauthenticated_public_release_http": 200,
+    "prerelease_badge": true,
+    "api_proxy_limitation": "Local api.github.com CONNECT403 after environment reconnect; authenticated public API metadata and actual HACS verification independently checked by fresh two-core GitHub jobs. Local asset/tag/main downloads require no proxy bypass.",
+    "public_native_layouts_on_both_cores": "passed; four independent outside-source native smoke installations",
+    "public_hacs_replay_on_both_cores": "passed; actual unchanged pinned HACS2.0.5/upstream against runner-captured public metadata and locally independently downloaded tag/main archives"
+  }
 }

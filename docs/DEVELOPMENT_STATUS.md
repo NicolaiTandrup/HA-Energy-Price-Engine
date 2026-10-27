@@ -1,11 +1,96 @@
 # Development handoff
 
-Updated 2026-10-27 (Europe/Copenhagen). **Beta.5 in progress** on
-`feat/beta5-simple-onboarding`, based on beta.4 final checkpoint d089a52.
-Owner explicitly authorizes beta.5 prerelease after mandatory checks. Preserve
-all prior tags/releases; no main merge, stable or live HA/control operations.
-Read AGENTS.md first. Beta.1–.4 failed owner onboarding acceptance; simulations
-are not owner acceptance. Issue #8 latest escalation and #12 read.
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.5 published and independently verified. STOP.**
+Owner authorized this prerelease only. No further feature development, beta.6,
+stable publication, main merge or production/charging-control operations. Resume
+only on owner feedback. Read AGENTS.md first; use this existing checkout.
+
+## Completed beta.5 publication
+
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.5
+
+- Immutable release source **a4ede923e42573def49026a8d1d817c37a979171**.
+- Annotated tag **7a919061010e1a018a54235e96711ff4295622a7**.
+- Branch **feat/beta5-simple-onboarding**, draft **PR #14**, unmerged.
+- Main remains **56cdb3c10993179371483812cbc36f651ba3ad8e**; prior releases/tags/assets
+  preserved. No stable release, live HA, Node-RED, CM, vehicle or charger changes.
+- All **15 exact-source push/PR/tag jobs green** before publication. Producer
+  **234 passed/core**, HA 2026.10.3/current 2026.10.4, 88% coverage, zero skips. Two
+  pinned upstream HACS deprecation warnings. Current stable .4 independently checked.
+- Unchanged consumer suites **153/176/227/228 per core**, two actual coupled runtime
+  startup-order/revision/unload cases per reference/core. No consumer code rewritten.
+- Official hassfest one integration/zero invalid, HACS validation/translations,
+  clean deterministic archives and both layouts independently installed outside
+  source on both cores. Original transactional SQLite touched-row performance retained.
+- Publisher **40559712967**, orchestration ec2ad995f2d5b59b5ee031daf2a68f1db7d859b9,
+  verifies exact annotated object/source, all 15 green checks, expected ZIP hashes,
+  clean rebuild and both native installs before prerelease/latest=false upload.
+- Two fresh independent postpublication core jobs downloaded public API metadata,
+  four assets, immutable tag source and compliant public main. Actual unchanged
+  pinned HACS 2.0.5/upstream add/discover/tag install/update/uninstall/reinstall and
+  both native ZIP layouts passed. Public semantic feed selects beta.5 for beta.4,
+  stays current for installed beta.5 and excludes beta/hashes for stable users.
+- Local unauthenticated public page HTTP 200/prerelease badge, all four downloaded
+  assets and their digests, every runtime file against public tag/local exact source,
+  annotated/peeled remote tag, main/prior beta.4 preservation independently checked.
+  Downloaded root/manual ZIPs each passed native outside-source installs on both
+  cores. Local actual HACS replay using independently downloaded public tag/main
+  bytes and runner-captured public metadata also passed 2 cases/core. Local public API CONNECT403 after cloud reconnect was handled by authorized
+  runner API checks; no credential replacement/proxy or integrity bypass.
+- Publication receipt **docs/receipts/v0.1.0-beta.5.json** includes exact check/job/
+  release/asset metadata and both public verification receipts. Native simulation:
+  **docs/receipts/v0.1.0-beta.5-simulation.json**. Illustrated guide, 19 screenshots and
+  two short EN custom/DA EWII demonstrations in docs/WIZARD_GUIDE.md.
+- Final checkpoint subject: **docs: finalize verified beta.5 publication and stop handoff**.
+
+SHA256:
+- ha_energy_price_engine.zip: 9f8ea839a04b5d67f61dc0e49f11611abcb4c85cdfced809f813937548dc0ad0
+- ha_energy_price_engine-manual.zip: 422c5d1bb39c4596a4af36db2e325ad56b642b8287e2bc09409d96a5928d3036
+
+## Result and remaining owner acceptance
+
+Five ordinary native stages save every accepted page in actual config. Saved
+confirmation and Configure resume replace hidden draft/final-save flows. Source
+facts establish conventions/area; Radius C needs actual product confirmation.
+EWII Basis/Plus are fresh official public suggestions only, with 24h maximum fallback.
+Their markup VAT convention is not established by official pages, so confirm it
+from the actual agreement. Custom input is ore/kWh/VAT/optional monthly fee with no
+ordinary dates. Standing terms start next complete quarter, no earlier unknown
+backfill or settled rewrite; future scheduled date/hour overrides remain. Monthly
+fees stay outside marginal prices. Numerical review has eight direct component
+settings and one Check prices; details/dated editing/storage live under Diagnostics.
+Raw vs final readiness stays distinct; estimates never give ledger/API READY.
+
+Real native EN/DA desktop/mobile journeys passed: custom/public agreement, accepted
+step persistence and interrupted resume, direct corrections, missing/provisional,
+source outage/recovery and explicit verification. Mobile document width 390 with no
+horizontal overflow or frontend errors. Four beta.4 sites preserve config/source/
+identity/history. Nine-site restart preserves settled SQL rows/revisions. Confirmed
+selected 115-row deletion removes only that entry/setup; same-name recreation has
+new ID/empty history. Other sites/global recorder retained. Synthetic software
+checks are not owner acceptance. QA server stopped after evidence collection.
+
+No prerelease-publication blocker remains. Owner acceptance stays unchecked:
+HACS Show beta versions → refresh → select v0.1.0-beta.5 → download → restart;
+Device info version 0.1.0-beta.5; Configure existing site (do not delete/recreate).
+Confirm own bill/agreement/VAT/grid class and public-source timing, verify restart
+and 13:05/13:20/13:40/23:59/00:01 schedules, actual mobile usability and hardware.
+Ordinary automatic setup targets Danish DK1/DK2/Radius C; other grid products and
+future periods require verified advanced rules. National defaults are bounded 2026
+Energinet and .008 tax 2026–27 baselines, not live legislation discovery. Heating
+eligibility is never guessed. New sites can have partial first-day final coverage;
+full-day API still requires every quarter. Native Close cannot submit typing;
+avoid simultaneous edits of one site. Existing entity language follows HA registry/
+system settings; forms follow the user's language. HACS external catalog branding
+can fall back while native PE icon works. Two-price-chart issue #10 remains separate.
+
+SQLite cloud repeat: 35,136 rows, 18,239,488 bytes; append 96 rows .0457s, reload 2.240s,
+lookup 10.06us, peak 243,448KiB under concurrent validation. **Cloud timings do not
+establish Raspberry Pi performance.** Immutable history stays in RAM for API v1;
+measure actual hardware and recovery. No live-source/bill/hardware/owner acceptance
+or production cutover is implied. Follow docs/BETA_ACCEPTANCE.md.
+
+## Earlier beta.5 development checkpoints (historical)
 
 ## Beta.5 initial checkpoint
 
