@@ -6,12 +6,13 @@ once mandatory software checks pass; no stable, main merge or production cutover
 ## Beta.2 software acceptance
 
 - [x] Pricing adapters, immutable SQLite history, multi-site identity and CM API retained.
-- [x] 185 producer tests (final rerun required before tagging) on HA 2026.10.3 and 2026.10.4; migration uses actual beta.1 code.
+- [x] 185 producer tests on HA 2026.10.3 and 2026.10.4; migration uses actual beta.1 code.
 - [x] Invalid/Back/submitted drafts resume without applying active changes.
 - [x] Desktop and 390px mobile native wizard navigation/screenshots with real HA frontend.
 - [x] HACS, hassfest, independent installed wizard/Options/reload/delete/recreate CI.
 - [x] Clear Close/reload warning: HA cannot persist unsubmitted keystrokes. Continue first.
-- [ ] Exact final tagged source CI and independent public source/asset/HACS receipts.
+- [x] Exact tagged source CI and public source/asset/HACS verification passed;
+  see docs/receipts/v0.1.0-beta.2.json.
 - [ ] Owner PAHA02-DEV upgrade/configuration, current contracts and real Pi observations.
 
 The final public receipt records completed distribution checks; owner hardware
