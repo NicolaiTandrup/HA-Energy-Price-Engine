@@ -1,0 +1,281 @@
+name: Publish authorized PE beta.7
+on:
+  push:
+    branches: [feat/beta5-simple-onboarding]
+    paths: [.github/workflows/publish-beta7.yml]
+permissions:
+  contents: write
+  checks: read
+  actions: read
+  pull-requests: write
+concurrency:
+  group: publish-pe-v0.1.0-beta.7
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PE_SOURCE: 9eb21fc300f9cfdc39b0e0405364bbf543bfc717
+      PE_TAG: v0.1.0-beta.7
+      PE_TAG_OBJECT: 51254125973257cbbfb1c13076964d9f4a10282c
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: v0.1.0-beta.7
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: astral-sh/setup-uv@v6
+      - name: Verify immutable authorized source and successful checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PE_SOURCE"
+          test "$(git rev-parse "$PE_TAG")" = "$PE_TAG_OBJECT"
+          test "$(git cat-file -t "$PE_TAG")" = "tag"
+          test "$(git rev-parse "$PE_TAG^{commit}")" = "$PE_SOURCE"
+          python - <<'PY_CHECK'
+          import json, os, subprocess, time
+          sha=os.environ['PE_SOURCE']
+          for attempt in range(30):
+              result=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/commits/{sha}/check-runs']))
+              checks=result['check_runs']
+              if len(checks)>=16 and all(c['status']=='completed' and c['conclusion']=='success' for c in checks):
+                  break
+              if any(c['status']=='completed' and c['conclusion'] not in ('success',) for c in checks):
+                  raise SystemExit('Exact-source CI did not pass; publication prohibited')
+              time.sleep(10)
+          else:
+              raise SystemExit('Exact-source CI is still pending; publication prohibited')
+          from pathlib import Path
+          repository=os.environ['GITHUB_REPOSITORY']
+          def api(path):return json.loads(subprocess.check_output(['gh','api',f'repos/{repository}/{path}']))
+          assert api('commits/main')['sha']=='56cdb3c10993179371483812cbc36f651ba3ad8e'
+          pr=api('pulls/14');assert pr['state']=='open' and pr['draft'] and pr['head']['ref']=='feat/beta5-simple-onboarding'
+          for number in range(1,7):
+              prior=json.loads(Path(f'docs/receipts/v0.1.0-beta.{number}.json').read_text())
+              tag=f'v0.1.0-beta.{number}';release=api('releases/tags/'+tag)
+              assert release['id']==prior['release_id'] and release['prerelease'] and not release['draft']
+              assert api('git/ref/tags/'+tag)['object']['sha']==prior.get('tag_object',prior.get('annotated_tag_object'))
+              assets={a['name']:a for a in release['assets']}
+              for name,digest in prior.get('archive_hashes',prior.get('archive_sha256')).items():assert assets[name]['digest']=='sha256:'+digest
+          PY_CHECK
+      - name: Build clean source and independently install both layouts
+        run: |
+          set -euo pipefail
+          uv venv
+          uv pip sync --require-hashes requirements-ha-current.lock
+          uv run --no-project python tools/build_beta.py
+          python - <<'PY_INTEGRITY'
+          import hashlib,json,os
+          from pathlib import Path
+          manifest=json.loads(Path('dist/BUILD_MANIFEST.json').read_text())
+          assert manifest['commit']==os.environ['PE_SOURCE'] and not manifest['dirty']
+          expected={'ha_energy_price_engine.zip':'b382f8d06901c72c2a305d9c09d700154d9f326fc8576266d599711fc820987b', 'ha_energy_price_engine-manual.zip':'dfdaa771932f011d9aeea8f07a00f932542d4788ef3aede2f89967b1f26d3b73'}
+          assert manifest['archives']==expected
+          for name,digest in expected.items():
+              assert hashlib.sha256((Path('dist')/name).read_bytes()).hexdigest()==digest
+          PY_INTEGRITY
+          uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine.zip
+          uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
+      - name: Publish authorized immutable beta.7 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta7-notes.md" <<'PE_NOTES'
+          Beta.7 standardizes **all preferred price displays to øre/kWh with exactly two decimals**, or optional **DKK/kWh with four**. Current/next and requested future-window readiness are independent from historical whole-day coverage. Stored canonical DKK/kWh, full precision, original entity/statistics units, SQLite and read-only CM APIv1 are preserved.
+
+          **Prerelease for development HA acceptance.** Source **9eb21fc300f9cfdc39b0e0405364bbf543bfc717**; immutable **v0.1.0-beta.7**. [Draft PR #14](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/14) remains unmerged. Main and all beta.1–.6 releases/tags/assets preserved. Owner authorizes beta.7 prerelease only.
+
+          ## HACS update
+
+          1. Back up development HA. Add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` as HACS custom **Integration** if necessary.
+          2. Persist **Show beta versions**, refresh information, choose **v0.1.0-beta.7**, download and restart HA. Reload browser/app. Device info must show **0.1.0-beta.7**.
+          3. Configure the **existing** site. New users first install official HA Nord Pool, then follow **source → confirmed actual grid product → actual fractional supplier markup/VAT**. No simultaneous legacy broker or mandatory dates/monthly fees/heating/product decision.
+          4. Review current/next readiness and historical coverage separately. **Check future window** selects an exact half-open interval; CM submits its own range to unchanged APIv1. Final prices shows stored current/selected-future components. Advanced → Display unit selects ore2 or DKK4.
+
+          [Setup and current/next examples](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.7/docs/WIZARD_GUIDE.md) · [HACS/repair procedure](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.7/docs/HACS_DISTRIBUTION.md) · [Acceptance checklist](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.7/docs/BETA_ACCEPTANCE.md) · [Native/index/migration evidence](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.7/docs/receipts/v0.1.0-beta.7-simulation.json)
+
+          ## Changes
+
+          - Preferred raw spot, current/next final prices, min/max/average, provisional values, Review, current/future breakdowns and stored-slot picker share one site unit and fixed locale-aware precision. Canonical technical entities remain explicitly labelled DKK/kWh with stable IDs, unrounded states and Recorder/statistics units. Separate fixed-unit display identities prevent reinterpretation of history.
+          - English/British-English/Danish and explicit number-format overrides are covered. Browser-system decimal conventions use bundled Intl-derived facts, no optional HA dependency. Raw display labels identify VAT basis. Monetary subtotal/VAT/final figures are independently rounded; totals and cost use full stored precision. Contract entry still preserves0.25/0.50/0.75/3.125ore with point/comma.
+          - Independent current/next and full-day historical readiness entities/diagnostics. A late22:15CET activation can show7/96 historical quarters INCOMPLETE, current/next/window READY and96/96 tomorrow READY. Earlier missing prices stay absent. A requested window is READY only when every slot has verified final prices; missing/unpublished/stale/error/provisional data never becomes zero or READY. The UI48h picker is no API horizon limit or charging plan.
+          - Established engine/SQLite/API/schedules/source normalizers preserved. Each stored UTC quarter retains final amount, original normalized spot/applied components, source/verification and revision. Live API uses immutable startup-loaded indexed slices; no provider fetch, composition, SQLite connection or write on consumer reads. Only changed future records are replaced; settled/unchanged rows and original revisions remain.
+          - Native beta.6 upgrade preserved15 configs/1,211 original SQL rows/revisions/315 entity IDs/29 Recorder statistics-unit metadata rows. Unit changes caused no pricing revision. Restart preserved16 configs/1,314rows exactly. Actual released beta.1–.6 migration matrix passes.
+          - Transparent sample: synthetic100DKK/MWh spot, recorded Radius C winter normal→peak and fictional0.5ore exVAT supplier. Current16:45CET **68.32ore/kWh**, next17:00 **147.95ore/kWh** (optional0.6832/1.4795DKK). Canonical technical prices remain0.683155/1.47946625DKK; supplied planned1.25/2kWh costs **3.81287625DKK**, displayed3.8129. Not a live quote, bill or private contract. Fixed subscriptions excluded; CM owns planning/measurement/control.
+          - All five local refreshes **13:05,13:20,13:40,23:59,00:01** preserved. Negative prices, Radius TOU/season/midnight,92/96/100-quarter DST, source/component failures, provisional isolation, reset/recovery and stable APIv1 covered. No source/private agreement/heating eligibility guessed. Historical EWII0.030DKK exVAT remains June–September2026 only.
+
+          ## Validation and integrity
+
+          **308 producer tests per core**, HA **2026.10.3 / current2026.10.4**,88% coverage,zero skips,two unchanged upstream HACS warnings. Four unchanged consumer suites153/176/227/228 per core plus two coupled runtime cases/reference/core. All16 exact-source push/PR/tag/draft-updater checks pass before upload. Official hassfest/HACS/translations and both clean package layouts install outside source on both cores. Fresh independent public jobs on both cores re-download actual public metadata/assets/tag/main, run pinned HACS2.0.5/upstream install/update/reinstall and both native layouts, and verify beta6→7 semantic selection. Permanent receipt is recorded only after success.
+
+          Native HA2026.10.4/frontend20260930.5 desktop1440×1000/mobile390×844 EN/en-GB/DA tests include actual entity formatting, two/four places, user separators, minimal-system locale, ready/missing windows, selected components, upgrade and restart; zero frontend errors/warnings. Synthetic/recorded boundaries, **not owner real-HA acceptance**.250 repeated range reads on normal/fall/spring cases reject provider fetch, recomposition and SQLite connections; offline SQL confirms the primary-key range index.
+
+          ZIP SHA256:
+          - `ha_energy_price_engine.zip`: `b382f8d06901c72c2a305d9c09d700154d9f326fc8576266d599711fc820987b`
+          - `ha_energy_price_engine-manual.zip`: `dfdaa771932f011d9aeea8f07a00f932542d4788ef3aede2f89967b1f26d3b73`
+
+          ## Limits
+
+          HA entity/card precision overrides can supersede suggestions; reset to Default or2/4. Old unit-specific display entities remain unavailable after unit switching, preserving history. Canonical technical fields intentionally retain unrounded DKK/kWh. Forms cannot save unsubmitted typing or provide per-page Back. Forms follow user locale; entity names follow registry/system language. HACS external brand catalog may fall back.
+
+          Automatic DSO starts Radius C; other products/future national periods need verified rules. New sites can have partial first days. Actual private terms/provider availability/heating eligibility and hardware remain owner acceptance. Cloud35,136rows/18.24MB,96-row append.0302s/reload1.599s/indexedlookup11.51µs retain original touched-row design; **cloud benchmarks do not establish Raspberry Pi performance**. History remains in RAM for APIv1.
+
+          No production HA, Node-RED, CM or physical charging changes. No main merge or stable release. Stop after beta.7 publication, independent verification and permanent handoff.
+          PE_NOTES
+          if gh release view "$PE_TAG" >/dev/null 2>&1; then
+            python - <<'PY_EXISTING'
+          import json,os,subprocess
+          data=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/releases/tags/{os.environ["PE_TAG"]}']))
+          assert data['prerelease'] and not data['draft'] and data['tag_name']==os.environ['PE_TAG']
+          assets={a['name']:a for a in data['assets']}
+          expected=json.load(open('dist/BUILD_MANIFEST.json'))['archives']
+          assert set(assets)=={*expected,'BUILD_MANIFEST.json','SHA256SUMS'}
+          for name,digest in expected.items():assert assets[name]['digest']=='sha256:'+digest
+          print('Existing immutable beta.7 matches authorized hashes; no release/asset mutation')
+          PY_EXISTING
+          else
+            gh release create "$PE_TAG" dist/ha_energy_price_engine.zip dist/ha_energy_price_engine-manual.zip dist/BUILD_MANIFEST.json dist/SHA256SUMS --prerelease --latest=false --verify-tag --title 'v0.1.0-beta.7 — clear prices and future charging readiness' --notes-file "$RUNNER_TEMP/pe-beta7-notes.md"
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$PE_TAG" --jq '{html_url,tag_name,draft,prerelease,assets:[.assets[].name]}'
+  verify-public:
+    name: Verify public beta.7 (${{ matrix.target }})
+    needs: publish
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: ha-2026.10.3
+            lockfile: requirements-dev.lock
+          - target: ha-2026.10.4
+            lockfile: requirements-ha-current.lock
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PE_SOURCE: 9eb21fc300f9cfdc39b0e0405364bbf543bfc717
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: v0.1.0-beta.7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: astral-sh/setup-uv@v6
+      - name: Prepare independent hash-verified core and actual HACS references
+        run: |
+          set -euo pipefail
+          uv venv
+          uv pip sync --require-hashes ${{ matrix.lockfile }}
+          uv run --no-project python tools/prepare_hacs_reference.py
+      - name: Independently download public assets and test HACS and both native layouts
+        run: |
+          set -euo pipefail
+          uv run --no-project python tools/verify_public_release.py --expected-commit "$PE_SOURCE" --output "$RUNNER_TEMP/public-beta7"
+          uv run --no-project python - <<'PY_CHANNEL'
+          import json,os,subprocess
+          from pathlib import Path
+          from custom_components.ha_energy_price_engine.update import release_for
+          feed=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/releases']))
+          assert release_for(feed,'0.1.0-beta.6')['tag_name']=='v0.1.0-beta.7'
+          assert release_for(feed,'0.1.0-beta.7')['tag_name']=='v0.1.0-beta.7'
+          stable=release_for(feed,'0.1.0')
+          assert stable is None or (not stable['prerelease'] and '-' not in stable['tag_name'])
+          path=Path(os.environ['RUNNER_TEMP'])/'public-beta7/PUBLIC_RELEASE_RECEIPT.json'
+          data=json.loads(path.read_text())
+          data['public_release_channel_selection']={'beta6_to_beta7':True,'installed_beta7_stays_current':True,'stable_excludes_beta_and_hashes':True}
+          path.write_text(json.dumps(data,indent=2)+'\n')
+          print('Public semantic release channel selection passed')
+          PY_CHANNEL
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pe-beta7-public-${{ matrix.target }}
+          path: ${{ runner.temp }}/public-beta7/PUBLIC_RELEASE_RECEIPT.json
+          if-no-files-found: error
+  audit:
+    name: Record verified beta.7 publication
+    needs: [publish, verify-public]
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PE_SOURCE: 9eb21fc300f9cfdc39b0e0405364bbf543bfc717
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/beta5-simple-onboarding
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: pe-beta7-public-*
+          path: public-verification
+      - name: Record public verification and preserve main and prior tags
+        run: |
+          set -euo pipefail
+          python - <<'PY_AUDIT'
+          import json,os,subprocess,urllib.request
+          from pathlib import Path
+          from datetime import UTC,datetime
+          repository=os.environ['GITHUB_REPOSITORY'];source=os.environ['PE_SOURCE'];tag='v0.1.0-beta.7'
+          def api(path):return json.loads(subprocess.check_output(['gh','api',f'repos/{repository}/{path}']))
+          receipts={p.parent.name:json.loads(p.read_text()) for p in Path('public-verification').rglob('PUBLIC_RELEASE_RECEIPT.json')}
+          assert len(receipts)==2
+          expected={'ha_energy_price_engine.zip':'b382f8d06901c72c2a305d9c09d700154d9f326fc8576266d599711fc820987b','ha_energy_price_engine-manual.zip':'dfdaa771932f011d9aeea8f07a00f932542d4788ef3aede2f89967b1f26d3b73'}
+          for receipt in receipts.values():
+              assert receipt['source_commit']==source and receipt['archive_hashes']==expected
+              assert receipt['isolated_hacs_and_native_install']=='passed'
+              assert all(receipt['public_release_channel_selection'].values())
+          release=api('releases/tags/'+tag)
+          assert release['prerelease'] and not release['draft']
+          assert api('commits/main')['sha']=='56cdb3c10993179371483812cbc36f651ba3ad8e'
+          assert api('git/ref/tags/v0.1.0-beta.4')['object']['sha']=='90cb819f001fd390ca35e1c83f26d3c6303c4de1'
+          assert api('git/ref/tags/v0.1.0-beta.3')['object']['sha']=='73b9e9e48d4cb17c69ecff4f77d9c992a5307516'
+          prior=[]
+          for number in range(1,7):
+              previous=json.loads(Path(f'docs/receipts/v0.1.0-beta.{number}.json').read_text())
+              oldtag=f'v0.1.0-beta.{number}'; old=api('releases/tags/'+oldtag)
+              assert old['id']==previous['release_id'] and old['prerelease'] and not old['draft']
+              assert api('git/ref/tags/'+oldtag)['object']['sha']==previous.get('tag_object',previous.get('annotated_tag_object'))
+              assets={a['name']:a for a in old['assets']}
+              for name,digest in previous.get('archive_hashes',previous.get('archive_sha256')).items():
+                  assert assets[name]['digest']=='sha256:'+digest
+              for asset in previous.get('assets',[]):
+                  assert all(assets[asset['name']].get(k)==asset[k] for k in ('id','size','digest') if k in asset)
+              prior.append({'tag':oldtag,'release_id':old['id'],'tag_and_asset_integrity_preserved':True})
+          tag_object=api('git/ref/tags/'+tag)['object']['sha'];assert tag_object=='51254125973257cbbfb1c13076964d9f4a10282c'
+          checks=api(f'commits/{source}/check-runs')['check_runs']
+          assert len(checks)>=16 and all(c['conclusion']=='success' for c in checks)
+          with urllib.request.urlopen(urllib.request.Request(release['html_url'],headers={'User-Agent':'PE-public-acceptance'}),timeout=30) as response:status=response.status
+          assert status==200
+          jobs=api(f'actions/runs/{os.environ["GITHUB_RUN_ID"]}/jobs')['jobs']
+          completed=[j for j in jobs if j['name'].startswith(('publish','Verify public'))]
+          assert len(completed)==3 and all(j['conclusion']=='success' for j in completed)
+          report={'schema':1,'verified_at':datetime.now(UTC).isoformat(),'tag':tag,'source_commit':source,'tag_object':tag_object,'main_commit':'56cdb3c10993179371483812cbc36f651ba3ad8e','main_unmerged':True,'previous_releases_preserved':True,'prior_releases':prior,'release_url':release['html_url'],'release_id':release['id'],'draft':False,'prerelease':True,'unauthenticated_release_page_http':status,'archive_hashes':expected,'assets':[{k:a.get(k) for k in ('name','id','size','digest','browser_download_url')} for a in release['assets']],'publisher':{'id':int(os.environ['GITHUB_RUN_ID']),'html_url':f'https://github.com/{repository}/actions/runs/{os.environ["GITHUB_RUN_ID"]}','head_sha':os.environ['GITHUB_SHA'],'publication_and_both_verification_jobs':'success','workflow_final_conclusion':'pending audit completion'},'exact_source_checks':[{'name':c['name'],'id':c['id'],'conclusion':c['conclusion'],'url':c['html_url']} for c in checks],'validation':{'ha_cores':['2026.10.3','2026.10.4'],'producer_cases_per_core':308,'producer_coverage_percent':88,'skips':0,'warnings':'Two deprecation warnings in pinned upstream HACS code','unchanged_consumer_cases_per_core':{'pr15':153,'pr16':176,'pr25':227,'pr26':228},'actual_coupled_runtime_cases_per_consumer_per_core':2,'public_verification':'Fresh independent GitHub runner jobs on both locked cores; actual public metadata/assets/tag source/main plus unchanged pinned HACS2.0.5/upstream and both native ZIP layouts outside source','native_frontend':'Disposable HA2026.10.4/frontend20260930.5 EN/en-GB/DA desktop/mobile; synthetic boundaries','simulation_receipt':'docs/receipts/v0.1.0-beta.7-simulation.json','public_release_channel_selection':'beta6 chooses beta7; installed beta7 current; stable excludes prereleases/hashes'},'public_verification_receipts':receipts,'owner_acceptance':False,'remaining_limitations':['Actual private markup/VAT require user confirmation; optional EWII offers remain Advanced only. Display and contract-input precision are separate.','National baselines are bounded dated data; other products/future periods require verified rules. Heating eligibility is never guessed.','New agreements start next complete quarter; first day may have only remaining-day coverage, never unknown past backfill.','Native Close cannot submit typed fields; no dedicated per-page Back. HA entity/card precision overrides remain user-owned; old unit-specific display entities remain unavailable after switching.','Entity names follow system/registry language; forms follow user language. HACS external brand catalog can show fallback.','Cloud SQLite measurements do not establish Raspberry Pi performance; history remains in memory for APIv1.'],'production_controls_touched':False}
+          Path('docs/receipts/v0.1.0-beta.7.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          PY_AUDIT
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/receipts/v0.1.0-beta.7.json
+          git commit -m 'docs: record independent public beta.7 verification on both cores'
+          git push origin HEAD:refs/heads/feat/beta5-simple-onboarding
+      - name: Update existing draft PR with verified prerelease
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta7-pr.md" <<'PE_PR'
+          Beta.7 is published and independently verified: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.7
+
+          Exact immutable source **9eb21fc300f9cfdc39b0e0405364bbf543bfc717**, annotated tag **51254125973257cbbfb1c13076964d9f4a10282c**. Existing PR stays draft/unmerged. Main and all beta.1–.6 tags/assets preserved. Owner authorizes beta.7 prerelease only.
+
+          All preferred price presentation now uses ore/kWh2 decimals or optional DKK/kWh4, across raw/final/current/next/statistics/provisional and current/future breakdowns. Canonical technical entities retain IDs/full values/Recorder units. Locale and user/browser-system decimal preferences covered without optional runtime dependencies. Contract inputs and charging-cost arithmetic retain full precision. Rounded amounts are labelled, never substituted into price/cost computation.
+
+          Current/next and exact requested future-window readiness are independent from historical full-day completeness. Native late activation shows7/96 history INCOMPLETE while current/next/window READY and tomorrow96/96 READY. Missing future remains INCOMPLETE; no unknown backfill or zero. Existing APIv1/engine/SQLite/scheduler retained. Reads use stored indexed values without network, composition, SQLite connections or writes. Changed future records alone are replaced; original settled values/revisions persist.
+
+          **Validation:**308 producer cases/core HA2026.10.3/.4,88% coverage,zero skips;unchanged consumers153/176/227/228/core plus two coupled runtime cases/reference/core. All16 exact-source checks green, all publication/public-verification jobs succeed. Hassfest/HACS/translations and both native ZIP layouts pass. Two fresh public jobs downloaded real metadata/assets/source and exercised pinned HACS2.0.5/upstream install/update/reinstall and beta6→7 semantic availability on both cores. Independent public hashes/source/native/HACS verification is recorded in the receipt.
+
+          Native EN/en-GB/DA desktop/mobile HA2026.10.4/frontend20260930.5 journeys passed2/4 decimals, raw/final, user/system locale, selected future components and ready/missing horizons, no frontend errors/warnings. Beta.6 upgrade15 configs/1,211 rows/315 entity IDs/29 Recorder unit metadata unchanged. Restart16configs/1,314rows unchanged.250 repeated read guards/case and actual SQL indexed read-only plan. Current16:45→next17:00 recorded Radius example68.32→147.95ore; supplied1.25/2kWh costs3.81287625DKK from canonical values. Synthetic/recorded software evidence, not owner acceptance.
+
+          [Setup/current-next examples](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.7/docs/WIZARD_GUIDE.md) · [HACS steps](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.7/docs/HACS_DISTRIBUTION.md) · [Publication receipt](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.7.json) · [Permanent handoff](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/DEVELOPMENT_STATUS.md)
+
+          HACS:persist Show beta versions,refresh,selectv0.1.0-beta.7,download/restart/reload. Configure existing site; Check future window uses APIv1, not a charging plan. Default display entities have fixed unit identities; HA card/entity overrides may supersede suggestions. Actual contracts/providers/hardware remain owner acceptance; cloud benchmarks are not Pi results. Original35,136-row SQLite storage18.24MB/touched-row append retained. No production HA,Node-RED,CM or physical control changes; no stable or merge. Stop after verification/final handoff. Refs#8,#12.
+          PE_PR
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" --method PATCH --raw-field title='Beta.7: consistent prices and independent charging-window readiness' -F body=@"$RUNNER_TEMP/pe-beta7-pr.md" --jq '{number,html_url,draft}'

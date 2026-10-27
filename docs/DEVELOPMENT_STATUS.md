@@ -7,6 +7,30 @@ worktree, main merge, stable or production/Node-RED/CM/physical-control changes.
 Owner authorizes immutable beta.7 prerelease after mandatory gates; stop after
 publication and independent verification. Prior beta.6 STOP is historical below.
 
+## Beta.7 immutable source and authorized publisher
+
+- Exact source **9eb21fc300f9cfdc39b0e0405364bbf543bfc717**; all11 source push/PR/
+  draft-updater checks green before tag creation. Clean build dirty=false.
+- Annotated **v0.1.0-beta.7** object **51254125973257cbbfb1c13076964d9f4a10282c**.
+  Five tag jobs pending; require all16 source jobs green before upload.
+- Both root/manual layouts installed outside source on both locked cores, including
+  installed system-number-format data on minimal HA. HACS ZIP SHA256:
+  `b382f8d06901c72c2a305d9c09d700154d9f326fc8576266d599711fc820987b`;
+  manual `dfdaa771932f011d9aeea8f07a00f932542d4788ef3aede2f89967b1f26d3b73`.
+- Main56cdb3c and all six prior annotated tags independently unchanged; beta7 newly
+  created, never moved. No beta7 release yet at this checkpoint.
+- Checkpoint subject: **ci: publish authorized beta.7 with immutable public verification**.
+  Dedicated publish-beta7 workflow requires exact source/tag/all16 green checks,
+  draft PR14, unchanged main/prior release IDs/tags/hashes; clean expected rebuild
+  and both native layouts before prerelease-only/latest=false four-asset publication.
+  Fresh independent two-core jobs download real public metadata/assets/tag/main,
+  run actual pinned HACS and native packages, verify semantic beta6→7 availability;
+  audit preserves prior assets and commits receipt/updates existing draft14.
+- Local workflow syntax/all five embedded Python blocks validated. Commit after
+  immutable source; push only after all16 source checks green. Then complete fresh
+  local public download/source/hash/native/HACS checks, final receipt/handoff/CI.
+  Owner already authorized beta7 prerelease. No stable/main/production/controls.
+
 ## Beta.7 final validation before tag
 
 Checkpoint subject: **docs: freeze validated beta.7 candidate for immutable publication**.
