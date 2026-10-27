@@ -115,15 +115,18 @@ async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, 
             result["flow_id"], {"slot": instant.isoformat()}
         )
         text = result["description_placeholders"]["slot_breakdown"]
-        assert "supplier:" in text and "Stored final:" in text and "electricity_tax:" in text
-        assert "revision:" in text and "input unit: DKK/MWh" in text
-        assert "original verification:" in text and "Fictional test supplier" in text
+        facts = __import__("json").loads(text.removeprefix("```json\n").removesuffix("\n```"))
+        assert "supplier" in facts["components"]["components"]
+        assert "electricity_tax" in facts["components"]["components"]
+        assert facts["canonical_unit"] == "DKK/kWh" and facts["source"]["input_unit"] == "DKK/MWh"
+        assert facts["revision"] >= 1 and facts["source"]["verified_at"]
+        assert "Fictional test supplier" in text
         hass.config_entries.options.async_abort(result["flow_id"])
         c.schedule.days["home"]["2026-10-23"]["status"] = "INCOMPLETE"
         assert DayStatisticSensor(c, "minimum").native_value is None
         c.schedule.days["home"]["2026-10-24"]["status"] = "STALE"
         assert TomorrowSensor(c).native_value == "STALE"
-        assert "No stored price" in slot_breakdown(c, datetime(2026, 10, 28, tzinfo=UTC))
+        assert '"records": 0' in slot_breakdown(c, datetime(2026, 10, 28, tzinfo=UTC))
     assert await hass.config_entries.async_unload(entry.entry_id)
 
 

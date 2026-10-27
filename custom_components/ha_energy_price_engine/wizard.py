@@ -168,7 +168,14 @@ class Wizard:
         return "✓" if active == self.draft else "✎"
 
     async def _verify(self, force=False):
-        site = validate_site(self.draft)
+        try:
+            site = validate_site(self.draft)
+        except ValueError, KeyError, TypeError, ZoneInfoNotFoundError:
+            self._site_verified = False
+            self._verification = {}
+            self._verified_signature = None
+            return self._verification
+        self._site_verified = True
         signature = json.dumps(site, sort_keys=True)
         if force or getattr(self, "_verified_signature", None) != signature:
             self._verification = await verify_site(
@@ -179,7 +186,7 @@ class Wizard:
             self._verified_signature = signature
         return self._verification
 
-    def _form(self, step, fields, progress, errors=None, help_text=""):
+    def _form(self, step, fields, progress, errors=None):
         fields[vol.Required("navigation", default="next")] = choice(
             [("next", "Next"), ("back", "Back"), ("review", "Review draft")], "wizard_navigation"
         )
@@ -199,6 +206,11 @@ class Wizard:
             last_step=False,
             description_placeholders={
                 "draft_status": self._state(),
+                "raw": " · ".join(
+                    f"{day}: {'✓' if r.get('raw', {}).get('status') == 'READY' else '✕'} {r.get('raw', {}).get('valid_slots', 0)}/{r.get('raw', {}).get('expected_slots', 0)}"
+                    for day, r in getattr(self, "_verification", {}).items()
+                )
+                or "—",
                 "progress": progress,
                 "context": "",
             },
@@ -353,9 +365,6 @@ class Wizard:
             fields,
             "1 / 6",
             errors,
-            "Nord Pool source unit (automatic): DKK/MWh excluding VAT. Display preference is separate."
-            if official
-            else "Advanced provider contract: explicit timestamped intervals, units, VAT and verified_at are required.",
         )
 
     async def async_step_wizard_location(self, user_input=None):
@@ -386,6 +395,7 @@ class Wizard:
                     errors["base"] = "invalid_configuration"
                     self._validation_error = str(e)
                 if not errors:
+                    await self._verify(force=True)
                     return await self._move(
                         "wizard_location", user_input, "wizard_grid", "wizard_source"
                     )
@@ -447,9 +457,6 @@ class Wizard:
             fields,
             "2 / 6",
             errors,
-            "Provider supplies a final all-in price; do not add tariffs."
-            if not fields
-            else "Select Radius C only if it is your grid product. Automatic identity, dates and coverage are checked on Save. Manual time bands/locks: use the dated-rate editor from Review; existing periods remain unchanged.",
         )
 
     def _rate_fields(self, key):
@@ -536,13 +543,11 @@ class Wizard:
                 **self._rate_fields("supplier"),
             }
         )
-        count = sum(r["id"] == "supplier" for r in self.draft.get("dated_components", []))
         return self._form(
             "wizard_supplier",
             fields,
             "3 / 6",
             errors,
-            f"{count} saved/staged supplier periods retained. Add only your verified contract. No EWII rate is inferred. Leave Add contract off to keep existing periods or finish later; missing coverage prevents READY.",
         )
 
     async def async_step_wizard_charges(self, user_input=None):
@@ -581,7 +586,6 @@ class Wizard:
             "wizard_charges",
             fields,
             "4 / 6",
-            help_text="Opt-in bounded documented baselines: 2026 Energinet net 0.043/system 0.072 DKK/kWh ex VAT; 2026–2027 tax 0.008. No future rules invented. Alternatively add dated manual rates from Review. Heating never creates an automatic discount: registration, actual year/consumption and an explicit verified eligible rate are required.",
         )
 
     async def async_step_wizard_display(self, user_input=None):
@@ -598,7 +602,6 @@ class Wizard:
                 ): choice([("øre/kWh", "øre/kWh"), ("DKK/kWh", "DKK/kWh")])
             },
             "5 / 6",
-            help_text="100 DKK/MWh = 10 øre/kWh = 0.10 DKK/kWh before tariffs/tax. Official input is fixed; this changes presentation only. Existing DKK sensor identities/statistics and stored/API DKK/kWh amounts stay unchanged; unit-specific display entities keep histories separate.",
         )
 
     def _review(self):
@@ -610,6 +613,8 @@ class Wizard:
 
         result = {
             "draft_status": self._state(),
+            "site_validation": mark(getattr(self, "_site_verified", False)),
+            "pending": str(len(self._pending)),
             "name": site.get("name", ""),
             "site_id": site.get("id", ""),
             "area": site.get("area", ""),
@@ -646,6 +651,8 @@ class Wizard:
             description_placeholders=self._review(),
             menu_options=[
                 "wizard_save",
+                "wizard_site",
+                "wizard_location",
                 "wizard_source",
                 "wizard_grid",
                 "wizard_supplier",

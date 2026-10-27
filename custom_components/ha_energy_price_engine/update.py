@@ -100,7 +100,9 @@ class PublishedRelease(CoordinatorEntity, UpdateEntity):
 
     @property
     def release_url(self):
-        return f"https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v{self.latest_version}"
+        release = release_for(self.coordinator.data or [], self.installed_version)
+        tag = release["tag_name"] if release else f"v{self.installed_version}"
+        return f"https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/{tag}"
 
     @property
     def release_summary(self):

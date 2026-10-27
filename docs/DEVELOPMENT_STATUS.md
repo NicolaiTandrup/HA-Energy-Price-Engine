@@ -49,6 +49,31 @@ fixtures in real frontend, final regression/consumer/CI/package verification, do
 then authorized beta.3 prerelease and independent public verification. Never call
 simulated results owner acceptance. No main merge or production/control operations.
 
+## Beta.3 native/functional checkpoint
+
+Checkpoint e6ddd04 pushed as draft **PR #11**; all ten actual CI checks passed,
+including producer/unchanged consumers on both cores, HACS/hassfest and package install.
+Checkpoint subject: `fix: localize native verification and retain actionable source states`.
+35 flow/functional tests and 11 acceptance/language tests pass locally; latest local
+hassfest valid. Whole suite was 195 green before adding early-Review/fallback cases.
+
+Real disposable HA .4/frontend 20260930.5 at /tmp/pe-beta3-ui, port8125, synthetic
+read-only service and Radius fixtures only. Native EN clean setup and native DA new
+site both save and actually publish 96 raw quarters .100 DKK/kWh and final .6675
+DKK/kWh (66.75 øre), using explicitly fictional supplier .111 and grid .200 plus
+bounded documented public components and 25% VAT. Real runtime/SQLite, not only
+preview or screenshots. User language switched through native profile localization
+while system language stays English; backend English/Danish/fallback key tests pass.
+Screenshots/logs/runtime states in /tmp; final committed evidence/guide pending.
+
+Remaining: finish native missing-contract/grid-outage/source/restart/DA state checks
+and screenshots on final code, complete setup/retest docs, full both-core tests/CI,
+clean packages then beta.3 tag/publication/public verification. Owner PAHA02-DEV
+acceptance remains NOT established; do not close #8 as owner-accepted. HACS's own
+card still needs persisted Show beta versions; PE semantic release entity never
+offers commits. Native Close still does not submit keystrokes: Continue before Close.
+No owner HA, no main merge, stable, CM release or control operations.
+
 ## Completed PE beta.2 — final receipt
 
 Public **prerelease**:

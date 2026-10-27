@@ -96,7 +96,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Grid tariffs",
-        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm your grid product before selecting automatic Radius C. C is a household connection class, not a supplier contract. Review will retrieve and verify the actual dated Radius tariff. Other classes need manual dated rates from Review → Advanced.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
+        "description": "**Verified spot source (quarters):** {raw}\n\nIf ✕: correct the source through Review. Grid configuration can continue; readiness is never forced.\n\n{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm your grid product before selecting automatic Radius C. C is a household connection class, not a supplier contract. Review will retrieve and verify the actual dated Radius tariff. Other classes need manual dated rates from Review → Advanced.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Grid tariff source",
@@ -178,7 +178,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Review, Save & verify",
-        "description": "{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
+        "description": "Site/source configuration valid: {site_validation}. Unapplied page edits: {pending}. Complete site/source before verification; Save returns to unapplied pages.\n\n{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -191,7 +191,9 @@
           "wizard_grid": "Correct grid / Radius tariff",
           "wizard_supplier": "Correct supplier contract",
           "wizard_charges": "Correct national charges / tax",
-          "wizard_recheck": "Recheck sources and calculation"
+          "wizard_recheck": "Recheck sources and calculation",
+          "wizard_site": "Correct site name",
+          "wizard_location": "Correct area / timezone / VAT"
         }
       },
       "wizard_resume": {
@@ -381,7 +383,7 @@
       },
       "breakdown": {
         "title": "Stored price breakdown",
-        "description": "{slot_breakdown}",
+        "description": "Select a stored quarter. An empty list means no stored prices: correct periods/source through Review. Technical facts use stable storage/API field names. start/end are UTC; revision is the original price version; final_price_incl_vat is DKK/kWh; display_value uses your preferred unit. components contains rates/VAT/sources; subscriptions are excluded from marginal price. Reading never fetches sources.\n\n{slot_breakdown}",
         "data": {
           "slot": "Quarter (local date/time and UTC offset)"
         }
@@ -445,7 +447,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Grid tariffs",
-        "description": "{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm your grid product before selecting automatic Radius C. C is a household connection class, not a supplier contract. Review will retrieve and verify the actual dated Radius tariff. Other classes need manual dated rates from Review → Advanced.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
+        "description": "**Verified spot source (quarters):** {raw}\n\nIf ✕: correct the source through Review. Grid configuration can continue; readiness is never forced.\n\n{progress} · {draft_status} (✓ saved / ✎ draft)\n\nConfirm your grid product before selecting automatic Radius C. C is a household connection class, not a supplier contract. Review will retrieve and verify the actual dated Radius tariff. Other classes need manual dated rates from Review → Advanced.\n\n**Continue preserves the page; active settings change only on Save & verify. Close/reload does not submit typed fields. Choose Continue first.**",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Grid tariff source",
@@ -527,7 +529,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Review, Save & verify",
-        "description": "{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
+        "description": "Site/source configuration valid: {site_validation}. Unapplied page edits: {pending}. Complete site/source before verification; Save returns to unapplied pages.\n\n{draft_status} · ✓ matches active settings; ✎ draft changes. Nothing applies until Save & verify.\n\n**Site:** {name} · {site_id}\n**Source:** {source} · {area} · {timezone}\n**Display:** {display_unit} · VAT {vat}% · storage/API DKK/kWh\n\n**Raw source — ✓ complete, ✕ missing/failed, ⚠ stale:**\n{raw}\n\n**Final calculation — verified quarters:**\n{final}\n\n**Supplier contract (verified dated markup):** {supplier}\n**Grid tariff (Radius verification or dated manual rates):** {dso}\n**Energinet network:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Electricity tax:** {electricity_tax}\n\n✓ period covered; ✕ missing/unverified on the shown date. Correct each ✕ using its step below. Missing rates keep final prices unavailable; valid raw spot prices remain visible. Save & verify applies this draft and checks sources again; there is no additional Save menu.\n\nTechnical source/calculation detail:\n{technical}",
         "data": {},
         "data_description": {},
         "submit": "Continue",
@@ -540,7 +542,9 @@
           "wizard_grid": "Correct grid / Radius tariff",
           "wizard_supplier": "Correct supplier contract",
           "wizard_charges": "Correct national charges / tax",
-          "wizard_recheck": "Recheck sources and calculation"
+          "wizard_recheck": "Recheck sources and calculation",
+          "wizard_site": "Correct site name",
+          "wizard_location": "Correct area / timezone / VAT"
         }
       },
       "wizard_resume": {
@@ -760,6 +764,20 @@
         "spot_ex_vat": "Spot excluding VAT",
         "spot_incl_vat": "Spot including VAT",
         "all_in": "Final all-in price"
+      }
+    },
+    "values": {
+      "options": {
+        "supplier": "Supplier markup",
+        "dso": "Grid tariff",
+        "energinet_net": "Energinet network",
+        "energinet_system": "Energinet system",
+        "electricity_tax": "Electricity tax",
+        "subscription": "Monthly subscription",
+        "supplier_subscription": "Supplier subscription",
+        "grid_subscription": "Grid subscription",
+        "all": "All consumption",
+        "heating_above_4000": "Verified eligible heating above threshold"
       }
     }
   }

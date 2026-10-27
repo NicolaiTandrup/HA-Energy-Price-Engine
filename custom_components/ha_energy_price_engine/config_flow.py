@@ -383,7 +383,7 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
         start, _ = day_bounds(day, runtime.site["timezone"])
         _, end = day_bounds(day + timedelta(days=1), runtime.site["timezone"])
         rows = runtime.price_engine.lookup(runtime.site["id"], start, end)
-        explanation = "Select a stored quarter to inspect its original amounts and verification. No source is fetched."
+        explanation = "—"
         if user_input:
             try:
                 selected = datetime.fromisoformat(user_input["slot"])
@@ -391,11 +391,9 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
                     raise ValueError("Slot not in displayed range")
                 explanation = slot_breakdown(runtime, selected, now)
             except ValueError, KeyError, TypeError:
-                explanation = (
-                    "Select an available quarter from the list. Missing prices are not zero."
-                )
+                explanation = "✕"
         if not rows:
-            explanation = "No stored quarters for today/tomorrow. Configure required components and check source readiness."
+            explanation = "—"
         return self.async_show_form(
             step_id="breakdown",
             data_schema=vol.Schema(
@@ -415,7 +413,7 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
         )
 
     async def async_step_storage(self, user_input=None):
-        result = "No backup created in this editor session."
+        result = "—"
         errors = {}
         if user_input is not None:
             runtime = getattr(self.config_entry, "runtime_data", None)

@@ -126,3 +126,45 @@ def test_release_channels_never_offer_commit_or_draft():
     assert release_for(data, "0.1.0-beta.2")["tag_name"] == "v0.1.0-beta.3"
     assert release_for(data, "0.1.0") is None
     assert release_for(data, "0.1.0-beta.3")["tag_name"] == "v0.1.0-beta.3"
+
+
+async def test_review_before_completing_site_does_not_crash_or_certify(hass):
+    from custom_components.ha_energy_price_engine.const import DOMAIN
+
+    flow = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    result = await hass.config_entries.flow.async_configure(
+        flow["flow_id"], {"name": "Unfinished", "source_type": "nordpool", "navigation": "review"}
+    )
+    assert result["step_id"] == "wizard_review"
+    assert result["description_placeholders"]["site_validation"] == "✕"
+    assert "wizard_source" in result["menu_options"]
+    hass.config_entries.flow.async_abort(flow["flow_id"])
+
+
+async def test_native_translations_follow_requested_locale_and_fall_back(hass):
+    import json
+    from pathlib import Path
+
+    from homeassistant.helpers.translation import async_get_translations
+
+    from custom_components.ha_energy_price_engine.const import DOMAIN
+
+    root = Path(__file__).parents[1] / "custom_components" / DOMAIN
+    en = json.loads((root / "translations/en.json").read_text())
+    da = json.loads((root / "translations/da.json").read_text())
+
+    def keys(value, prefix=""):
+        return {prefix + k for k, v in value.items() if not isinstance(v, dict)} | set().union(
+            *(keys(v, prefix + k + ".") for k, v in value.items() if isinstance(v, dict))
+        )
+
+    assert keys(en) == keys(da)
+    # Core resolves native resources per request, independent from system geography.
+    hass.config.language = "en"
+    english = await async_get_translations(hass, "en", "config", {DOMAIN})
+    danish = await async_get_translations(hass, "da", "config", {DOMAIN})
+    unknown = await async_get_translations(hass, "zz", "config", {DOMAIN})
+    key = f"component.{DOMAIN}.config.step.wizard_supplier.title"
+    assert english[key] == "3 / 6 · Supplier contract"
+    assert danish[key] == "3 / 6 · Leverandørkontrakt"
+    assert unknown[key] == english[key]

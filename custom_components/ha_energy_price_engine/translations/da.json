@@ -3,39 +3,39 @@
   "config": {
     "step": {
       "user": {
-        "title": "Add an independent price site",
-        "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates.",
+        "title": "Tilføj et selvstændigt prissted",
+        "description": "Vælg et navn og en officiel Nord Pool-kilde. Hvert sted har egne dokumenterede satser. Konfigurér datoer, net, leverandør og afgifter i guiden. Ukendte priser er aldrig nul.",
         "data": {
-          "id": "Stable site ID (lowercase letters, digits and underscores)",
-          "name": "Site name",
-          "nordpool_entry": "Official Nord Pool integration",
-          "area": "Price area (for example DK2)",
-          "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
-          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
-          "price_entity": "Timestamped provider entity (entity source only)",
-          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
-          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
-          "price_attribute": "Timestamped interval attribute (entity source only)",
-          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
+          "id": "Permanent sted-ID (små bogstaver, tal og underscore)",
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-integration",
+          "area": "Prisområde (fx DK2)",
+          "timezone": "IANA-tidszone (fx Europe/Copenhagen)",
+          "vat": "Momsandel for spot og automatisk nettarif (0,25 = 25 %)",
+          "source_type": "Spotkilde (officiel Nord Pool eller udtrykkelig entitetsaftale)",
+          "price_entity": "Tidsstemplet leverandørentitet (kun entitetskilde)",
+          "price_unit": "Bekræftet inputenhed (officiel Nord Pool: DKK/MWh)",
+          "price_basis": "Bekræftet moms-/prisgrundlag (officiel Nord Pool: spot uden moms)",
+          "price_attribute": "Attribut med tidsstemplede intervaller (kun entitetskilde)",
+          "stale_minutes": "Maksimal alder på kildekontrol (minutter, kun entitetskilde)"
         }
       },
       "reconfigure": {
-        "title": "Site and official spot source",
+        "title": "Sted og officiel spotkilde",
         "data": {
-          "name": "Site name",
-          "nordpool_entry": "Official Nord Pool integration",
-          "area": "Price area (for example DK2)",
-          "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
-          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
-          "price_entity": "Timestamped provider entity (entity source only)",
-          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
-          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
-          "price_attribute": "Timestamped interval attribute (entity source only)",
-          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-integration",
+          "area": "Prisområde (fx DK2)",
+          "timezone": "IANA-tidszone (fx Europe/Copenhagen)",
+          "vat": "Momsandel for spot og automatisk nettarif (0,25 = 25 %)",
+          "source_type": "Spotkilde (officiel Nord Pool eller udtrykkelig entitetsaftale)",
+          "price_entity": "Tidsstemplet leverandørentitet (kun entitetskilde)",
+          "price_unit": "Bekræftet inputenhed (officiel Nord Pool: DKK/MWh)",
+          "price_basis": "Bekræftet moms-/prisgrundlag (officiel Nord Pool: spot uden moms)",
+          "price_attribute": "Attribut med tidsstemplede intervaller (kun entitetskilde)",
+          "stale_minutes": "Maksimal alder på kildekontrol (minutter, kun entitetskilde)"
         },
-        "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates."
+        "description": "Vælg et navn og en officiel Nord Pool-kilde. Hvert sted har egne dokumenterede satser. Konfigurér datoer, net, leverandør og afgifter i guiden. Ukendte priser er aldrig nul."
       },
       "wizard_site": {
         "title": "1 / 6 · Sted og kilde",
@@ -96,7 +96,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Nettariffer",
-        "description": "{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nBekræft dit netprodukt før valg af automatisk Radius C. C er en tilslutningsklasse, ikke en elaftale. Oversigten henter og kontrollerer den daterede Radius-tarif. Andre klasser kræver manuelle daterede satser via Oversigt → Avanceret.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
+        "description": "**Kontrolleret spotkilde (kvarterer):** {raw}\n\nVed ✕: Ret kilden via Oversigt. Nettariffer kan stadig indtastes; intet sættes kunstigt til klar.\n\n{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nBekræft dit netprodukt før valg af automatisk Radius C. C er en tilslutningsklasse, ikke en elaftale. Oversigten henter og kontrollerer den daterede Radius-tarif. Andre klasser kræver manuelle daterede satser via Oversigt → Avanceret.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Nettariffens kilde",
@@ -178,7 +178,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Oversigt, Gem og kontrollér",
-        "description": "{draft_status} · ✓ svarer til aktive indstillinger; ✎ kladdeændringer. Intet anvendes før Gem og kontrollér.\n\n**Sted:** {name} · {site_id}\n**Kilde:** {source} · {area} · {timezone}\n**Visning:** {display_unit} · moms {vat}% · lager/API DKK/kWh\n\n**Rå kilde — ✓ fuldstændig, ✕ mangler/fejlet, ⚠ forældet:**\n{raw}\n\n**Beregnet slutpris — kontrollerede kvarterer:**\n{final}\n\n**Leverandøraftale (kontrolleret dateret tillæg):** {supplier}\n**Nettarif (Radius-kontrol eller daterede manuelle satser):** {dso}\n**Energinet net:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Elafgift:** {electricity_tax}\n\n✓ perioden er dækket; ✕ mangler/ikke kontrolleret på den viste dato. Ret hvert ✕ via dets trin nedenfor. Manglende satser gør slutpriser utilgængelige; gyldige rå spotpriser vises stadig. Gem og kontrollér anvender kladden og kontrollerer kilder igen; der er ingen ekstra Gem-menu.\n\nTekniske kilde-/beregningsoplysninger:\n{technical}",
+        "description": "Sted/kilde valideret: {site_validation}. Ikke anvendte sideændringer: {pending}. Ret sted/kilde før kontrol; Gem sender dig tilbage til ikke anvendte sider.\n\n{draft_status} · ✓ svarer til aktive indstillinger; ✎ kladdeændringer. Intet anvendes før Gem og kontrollér.\n\n**Sted:** {name} · {site_id}\n**Kilde:** {source} · {area} · {timezone}\n**Visning:** {display_unit} · moms {vat}% · lager/API DKK/kWh\n\n**Rå kilde — ✓ fuldstændig, ✕ mangler/fejlet, ⚠ forældet:**\n{raw}\n\n**Beregnet slutpris — kontrollerede kvarterer:**\n{final}\n\n**Leverandøraftale (kontrolleret dateret tillæg):** {supplier}\n**Nettarif (Radius-kontrol eller daterede manuelle satser):** {dso}\n**Energinet net:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Elafgift:** {electricity_tax}\n\n✓ perioden er dækket; ✕ mangler/ikke kontrolleret på den viste dato. Ret hvert ✕ via dets trin nedenfor. Manglende satser gør slutpriser utilgængelige; gyldige rå spotpriser vises stadig. Gem og kontrollér anvender kladden og kontrollerer kilder igen; der er ingen ekstra Gem-menu.\n\nTekniske kilde-/beregningsoplysninger:\n{technical}",
         "data": {},
         "data_description": {},
         "submit": "Fortsæt",
@@ -191,7 +191,9 @@
           "wizard_grid": "Ret nettarif / Radius",
           "wizard_supplier": "Ret leverandøraftale",
           "wizard_charges": "Ret Energinet / elafgift",
-          "wizard_recheck": "Kontrollér kilder og beregning igen"
+          "wizard_recheck": "Kontrollér kilder og beregning igen",
+          "wizard_site": "Ret stedets navn",
+          "wizard_location": "Ret område / tidszone / moms"
         }
       },
       "wizard_resume": {
@@ -239,7 +241,7 @@
       }
     },
     "error": {
-      "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap.",
+      "invalid_configuration": "Kontrollér sted-ID, officiel Nord Pool, tidszone, enheder, datoer og overlappende satser.",
       "name_required": "Indtast et genkendeligt navn.",
       "invalid_id": "Brug små bogstaver a-z, tal og underscore; start med bogstav/tal.",
       "duplicate_id": "ID tilhører allerede et sted. Vælg et andet ID eller konfigurér det eksisterende sted.",
@@ -254,8 +256,8 @@
       "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede."
     },
     "abort": {
-      "already_configured": "This site ID is already configured.",
-      "reconfigure_successful": "Site source updated. Stable site identity and dated business settings were preserved.",
+      "already_configured": "Dette sted-ID er allerede konfigureret.",
+      "reconfigure_successful": "Stedets kilde er opdateret. Permanent identitet og daterede satser blev bevaret.",
       "draft_discarded": "Kladden er kasseret; aktive priser, indstillinger og historik er bevaret."
     },
     "create_entry": {
@@ -265,125 +267,125 @@
   "options": {
     "step": {
       "init": {
-        "title": "Pricing, tariffs, supplier and taxes",
-        "description": "{pricing_summary}\n\nAdd or edit dated rates. Save applies this draft; closing without Save discards edits. Unknown rates are never zero.",
+        "title": "Priser, tariffer, leverandør og afgifter",
+        "description": "{pricing_summary}\n\nTilføj eller redigér daterede satser. Indsend hvert trin for at bevare kladden, og afslut via Oversigt → Gem og kontrollér.",
         "menu_options": {
-          "site": "Site and spot VAT",
-          "add_rate": "Add dated rate or subscription",
-          "edit_rate": "Edit dated rate",
-          "remove_rate": "Remove dated rate",
-          "dso": "Grid tariff source and fallback",
-          "taxes": "Dated national baselines and tax eligibility",
-          "save": "Save changes",
-          "supplier": "Supplier and contract guidance",
-          "storage": "Storage and verified backup",
-          "breakdown": "Inspect a stored quarter-hour price"
+          "site": "Sted og spotmoms",
+          "add_rate": "Tilføj dateret sats eller abonnement",
+          "edit_rate": "Redigér dateret sats",
+          "remove_rate": "Fjern dateret sats",
+          "dso": "Nettarifkilde og reserve",
+          "taxes": "Dateret nationalt grundlag og afgiftsberettigelse",
+          "save": "Gem ændringer",
+          "supplier": "Leverandør og aftalehjælp",
+          "storage": "Lager og kontrolleret sikkerhedskopi",
+          "breakdown": "Se en gemt kvarterspris"
         }
       },
       "site": {
-        "title": "Site and official spot source",
+        "title": "Sted og officiel spotkilde",
         "data": {
-          "name": "Site name",
-          "nordpool_entry": "Official Nord Pool integration",
-          "area": "Price area (for example DK2)",
-          "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
-          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
-          "price_entity": "Timestamped provider entity (entity source only)",
-          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
-          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
-          "price_attribute": "Timestamped interval attribute (entity source only)",
-          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-integration",
+          "area": "Prisområde (fx DK2)",
+          "timezone": "IANA-tidszone (fx Europe/Copenhagen)",
+          "vat": "Momsandel for spot og automatisk nettarif (0,25 = 25 %)",
+          "source_type": "Spotkilde (officiel Nord Pool eller udtrykkelig entitetsaftale)",
+          "price_entity": "Tidsstemplet leverandørentitet (kun entitetskilde)",
+          "price_unit": "Bekræftet inputenhed (officiel Nord Pool: DKK/MWh)",
+          "price_basis": "Bekræftet moms-/prisgrundlag (officiel Nord Pool: spot uden moms)",
+          "price_attribute": "Attribut med tidsstemplede intervaller (kun entitetskilde)",
+          "stale_minutes": "Maksimal alder på kildekontrol (minutter, kun entitetskilde)"
         }
       },
       "dso": {
-        "title": "Grid tariff source",
-        "description": "Automatic Radius C verifies GLN 5790000705689, D03/DT_C_01 and coverage. Manual uses dated DSO rates. Fallback uses explicit dated manual DSO periods when the verified cache cannot cover the request. Expired or unavailable rates never become zero.",
+        "title": "Nettarifkilde",
+        "description": "Automatisk Radius C kontrollerer GLN 5790000705689 og D03/DT_C_01 samt periodedækning. Andre produkter kræver daterede manuelle satser. Reserve kræver egne kontrollerede satser; udløbne data er aldrig nul.",
         "data": {
-          "dso_mode": "DSO source (manual or verified Radius C)",
-          "dso_manual_fallback": "Allow explicit dated manual DSO fallback",
-          "dso_stale_days": "Maximum age of last verified DSO cache (days)",
-          "dso_tariff_class": "Tariff class (automatic Radius supports verified C only; other classes require manual dated rates)"
+          "dso_mode": "Netkilde (manuel eller kontrolleret Radius C)",
+          "dso_manual_fallback": "Tillad udtrykkelig dateret manuel nettarif som reserve",
+          "dso_stale_days": "Maksimal alder på kontrolleret nettarif (dage)",
+          "dso_tariff_class": "Tarifklasse (automatisk Radius understøtter kun C; andre klasser kræver daterede manuelle satser)"
         }
       },
       "add_rate": {
-        "title": "Add dated price component",
-        "description": "Use a verified per-site rate and exclusive end date. EWII household example is 0.030 DKK/kWh ex VAT from 2026-06-01 until 2026-10-01 only; do not apply it to later dates or another site. Subscriptions use DKK/month and are excluded from slot totals.",
+        "title": "Tilføj dateret priskomponent",
+        "description": "Angiv en dokumenteret sats for dette sted med eksklusiv slutdato. EWII-husstandseksemplet 0,030 DKK/kWh uden moms gælder kun juni–september 2026. Ingen senere aftale eller sommerhussats antages. Abonnementer i DKK/month indgår ikke i kvartersprisen.",
         "data": {
-          "id": "Component",
-          "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = øre)",
-          "vat_included": "Amount already includes VAT",
-          "vat_rate": "Component VAT fraction (0.25 = 25%)",
-          "valid_from": "Effective from (inclusive local date)",
-          "valid_to": "Effective until (exclusive local date)",
-          "source": "Source or contract reference (no customer identifiers)",
-          "verified_on": "Verified on",
-          "locked": "Manual lock (automatic rates cannot override)",
-          "eligibility": "Eligibility (heating requires verified registration and usage)",
-          "hours": "Local hours (blank = all day; use separate dated rates for manual time-of-use bands)"
+          "id": "Priskomponent",
+          "amount": "Beløb (i valgt enhed)",
+          "unit": "Prisenhed (ore = øre)",
+          "vat_included": "Beløbet indeholder allerede moms",
+          "vat_rate": "Komponentens momsandel (0,25 = 25 %)",
+          "valid_from": "Gældende fra (inklusive lokal dato)",
+          "valid_to": "Gældende indtil (eksklusive lokal dato)",
+          "source": "Kilde- eller aftalereference (ingen kundeidentifikatorer)",
+          "verified_on": "Kontrolleret den",
+          "locked": "Manuel lås (automatiske satser kan ikke tilsidesætte)",
+          "eligibility": "Berettigelse (elvarme kræver dokumenteret registrering og forbrug)",
+          "hours": "Lokale timer (tomt = hele dagen; brug særskilte daterede regler til tidszoner)"
         }
       },
       "rate": {
-        "title": "Edit dated price component",
-        "description": "Change effective dates or amount; overlaps are rejected. Settled prices stay unchanged. Only affected future intervals are recalculated after Save.",
+        "title": "Redigér dateret priskomponent",
+        "description": "Redigér beløb eller gyldighedsdatoer. Overlap afvises. Allerede påbegyndte priser bevares; kun berørte fremtidige kvarterer genberegnes efter Gem og kontrollér.",
         "data": {
-          "id": "Component",
-          "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = øre)",
-          "vat_included": "Amount already includes VAT",
-          "vat_rate": "Component VAT fraction (0.25 = 25%)",
-          "valid_from": "Effective from (inclusive local date)",
-          "valid_to": "Effective until (exclusive local date)",
-          "source": "Source or contract reference (no customer identifiers)",
-          "verified_on": "Verified on",
-          "locked": "Manual lock (automatic rates cannot override)",
-          "eligibility": "Eligibility (heating requires verified registration and usage)",
-          "hours": "Local hours (blank = all day; use separate dated rates for manual time-of-use bands)"
+          "id": "Priskomponent",
+          "amount": "Beløb (i valgt enhed)",
+          "unit": "Prisenhed (ore = øre)",
+          "vat_included": "Beløbet indeholder allerede moms",
+          "vat_rate": "Komponentens momsandel (0,25 = 25 %)",
+          "valid_from": "Gældende fra (inklusive lokal dato)",
+          "valid_to": "Gældende indtil (eksklusive lokal dato)",
+          "source": "Kilde- eller aftalereference (ingen kundeidentifikatorer)",
+          "verified_on": "Kontrolleret den",
+          "locked": "Manuel lås (automatiske satser kan ikke tilsidesætte)",
+          "eligibility": "Berettigelse (elvarme kræver dokumenteret registrering og forbrug)",
+          "hours": "Lokale timer (tomt = hele dagen; brug særskilte daterede regler til tidszoner)"
         }
       },
       "edit_rate": {
-        "title": "Choose a dated rate to edit",
+        "title": "Vælg en dateret sats at redigere",
         "data": {
-          "rate": "Component and effective period"
+          "rate": "Komponent og gyldighedsperiode"
         }
       },
       "remove_rate": {
-        "title": "Choose a dated rate to remove",
-        "description": "Removal can leave future coverage incomplete. Existing settled history is retained.",
+        "title": "Vælg en dateret sats at fjerne",
+        "description": "Fjernelse kan gøre fremtidig dækning ufuldstændig. Afregnet historik bevares.",
         "data": {
-          "rate": "Component and effective period"
+          "rate": "Komponent og gyldighedsperiode"
         }
       },
       "save": {
-        "title": "Save pricing configuration"
+        "title": "Gem prisopsætning"
       },
       "taxes": {
-        "title": "Dated public baselines and tax eligibility",
-        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026–2027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
+        "title": "Dateret nationalt grundlag og afgiftsberettigelse",
+        "description": " (✓ gemt / ✎ kladde)\n\nSlutpriser kræver Energinets net-/systemtarif og elafgift. Aktivér det dokumenterede tidsafgrænsede grundlag, eller angiv kontrollerede daterede regler via Oversigt → Avanceret. Grundlag: Energinet 2026 0,043/0,072 DKK/kWh uden moms; elafgift 0,008 i 2026–2027. Dette er dokumenterede data, ikke løbende lovovervågning. Elvarme kræver dokumenteret berettigelse og en sats; registrering alene giver ingen rabat.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
         "data": {
-          "danish_public_rates": "Use documented dated national baseline (not live legislative verification)",
-          "heating_registered": "Electrically heated residence registration verified",
-          "annual_usage_kwh": "Verified annual consumption (kWh)",
-          "usage_year": "Year of verified annual consumption"
+          "danish_public_rates": "Brug dokumenteret dateret nationalt grundlag (ikke løbende lovkontrol)",
+          "heating_registered": "Registrering som elopvarmet bolig er dokumenteret",
+          "annual_usage_kwh": "Dokumenteret årsforbrug (kWh)",
+          "usage_year": "År for dokumenteret årsforbrug"
         }
       },
       "supplier": {
-        "title": "Supplier contract",
-        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June–September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
+        "title": "Leverandøraftale",
+        "description": " (✓ gemt / ✎ kladde)\n\nPåkrævet til slutpriser: din leverandørs tillæg pr. kWh, enhed, moms, fra-/til-dato og kontrolreference. EWII er kun et navn. Aktivér afkrydsningen og udfyld felterne for at tilføje en periode. Lad den være slået fra for at bevare eksisterende perioder eller gemme en ufuldstændig opsætning; rå spotpriser virker stadig. Ingen privat sats gættes.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
         "data": {
-          "supplier": "Supplier label (no automatic contract inheritance)"
+          "supplier": "Leverandørnavn (ingen automatisk overførsel af aftale)"
         }
       },
       "storage": {
-        "title": "Create a verified local ledger backup",
-        "description": "{backup_result}\\n\\nSubmit to create a new verified SQLite snapshot. No prices, source configuration or controls change. Existing backups are never overwritten. Restore is deliberately offline-only: stop HA, compare backup revisions with recorded costs, preserve current files, then follow the beta recovery guide."
+        "title": "Opret kontrolleret lokal sikkerhedskopi",
+        "description": "{backup_result}\n\nFortsæt opretter en ny kontrolleret SQLite-kopi i .storage. Eksisterende kopier overskrives ikke. Medtag kopien i en HA-sikkerhedskopi. Gendannelse foregår kun offline: stop HA, bevar aktuelle filer og følg gendannelsesguiden."
       },
       "breakdown": {
-        "title": "Stored price breakdown",
-        "description": "{slot_breakdown}",
+        "title": "Gemt prisopdeling",
+        "description": "Vælg et gemt kvarter. Tom liste betyder manglende gemte priser: ret perioder/kilde via Oversigt. Tekniske fakta bruger lagerets/APIens stabile feltnavne. start/end er UTC, revision er oprindelig prisversion, final_price_incl_vat er DKK/kWh, display_value bruger valgt visningsenhed. components viser satser/moms/kilder; abonnementer indgår ikke i kvartersprisen. Ingen kilder hentes ved læsning.\n\n{slot_breakdown}",
         "data": {
-          "slot": "Quarter (local date/time and UTC offset)"
+          "slot": "Kvarter (lokal dato/tid og UTC-forskydning)"
         }
       },
       "wizard_site": {
@@ -445,7 +447,7 @@
       },
       "wizard_grid": {
         "title": "2 / 6 · Nettariffer",
-        "description": "{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nBekræft dit netprodukt før valg af automatisk Radius C. C er en tilslutningsklasse, ikke en elaftale. Oversigten henter og kontrollerer den daterede Radius-tarif. Andre klasser kræver manuelle daterede satser via Oversigt → Avanceret.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
+        "description": "**Kontrolleret spotkilde (kvarterer):** {raw}\n\nVed ✕: Ret kilden via Oversigt. Nettariffer kan stadig indtastes; intet sættes kunstigt til klar.\n\n{progress} · {draft_status} (✓ gemt / ✎ kladde)\n\nBekræft dit netprodukt før valg af automatisk Radius C. C er en tilslutningsklasse, ikke en elaftale. Oversigten henter og kontrollerer den daterede Radius-tarif. Andre klasser kræver manuelle daterede satser via Oversigt → Avanceret.\n\n**Fortsæt bevarer siden; aktive indstillinger ændres kun med Gem og kontrollér. Luk/genindlæsning indsender ikke indtastede felter. Tryk Fortsæt først.**",
         "data": {
           "navigation": "Navigation",
           "dso_mode": "Nettariffens kilde",
@@ -527,7 +529,7 @@
       },
       "wizard_review": {
         "title": "6 / 6 · Oversigt, Gem og kontrollér",
-        "description": "{draft_status} · ✓ svarer til aktive indstillinger; ✎ kladdeændringer. Intet anvendes før Gem og kontrollér.\n\n**Sted:** {name} · {site_id}\n**Kilde:** {source} · {area} · {timezone}\n**Visning:** {display_unit} · moms {vat}% · lager/API DKK/kWh\n\n**Rå kilde — ✓ fuldstændig, ✕ mangler/fejlet, ⚠ forældet:**\n{raw}\n\n**Beregnet slutpris — kontrollerede kvarterer:**\n{final}\n\n**Leverandøraftale (kontrolleret dateret tillæg):** {supplier}\n**Nettarif (Radius-kontrol eller daterede manuelle satser):** {dso}\n**Energinet net:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Elafgift:** {electricity_tax}\n\n✓ perioden er dækket; ✕ mangler/ikke kontrolleret på den viste dato. Ret hvert ✕ via dets trin nedenfor. Manglende satser gør slutpriser utilgængelige; gyldige rå spotpriser vises stadig. Gem og kontrollér anvender kladden og kontrollerer kilder igen; der er ingen ekstra Gem-menu.\n\nTekniske kilde-/beregningsoplysninger:\n{technical}",
+        "description": "Sted/kilde valideret: {site_validation}. Ikke anvendte sideændringer: {pending}. Ret sted/kilde før kontrol; Gem sender dig tilbage til ikke anvendte sider.\n\n{draft_status} · ✓ svarer til aktive indstillinger; ✎ kladdeændringer. Intet anvendes før Gem og kontrollér.\n\n**Sted:** {name} · {site_id}\n**Kilde:** {source} · {area} · {timezone}\n**Visning:** {display_unit} · moms {vat}% · lager/API DKK/kWh\n\n**Rå kilde — ✓ fuldstændig, ✕ mangler/fejlet, ⚠ forældet:**\n{raw}\n\n**Beregnet slutpris — kontrollerede kvarterer:**\n{final}\n\n**Leverandøraftale (kontrolleret dateret tillæg):** {supplier}\n**Nettarif (Radius-kontrol eller daterede manuelle satser):** {dso}\n**Energinet net:** {energinet_net}\n**Energinet system:** {energinet_system}\n**Elafgift:** {electricity_tax}\n\n✓ perioden er dækket; ✕ mangler/ikke kontrolleret på den viste dato. Ret hvert ✕ via dets trin nedenfor. Manglende satser gør slutpriser utilgængelige; gyldige rå spotpriser vises stadig. Gem og kontrollér anvender kladden og kontrollerer kilder igen; der er ingen ekstra Gem-menu.\n\nTekniske kilde-/beregningsoplysninger:\n{technical}",
         "data": {},
         "data_description": {},
         "submit": "Fortsæt",
@@ -540,7 +542,9 @@
           "wizard_grid": "Ret nettarif / Radius",
           "wizard_supplier": "Ret leverandøraftale",
           "wizard_charges": "Ret Energinet / elafgift",
-          "wizard_recheck": "Kontrollér kilder og beregning igen"
+          "wizard_recheck": "Kontrollér kilder og beregning igen",
+          "wizard_site": "Ret stedets navn",
+          "wizard_location": "Ret område / tidszone / moms"
         }
       },
       "wizard_resume": {
@@ -588,9 +592,9 @@
       }
     },
     "error": {
-      "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry.",
-      "site_not_loaded": "Load this pricing site before creating a backup.",
-      "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics.",
+      "invalid_configuration": "Ugyldig opsætning. Kontrollér kilde, enheder/moms, datoer, overlap og officiel Nord Pool.",
+      "site_not_loaded": "Indlæs prisstedet før oprettelse af sikkerhedskopi.",
+      "backup_failed": "Sikkerhedskopien fejlede, eller prisarkivet bestod ikke kontrollen. Bevar alle filer og undersøg lagerdiagnostik.",
       "name_required": "Indtast et genkendeligt navn.",
       "invalid_id": "Brug små bogstaver a-z, tal og underscore; start med bogstav/tal.",
       "duplicate_id": "ID tilhører allerede et sted. Vælg et andet ID eller konfigurér det eksisterende sted.",
@@ -605,8 +609,8 @@
       "pending_page": "De bevarede felter skal bekræftes med Fortsæt/Næste før Gem. Aktive indstillinger er uændrede."
     },
     "abort": {
-      "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
-      "site_not_loaded": "Load this site to inspect stored prices.",
+      "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",
+      "site_not_loaded": "Indlæs stedet for at se gemte priser.",
       "draft_discarded": "Kladden er kasseret; aktive priser, indstillinger og historik er bevaret."
     },
     "create_entry": {
@@ -616,10 +620,10 @@
   "entity": {
     "sensor": {
       "current_price": {
-        "name": "Current final electricity price"
+        "name": "Aktuel samlet elpris"
       },
       "readiness": {
-        "name": "Price readiness",
+        "name": "Prisberedskab",
         "state": {
           "ready": "Klar",
           "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
@@ -628,19 +632,19 @@
         }
       },
       "next_price": {
-        "name": "Next quarter final electricity price"
+        "name": "Samlet elpris næste kvarter"
       },
       "today_minimum": {
-        "name": "Today minimum final price"
+        "name": "Laveste slutpris i dag"
       },
       "today_maximum": {
-        "name": "Today maximum final price"
+        "name": "Højeste slutpris i dag"
       },
       "today_average": {
-        "name": "Today average final price"
+        "name": "Gennemsnitlig slutpris i dag"
       },
       "tomorrow_status": {
-        "name": "Tomorrow price readiness",
+        "name": "Prisberedskab i morgen",
         "state": {
           "ready": "Klar",
           "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
@@ -712,19 +716,19 @@
   },
   "issues": {
     "pricing_not_ready": {
-      "title": "Electricity pricing needs attention",
+      "title": "Elpriser kræver handling",
       "fix_flow": {
         "step": {
           "confirm": {
-            "title": "Verify this pricing site again",
-            "description": "Review this site’s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
+            "title": "Kontrollér prisstedet igen",
+            "description": "Åbn Konfigurér og brug guiden til at rette manglende eller udløbne leverandør-/net-/Energinet-/afgiftsperioder. Rå spotkilden vises uafhængigt. Fortsæt kontrollerer igen; advarslen forsvinder kun ved fuldt kontrollerede slutpriser. Ingen ladestyring."
           }
         },
         "error": {
-          "pricing_not_ready": "Prices are still incomplete, stale or unavailable. Check site Options and diagnostics, then retry."
+          "pricing_not_ready": "Priser er stadig ufuldstændige, forældede eller fejlramte. Se prisproblem og guideoversigt, ret den angivne periode eller kilde, og prøv igen."
         },
         "abort": {
-          "site_not_loaded": "This pricing site is not loaded. Check its integration entry."
+          "site_not_loaded": "Dette prissted er ikke indlæst. Kontrollér integrationsposten."
         }
       }
     }
@@ -760,6 +764,20 @@
         "spot_ex_vat": "Spot uden moms",
         "spot_incl_vat": "Spot med moms",
         "all_in": "Samlet slutpris"
+      }
+    },
+    "values": {
+      "options": {
+        "supplier": "Leverandørtillæg",
+        "dso": "Nettarif",
+        "energinet_net": "Energinet net",
+        "energinet_system": "Energinet system",
+        "electricity_tax": "Elafgift",
+        "subscription": "Månedsabonnement",
+        "supplier_subscription": "Leverandørabonnement",
+        "grid_subscription": "Netabonnement",
+        "all": "Alt forbrug",
+        "heating_above_4000": "Dokumenteret berettiget elvarme over grænsen"
       }
     }
   }

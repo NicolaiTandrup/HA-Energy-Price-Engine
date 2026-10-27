@@ -42,9 +42,19 @@ class PriceUpdater:
     async def refresh(self, site, now, *, force=False, dates=None):
         async with self.lock:
             key = site["id"]
+            cutoff = str(now.astimezone(ZoneInfo(site["timezone"])).date() - timedelta(days=1))
+            self.raw_slots = {day: rows for day, rows in self.raw_slots.items() if day >= cutoff}
+            self.raw_reports = {
+                day: report for day, report in self.raw_reports.items() if day >= cutoff
+            }
             old = self.status.get(key, {})
             report = {
-                **old,
+                "last_success": old.get("last_success"),
+                "missing_components": [],
+                "failure_stage": None,
+                "required_action": None,
+                "affected_period": None,
+                "reason": None,
                 "last_attempt": now.isoformat(),
                 "status": "ERROR",
                 "source_slots": None,
@@ -145,6 +155,8 @@ class PriceUpdater:
                             report.update(
                                 status="INCOMPLETE",
                                 reason="Requested day source series is incomplete",
+                                failure_stage="source",
+                                required_action="Check raw source coverage; verify the selected Nord Pool area and wait for publication or recheck the source.",
                                 changed=False,
                             )
                             return False
