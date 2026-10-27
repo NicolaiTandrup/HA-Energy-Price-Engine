@@ -11,6 +11,7 @@ from .configuration import settings, tariff_for
 from .const import DOMAIN
 from .localization import review_labels
 from .models import PriceSlot
+from .presentation import format_price
 from .price_components import normalize_component, resolved_rules
 
 COMPONENT_STEPS = {
@@ -290,16 +291,16 @@ async def review(hass, entry, details=False, only=None):
     lines = []
     missing = []
     site = settings(entry)
+    unit = site.get("display_unit", "øre/kWh")
     for key, row in data["components"].items():
         if only and key not in only:
             continue
         value = (
-            "—"
-            if row["display_value"] is None
-            else f"{row['display_value']:.6f}".rstrip("0").rstrip(".")
+            ("—" if row["display_value"] is None else f"{row['display_value']:g}")
+            if key == "vat"
+            else format_price(row["display_value"], unit, t("decimal_separator"), from_ore=True)
         )
-        value = value.replace(".", t("decimal_separator"))
-        unit = "%" if key == "vat" else "øre"
+        row_unit = "%" if key == "vat" else unit
         if key == "source":
             name = "Nord Pool" if site.get("source_type") == "nordpool" else t("provider_source")
         else:
@@ -318,7 +319,7 @@ async def review(hass, entry, details=False, only=None):
             if key in {"supplier", "dso"}
             else ""
         )
-        menu[row["action"]] = f"{mark} {name} · {value} {unit} · {status}" + (
+        menu[row["action"]] = f"{mark} {name} · {value} {row_unit} · {status}" + (
             f" · {source_label}" if source_label else ""
         )
         source_text = source
@@ -333,7 +334,7 @@ async def review(hass, entry, details=False, only=None):
         action = t("edit_" + key)
         period = safe(row["effective_period"]).replace("9999-12-31", t("until_changed"))
         lines.append(
-            f"**{safe(name)}**: {value} {t('unit_incl_vat') if key != 'vat' else '%'} · {safe(status)}\n\n{safe(source_text) or '—'} · {period or '—'}\n\n{safe(t('fix_' + key)) if row['status'] != 'verified' else safe(action)}"
+            f"**{safe(name)}**: {value} {t('unit_incl_vat').replace('øre/kWh', unit) if key != 'vat' else '%'} · {safe(status)}\n\n{safe(source_text) or '—'} · {period or '—'}\n\n{safe(t('fix_' + key)) if row['status'] != 'verified' else safe(action)}"
         )
         if row["status"] not in {"verified"}:
             target = {
@@ -361,7 +362,11 @@ async def review(hass, entry, details=False, only=None):
         coverage.append(
             f"{t('today' if offset == 0 else 'tomorrow')} {day}: {t('raw_label')} {raw.get('valid_slots', 0)}/{raw.get('expected_slots', 0)} · {t('final_label')} {report.get('valid_slots', 0)}/{report.get('expected_slots', 0)}"
         )
+    from .charging_diagnostics import charging_readiness
+
     return {
+        "unit": unit,
+        "readiness": await charging_readiness(hass, entry),
         "name": safe(site["name"]),
         "coverage": " · ".join(coverage) or "—",
         "components": "\n\n---\n\n".join(lines),

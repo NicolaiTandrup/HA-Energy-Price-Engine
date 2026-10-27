@@ -196,7 +196,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "wizard_resume": {
@@ -251,7 +252,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "wizard_recheck": {
@@ -314,7 +316,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_area": {
@@ -349,7 +352,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_grid": {
@@ -384,7 +388,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_grid_rate": {
@@ -421,7 +426,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_supplier": {
@@ -474,7 +480,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         },
         "data_description": {
           "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
@@ -512,7 +519,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_heating": {
@@ -549,12 +557,13 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_review": {
         "title": "Dine ladepriser",
-        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er øre/kWh inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er {unit} inkl. moms.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -582,7 +591,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_diagnostics": {
@@ -615,7 +625,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_tax_details": {
@@ -648,12 +659,13 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_display": {
         "title": "Visningsenhed",
-        "description": "{saved}\n\nEksisterende historik og forbruger-API forbliver i DKK/kWh.",
+        "description": "{saved}\n\nØre/kWh viser altid 2 decimaler; DKK/kWh viser 4. Prisberegning og ladeomkostninger bruger fuld præcision. Eksisterende kanoniske enheder og historik bevarer DKK/kWh.",
         "data": {
           "display_unit": "Foretrukken visningsenhed"
         },
@@ -683,7 +695,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "source_details": {
@@ -728,7 +741,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         },
         "data_description": {}
       },
@@ -762,7 +776,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "rates": {
@@ -795,7 +810,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "storage_tools": {
@@ -828,7 +844,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "add_rate": {
@@ -923,7 +940,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_estimate": {
@@ -953,6 +971,15 @@
           "energy_kind": "Energiens grundlag"
         },
         "submit": "Beregn estimat"
+      },
+      "horizon": {
+        "title": "Kontrollér fremtidigt tidsrum",
+        "description": "Vælg det ønskede tidsrum. Slutgrænsen er ikke med. Kalenderen viser de næste 48 timer, også hvor priser endnu mangler. Kontrollen ændrer ingen ladeplan. CM spørger API v1 om sit eget tidsrum.\n\n{result}",
+        "data": {
+          "start": "Startkvarter",
+          "end": "Slut (ikke med)"
+        },
+        "submit": "Kontrollér tidsrum"
       }
     },
     "error": {
@@ -983,7 +1010,8 @@
       "invalid_quarter": "Vælg et kvarter fra listen.",
       "future_measurement": "Fremtidig energi er planlagt, ikke målt. Vælg planlagt energi eller et tidligere kvarter.",
       "official_required": "Fjern den alternative integration, der bruger Nord Pool-domænet, og vælg den officielle Home Assistant-integration.",
-      "source_area_required": "Konfigurér DK1 eller DK2 i den valgte Nord Pool-integration først."
+      "source_area_required": "Konfigurér DK1 eller DK2 i den valgte Nord Pool-integration først.",
+      "invalid_horizon": "Vælg fremtidige kvartergrænser, hvor slut følger start."
     },
     "abort": {
       "already_configured": "Dette sted-ID er allerede konfigureret.",
@@ -1020,7 +1048,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "site": {
@@ -1288,7 +1317,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "wizard_resume": {
@@ -1343,7 +1373,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "wizard_recheck": {
@@ -1406,7 +1437,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_area": {
@@ -1441,7 +1473,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_grid": {
@@ -1476,7 +1509,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_grid_rate": {
@@ -1513,7 +1547,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_supplier": {
@@ -1566,7 +1601,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         },
         "data_description": {
           "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
@@ -1604,7 +1640,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_heating": {
@@ -1641,12 +1678,13 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_review": {
         "title": "Dine ladepriser",
-        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er øre/kWh inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er {unit} inkl. moms.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -1674,7 +1712,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_diagnostics": {
@@ -1707,7 +1746,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_tax_details": {
@@ -1740,12 +1780,13 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_display": {
         "title": "Visningsenhed",
-        "description": "{saved}\n\nEksisterende historik og forbruger-API forbliver i DKK/kWh.",
+        "description": "{saved}\n\nØre/kWh viser altid 2 decimaler; DKK/kWh viser 4. Prisberegning og ladeomkostninger bruger fuld præcision. Eksisterende kanoniske enheder og historik bevarer DKK/kWh.",
         "data": {
           "display_unit": "Foretrukken visningsenhed"
         },
@@ -1775,7 +1816,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "source_details": {
@@ -1820,7 +1862,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         },
         "data_description": {}
       },
@@ -1854,7 +1897,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "rates": {
@@ -1887,7 +1931,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "storage_tools": {
@@ -1920,7 +1965,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_offers": {
@@ -1955,7 +2001,8 @@
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
-          "session_estimate": "Anslået ladepris"
+          "session_estimate": "Anslået ladepris",
+          "horizon": "Kontrollér fremtidigt tidsrum"
         }
       },
       "setup_estimate": {
@@ -1985,6 +2032,15 @@
           "energy_kind": "Energiens grundlag"
         },
         "submit": "Beregn estimat"
+      },
+      "horizon": {
+        "title": "Kontrollér fremtidigt tidsrum",
+        "description": "Vælg det ønskede tidsrum. Slutgrænsen er ikke med. Kalenderen viser de næste 48 timer, også hvor priser endnu mangler. Kontrollen ændrer ingen ladeplan. CM spørger API v1 om sit eget tidsrum.\n\n{result}",
+        "data": {
+          "start": "Startkvarter",
+          "end": "Slut (ikke med)"
+        },
+        "submit": "Kontrollér tidsrum"
       }
     },
     "error": {
@@ -2017,7 +2073,8 @@
       "invalid_quarter": "Vælg et kvarter fra listen.",
       "future_measurement": "Fremtidig energi er planlagt, ikke målt. Vælg planlagt energi eller et tidligere kvarter.",
       "official_required": "Fjern den alternative integration, der bruger Nord Pool-domænet, og vælg den officielle Home Assistant-integration.",
-      "source_area_required": "Konfigurér DK1 eller DK2 i den valgte Nord Pool-integration først."
+      "source_area_required": "Konfigurér DK1 eller DK2 i den valgte Nord Pool-integration først.",
+      "invalid_horizon": "Vælg fremtidige kvartergrænser, hvor slut følger start."
     },
     "abort": {
       "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",
@@ -2037,10 +2094,10 @@
   "entity": {
     "sensor": {
       "current_price": {
-        "name": "Aktuel samlet elpris"
+        "name": "Kanonisk teknisk værdi: Aktuel samlet elpris (DKK/kWh)"
       },
       "readiness": {
-        "name": "Prisberedskab",
+        "name": "Nuværende kvarters prisberedskab",
         "state": {
           "ready": "Klar",
           "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
@@ -2049,19 +2106,19 @@
         }
       },
       "next_price": {
-        "name": "Samlet elpris næste kvarter"
+        "name": "Kanonisk teknisk værdi: Samlet elpris næste kvarter (DKK/kWh)"
       },
       "today_minimum": {
-        "name": "Laveste slutpris i dag"
+        "name": "Kanonisk teknisk værdi: Laveste slutpris i dag (DKK/kWh)"
       },
       "today_maximum": {
-        "name": "Højeste slutpris i dag"
+        "name": "Kanonisk teknisk værdi: Højeste slutpris i dag (DKK/kWh)"
       },
       "today_average": {
-        "name": "Gennemsnitlig slutpris i dag"
+        "name": "Kanonisk teknisk værdi: Gennemsnitlig slutpris i dag (DKK/kWh)"
       },
       "tomorrow_status": {
-        "name": "Prisberedskab i morgen",
+        "name": "Hele morgendagens dækning",
         "state": {
           "ready": "Klar",
           "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
@@ -2085,10 +2142,10 @@
         "name": "Døgngennemsnit (valgt visning)"
       },
       "raw_current": {
-        "name": "Aktuel rå spotpris (før tillæg)"
+        "name": "Kanonisk teknisk værdi: Aktuel rå spotpris (før tillæg) (DKK/kWh)"
       },
       "raw_next": {
-        "name": "Rå spotpris næste kvarter"
+        "name": "Kanonisk teknisk værdi: Rå spotpris næste kvarter (DKK/kWh)"
       },
       "raw_today": {
         "name": "Rå kildeberedskab i dag",
@@ -2126,7 +2183,7 @@
         }
       },
       "final_status": {
-        "name": "Slutprisstatus (lokaliseret)",
+        "name": "Nuværende kvarters verificerede priser",
         "state": {
           "ready": "Klar",
           "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
@@ -2135,10 +2192,40 @@
         }
       },
       "estimated_current": {
-        "name": "ESTIMERET / UVERIFICERET aktuel pris"
+        "name": "Kanonisk teknisk værdi: ESTIMERET / UVERIFICERET aktuel pris (DKK/kWh)"
       },
       "estimated_next": {
-        "name": "ESTIMERET / UVERIFICERET pris næste kvarter"
+        "name": "Kanonisk teknisk værdi: ESTIMERET / UVERIFICERET pris næste kvarter (DKK/kWh)"
+      },
+      "display_raw_current": {
+        "name": "Spot nu (valgt visning)"
+      },
+      "display_raw_next": {
+        "name": "Spot næste kvarter (valgt visning)"
+      },
+      "display_estimated_current": {
+        "name": "FORELØBIG pris nu (valgt visning)"
+      },
+      "display_estimated_next": {
+        "name": "FORELØBIG næste kvarter (valgt visning)"
+      },
+      "next_quarter_status": {
+        "name": "Næste kvarters prisberedskab",
+        "state": {
+          "ready": "Klar",
+          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
+          "stale": "Forældet — kilden skal kontrolleres igen",
+          "error": "Kontrol fejlet — se prisproblem"
+        }
+      },
+      "historical_day_status": {
+        "name": "Hele dagens historik",
+        "state": {
+          "ready": "Klar",
+          "incomplete": "Ufuldstændig historik — tidligere kvarterer kan mangle",
+          "stale": "Forældet — kilden skal kontrolleres igen",
+          "error": "Kontrol fejlet — se prisproblem"
+        }
       }
     },
     "update": {
@@ -2291,7 +2378,20 @@
         "energy_measured": "Målt energi",
         "provisional_guidance": "Dette er kun et uverificeret visualiseringsestimat. CM modtager ikke verificerede priser fra estimatet.",
         "check_guidance": "Kontrollér priskilderne igen. Tidligere gemte priser er ikke en ny verificering.",
-        "provisional_source": "Brugergodkendt visualiseringsestimat"
+        "provisional_source": "Brugergodkendt visualiseringsestimat",
+        "scope_current": "Nuværende kvarter",
+        "scope_next": "Næste kvarter",
+        "scope_requested": "Valgt fremtidigt tidsrum",
+        "scope_history_today": "Hele dagens historik",
+        "scope_history_tomorrow": "Hele morgendagens dækning",
+        "readiness_ready": "Klar",
+        "readiness_incomplete": "Ufuldstændig",
+        "readiness_stale": "Forældet",
+        "readiness_error": "Verifikation fejlede",
+        "readiness_not_loaded": "Integration ikke indlæst",
+        "activation_history": "Tidligere kvarterer før opsætningen mangler med vilje. Det blokerer ikke et fremtidigt tidsrum, hvor alle priser er verificerede.",
+        "horizon_label": "Kontrollér fremtidigt tidsrum",
+        "horizon_unavailable": "Kun et komplet tidsrum med verificerede priser er klar. Kontrollér komponentdiagnostik og kildens tilgængelighed; manglende priser er aldrig nul."
       }
     },
     "contract_mode": {

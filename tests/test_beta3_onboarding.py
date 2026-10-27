@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import pytest
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.ha_energy_price_engine.api import get_api
@@ -78,7 +79,12 @@ async def test_missing_component_never_hides_valid_source(hass, freezer, missing
     assert c.data["valid_slots"] == 0
     assert not c.price_engine.records.get("home")
     assert (
-        hass.states.get("sensor.test_home_current_raw_spot_price_before_additions").state == "-0.1"
+        hass.states.get(
+            er.async_get(hass).async_get_entity_id(
+                "sensor", "ha_energy_price_engine", "home_raw_spot_0"
+            )
+        ).state
+        == "-0.1"
     )
     assert await hass.config_entries.async_unload(entry.entry_id)
 

@@ -1,0 +1,38 @@
+name: Continue beta.7 development PR
+on:
+  push:
+    branches: [feat/beta5-simple-onboarding]
+    paths: [.github/workflows/beta7-pr.yml]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Open reviewable draft without merging or publishing
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta7-body.md" <<'PR_BODY'
+          Beta.7 continues the validated beta.6 engine after owner feedback in #8. It standardizes preferred price presentation and separates requested future range readiness from historical day completeness.
+          
+          First tested checkpoint: preferred raw/final/current/next/statistic/provisional display entities use fixed2 decimals in ore/kWh or4 in DKK/kWh. Canonical sensors keep their units, unique IDs, full values and statistics; they are clearly labelled technical. Review, current/future breakdown and stored-slot picker share a locale-aware presentation formatter. Contract input retains exact fractional precision and charging costs use unrounded prices.
+          
+          Independent current/next readiness and full-day historical coverage are visible. A read-only future-window inspector calls unchanged APIv1 directly; it creates no charging plan. Late-activation tests on normal/DST92/96/100 days prove7 remaining today quarters and READY crossing-midnight windows while historical day stays INCOMPLETE. Repeated indexed reads reject external fetch, composition and DB connections; stored source/components/revisions and original spot provenance survive restart. A one-quarter correction writes only that affected future row and retains the original revision.
+          
+          Focused46 cases passed, including locale precision, unit-switch registry safety, future gaps, source failures, midnight and SQLite read-only plan. Full preliminary302 suites/core had298 pass and4 outdated entity/menu expectations; those are corrected and targeted regression21 passed. Clean full both-core rerun/native frontend/package/HACS/consumer/CI gates remain in progress; no beta.7 tag/release yet.
+          
+          Owner authorizes beta.7 prerelease after mandatory gates. Preserve main, earlier releases, engine/SQLite/API/schedules and actual private contracts; no production HA, Node-RED, CM or physical control changes. No stable/merge. This PR stays draft. Permanent handoff:docs/DEVELOPMENT_STATUS.md. Refs#8,#12.
+          PR_BODY
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" > "$RUNNER_TEMP/pe-existing-pr.json"
+          python - <<'CHECK_PR'
+          import json,os
+          data=json.load(open(os.environ['RUNNER_TEMP']+'/pe-existing-pr.json'))
+          assert data['state']=='open' and data['draft'] is True
+          assert data['head']['ref']=='feat/beta5-simple-onboarding'
+          assert data['head']['sha']==os.environ['GITHUB_SHA']
+          CHECK_PR
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" --method PATCH --raw-field title='Beta.7: consistent prices and independent charging-window readiness' -F body=@"$RUNNER_TEMP/pe-beta7-body.md" --jq '{number,html_url,draft}'

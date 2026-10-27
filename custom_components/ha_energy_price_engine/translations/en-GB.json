@@ -196,7 +196,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "wizard_resume": {
@@ -251,7 +252,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "wizard_recheck": {
@@ -314,7 +316,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_area": {
@@ -349,7 +352,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_grid": {
@@ -384,7 +388,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_grid_rate": {
@@ -421,7 +426,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_supplier": {
@@ -474,7 +480,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         },
         "data_description": {
           "vat_basis": "The product page does not state this offer’s VAT basis. Confirm it from your agreement; PE does not guess."
@@ -512,7 +519,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_heating": {
@@ -549,12 +557,13 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_review": {
         "title": "Your charging prices",
-        "description": "**{name}** · Settings saved. Tap to edit. Prices are øre/kWh including VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Settings saved. Tap to edit. Prices are {unit} including VAT.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Save and continue",
         "menu_options": {
@@ -582,7 +591,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_diagnostics": {
@@ -615,7 +625,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_tax_details": {
@@ -648,12 +659,13 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_display": {
         "title": "Display unit",
-        "description": "{saved}\n\nExisting history and consumer API remain in DKK/kWh.",
+        "description": "{saved}\n\nØre/kWh always shows 2 decimals; DKK/kWh shows 4. Pricing and charging costs retain full precision. Existing canonical entities and history keep DKK/kWh.",
         "data": {
           "display_unit": "Preferred display unit"
         },
@@ -683,7 +695,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "source_details": {
@@ -728,7 +741,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         },
         "data_description": {}
       },
@@ -762,7 +776,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "rates": {
@@ -795,7 +810,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "storage_tools": {
@@ -828,7 +844,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "add_rate": {
@@ -923,7 +940,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_estimate": {
@@ -953,6 +971,15 @@
           "energy_kind": "Energy basis"
         },
         "submit": "Calculate estimate"
+      },
+      "horizon": {
+        "title": "Check future window",
+        "description": "Choose the required window. The end boundary is excluded. The picker covers the next 48 hours, including times without published prices. This check changes no charging plan. CM queries API v1 for its own window.\n\n{result}",
+        "data": {
+          "start": "First quarter",
+          "end": "End (excluded)"
+        },
+        "submit": "Check window"
       }
     },
     "error": {
@@ -983,7 +1010,8 @@
       "invalid_quarter": "Choose a quarter from the list.",
       "future_measurement": "Future energy is planned, not measured. Choose planned energy or an earlier quarter.",
       "official_required": "Remove the alternate integration shadowing the Nord Pool domain and choose the official Home Assistant integration.",
-      "source_area_required": "Configure DK1 or DK2 in the selected Nord Pool integration first."
+      "source_area_required": "Configure DK1 or DK2 in the selected Nord Pool integration first.",
+      "invalid_horizon": "Choose future quarter boundaries with the end after the start."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
@@ -1020,7 +1048,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "site": {
@@ -1288,7 +1317,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "wizard_resume": {
@@ -1343,7 +1373,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "wizard_recheck": {
@@ -1406,7 +1437,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_area": {
@@ -1441,7 +1473,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_grid": {
@@ -1476,7 +1509,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_grid_rate": {
@@ -1513,7 +1547,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_supplier": {
@@ -1566,7 +1601,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         },
         "data_description": {
           "vat_basis": "The product page does not state this offer’s VAT basis. Confirm it from your agreement; PE does not guess."
@@ -1604,7 +1640,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_heating": {
@@ -1641,12 +1678,13 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_review": {
         "title": "Your charging prices",
-        "description": "**{name}** · Settings saved. Tap to edit. Prices are øre/kWh including VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Settings saved. Tap to edit. Prices are {unit} including VAT.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Save and continue",
         "menu_options": {
@@ -1674,7 +1712,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_diagnostics": {
@@ -1707,7 +1746,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_tax_details": {
@@ -1740,12 +1780,13 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_display": {
         "title": "Display unit",
-        "description": "{saved}\n\nExisting history and consumer API remain in DKK/kWh.",
+        "description": "{saved}\n\nØre/kWh always shows 2 decimals; DKK/kWh shows 4. Pricing and charging costs retain full precision. Existing canonical entities and history keep DKK/kWh.",
         "data": {
           "display_unit": "Preferred display unit"
         },
@@ -1775,7 +1816,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "source_details": {
@@ -1820,7 +1862,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         },
         "data_description": {}
       },
@@ -1854,7 +1897,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "rates": {
@@ -1887,7 +1931,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "storage_tools": {
@@ -1920,7 +1965,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_offers": {
@@ -1955,7 +2001,8 @@
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
-          "session_estimate": "Charging cost estimate"
+          "session_estimate": "Charging cost estimate",
+          "horizon": "Check future window"
         }
       },
       "setup_estimate": {
@@ -1985,6 +2032,15 @@
           "energy_kind": "Energy basis"
         },
         "submit": "Calculate estimate"
+      },
+      "horizon": {
+        "title": "Check future window",
+        "description": "Choose the required window. The end boundary is excluded. The picker covers the next 48 hours, including times without published prices. This check changes no charging plan. CM queries API v1 for its own window.\n\n{result}",
+        "data": {
+          "start": "First quarter",
+          "end": "End (excluded)"
+        },
+        "submit": "Check window"
       }
     },
     "error": {
@@ -2017,7 +2073,8 @@
       "invalid_quarter": "Choose a quarter from the list.",
       "future_measurement": "Future energy is planned, not measured. Choose planned energy or an earlier quarter.",
       "official_required": "Remove the alternate integration shadowing the Nord Pool domain and choose the official Home Assistant integration.",
-      "source_area_required": "Configure DK1 or DK2 in the selected Nord Pool integration first."
+      "source_area_required": "Configure DK1 or DK2 in the selected Nord Pool integration first.",
+      "invalid_horizon": "Choose future quarter boundaries with the end after the start."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
@@ -2037,10 +2094,10 @@
   "entity": {
     "sensor": {
       "current_price": {
-        "name": "Current final electricity price"
+        "name": "Canonical technical: Current final electricity price (DKK/kWh)"
       },
       "readiness": {
-        "name": "Price readiness",
+        "name": "Current quarter readiness",
         "state": {
           "ready": "Ready",
           "incomplete": "Incomplete — configure missing periods or await publication",
@@ -2049,19 +2106,19 @@
         }
       },
       "next_price": {
-        "name": "Next quarter final electricity price"
+        "name": "Canonical technical: Next quarter final electricity price (DKK/kWh)"
       },
       "today_minimum": {
-        "name": "Today minimum final price"
+        "name": "Canonical technical: Today minimum final price (DKK/kWh)"
       },
       "today_maximum": {
-        "name": "Today maximum final price"
+        "name": "Canonical technical: Today maximum final price (DKK/kWh)"
       },
       "today_average": {
-        "name": "Today average final price"
+        "name": "Canonical technical: Today average final price (DKK/kWh)"
       },
       "tomorrow_status": {
-        "name": "Tomorrow price readiness",
+        "name": "Tomorrow’s full-day coverage",
         "state": {
           "ready": "Ready",
           "incomplete": "Incomplete — configure missing periods or await publication",
@@ -2085,10 +2142,10 @@
         "name": "Today average (preferred display)"
       },
       "raw_current": {
-        "name": "Current raw spot price (before additions)"
+        "name": "Canonical technical: Current raw spot price (before additions) (DKK/kWh)"
       },
       "raw_next": {
-        "name": "Next quarter raw spot price"
+        "name": "Canonical technical: Next quarter raw spot price (DKK/kWh)"
       },
       "raw_today": {
         "name": "Today raw source readiness",
@@ -2126,7 +2183,7 @@
         }
       },
       "final_status": {
-        "name": "Final pricing status (localized)",
+        "name": "Current quarter final readiness",
         "state": {
           "ready": "Ready",
           "incomplete": "Incomplete — configure missing periods or await publication",
@@ -2135,10 +2192,40 @@
         }
       },
       "estimated_current": {
-        "name": "ESTIMATED / UNVERIFIED current price"
+        "name": "Canonical technical: ESTIMATED / UNVERIFIED current price (DKK/kWh)"
       },
       "estimated_next": {
-        "name": "ESTIMATED / UNVERIFIED next-quarter price"
+        "name": "Canonical technical: ESTIMATED / UNVERIFIED next-quarter price (DKK/kWh)"
+      },
+      "display_raw_current": {
+        "name": "Spot now (preferred display)"
+      },
+      "display_raw_next": {
+        "name": "Spot next quarter (preferred display)"
+      },
+      "display_estimated_current": {
+        "name": "PROVISIONAL current price (preferred display)"
+      },
+      "display_estimated_next": {
+        "name": "PROVISIONAL next quarter (preferred display)"
+      },
+      "next_quarter_status": {
+        "name": "Next quarter readiness",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete — configure missing periods or await publication",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
+      },
+      "historical_day_status": {
+        "name": "Today’s full-day history",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete history — earlier quarters may be unavailable",
+          "stale": "Stale — source recheck required",
+          "error": "Verification failed — inspect pricing problem"
+        }
       }
     },
     "update": {
@@ -2291,7 +2378,20 @@
         "energy_measured": "Measured energy",
         "provisional_guidance": "This is an unverified visualization estimate only. CM does not receive verified prices from it.",
         "check_guidance": "Check the price sources again. Previously stored prices are not a new verification.",
-        "provisional_source": "User-approved visualization estimate"
+        "provisional_source": "User-approved visualization estimate",
+        "scope_current": "Current quarter",
+        "scope_next": "Next quarter",
+        "scope_requested": "Requested future window",
+        "scope_history_today": "Today’s full-day history",
+        "scope_history_tomorrow": "Tomorrow’s full-day coverage",
+        "readiness_ready": "Ready",
+        "readiness_incomplete": "Incomplete",
+        "readiness_stale": "Stale",
+        "readiness_error": "Verification failed",
+        "readiness_not_loaded": "Integration not loaded",
+        "activation_history": "Earlier quarters before setup are intentionally unavailable. This does not block a future window whose prices are all verified.",
+        "horizon_label": "Check future window",
+        "horizon_unavailable": "Only a complete window of verified prices is ready. Check component diagnostics and source availability; missing prices are never zero."
       }
     },
     "contract_mode": {

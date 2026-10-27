@@ -643,7 +643,11 @@ class SimpleSetup(FlowTools):
         from .localization import review_labels
 
         labels = await review_labels(self.hass)
-        choices = {"setup_check": labels.get("check_prices", "Check prices"), **summary.pop("rows")}
+        choices = {
+            "setup_check": labels.get("check_prices", "Check prices"),
+            **summary.pop("rows"),
+            "horizon": labels["horizon_label"],
+        }
         return self.async_show_menu(
             step_id="setup_review", menu_options=choices, description_placeholders=summary
         )
@@ -740,7 +744,7 @@ class SimpleSetup(FlowTools):
                 "components": await charging_breakdown(self.hass, self._wizard_entry, selected)
             },
             menu_options=list(dict.fromkeys(missing))
-            + ["select_quarter", "session_estimate", "setup_review", "advanced"],
+            + ["select_quarter", "horizon", "session_estimate", "setup_review", "advanced"],
         )
 
     async def async_step_select_quarter(self, user_input=None):
@@ -756,6 +760,34 @@ class SimpleSetup(FlowTools):
             errors["slot"] = "invalid_quarter"
         return await self._simple_form(
             "select_quarter", {vol.Required("slot"): choice(choices)}, "", user_input, errors
+        )
+
+    async def async_step_horizon(self, user_input=None):
+        from .charging_diagnostics import charging_readiness, horizon_choices
+
+        choices = horizon_choices(self._wizard_entry)
+        errors = {}
+        start = end = None
+        if user_input is not None:
+            try:
+                if any(user_input[k] not in dict(choices) for k in ("start", "end")):
+                    raise ValueError("Choose future quarter boundaries")
+                start, end = (dt_util.parse_datetime(user_input[k]) for k in ("start", "end"))
+                if not start or not end or end <= start:
+                    raise ValueError("End must follow start")
+            except ValueError, TypeError, KeyError:
+                errors["end"] = "invalid_horizon"
+                start = end = None
+        return await self._simple_form(
+            "horizon",
+            {
+                vol.Required("start", default=choices[0][0]): choice(choices[:-1]),
+                vol.Required("end"): choice(choices[1:]),
+            },
+            "",
+            user_input,
+            errors,
+            result=await charging_readiness(self.hass, self._wizard_entry, start, end),
         )
 
     async def async_step_session_estimate(self, user_input=None):

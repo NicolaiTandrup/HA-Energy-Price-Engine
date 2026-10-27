@@ -10,9 +10,9 @@ from homeassistant.helpers.event import async_track_utc_time_change
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
-from .api import ConsumerAPI
 from .const import DOMAIN
-from .status import day_result, source_status
+from .presentation import display_precision, display_value
+from .status import day_result, quarter_result, source_status
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -27,6 +27,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
             RawReadinessSensor(c),
             RawReadinessSensor(c, 1),
             FinalStatusSensor(c),
+            NextReadinessSensor(c),
+            HistoricalCoverageSensor(c),
             PricingProblemSensor(c),
             ReadinessSensor(c),
             NextPriceSensor(c),
@@ -34,7 +36,17 @@ async def async_setup_entry(hass, entry, async_add_entities):
             TomorrowSensor(c),
             *[
                 DisplaySensor(c, kind)
-                for kind in ("current", "next", "minimum", "maximum", "average")
+                for kind in (
+                    "current",
+                    "next",
+                    "minimum",
+                    "maximum",
+                    "average",
+                    "raw_current",
+                    "raw_next",
+                    "estimated_current",
+                    "estimated_next",
+                )
             ],
         ]
     )
@@ -65,23 +77,15 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
         self.async_on_remove(async_track_utc_time_change(self.hass, publish, minute="*", second=0))
 
     def current_result(self, offset=0):
-        now = dt_util.utcnow()
-        start = now.replace(minute=(now.minute // 15) * 15, second=0, microsecond=0) + timedelta(
-            minutes=15 * offset
-        )
-        return ConsumerAPI(self.coordinator.hass).lookup(
-            self.site["id"],
-            start,
-            start + timedelta(minutes=15),
-            now=now,
-            producer_entry_id=self.coordinator.entry.entry_id,
-        )
+        return quarter_result(self.coordinator, offset)
 
 
 class PriceSensor(BaseSensor):
     _attr_translation_key = "current_price"
     _attr_native_unit_of_measurement = "DKK/kWh"
     _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_suggested_display_precision = 4
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -99,6 +103,7 @@ class PriceSensor(BaseSensor):
     @property
     def extra_state_attributes(self):
         return {
+            "canonical_technical_value": True,
             "api_version": 1,
             "site_id": self.site["id"],
             "readiness": str(self.current_result().status),
@@ -140,6 +145,8 @@ class NextPriceSensor(PriceSensor):
 class DayStatisticSensor(BaseSensor):
     _attr_native_unit_of_measurement = "DKK/kWh"
     _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_suggested_display_precision = 4
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(self, coordinator, kind):
         super().__init__(coordinator)
@@ -186,20 +193,27 @@ class TomorrowSensor(BaseSensor):
 class DisplaySensor(BaseSensor):
     """Unit-specific presentation identity: canonical sensors/statistics never change."""
 
-    _attr_suggested_display_precision = 6
+    _attr_suggested_display_precision = 4
 
     def __init__(self, coordinator, kind):
         super().__init__(coordinator)
         self.kind = kind
         self.unit = self.site.get("display_unit", "øre/kWh")
         self._attr_native_unit_of_measurement = self.unit
+        self._attr_suggested_display_precision = display_precision(self.unit)
         suffix = "ore" if self.unit == "øre/kWh" else "dkk"
         self._attr_unique_id = f"{self.site['id']}_display_{kind}_{suffix}"
         self._attr_translation_key = f"display_{kind}"
 
     @property
     def native_value(self):
-        if self.kind in {"current", "next"}:
+        if self.kind in {"raw_current", "raw_next"}:
+            value = RawSpotSensor(self.coordinator, int(self.kind == "raw_next")).native_value
+        elif self.kind in {"estimated_current", "estimated_next"}:
+            value = EstimatedPriceSensor(
+                self.coordinator, int(self.kind == "estimated_next")
+            ).native_value
+        elif self.kind in {"current", "next"}:
             result = self.current_result(1 if self.kind == "next" else 0)
             value = (
                 result.records[0].final_price_incl_vat
@@ -208,14 +222,22 @@ class DisplaySensor(BaseSensor):
             )
         else:
             value = DayStatisticSensor(self.coordinator, self.kind).native_value
-        return value * (100 if self.unit == "øre/kWh" else 1) if value is not None else None
+        return display_value(value, self.unit)
 
     @property
     def extra_state_attributes(self):
         return {
             "site_id": self.site["id"],
             "stored_and_api_unit": "DKK/kWh",
-            "vat_included": True,
+            "vat_included": self.site.get("price_basis") == "spot_incl_vat"
+            if self.kind.startswith("raw_")
+            else True,
+            "verification": "ESTIMATED_UNVERIFIED"
+            if self.kind.startswith("estimated_")
+            else RawReadinessSensor(self.coordinator, int(self.kind == "raw_next")).native_value
+            if self.kind.startswith("raw_")
+            else "verified_only",
+            "eligible_for_control": False,
             "presentation_only": True,
         }
 
@@ -223,8 +245,10 @@ class DisplaySensor(BaseSensor):
 class RawSpotSensor(BaseSensor):
     """Verified spot source, independent of final composition and ledger success."""
 
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
     _attr_native_unit_of_measurement = "DKK/kWh"
-    _attr_suggested_display_precision = 6
+    _attr_suggested_display_precision = 4
 
     def __init__(self, coordinator, offset=0):
         super().__init__(coordinator)
@@ -257,6 +281,7 @@ class RawSpotSensor(BaseSensor):
     @property
     def extra_state_attributes(self):
         return {
+            "canonical_technical_value": True,
             "price_basis": self.site.get("price_basis"),
             "currency": "DKK",
             "final_price": False,
@@ -388,8 +413,10 @@ class FinalStatusSensor(ReadinessSensor):
 class EstimatedPriceSensor(BaseSensor):
     """Unverified visualization only; not a producer API or control input."""
 
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
     _attr_native_unit_of_measurement = "DKK/kWh"
-    _attr_suggested_display_precision = 6
+    _attr_suggested_display_precision = 4
 
     def __init__(self, coordinator, offset=0):
         super().__init__(coordinator)
@@ -420,9 +447,32 @@ class EstimatedPriceSensor(BaseSensor):
     @property
     def extra_state_attributes(self):
         return {
+            "canonical_technical_value": True,
             "verification": "ESTIMATED_UNVERIFIED",
             "visualization_only": True,
             "eligible_for_control": False,
             "authoritative_api": False,
             "vat_included": True,
         }
+
+
+class NextReadinessSensor(FinalStatusSensor):
+    _attr_translation_key = "next_quarter_status"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_next_quarter_status"
+
+    def current_result(self, offset=1):
+        return super().current_result(offset)
+
+
+class HistoricalCoverageSensor(FinalStatusSensor):
+    _attr_translation_key = "historical_day_status"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_historical_day_status"
+
+    def current_result(self, offset=0):
+        return day_result(self.coordinator)

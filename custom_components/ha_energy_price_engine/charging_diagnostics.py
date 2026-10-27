@@ -9,6 +9,7 @@ from .component_status import component_snapshot, safe
 from .configuration import settings
 from .const import DOMAIN
 from .localization import review_labels
+from .presentation import format_price
 
 
 def quarter_choices(hass, entry):
@@ -38,12 +39,13 @@ async def charging_breakdown(hass, entry, start):
     def text(key):
         return labels.get(key, key)
 
+    unit = settings(entry).get("display_unit", "øre/kWh")
+
     def amount(value):
-        return (
-            "—"
-            if value is None
-            else f"{value:.6f}".rstrip("0").rstrip(".").replace(".", text("decimal_separator"))
-        )
+        return format_price(value, unit, text("decimal_separator"), from_ore=True)
+
+    def price_unit(key):
+        return text(key).replace("øre/kWh", unit)
 
     zone = ZoneInfo(settings(entry)["timezone"])
     lines = [f"**{start.astimezone(zone).isoformat(timespec='minutes')}**"]
@@ -66,16 +68,18 @@ async def charging_breakdown(hass, entry, start):
             source = text("public_baseline")
         period = safe(row["effective_period"]).replace("9999-12-31", text("until_changed"))
         lines.append(
-            f"**{name}: {amount(row['value'])} {text('unit_ex_vat')}** · {text(row['status'])}\n\n{safe(source) or '—'} · {period or '—'}"
+            f"**{name}: {amount(row['value'])} {price_unit('unit_ex_vat')}** · {text(row['status'])}\n\n{safe(source) or '—'} · {period or '—'}"
         )
     final = data["components"]["final"]
-    lines.append(f"**{text('vat_amount')}: {amount(data['canonical_vat_ore'])} øre/kWh**")
     lines.append(
-        f"**{text('final')}: {amount(final['display_value'])} {text('unit_incl_vat')}** · {text(final['status'])}"
+        f"**{text('vat_amount')}: {amount(data['canonical_vat_ore'])} {unit}** · {text(data['components']['vat']['status'])} · {text('confirmed_vat_label')}"
+    )
+    lines.append(
+        f"**{text('final')}: {amount(final['display_value'])} {price_unit('unit_incl_vat')}** · {text(final['status'])}"
     )
     if data["canonical_ex_vat_ore"] is not None:
         lines.append(
-            f"{amount(data['canonical_ex_vat_ore'])} + {amount(data['canonical_vat_ore'])} = {amount(final['display_value'])} øre/kWh"
+            f"{amount(data['canonical_ex_vat_ore'])} + {amount(data['canonical_vat_ore'])} = {amount(final['display_value'])} {unit}"
         )
     lines.append(text("marginal_only"))
     activation = dt_util.parse_datetime(data.get("scope_start") or "")
@@ -104,4 +108,47 @@ async def charging_breakdown(hass, entry, start):
             lines.append(
                 text("checked_at") + " " + stamp.astimezone(zone).isoformat(timespec="minutes")
             )
+    lines.insert(1, await charging_readiness(hass, entry))
     return "\n\n---\n\n".join(lines)
+
+
+async def charging_readiness(hass, entry, start=None, end=None):
+    """Separate range readiness from full-day history using the unchanged API v1."""
+    from .status import readiness_snapshot
+
+    labels = await review_labels(hass)
+    snapshot = readiness_snapshot(hass, entry, start=start, end=end)
+    zone = ZoneInfo(settings(entry)["timezone"])
+    lines = []
+    for key in ("current", "next", "requested", "history_today", "history_tomorrow"):
+        if key not in snapshot:
+            continue
+        facts = snapshot[key]
+        state = labels["readiness_" + facts["status"].lower()]
+        lines.append(
+            f"**{labels['scope_' + key]}: {state}** · {facts['valid_slots']}/{facts['expected_slots']}"
+        )
+        if key == "requested":
+            first, last = (
+                dt_util.parse_datetime(facts[k]).astimezone(zone) for k in ("start", "end")
+            )
+            lines.append(
+                f"{first.isoformat(timespec='minutes')} → {last.isoformat(timespec='minutes')}"
+            )
+            if facts["status"] != "READY":
+                lines.append(labels["horizon_unavailable"])
+    if snapshot["missing_before_activation"]:
+        lines.append(labels["activation_history"])
+    return "\n\n".join(lines)
+
+
+def horizon_choices(entry):
+    """Calendar choices, never fabricated price slots. API v1 has no 48h limit."""
+    now = dt_util.utcnow()
+    current = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
+    zone = ZoneInfo(settings(entry)["timezone"])
+    return [
+        (stamp.isoformat(), stamp.astimezone(zone).isoformat(timespec="minutes"))
+        for n in range(193)
+        if (stamp := current + timedelta(minutes=15 * n))
+    ]

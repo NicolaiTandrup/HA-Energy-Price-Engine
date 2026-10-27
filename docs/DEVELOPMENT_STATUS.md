@@ -1,5 +1,57 @@
 # Development handoff
 
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 active**, newly authorized by the
+owner's uploaded beta.7 mission and issue#8 comments21:20/21:28UTC. Continue existing
+PR14/`feat/beta5-simple-onboarding` from final beta.6 checkpoint22a1c83. No restart,
+worktree, main merge, stable or production/Node-RED/CM/physical-control changes.
+Owner authorizes immutable beta.7 prerelease after mandatory gates; stop after
+publication and independent verification. Prior beta.6 STOP is historical below.
+
+## Beta.7 first implementation checkpoint
+
+Checkpoint subject: **feat: standardize price display and expose future-window readiness**.
+
+- New display-only formatter: ore/kWh2 decimals, DKK/kWh4, point/comma, negative
+  values and zero; full internal/ledger/API/cost precision preserved. Preferred
+  display now covers raw/current/next, final statistics and provisional prices.
+  Canonical sensor IDs/units/statistics remain; technical labels identify DKK.
+  HA supported suggested precision updates on reload; explicit user entity/card
+  overrides remain user-owned. Review/diagnostics/picker use selected site unit.
+- Unchanged APIv1/engine/SQLite/scheduler. Current and next status independent from
+  today's historical full-day completeness. Pure read-only requested-window check
+  uses APIv1; its48h calendar picker is no API limit or charging plan. Missing future
+  slots/component/source verification remain fail-closed. Historical past not filled.
+- Native integration tests on normal/fall/spring96/100/92 days:late activation7 today
+  rows, current+next+15-quarter crossing-midnight range READY, day INCOMPLETE.
+  Current/next midnight behavior, incomplete tomorrow and bad/end-before-start
+  horizons covered.250 repeated range reads assert no network, recomposition or
+  SQLite connection; SQL read-only EXPLAIN uses existing primary-key range index.
+  StoredUTC interval/amount/original normalized spot/components/source/revision and
+  restart integrity proven; one changed quarter writes only that future row and
+  original published revision stays recoverable. No storage/schema migration.
+- Focused46 passed; corrected historical entity/menu regression21 passed. First
+  full302 cases/core:298 passed,4 expected presentation identity/menu assertions
+  outdated; corrected. Three test SQLite connections now explicitly closed, leaving
+  only expected upstream HACS warnings on next clean run. Ruff check/format pass.
+  New303-case full both-core rerun, native frontend, consumers/packages/hassfest/
+  HACS/CI pending. Released beta.6 source added to beta.1–.6 migration matrix.
+- Browser plugin unavailable. Frontend-testing-debugging skill:existing Playwright/
+  Chromium against isolated HA2026.10.4/frontend20260930.5, never owner HA. Beta.7 QA
+  clone has15 beta.6 configs/1,211 old SQL rows; a new fictional late site has recorded
+  Radius and synthetic100DKK/MWh spot. Native QA currently being prepared; no UI
+  acceptance claim yet. Old source/canonical units preserved in clone.
+- Dedicated beta7-pr workflow updates existing draft14 through the supported
+  authorized runner route; local GitHub API remains proxy-blocked. Public Git/web
+  work. No beta.7 tag/release. Keep old beta.1–.6 workflows/tags/assets untouched.
+
+Next:complete303/core and native EN/DA desktop/mobile unit-switch/precision/horizon
+checks, beta.6 runtime upgrade/Recorder/ledger checks, unchanged consumer suites,
+package/HACS/hassfest/SQLite scale gates. Commit any fixes/evidence/docs. Freeze clean
+source and exact tag after CI; publish beta.7 via guarded workflow, fresh public
+HACS/native verification on both cores, receipt/PR/final handoff then STOP.
+
+## Completed beta.6 checkpoint (historical)
+
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 published and independently
 verified. STOP: owner mission complete.** No beta.7 work, stable release, main merge,
 production cutover or charging actions are authorized by this checkpoint.

@@ -76,7 +76,7 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
     c = entry.runtime_data
     assert entry.version == 3
     device = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)[0]
-    assert device.sw_version == "0.1.0-beta.6"  # Installed manifest, not flow/core version.
+    assert device.sw_version == "0.1.0-beta.7"  # Installed manifest, not flow/core version.
     now = datetime(2026, 10, 23, 12, tzinfo=UTC)
     original = c.price_engine.records["home"]
     price = PriceSensor(c).native_value
@@ -187,6 +187,7 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
         ("78ef9ba4d02ccb85b9395991d1376fbdec34bb84", 3),
         ("38973d88ad67758b419dfc45c193a8c85674afda", 3),
         ("a4ede923e42573def49026a8d1d817c37a979171", 3),
+        ("f5a18152748205906bfd5e7ae7a72b592943e742", 3),
     ],
 )
 async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(

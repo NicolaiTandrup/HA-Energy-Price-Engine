@@ -28,7 +28,7 @@ async def test_direct_supplier_contract_approval_and_compact_review(hass, freeze
     r = await hass.config_entries.options.async_configure(fid, {**data, "amount": "3..0"})
     assert r["errors"]["amount"] == "invalid_decimal"
     r = await hass.config_entries.options.async_configure(fid, data)
-    assert r["step_id"] == "setup_review" and len(r["menu_options"]) == 9
+    assert r["step_id"] == "setup_review" and "horizon" in r["menu_options"]
     coverage = r["description_placeholders"]["coverage"]
     assert coverage.count("2026-10-23") == 1 and coverage.count("2026-10-24") == 1
     assert "Verified" in r["menu_options"]["setup_supplier"]

@@ -24,7 +24,7 @@ from tools.prepare_hacs_reference import PINS
 from .test_hacs_workflow import candidate_tree, upstream
 
 ROOT = Path(__file__).parents[1]
-TAG = "v0.1.0-beta.6"
+TAG = "v0.1.0-beta.7"
 DOMAIN = "ha_energy_price_engine"
 
 

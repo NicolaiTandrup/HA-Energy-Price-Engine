@@ -67,7 +67,7 @@ async def test_new_site_saves_every_step_and_reopens_without_final_commit(hass, 
     assert any(x["id"] == "supplier" for x in site.options["dated_components"])
     hass.config_entries.options.async_abort(fid)
     r = await hass.config_entries.options.async_init(site.entry_id)
-    assert r["step_id"] == "setup_review" and len(r["menu_options"]) == 9
+    assert r["step_id"] == "setup_review" and "horizon" in r["menu_options"]
     assert "wizard_save" not in r["menu_options"] and "setup_done" not in r["menu_options"]
     start = datetime(2026, 10, 27, 16, 15, tzinfo=UTC)
     result = get_api(hass).lookup("current_site", start, start + timedelta(minutes=15))

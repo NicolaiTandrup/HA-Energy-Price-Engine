@@ -11,7 +11,11 @@ async def async_get_config_entry_diagnostics(hass, entry):
     if c is None or entry.entry_id not in hass.data.get("ha_energy_price_engine", {}):
         return {"api_version": 1, "loaded": False, "state": str(entry.state)}
     now = dt_util.utcnow()
-    rows = c.price_engine.lookup(c.site["id"], now, now + timedelta(microseconds=1))
+    rows = c.price_engine.lookup(
+        c.site["id"],
+        now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0),
+        now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(minutes=15),
+    )
     components = json.loads(rows[0].components_json).get("components", {}) if rows else {}
     source = json.loads(rows[0].source_json) if rows else {}
     # Whitelist public source metadata; omit the Nord Pool entry identifier and
@@ -57,6 +61,12 @@ async def async_get_config_entry_diagnostics(hass, entry):
     from .component_status import component_snapshot
 
     snapshot = component_snapshot(hass, entry)
+    from .localization import review_labels
+    from .presentation import display_value, format_price
+    from .status import readiness_snapshot
+
+    labels = await review_labels(hass)
+    unit = c.site.get("display_unit", "øre/kWh")
     public_components = {}
     for key, row in snapshot["components"].items():
         source = row["source"]
@@ -71,8 +81,21 @@ async def async_get_config_entry_diagnostics(hass, entry):
         }:
             source = "user_confirmed_or_unavailable"
         public_components[key] = {**row, "source": source}
+        if key != "vat":
+            value = row["value"] / 100 if row["value"] is not None else None
+            shown = row["display_value"] / 100 if row["display_value"] is not None else None
+            public_components[key].update(
+                value=display_value(value, unit),
+                display_value=display_value(shown, unit),
+                unit=unit + (" incl VAT" if key == "final" else " ex VAT"),
+                formatted_value=format_price(value, unit, labels["decimal_separator"]),
+                canonical_value_dkk_per_kwh=value,
+            )
     return {
         "component_breakdown": public_components,
+        "canonical_technical_unit": "DKK/kWh",
+        "price_display_unit": unit,
+        "readiness": readiness_snapshot(hass, entry),
         "storage": storage,
         "api_version": 1,
         "raw_source_days": {

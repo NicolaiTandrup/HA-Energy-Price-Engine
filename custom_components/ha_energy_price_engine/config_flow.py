@@ -382,6 +382,11 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
         start, _ = day_bounds(day, runtime.site["timezone"])
         _, end = day_bounds(day + timedelta(days=1), runtime.site["timezone"])
         rows = runtime.price_engine.lookup(runtime.site["id"], start, end)
+        from .localization import review_labels
+        from .presentation import format_price
+
+        labels = await review_labels(self.hass)
+        display_unit = runtime.site.get("display_unit", "øre/kWh")
         explanation = "—"
         if user_input:
             try:
@@ -401,7 +406,7 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
                         [
                             {
                                 "value": r.start.isoformat(),
-                                "label": f"{r.start.astimezone(zone).isoformat()} — {r.final_price_incl_vat:.6f} DKK/kWh",
+                                "label": f"{r.start.astimezone(zone).isoformat()} — {format_price(r.final_price_incl_vat, display_unit, labels['decimal_separator'])} {display_unit}",
                             }
                             for r in rows
                         ]

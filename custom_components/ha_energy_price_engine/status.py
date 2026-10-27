@@ -7,6 +7,8 @@ from zoneinfo import ZoneInfo
 from homeassistant.util import dt as dt_util
 
 from .api import ConsumerAPI
+from .configuration import settings
+from .presentation import format_price
 from .price_engine import day_bounds
 
 
@@ -20,6 +22,50 @@ def interval_result(coordinator, start, end, now):
     )
 
 
+def quarter_result(coordinator, offset=0, now=None):
+    now = now or dt_util.utcnow()
+    start = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(
+        minutes=15 * offset
+    )
+    return interval_result(coordinator, start, start + timedelta(minutes=15), now)
+
+
+def readiness_snapshot(hass, entry, *, start=None, end=None, now=None):
+    now = now or dt_util.utcnow()
+    site = settings(entry)
+    current = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
+    day = now.astimezone(ZoneInfo(site["timezone"])).date()
+    ranges = {
+        "current": (current, current + timedelta(minutes=15)),
+        "next": (current + timedelta(minutes=15), current + timedelta(minutes=30)),
+        "history_today": day_bounds(day, site["timezone"]),
+        "history_tomorrow": day_bounds(day + timedelta(days=1), site["timezone"]),
+    }
+    if start is not None or end is not None:
+        if start is None or end is None:
+            raise ValueError("Both requested horizon boundaries are required")
+        ranges["requested"] = (start, end)
+    api = ConsumerAPI(hass)
+    facts = {}
+    for key, (first, last) in ranges.items():
+        result = api.lookup(site["id"], first, last, now=now, producer_entry_id=entry.entry_id)
+        facts[key] = {
+            "start": first.isoformat(),
+            "end": last.isoformat(),
+            "status": str(result.status),
+            "valid_slots": result.valid_slots,
+            "expected_slots": result.expected_slots,
+            "last_success": result.last_success,
+        }
+    activation = dt_util.parse_datetime(site.get("pricing_start", ""))
+    facts["missing_before_activation"] = bool(
+        activation
+        and ranges["history_today"][0] < activation < ranges["history_today"][1]
+        and facts["history_today"]["status"] == "INCOMPLETE"
+    )
+    return facts
+
+
 def day_result(coordinator, offset=0, now=None):
     now = now or dt_util.utcnow()
     site = coordinator.site
@@ -31,6 +77,8 @@ def source_status(coordinator, now=None):
     now = now or dt_util.utcnow()
     site = coordinator.site
     result = day_result(coordinator, now=now)
+    current = quarter_result(coordinator, now=now)
+    following = quarter_result(coordinator, 1, now)
     source = coordinator.hass.config_entries.async_get_entry(site.get("nordpool_entry", ""))
     reports = coordinator.schedule.days.get(site["id"], {})
     today = str(now.astimezone(ZoneInfo(site["timezone"])).date())
@@ -43,7 +91,12 @@ def source_status(coordinator, now=None):
         "area": site["area"],
         "currency": "DKK",
         "resolution_minutes": 15,
-        "health": str(result.status),
+        "health": str(current.status),
+        "health_scope": "current_quarter",
+        "current_quarter_status": str(current.status),
+        "next_quarter_status": str(following.status),
+        "historical_day_status": str(result.status),
+        "coverage_scope": "historical_full_day",
         "last_success": result.last_success,
         "last_attempt": report.get("last_attempt"),
         "last_error": result.reason,
@@ -84,6 +137,8 @@ def slot_breakdown(coordinator, start, now=None):
             canonical_unit="DKK/kWh",
             display_value=row.final_price_incl_vat * (100 if unit == "øre/kWh" else 1),
             display_unit=unit,
+            display_text=format_price(row.final_price_incl_vat, unit),
+            canonical_technical_values=True,
             source=json.loads(row.source_json),
             components=json.loads(row.components_json),
         )
