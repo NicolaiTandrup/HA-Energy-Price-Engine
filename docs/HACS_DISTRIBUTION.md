@@ -1,16 +1,16 @@
-# Install Energy Price Engine beta.1 with HACS
+# Install Energy Price Engine beta.3 with HACS
 
 Repository: **NicolaiTandrup/HA-Energy-Price-Engine**
 HACS category: **Integration**
 HACS and native integration name: **Energy Price Engine**
-Release: **v0.1.0-beta.1**, manifest version `0.1.0-beta.1`
-[Public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.1)
+Release: **v0.1.0-beta.3**, manifest version `0.1.0-beta.3`
+[Public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.3)
 
-The owner authorized merging PE PR #7 and publishing this PE prerelease on
-2026-10-26. This does not authorize CM publication, a stable release, production
-installation, Node-RED changes or vehicle/charger commands. Publication and exact
-source/asset validation receipts are recorded on the public release and PR #7;
-check that the release is published, marked **Pre-release**, and not a draft.
+The owner authorizes beta.3 publication after mandatory checks. Its source is the
+validated tag on PR #11's development branch; main stays on the previously approved
+beta.1 implementation. HACS uses main for registration and the exact selected beta
+tag for download. No main merge, stable release, CM release or live control operation
+is included. Confirm the public release is **Pre-release**, not a draft.
 
 ## PAHA02-DEV: exact installation procedure
 
@@ -23,7 +23,7 @@ check that the release is published, marked **Pre-release**, and not a draft.
    **Integration**, then **Add**. Do not append a branch URL or enter a ZIP URL.
 3. Find and open **Energy Price Engine** in HACS. Open **Download** (or the
    repository menu's **Redownload/Download again** for an existing installation).
-   Enable **Show beta versions** if beta.1 is hidden. Choose **v0.1.0-beta.1** in
+   Enable **Show beta versions** if beta.3 is hidden. Choose **v0.1.0-beta.3** in
    the available-version selector and download. HACS UI wording can vary by version;
    the required actions are enable beta versions and select this exact release.
    Do not accidentally select the moving `main` development version.
@@ -39,25 +39,24 @@ check that the release is published, marked **Pre-release**, and not a draft.
    Home Assistant Nord Pool** integration for DK2 is present. PE needs no additional
    credentials. Do not install/run a legacy HACS Nordpool broker in parallel for
    acceptance; an old custom component shadowing the official domain is rejected.
-7. Choose **Settings → Devices & services → Add integration → Energy Price Engine**.
-   Enter a readable site name and stable lowercase site ID, for example `dev_house`.
-   Select **Official Home Assistant Nord Pool**, then select the installed entry by
-   its readable name in the dropdown. PE stores its actual opaque config-entry ID;
-   never type an entity name/ID or edit integration code to find it.
-8. Confirm **DK2**, **Europe/Copenhagen**, input **DKK/MWh**, **spot excluding VAT**,
-   and VAT fraction **0.25**. PE requests DKK and normalizes MWh to kWh once.
-9. Open the new entry's **Configure / Options**. Enter verified, dated supplier,
-   grid/Radius class, Energinet, electricity-tax and VAT components. Configure locks,
-   manual hourly bands or fallback as appropriate; use **Save changes** to commit
-   the draft. See [BETA_SETUP.md](BETA_SETUP.md) for each native editor.
-   Missing/unverified current rates intentionally prevent READY; never enter an
-   invented zero. The historical household EWII .030 DKK/kWh ex-VAT markup applies
-   only June–September 2026, not October or another site.
-10. Inspect the site's seven entities: current and next-quarter final price,
-    today's complete minimum/maximum/average, readiness and tomorrow readiness.
-    Readiness attributes show source/area/currency/resolution, counts, verification,
-    last error and next scheduled check. Options → **Inspect a stored quarter-hour
-    price** shows original components, VAT, sources, effective periods and revision.
+7. For a new site choose **Settings → Devices & services → Add integration → Energy
+   Price Engine**. For an existing beta.1 site choose **Configure / Options** instead;
+   do not delete/recreate it. Stable IDs, references, overrides and SQLite history
+   migrate in place to config version 3.
+8. Follow the [six-stage wizard](WIZARD_GUIDE.md): site/official Nord Pool, grid,
+   supplier, national charges, display, Review. Official input is automatic
+   **DKK/MWh excluding VAT**; confirm DK2/Copenhagen where suggested. VAT input is
+   **25** for 25%; preferred display defaults to **øre/kWh**.
+9. Enter only verified dated rates. The EWII household .030 DKK/kWh ex-VAT fact is
+   June–September 2026 only. Use **Continue** to preserve each draft page; unsent
+   fields are lost by HA's Close/reload. Final **Save & verify** applies the draft.
+   Missing components remain unavailable; saved does not mean READY.
+10. Inspect the original seven DKK/readiness entities and five preferred-display
+    sensors. Device info shows **0.1.0-beta.3**. Readiness attributes identify missing
+    components, affected period, source/error and corrective action. Review →
+    **Dated rates / manual overrides → Inspect a stored quarter-hour price** shows
+    applied components, VAT, sources, periods and revision.
+
 11. Repeat **Add integration** for additional independent sites. Use explicit
     producer entry/site mapping for any separately approved consumer. PE has no
     charging or vehicle controls and can be meaningfully tested on its own.
@@ -77,14 +76,15 @@ is the fixture boundary; validator/installer/extraction methods run unchanged.
 
 After publication, `tools/verify_public_release.py` independently downloads actual
 public repository/release/tag metadata, source ZIP and all four release assets.
-It checks tag/source identity and SHA-256/file provenance, then reruns those real
+It separately downloads actual main and tag sources (they may differ), checks
+main registration structure and exact tag/source identity and SHA-256/file provenance, then reruns those real
 HACS methods using the downloaded public bytes and native installation/configuration
 outside the source tree. This is an isolated HACS backend/native HA harness, not
 an authenticated session on PAHA02-DEV. See the release's verification receipt.
 
 ```sh
 .venv-ha-current/bin/python tools/verify_public_release.py \
-  --expected-commit THE_VALIDATED_RELEASE_COMMIT --output /tmp/pe-public-beta1
+  --expected-commit THE_VALIDATED_RELEASE_COMMIT --output /tmp/pe-public-beta3
 ```
 
 `BUILD_MANIFEST.json` describes the clean build; its `published: false` means the
@@ -116,3 +116,26 @@ snapshots are retained in `contracts/hacs-default-branches.json` and tests repro
 that exact HACS rejection. A `/tree/branch` suffix is discarded by HACS's normal add
 workflow. PE's authorized main bootstrap resolves its own structure gate; it does
 not change, merge or publish EV Charge Manager.
+
+## Beta.3 retest and the short-hash update card
+
+Beta.2 failed owner acceptance. This candidate adds actual Review source/calculation
+checks and independent raw source entities; screenshots/tests remain isolated
+simulation, not PAHA02-DEV success. Follow [the focused retest](WIZARD_GUIDE.md).
+
+The recorded `installed v0.1.0-beta.2 / latest 56cdb3c` card belongs to HACS. Actual
+pinned HACS code reproduces it when **Show beta versions is off** and the repository
+has no stable release: its available-version property falls back to main's commit.
+Selecting a beta download alone does not prove this subscription flag remains on.
+Keep **Show beta versions enabled in HACS's repository controls**, refresh repository
+information, then confirm latest is a semantic beta tag. Do not choose main/commits.
+Beta.3 sets hide_default_branch metadata; main registration remains compatible.
+
+PE additionally exposes a read-only **Published PE release (update through HACS)**
+UpdateEntity. It compares only published semantic tags, follows beta/stable according
+to the installed package, filters drafts/commits, and links exact release notes. It
+does not install files or change HACS settings. Stable installs never follow beta.
+GitHub failure makes that metadata unavailable; it never affects price readiness.
+HACS owns its separate card; PE does not monkey-patch it or publish a stable release
+to conceal this upstream fallback. If it still shows a hash, record HACS version and
+its persisted beta visibility; use the exact release download rather than the hash.

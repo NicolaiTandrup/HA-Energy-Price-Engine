@@ -19,10 +19,20 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(
         [
             PriceSensor(c),
+            RawSpotSensor(c),
+            RawSpotSensor(c, 1),
+            RawReadinessSensor(c),
+            RawReadinessSensor(c, 1),
+            FinalStatusSensor(c),
+            PricingProblemSensor(c),
             ReadinessSensor(c),
             NextPriceSensor(c),
             *[DayStatisticSensor(c, kind) for kind in ("minimum", "maximum", "average")],
             TomorrowSensor(c),
+            *[
+                DisplaySensor(c, kind)
+                for kind in ("current", "next", "minimum", "maximum", "average")
+            ],
         ]
     )
 
@@ -37,6 +47,7 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
             identifiers={(DOMAIN, self.site["id"])},
             name=self.site["name"],
             manufacturer="Energy Price Engine",
+            sw_version=getattr(coordinator, "integration_version", None),
         )
 
     async def async_added_to_hass(self):
@@ -92,6 +103,8 @@ class PriceSensor(BaseSensor):
 
 
 class ReadinessSensor(BaseSensor):
+    _attr_device_class = "enum"
+    _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
     _attr_translation_key = "readiness"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
@@ -141,6 +154,8 @@ class DayStatisticSensor(BaseSensor):
 
 
 class TomorrowSensor(BaseSensor):
+    _attr_device_class = "enum"
+    _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
     _attr_translation_key = "tomorrow_status"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
@@ -161,3 +176,186 @@ class TomorrowSensor(BaseSensor):
             "last_success": result.last_success,
             "reason": result.reason,
         }
+
+
+class DisplaySensor(BaseSensor):
+    """Unit-specific presentation identity: canonical sensors/statistics never change."""
+
+    _attr_suggested_display_precision = 6
+
+    def __init__(self, coordinator, kind):
+        super().__init__(coordinator)
+        self.kind = kind
+        self.unit = self.site.get("display_unit", "øre/kWh")
+        self._attr_native_unit_of_measurement = self.unit
+        suffix = "ore" if self.unit == "øre/kWh" else "dkk"
+        self._attr_unique_id = f"{self.site['id']}_display_{kind}_{suffix}"
+        self._attr_translation_key = f"display_{kind}"
+
+    @property
+    def native_value(self):
+        if self.kind in {"current", "next"}:
+            result = self.current_result(1 if self.kind == "next" else 0)
+            value = (
+                result.records[0].final_price_incl_vat
+                if str(result.status) == "READY" and result.records
+                else None
+            )
+        else:
+            value = DayStatisticSensor(self.coordinator, self.kind).native_value
+        return value * (100 if self.unit == "øre/kWh" else 1) if value is not None else None
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            "site_id": self.site["id"],
+            "stored_and_api_unit": "DKK/kWh",
+            "vat_included": True,
+            "presentation_only": True,
+        }
+
+
+class RawSpotSensor(BaseSensor):
+    """Verified spot source, independent of final composition and ledger success."""
+
+    _attr_native_unit_of_measurement = "DKK/kWh"
+    _attr_suggested_display_precision = 6
+
+    def __init__(self, coordinator, offset=0):
+        super().__init__(coordinator)
+        self.offset = offset
+        self._attr_unique_id = f"{self.site['id']}_raw_spot_{offset}"
+        self._attr_translation_key = "raw_current" if offset == 0 else "raw_next"
+
+    @property
+    def native_value(self):
+        now = dt_util.utcnow()
+        start = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(
+            minutes=15 * self.offset
+        )
+        updater = self.coordinator.price_updater
+        for day, slots in updater.raw_slots.items():
+            report = updater.raw_reports[day]
+            verified = dt_util.parse_datetime(report.get("verified_at", ""))
+            if (
+                report.get("price_basis") == "all_in"
+                or report["status"] == "ERROR"
+                or not verified
+                or not 0 <= (now - verified).total_seconds() < 7200
+            ):
+                continue
+            for slot in slots:
+                if slot.start == start:
+                    return slot.price
+        return None
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            "price_basis": self.site.get("price_basis"),
+            "currency": "DKK",
+            "final_price": False,
+            "vat_included": self.site.get("price_basis") == "spot_incl_vat",
+        }
+
+
+class RawReadinessSensor(BaseSensor):
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = "enum"
+    _attr_options = ["ready", "incomplete", "stale", "error"]
+
+    def __init__(self, coordinator, offset=0):
+        super().__init__(coordinator)
+        self.offset = offset
+        self._attr_unique_id = f"{self.site['id']}_raw_readiness_{offset}"
+        self._attr_translation_key = "raw_today" if offset == 0 else "raw_tomorrow"
+
+    @property
+    def report(self):
+        from zoneinfo import ZoneInfo
+
+        day = dt_util.utcnow().astimezone(ZoneInfo(self.site["timezone"])).date() + timedelta(
+            days=self.offset
+        )
+        return self.coordinator.price_updater.raw_reports.get(str(day), {})
+
+    @property
+    def native_value(self):
+        report = self.report
+        verified = dt_util.parse_datetime(report.get("verified_at", ""))
+        if (
+            report.get("status") == "READY"
+            and verified
+            and (dt_util.utcnow() - verified).total_seconds() >= 7200
+        ):
+            return "stale"
+        return report.get("status", "INCOMPLETE").lower()
+
+    @property
+    def extra_state_attributes(self):
+        return self.report
+
+
+class PricingProblemSensor(BaseSensor):
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = "enum"
+    _attr_options = [
+        "none",
+        "source",
+        "grid",
+        "storage",
+        "composition",
+        "configuration",
+        "supplier",
+        "electricity_tax",
+        "energinet_net",
+        "energinet_system",
+        "dso",
+    ]
+    _attr_translation_key = "pricing_problem"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_pricing_problem"
+
+    @property
+    def native_value(self):
+        report = self.coordinator.data or {}
+        missing = report.get("missing_components", [])
+        return next(
+            (
+                k
+                for k in ("supplier", "dso", "energinet_net", "energinet_system", "electricity_tax")
+                if k in missing
+            ),
+            report.get("failure_stage") or "none",
+        )
+
+    @property
+    def extra_state_attributes(self):
+        report = self.coordinator.data or {}
+        return {
+            k: report.get(k)
+            for k in (
+                "affected_period",
+                "missing_components",
+                "reason",
+                "required_action",
+                "failure_stage",
+            )
+        }
+
+
+class FinalStatusSensor(ReadinessSensor):
+    """Localized enum alongside preserved legacy uppercase status/API contracts."""
+
+    _attr_options = ["ready", "incomplete", "stale", "error"]
+    _attr_translation_key = "final_status"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_final_status"
+
+    @property
+    def native_value(self):
+        return str(self.current_result().status).lower()

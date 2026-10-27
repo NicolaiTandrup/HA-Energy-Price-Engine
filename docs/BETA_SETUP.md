@@ -1,10 +1,11 @@
-# Install and configure v0.1.0-beta.1
+# Install and configure v0.1.0-beta.3
 
 Use the [exact HACS / PAHA02-DEV procedure](HACS_DISTRIBUTION.md) to add the PE
-repository as Integration and select **v0.1.0-beta.1** with beta versions enabled.
-The owner authorized the PE main merge and prerelease on 2026-10-26. Check the public
-release/verification receipt for its validated commit. No CM publication or production
-change is part of that authorization. Everyday pricing setup is native UI, not YAML.
+repository as Integration and select **v0.1.0-beta.3** with beta versions enabled.
+The owner authorizes beta.3 prerelease publication after mandatory checks. Main
+already supports HACS registration; beta.3 installs from its exact tag without
+merging its development PR. No production or control operation is included.
+Everyday pricing setup is native UI, not YAML.
 
 ## Choose an isolated installation and exact package
 
@@ -55,26 +56,37 @@ Do not remove/disable anything on live HA merely to try this candidate.
 
 ## Add independent sites in Devices & services
 
-1. Open **Settings → Devices & services → Add integration → Energy Price Engine**.
-2. Enter a readable site name and a stable lowercase ID, for example `house` or
-   `summer_house`. That ID/config entry is the explicit consumer mapping; renaming
-   the label does not change its identity.
-3. Choose **Official Nord Pool** and its config entry. One unambiguous existing
-   official entry is suggested for confirmation; multiple entries require a choice.
-   Confirm the price area (`DK2` initially) and `Europe/Copenhagen` for a Danish
-   delivery day. Official input is ex-VAT `DKK/MWh`; confirm the VAT fraction
-   (`0.25` means 25%). No supplier contract is discovered or copied.
-4. Add the entry, then open its **Options / Configure** menu to enter dated business
-   rates below. Until required components cover the current day, readiness is
-   degraded and the current price is unknown, never a fabricated zero.
-5. Repeat Add integration for each additional site. HA's integration entry/device
-   list is the site list; there is no hardcoded site count. Each entry has its own
-   source mapping, rules, ledger and diagnostics. Resource use still scales with data.
+Follow the [illustrated six-stage wizard](WIZARD_GUIDE.md), available both from
+**Add integration** and an existing site's **Configure / Options**:
 
-Use Options → Site or HA's Reconfigure action to change a source/label/area without
-changing the stable ID. Use HA's Delete entry action to remove a site. Other sites
-continue working. Authoritative price history is retained for references; a new
-entry never silently inherits the removed site's private rates/history.
+1. **Site and source**: enter a name; leave the optional ID blank for a unique
+   generated ID. Choose official Nord Pool, select its readable entry, confirm the
+   supported area/timezone hints. Input conventions are automatic **DKK/MWh ex VAT**.
+   The spot/grid VAT field is **25** for 25%, not 0.25.
+2. **Grid**: confirm Radius C before selecting automatic verification, or choose
+   explicit manual rates. No grid product is inferred from a supplier label.
+3. **Supplier**: choose EWII/custom as a label. To add a contract, explicitly enter
+   your verified amount, unit, VAT and bounded dates/source. Leaving Add contract
+   off retains existing periods and allows an incomplete site to be saved.
+4. **National charges**: explicitly opt into documented bounded national rules or
+   use manual dated rules. Heating registration never creates a guessed discount.
+5. **Display**: default **øre/kWh**; canonical DKK entities, storage and API stay
+   unchanged. Separate display entities have unit-specific identities.
+6. **Review, Save & verify**: inspect coverage by date. Open **Dated rates / manual
+   overrides** for advanced edits, then return to Review and choose **Save & verify**.
+   Saved configuration is not a claim of READY prices.
+
+On forms select **Next / Back / Review**, then **Continue**. Continue persists a
+draft without applying active changes; closing and reopening resumes it. Every page
+warns that **Close/browser reload does not submit fields still being typed**: press
+Continue first. Validation errors and submitted Back edits are retained; Save returns
+to pending pages before applying them. **Discard draft…** requires explicit confirmation.
+Do not edit the same site in multiple browser flows at once.
+
+Repeat Add integration for independently configured sites; there is no hardcoded
+count. Existing incomplete sites resume through Configure. Site renaming preserves
+its permanent ID; source changes preserve its entry/history. Delete uses HA's
+entry menu; retained accounting ledgers are never automatically assigned to a new entry.
 
 ## Pricing / tariffs / supplier / taxes
 
@@ -107,8 +119,8 @@ not silently certify an old/fallback tariff as fresh automatic data. Deliberatel
 select authoritative manual mode after verification when appropriate.
 
 To schedule a new contract, edit the old end date to the new start date and add the
-new period in the **same options draft**, then Save. Closing without Save discards
-staged edits. Changing rates reprocesses affected future quarters; already-started
+new period in the **same options draft**, then return to Review and **Save & verify**. Submitted changes persist in a
+separate draft across closing; active pricing remains unchanged until final Save. Changing rates reprocesses affected future quarters; already-started
 prices stay unchanged and prior published revisions remain recoverable. Amounts are
 normalized with VAT exactly once. No source-code edits are necessary.
 
@@ -124,13 +136,17 @@ Final all-in mode prohibits tariff/VAT additions; use spot mode for composed rat
 
 ## Check readiness, sources and persistence
 
-Each site publishes seven entities: current and next-quarter final DKK/kWh,
+Each site preserves the seven original canonical/readiness entities: current and next-quarter final DKK/kWh,
 complete-day minimum/maximum/average, current readiness and tomorrow readiness.
 Incomplete/stale days have no numeric aggregate. Readiness attributes show source
 title, site, DK2/DKK, 15-minute resolution, coverage, last verification/error and
-next scheduled check. Options → Inspect a stored quarter-hour price explains a
+next scheduled check. Configure → Review → Dated rates / manual overrides → Inspect a stored quarter-hour price explains a
 selected today/tomorrow slot including VAT and original revision, with unambiguous
-local UTC offsets on repeated autumn hours. No source calls or tariff composition
+local UTC offsets on repeated autumn hours. Five additional preferred-display sensors default to øre/kWh, while the original
+DKK sensors keep their IDs and statistics. Switching preference creates the other
+unit family; it never reinterprets old statistics. Device info shows the installed
+manifest version. Missing-component attributes identify date, source and corrective
+action. No source calls or tariff composition
 occur on these reads. Dashboard reads
 and API v1 lookups never fetch sources or calculate tariffs. Diagnostics and Options
 show applied components, periods/locks, verification, revisions, valid/expected slot
@@ -168,3 +184,45 @@ test scaffolding only, not the deployed integration's runtime dependencies.
 Passing these automated tests does not approve real charging control or prove live
 provider availability. Complete the [acceptance and rollback checklist](BETA_ACCEPTANCE.md)
 with the owner before a real source/controller switchover.
+
+## Beta.3 raw source versus final price
+
+New raw current/next **DKK/kWh before additions** and today/tomorrow raw-source enum
+sensors expose actual verified quarters and timestamps independently from final
+composition. Official DKK/MWh is converted once; 100 DKK/MWh becomes 0.100 DKK/kWh.
+Raw spot is never a total electricity price. An all-in entity provider is not falsely
+labelled raw spot. No raw quarter is fabricated. Raw observations are operational
+and bounded to recent days; authoritative final SQLite history retains its existing
+policy. On restart raw observations are fetched again, not invented from final totals.
+
+The new localized final status and pricing-problem entities give corrective guidance.
+Existing uppercase readiness codes and canonical DKK entities/API remain compatible.
+Missing supplier/national periods are INCOMPLETE, with component/date/action; source,
+Radius and storage failures are distinct. Final valid_slots counts final records,
+not raw provider input. Raw READY 96 + final INCOMPLETE 0 is legitimate when a required
+contract is missing. Cached raw source can be STALE after a failed refresh, retains
+its original timestamp, and expires within two hours; final API remains fail-closed.
+
+New Danish official-source sites suggest the documented bounded national baseline
+with a visible editable checkbox. Existing choices/overrides remain unchanged. No
+Radius connection is inferred merely from DK2: confirm the grid product. No private
+EWII amount or heating eligibility is defaulted.
+
+Review uses the actual source adapters and the same canonical calculate() function
+in a transient in-memory sink; drafts never write price ledgers. Save rechecks and
+applies the complete configuration through normal runtime/transactional persistence.
+Preview calculation success is not proof that a later disk write succeeded: inspect
+final status/problem and verified slot counts after Save. Storage failures retain
+old history and identify disk/recovery action. There is no extra hidden Save.
+
+Native English/Danish forms, selectors, validation, Repairs and enum states follow
+the user's selected UI language. HA entity names follow the **system language** and
+existing registry names, as standard native HA behavior; changing a user's profile
+does not rename entities for everyone. Both name resources are shipped. New enum
+status entities localize per user; legacy uppercase state codes remain unchanged.
+Technical details retain canonical source/API keys and provider exception text.
+
+Legacy readiness/API valid_slots can count retained stored rows even during an outage;
+always check status. Diagnostic verified_final_slots counts currently certified final
+quarters, stored_slots preserves the retained count, and raw_valid_slots/raw_status
+explain the independent input. Historical/API contracts are unchanged.

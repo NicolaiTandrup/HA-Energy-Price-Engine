@@ -24,7 +24,7 @@ from tools.prepare_hacs_reference import PINS
 from .test_hacs_workflow import candidate_tree, upstream
 
 ROOT = Path(__file__).parents[1]
-TAG = "v0.1.0-beta.1"
+TAG = "v0.1.0-beta.3"
 DOMAIN = "ha_energy_price_engine"
 
 
@@ -63,6 +63,14 @@ def release_inputs():
 @pytest.mark.parametrize("line", list(PINS))
 async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_path, line):
     receipt, files, archive = release_inputs()
+    main_files = files
+    if main_archive := receipt.get("main_archive"):
+        with zipfile.ZipFile(main_archive) as source:
+            main_files = {
+                "/".join(p.split("/")[1:]): source.read(p)
+                for p in source.namelist()
+                if not p.endswith("/")
+            }
     assert receipt["release"]["prerelease"] and not receipt["release"]["draft"]
     assert receipt["release"]["tag_name"] == TAG
     alias = upstream(line)
@@ -84,22 +92,31 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         last_commit=receipt["source_commit"],
         set_last_commit=AsyncMock(),
     )
-    directories = {str(p) for name in files for p in Path(name).parents if str(p) != "."}
-    tree = [
-        SimpleNamespace(
-            path=p,
-            full_path=p,
-            filename=Path(p).name,
-            is_directory=p in directories,
-            type="tree" if p in directories else "blob",
-            url="https://api.github.com/recorded-public-tree",
-        )
-        for p in sorted(set(files) | directories)
-    ]
+
+    def tree_for(payload):
+        directories = {str(p) for name in payload for p in Path(name).parents if str(p) != "."}
+        return [
+            SimpleNamespace(
+                path=p,
+                full_path=p,
+                filename=Path(p).name,
+                is_directory=p in directories,
+                type="tree" if p in directories else "blob",
+                url="https://api.github.com/recorded-public-tree",
+            )
+            for p in sorted(set(payload) | directories)
+        ]
+
+    async def get_tree(self, ref):
+        return tree_for(files if ref == TAG else main_files)
+
     calls = []
 
     async def contents(*, path, **kwargs):
-        return SimpleNamespace(data=SimpleNamespace(content=base64.b64encode(files[path]).decode()))
+        payload = files if kwargs.get("params", {}).get("ref") == TAG else main_files
+        return SimpleNamespace(
+            data=SimpleNamespace(content=base64.b64encode(payload[path]).decode())
+        )
 
     async def download(url, **kwargs):
         calls.append(url)
@@ -133,7 +150,7 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
             "get_releases",
             AsyncMock(return_value=[GitHubReleaseModel(receipt["release"])]),
         ),
-        patch.object(repo_base.HacsRepository, "get_tree", AsyncMock(return_value=tree)),
+        patch.object(repo_base.HacsRepository, "get_tree", get_tree),
         patch.object(repo_base.HacsRepository, "async_set_last_commits", last_commits, create=True),
         patch.object(repo_base, "Backup", side_effect=isolated_backup),
     ):
@@ -143,9 +160,19 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         assert repo and repo.data.domain == DOMAIN and repo.data.config_flow
         assert repo.data.manifest_name == "Energy Price Engine"
         assert repo.data.prerelease == TAG and TAG not in repo.data.published_tags
+        # Reproduce the owner's HACS card: no stable release + beta visibility
+        # disabled falls back to main's short SHA, even after a beta install.
+        hacs.coordinators[enums.HacsCategory.INTEGRATION] = Mock()
+        update_module = importlib.import_module(alias + ".update")
+        native_update = update_module.HacsRepositoryUpdateEntity(hacs=hacs, repository=repo)
+        repo.data.installed_version = TAG
+        repo.data.last_commit = "56cdb3c"
+        assert native_update.latest_version == "56cdb3c"
         repo.data.show_beta = True  # Same state set by HACS's Show beta versions action.
         await repo.update_repository(force=True)
         assert TAG in repo.data.published_tags
+        assert native_update.latest_version == TAG
+        assert native_update.installed_version == TAG
         repo.data.selected_tag = TAG
         assert repo.version_to_download() == TAG
         installed = tmp_path / "custom_components" / DOMAIN

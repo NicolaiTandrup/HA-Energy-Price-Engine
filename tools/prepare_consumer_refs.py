@@ -17,6 +17,20 @@ REPOSITORY = "https://github.com/NicolaiTandrup/HA-EV-Charge-Manager.git"
 
 
 def prepare(source_git=None):
+    # The migration test executes the immutable released producer, even in shallow CI.
+    for released in (
+        "56cdb3c10993179371483812cbc36f651ba3ad8e",
+        "0c93d2bfac88878cff46e7726f59accbeababf85",
+    ):
+        if subprocess.run(
+            ["git", "cat-file", "-e", released + "^{commit}"], cwd=ROOT, capture_output=True
+        ).returncode:
+            subprocess.run(
+                ["git", "fetch", "--depth=1", "origin", released],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+            )
     output = ROOT / "consumer-references"
     output.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="pe-consumer-ref-") as temporary:

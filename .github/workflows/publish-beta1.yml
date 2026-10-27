@@ -1,0 +1,97 @@
+name: Publish authorized PE beta.1
+on:
+  push:
+    branches: [feat/standalone-price-engine]
+    paths: [.github/workflows/publish-beta1.yml]
+permissions:
+  contents: write
+  checks: read
+  actions: read
+concurrency:
+  group: publish-pe-v0.1.0-beta.1
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PE_SOURCE: 56cdb3c10993179371483812cbc36f651ba3ad8e
+      PE_TAG: v0.1.0-beta.1
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: v0.1.0-beta.1
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: astral-sh/setup-uv@v6
+      - name: Verify immutable authorized source and successful checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PE_SOURCE"
+          test "$(git rev-parse "$PE_TAG^{commit}")" = "$PE_SOURCE"
+          python - <<'PY_CHECK'
+          import json, os, subprocess, time
+          sha=os.environ['PE_SOURCE']
+          for attempt in range(30):
+              result=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/commits/{sha}/check-runs']))
+              checks=result['check_runs']
+              if len(checks)>=5 and all(c['status']=='completed' and c['conclusion']=='success' for c in checks):
+                  break
+              if any(c['status']=='completed' and c['conclusion'] not in ('success',) for c in checks):
+                  raise SystemExit('Exact-source CI did not pass; publication prohibited')
+              time.sleep(10)
+          else:
+              raise SystemExit('Exact-source CI is still pending; publication prohibited')
+          PY_CHECK
+      - name: Build clean source and independently install both layouts
+        run: |
+          set -euo pipefail
+          uv venv
+          uv pip sync --require-hashes requirements-ha-current.lock
+          uv run --no-project python tools/build_beta.py
+          uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine.zip
+          uv run --no-project python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
+      - name: Publish only authorized beta prerelease with provenance assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta1-notes.md" <<'PE_NOTES'
+          First native **read-only Energy Price Engine beta** for independent installation through HACS.
+          
+          Source/tag: `v0.1.0-beta.1` → `56cdb3c10993179371483812cbc36f651ba3ad8e`, the history-preserving merge of PR #7. No stable release or EV Charge Manager publication is included.
+          
+          ## Install on PAHA02-DEV
+          
+          1. HACS → Custom repositories → add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine`, category **Integration**.
+          2. Open **Energy Price Engine**, enable **Show beta versions** in the download/version dialog if needed, select **v0.1.0-beta.1**, and download.
+          3. Restart Home Assistant.
+          4. Settings → Devices & services → Add integration → **Energy Price Engine**.
+          5. Select the already installed **official Nord Pool** entry by its readable name; confirm DK2, DKK/MWh excluding VAT and Europe/Copenhagen. Configure verified dated rates in Options, then inspect readiness and stored-price breakdown.
+          
+          [Exact installation/update/reinstall guide](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.1/docs/HACS_DISTRIBUTION.md) · [Native pricing setup](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.1/docs/BETA_SETUP.md) · [Acceptance/rollback](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/v0.1.0-beta.1/docs/BETA_ACCEPTANCE.md)
+          
+          ## Included
+          
+          Independent sites with native configuration/Options; official Nord Pool selection and strict 15-minute/DST/unit validation; verified Radius C and dated manual tariff/contract/tax/VAT rules; current/next/daily/readiness sensors and source breakdown. Transactional SQLite retains settled prices and exact revisions, supports recovery/backup, and preserves the measured incremental-write improvement. Consumers use stable read-only API v1. Copenhagen 13:05, 13:20, 13:40, 23:59 and 00:01 schedules are retained.
+          
+          ## Validation and provenance
+          
+          - **177 producer tests** pass on HA **2026.10.3 and 2026.10.4**; 91% coverage, zero skips. Ruff, official hassfest, HACS metadata and exact-source CI pass.
+          - Unchanged consumer API suites and actual coupled runtimes cover both startup orders, revisions, duplicates and producer unload. No charging/control calls or consumer price recomposition are permitted in these tests.
+          - Real pinned HACS 2.0.5/upstream code tests registration, beta visibility, exact tag download, update and reinstall. Independent native archive tests run outside the source tree.
+          - `SHA256SUMS` checks both ZIPs; `BUILD_MANIFEST.json` pins the clean source commit and every runtime file. Its `published: false` means the builder itself never publishes; this GitHub prerelease is the separate publication action.
+          - HACS normally extracts the selected tag's `custom_components/ha_energy_price_engine` source directory. `ha_energy_price_engine.zip` is the equivalent root-layout artifact; `ha_energy_price_engine-manual.zip` extracts at the HA configuration root. Do not extract the root-layout ZIP directly at the HA configuration root.
+          
+          Independent verification of the actual public tag/source/assets and HACS/native install is performed after publication; its final receipt is attached below once completed. This does not claim an authenticated PAHA02-DEV session.
+          
+          ## Beta limits
+          
+          DKK and verified Radius C automation initially; other tariff classes/contracts require explicit verified manual configuration. Unknown components remain unavailable, never zero. The EWII household .030 DKK/kWh ex-VAT fact applies **June–September 2026 only**; no October, future or summer-house terms are inferred. National baseline periods remain bounded.
+          
+          Cloud benchmarks are not Raspberry Pi results. All history remains in memory and is not automatically pruned; verify Pi RAM/disk/source behavior before a larger pilot. Actual household/billing parity requires recorded owner data. PE has no vehicle/charger controls. No production HA, PAHA01, Node-RED or Tesla/Easee operation was performed or authorized. Source/control cutover remains a separate owner decision.
+          PE_NOTES
+          gh release create "$PE_TAG" dist/ha_energy_price_engine.zip dist/ha_energy_price_engine-manual.zip dist/BUILD_MANIFEST.json dist/SHA256SUMS --prerelease --latest=false --verify-tag --title 'v0.1.0-beta.1 — read-only Energy Price Engine' --notes-file "$RUNNER_TEMP/pe-beta1-notes.md"
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$PE_TAG" --jq '{html_url,tag_name,draft,prerelease,assets:[.assets[].name]}'

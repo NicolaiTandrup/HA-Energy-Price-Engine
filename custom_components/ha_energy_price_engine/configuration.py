@@ -15,6 +15,8 @@ def settings(entry):
 
 def validate_site(value):
     site = deepcopy(value)
+    if site.setdefault("display_unit", "øre/kWh") not in {"øre/kWh", "DKK/kWh"}:
+        raise ValueError("Display unit must be øre/kWh or DKK/kWh; provider input is separate")
     source_type = site.setdefault("source_type", "nordpool")
     site.setdefault("nordpool_entry", "")
     site.setdefault("price_basis", "spot_ex_vat")

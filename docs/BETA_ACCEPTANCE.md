@@ -1,25 +1,28 @@
 # PE + CM beta acceptance, source migration and rollback
 
-Target: **v0.1.0-beta.1 read-only PE prerelease**. On 2026-10-26 the owner explicitly
-authorized merging PE PR #7 and publishing this prerelease. This does not authorize
-a stable release, CM publication or production/control cutover.
+Target: **v0.1.0-beta.3 read-only PE prerelease**. Publication is owner-authorized
+once mandatory software checks pass; no stable, main merge or production cutover.
 
-## Software distribution acceptance
+## Beta.3 software and owner acceptance
 
-- [x] Existing validated native implementation and immutable SQLite history preserved.
-- [x] Both-core unit/integration, source selection, DST, recovery and consumer API tests.
-- [x] Actual HACS prerelease discovery/tag download/update/reinstall regression tests.
-- [x] Independently placed ZIPs configure/reload/remove/recreate outside source.
-- [x] Explicit owner approval for PE PR #7 merge and PE beta.1 prerelease.
-- [ ] Exact merged/tagged commit CI and independent public-release receipt recorded
-  on the release and PR #7. The live receipt, not this source checklist, establishes
-  completion of merge/publication/download verification.
-- [ ] Owner records actual PAHA02-DEV HACS installation/configuration and hardware
-  observations. Isolated tests do not check this box for the owner.
+- [x] Real isolated native EN/DA new-site flows save complete verified fixtures.
+- [x] Runtime final .6675 DKK/kWh / 66.75 øre, source .100, 96 quarters on both days.
+- [x] Missing contract: raw 96 READY, final 0 INCOMPLETE, exact supplier period/action.
+- [x] Radius/source/partial/ledger failures distinguished without manufacturing prices.
+- [x] Actual beta.1/.2 source creates upgrade fixtures; ledger rows/revisions preserved.
+- [x] Native user-language switch/fallback, submitted draft/Back/Discard/reload coverage.
+- [x] HACS SHA fallback reproduced, beta subscription/semantic release behavior tested.
+- [x] Final exact-source both-core/consumer/HACS/hassfest/package CI: 200 producer tests per core.
+- [x] Published beta.3 source/assets verified independently on both cores; see
+  docs/receipts/v0.1.0-beta.3.json.
+- [ ] Owner PAHA02-DEV installation and focused [retest](WIZARD_GUIDE.md) recorded.
+- [ ] Owner current contracts/source/billing and Raspberry Pi resource acceptance.
 
-Follow [HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md) for exact PE installation and
-public verification. CM remains a separate unpublished development project; its
-merge/publication is not a prerequisite to read-only PE installation.
+Beta.1/.2 automated software checks did **not** establish owner acceptance. Beta.3
+simulations likewise do not check those owner boxes. Main is unchanged, PR unmerged,
+no stable or control operation. Native Close does not submit typed fields: Continue
+first. Entity names obey HA system language/registry; native enum states and wizard
+follow individual user language. Technical provenance keys remain canonical.
 
 ## Before touching the owner's installation
 

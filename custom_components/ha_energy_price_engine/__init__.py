@@ -5,34 +5,36 @@ import logging
 from homeassistant.const import Platform
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
 from homeassistant.helpers import issue_registry as ir
+from homeassistant.loader import async_get_integration
 
 from .configuration import validate_site
 from .const import DOMAIN
 from .coordinator import PriceCoordinator
 
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.SENSOR, Platform.UPDATE]
 LOGGER = logging.getLogger(__name__)
 
 
 async def async_migrate_entry(hass, entry):
     """Upgrade durable site settings additively, without touching price history."""
-    if entry.version > 2:
+    if entry.version > 3:
         LOGGER.error("Cannot load a newer Price Engine entry with this integration version")
         return False
-    if entry.version == 1:
+    if entry.version in (1, 2):
         try:
             data = validate_site(dict(entry.data))
             options = validate_site({**data, **entry.options}) if entry.options else {}
         except ValueError, KeyError, TypeError:
             LOGGER.error("Legacy Price Engine entry requires configuration repair")
             return False
-        hass.config_entries.async_update_entry(entry, data=data, options=options, version=2)
+        hass.config_entries.async_update_entry(entry, data=data, options=options, version=3)
     return True
 
 
 async def async_setup_entry(hass, entry):
     try:
         coordinator = PriceCoordinator(hass, entry)
+        coordinator.integration_version = str((await async_get_integration(hass, DOMAIN)).version)
     except (ValueError, KeyError, TypeError) as err:
         raise ConfigEntryError("Invalid site configuration; reconfigure this entry") from err
     entry.async_on_unload(coordinator.stop)
@@ -52,6 +54,12 @@ async def async_setup_entry(hass, entry):
 
 
 async def async_update_options(hass, entry):
+    from .configuration import settings
+
+    name = settings(entry).get("name", entry.title)
+    if entry.title != name:
+        hass.config_entries.async_update_entry(entry, title=name)
+        return  # The metadata notification invokes this listener once more.
     await hass.config_entries.async_reload(entry.entry_id)
 
 

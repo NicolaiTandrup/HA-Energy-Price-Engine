@@ -9,7 +9,6 @@ from homeassistant.core import SupportsResponse
 from homeassistant.helpers import selector
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.ha_energy_price_engine.const import DOMAIN
 from custom_components.ha_energy_price_engine.sensor import (
     DayStatisticSensor,
     NextPriceSensor,
@@ -20,6 +19,7 @@ from custom_components.ha_energy_price_engine.status import slot_breakdown, sour
 
 from .test_integration import model, price_service, setup  # noqa: F401
 from .test_price_engine import rows
+from .wizard_helpers import options_advanced, source_page
 
 
 @pytest.mark.usefixtures("price_service")
@@ -34,7 +34,7 @@ async def test_opaque_entry_selection_replacement_and_readable_status(hass, free
     )
     first.add_to_hass(hass)
     assert (await async_source_defaults(hass))["nordpool_entry"] == first.entry_id
-    form = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    form = await source_page(hass)
     field = next(v for k, v in form["data_schema"].schema.items() if str(k) == "nordpool_entry")
     assert isinstance(field, selector.ConfigEntrySelector)
     assert (
@@ -54,13 +54,17 @@ async def test_opaque_entry_selection_replacement_and_readable_status(hass, free
     assert await async_source_defaults(hass) == {}
     options = await hass.config_entries.options.async_init(entry.entry_id)
     options = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"next_step_id": "site"}
+        options["flow_id"], {"name": "House", "source_type": "nordpool"}
     )
     options = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"name": "House", "nordpool_entry": second.entry_id}
+        options["flow_id"], {"nordpool_entry": second.entry_id}
+    )
+    options = await hass.config_entries.options.async_configure(
+        options["flow_id"],
+        {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25, "navigation": "review"},
     )
     saved = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"next_step_id": "save"}
+        options["flow_id"], {"next_step_id": "wizard_save"}
     )
     assert saved["type"] == "create_entry"
     await hass.async_block_till_done()
@@ -102,7 +106,7 @@ async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, 
         status = source_status(c)
         assert status["resolution_minutes"] == 15 and status["currency"] == "DKK"
         assert status["next_scheduled_update"].endswith("23:59:00+02:00")
-        options = await hass.config_entries.options.async_init(entry.entry_id)
+        options = await options_advanced(hass, entry.entry_id)
         result = await hass.config_entries.options.async_configure(
             options["flow_id"], {"next_step_id": "breakdown"}
         )
@@ -111,15 +115,18 @@ async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, 
             result["flow_id"], {"slot": instant.isoformat()}
         )
         text = result["description_placeholders"]["slot_breakdown"]
-        assert "supplier:" in text and "Stored final:" in text and "electricity_tax:" in text
-        assert "revision:" in text and "input unit: DKK/MWh" in text
-        assert "original verification:" in text and "Fictional test supplier" in text
+        facts = __import__("json").loads(text.removeprefix("```json\n").removesuffix("\n```"))
+        assert "supplier" in facts["components"]["components"]
+        assert "electricity_tax" in facts["components"]["components"]
+        assert facts["canonical_unit"] == "DKK/kWh" and facts["source"]["input_unit"] == "DKK/MWh"
+        assert facts["revision"] >= 1 and facts["source"]["verified_at"]
+        assert "Fictional test supplier" in text
         hass.config_entries.options.async_abort(result["flow_id"])
         c.schedule.days["home"]["2026-10-23"]["status"] = "INCOMPLETE"
         assert DayStatisticSensor(c, "minimum").native_value is None
         c.schedule.days["home"]["2026-10-24"]["status"] = "STALE"
         assert TomorrowSensor(c).native_value == "STALE"
-        assert "No stored price" in slot_breakdown(c, datetime(2026, 10, 28, tzinfo=UTC))
+        assert '"records": 0' in slot_breakdown(c, datetime(2026, 10, 28, tzinfo=UTC))
     assert await hass.config_entries.async_unload(entry.entry_id)
 
 

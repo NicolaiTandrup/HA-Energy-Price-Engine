@@ -1,6 +1,7 @@
 """Source refresh/composition boundary, separate from all lookup consumers."""
 
 from asyncio import Lock
+from datetime import timedelta
 from zoneinfo import ZoneInfo
 
 from homeassistant.exceptions import HomeAssistantError
@@ -21,6 +22,7 @@ class PriceUpdater:
         self.official = OfficialPrices(hass)
         self.tariffs = TariffSource(hass, engine.entry_id)
         self.status = {}
+        self.raw_reports, self.raw_slots = {}, {}
         self.lock = Lock()
         self.on_change = on_change
 
@@ -40,21 +42,27 @@ class PriceUpdater:
     async def refresh(self, site, now, *, force=False, dates=None):
         async with self.lock:
             key = site["id"]
+            cutoff = str(now.astimezone(ZoneInfo(site["timezone"])).date() - timedelta(days=1))
+            self.raw_slots = {day: rows for day, rows in self.raw_slots.items() if day >= cutoff}
+            self.raw_reports = {
+                day: report for day, report in self.raw_reports.items() if day >= cutoff
+            }
             old = self.status.get(key, {})
             report = {
-                **old,
+                "last_success": old.get("last_success"),
+                "missing_components": [],
+                "failure_stage": None,
+                "required_action": None,
+                "affected_period": None,
+                "reason": None,
                 "last_attempt": now.isoformat(),
                 "status": "ERROR",
                 "source_slots": None,
             }
             self.status[key] = report
+            stage = "source"
             try:
                 tariff = tariff_for(site) if "vat" in site else dict(site.get("tariff", {}))
-                if site.get("grid_tariff_entity"):
-                    state = self.state(
-                        site["grid_tariff_entity"], now, site.get("stale_minutes", 40)
-                    )
-                    tariff["grid_slots"] = parse_prices(dict(state.attributes), "slots")
                 if site.get("nordpool_entry"):
                     slots = await self.official.get(
                         site, now, compose=False, force=force, dates=dates
@@ -102,6 +110,34 @@ class PriceUpdater:
                     )
                     source["verified_at"] = verified.isoformat()
                     source["input_unit"] = site.get("price_unit", "explicit_multiplier")
+                # Source publication precedes *all* component/grid/storage work.
+                days = dates or [
+                    now.astimezone(ZoneInfo(site["timezone"])).date() + timedelta(days=n)
+                    for n in (0, 1)
+                ]
+                for day in days:
+                    start, end = day_bounds(day, site["timezone"])
+                    selected = tuple(s for s in slots if start <= s.start and s.end <= end)
+                    expected = int((end - start).total_seconds() / 900)
+                    fresh = not (
+                        site.get("nordpool_entry") and str(day) in self.official.last_errors
+                    )
+                    self.raw_slots[str(day)] = selected
+                    self.raw_reports[str(day)] = {
+                        "status": "STALE"
+                        if not fresh
+                        else "READY"
+                        if len(selected) == expected
+                        else "INCOMPLETE",
+                        "valid_slots": len(selected),
+                        "expected_slots": expected,
+                        "verified_at": source["verified_at"],
+                        "last_attempt": now.isoformat(),
+                        "price_basis": site.get("price_basis", "spot_ex_vat"),
+                        "reason": None
+                        if fresh
+                        else "Nord Pool refresh failed; cached raw source retained",
+                    }
                 if dates:
                     verified_slots = []
                     for day in dates:
@@ -118,6 +154,8 @@ class PriceUpdater:
                             report.update(
                                 status="INCOMPLETE",
                                 reason="Requested day source series is incomplete",
+                                failure_stage="source",
+                                required_action="Check raw source coverage; verify the selected Nord Pool area and wait for publication or recheck the source.",
                                 changed=False,
                             )
                             return False
@@ -125,6 +163,13 @@ class PriceUpdater:
                     if site.get("nordpool_entry") and len(verified_slots) != len(slots):
                         raise ValueError("Source returned intervals outside the requested dates")
                     slots = verified_slots
+                stage = "configuration"
+                if site.get("grid_tariff_entity"):
+                    stage = "grid"
+                    state = self.state(
+                        site["grid_tariff_entity"], now, site.get("stale_minutes", 40)
+                    )
+                    tariff["grid_slots"] = parse_prices(dict(state.attributes), "slots")
                 locked_dso = all(
                     any(
                         r["id"] == "dso"
@@ -147,6 +192,7 @@ class PriceUpdater:
                         raise ValueError(
                             "Automatic DSO requires spot basis without duplicate grid additions"
                         )
+                    stage = "grid"
                     try:
                         tariff["grid_slots"], source["dso"] = await self.tariffs.get(
                             site, slots[0].start, slots[-1].end, now
@@ -171,6 +217,8 @@ class PriceUpdater:
                         annual_usage_kwh=site.get("annual_usage_kwh", 0),
                         usage_year=site.get("usage_year"),
                     )
+                stage = "composition"
+                report["grid_status"] = "STALE" if source.get("dso", {}).get("warning") else "READY"
                 before = {r.start: r.final_price_incl_vat for r in self.engine.records.get(key, ())}
                 changed = await self.engine.async_update(key, slots, tariff, source, now)
                 affected = tuple(
@@ -187,15 +235,26 @@ class PriceUpdater:
                     else "INCOMPLETE",
                     last_success=source["verified_at"],
                     reason=None,
+                    failure_stage=None,
+                    missing_components=[],
+                    required_action=None,
+                    affected_period=None,
                     changed=changed,
                 )
                 if site.get("nordpool_entry") and self.official.last_errors:
                     report.update(
                         status="STALE",
                         reason="Nord Pool refresh failed; retained verified intervals",
+                        failure_stage="source",
+                        required_action="Check official Nord Pool availability and recheck. Retained raw intervals have their original verification timestamp; final prices are not READY.",
                     )
                 if source.get("dso", {}).get("warning"):
-                    report.update(status="STALE", reason=source["dso"]["warning"])
+                    report.update(
+                        status="STALE",
+                        reason=source["dso"]["warning"],
+                        failure_stage="grid",
+                        required_action="Recheck Radius/grid coverage and cache age, or configure verified dated manual tariffs. Cached/fallback prices are not certified READY.",
+                    )
                 return changed
             except (
                 ValueError,
@@ -205,5 +264,41 @@ class PriceUpdater:
                 HomeAssistantError,
                 TimeoutError,
             ) as err:
-                report.update(reason=str(err), changed=False)
+                period = ", ".join(map(str, dates)) if dates else "current/next delivery day"
+                stage = (
+                    "configuration"
+                    if getattr(err, "components", None)
+                    else "storage"
+                    if isinstance(err, OSError) and stage == "composition"
+                    else stage
+                )
+                if stage == "source":
+                    for day in dates or [now.astimezone(ZoneInfo(site["timezone"])).date()]:
+                        self.raw_reports[str(day)] = {
+                            "status": "ERROR",
+                            "valid_slots": 0,
+                            "expected_slots": int(
+                                (
+                                    day_bounds(day, site["timezone"])[1]
+                                    - day_bounds(day, site["timezone"])[0]
+                                ).total_seconds()
+                                / 900
+                            ),
+                            "reason": str(err),
+                            "last_attempt": now.isoformat(),
+                        }
+                        self.raw_slots.pop(str(day), None)
+                report.update(
+                    status="INCOMPLETE" if stage == "configuration" else "ERROR",
+                    reason=str(err),
+                    failure_stage=stage,
+                    changed=False,
+                    affected_period=getattr(err, "period", period),
+                    missing_components=getattr(err, "components", []),
+                    required_action=getattr(
+                        err,
+                        "action",
+                        "Check the selected source and its availability, units and verification timestamp, then Configure → guided setup and Save & verify. Retained prices are not certified READY.",
+                    ),
+                )
                 return False  # Keep the last durable verified prices, never invent zeros.
