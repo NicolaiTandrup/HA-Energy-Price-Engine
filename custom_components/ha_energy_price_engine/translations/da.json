@@ -396,7 +396,7 @@
       },
       "setup_supplier": {
         "title": "3 / 5 · Elleverandør",
-        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.",
+        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
         "data": {
           "product": "Elleverandør og aftale"
         },
@@ -526,7 +526,7 @@
       },
       "setup_review": {
         "title": "5 / 5 · Dine elpriser",
-        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Alle beløb er inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er øre/kWh inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -1345,7 +1345,7 @@
       },
       "setup_supplier": {
         "title": "3 / 5 · Elleverandør",
-        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.",
+        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
         "data": {
           "product": "Elleverandør og aftale"
         },
@@ -1475,7 +1475,7 @@
       },
       "setup_review": {
         "title": "5 / 5 · Dine elpriser",
-        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Alle beløb er inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er øre/kWh inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -1995,7 +1995,9 @@
         "monthly_label": "Abonnement",
         "subscription_excluded": "Ikke med i kWh-prisen",
         "unit_incl_vat": "øre/kWh inkl. moms",
-        "unit_ex_vat": "øre/kWh ekskl. moms"
+        "unit_ex_vat": "øre/kWh ekskl. moms",
+        "until_changed": "indtil ændret",
+        "offers_unavailable": "Aktuelle EWII-tilbud kunne ikke verificeres. Indtast tillægget fra din egen aftale."
       }
     },
     "contract_mode": {

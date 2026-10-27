@@ -325,11 +325,23 @@ class PricingProblemSensor(BaseSensor):
         self._attr_unique_id = f"{self.site['id']}_pricing_problem"
 
     @property
-    def native_value(self):
+    def report(self):
+        from zoneinfo import ZoneInfo
+
         activation = dt_util.parse_datetime(self.site.get("pricing_start", ""))
         if activation and activation > dt_util.utcnow():
+            day = str(activation.astimezone(ZoneInfo(self.site["timezone"])).date())
+            return self.coordinator.schedule.days.get(self.site["id"], {}).get(
+                day, self.coordinator.data or {}
+            )
+        return self.coordinator.data or {}
+
+    @property
+    def native_value(self):
+        activation = dt_util.parse_datetime(self.site.get("pricing_start", ""))
+        report = self.report
+        if activation and activation > dt_util.utcnow() and report.get("status") == "READY":
             return "activation"
-        report = self.coordinator.data or {}
         missing = report.get("missing_components", [])
         return next(
             (
@@ -342,7 +354,7 @@ class PricingProblemSensor(BaseSensor):
 
     @property
     def extra_state_attributes(self):
-        report = self.coordinator.data or {}
+        report = self.report
         return {
             "prices_start_at": self.site.get("pricing_start"),
             **{

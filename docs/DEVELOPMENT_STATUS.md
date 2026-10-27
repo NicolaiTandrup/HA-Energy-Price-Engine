@@ -809,3 +809,24 @@ and the exact Brain, Energy Price Broker and Charger Optimizer flow/config backu
 Next: complete the authorized merge/prerelease/public verification sequence above.
 Preserve exact tag/commit/asset provenance and existing branch history. No stable
 release, CM publication, production HA/Node-RED changes or live controls.
+
+## Beta.5 diagnostic and release-validation checkpoint
+
+Checkpoint subject: **fix: show missing components before future activation guidance**.
+Known prior commit d8e54e2; all10 push/PR checks green there. Future activation now
+reports missing supplier/components first, including next-day activation at midnight.
+Only a verified activation range shows the wait-for-quarter guidance. Native details
+say until changed instead of the internal9999 sentinel; national details are scoped
+to national/VAT rows, and unavailable public-offer discovery is explicit.
+
+Final local producer suites **234 passed per core** (2026.10.3/.4), **88%** coverage,
+zero skips, two pinned upstream HACS deprecation warnings. Focused diagnostic12
+passed; ruff check/format passed. Real native DA public EWII Plus and EN custom
+journeys save accepted pages, close/resume tax and show verified expected prices.
+EN mobile missing supplier and approved provisional case passed, width390 with no
+horizontal overflow or frontend errors. No draft-final-save needed. Restart/deletion
+and final captures are in progress. Public setup/HACS/acceptance docs updated to
+five saved stages; software/owner acceptance boxes intentionally pending final gates.
+No beta.5 tag/release yet. Next: finish evidence, unchanged consumer matrix, package
+and metadata gates, commit clean source, exact-source CI, immutable authorized
+prerelease, independent public validation, final handoff and stop.

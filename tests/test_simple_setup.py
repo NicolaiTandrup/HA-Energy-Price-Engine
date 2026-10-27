@@ -49,6 +49,9 @@ async def test_new_site_saves_every_step_and_reopens_without_final_commit(hass, 
         fid, {"amount": 20, "vat_included": False, "confirm": True}
     )
     assert r["step_id"] == "setup_supplier"
+    from custom_components.ha_energy_price_engine.sensor import PricingProblemSensor
+
+    assert PricingProblemSensor(site.runtime_data).native_value == "supplier"
     assert site.options["dated_components"][0]["id"] == "dso"
     r = await hass.config_entries.options.async_configure(fid, {"product": "custom"})
     assert r["step_id"] == "setup_contract"

@@ -396,7 +396,7 @@
       },
       "setup_supplier": {
         "title": "3 / 5 · Electricity supplier",
-        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.",
+        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
         "data": {
           "product": "Supplier agreement"
         },
@@ -526,7 +526,7 @@
       },
       "setup_review": {
         "title": "5 / 5 · Your prices",
-        "description": "**{name}** · Settings saved. Tap to edit. All amounts include VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Settings saved. Tap to edit. Prices are øre/kWh including VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Save and continue",
         "menu_options": {
@@ -1345,7 +1345,7 @@
       },
       "setup_supplier": {
         "title": "3 / 5 · Electricity supplier",
-        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.",
+        "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
         "data": {
           "product": "Supplier agreement"
         },
@@ -1475,7 +1475,7 @@
       },
       "setup_review": {
         "title": "5 / 5 · Your prices",
-        "description": "**{name}** · Settings saved. Tap to edit. All amounts include VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Settings saved. Tap to edit. Prices are øre/kWh including VAT.\n\n{coverage}\n\n{start}\n\n{operation}",
         "data": {},
         "submit": "Save and continue",
         "menu_options": {
@@ -1995,7 +1995,9 @@
         "monthly_label": "Monthly subscription",
         "subscription_excluded": "Excluded from per-kWh prices",
         "unit_incl_vat": "øre/kWh including VAT",
-        "unit_ex_vat": "øre/kWh excluding VAT"
+        "unit_ex_vat": "øre/kWh excluding VAT",
+        "until_changed": "until changed",
+        "offers_unavailable": "Current EWII offers could not be verified. Enter the markup from your own agreement."
       }
     },
     "contract_mode": {

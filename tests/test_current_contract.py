@@ -122,3 +122,28 @@ def test_current_terms_retain_future_dated_and_hourly_overrides():
             PriceSlot(start, start + timedelta(minutes=15), -0.1), tariff_for(current)
         )
         assert components["components"]["supplier"]["ex_vat"] == pytest.approx(expected / 100)
+
+
+@pytest.mark.parametrize("missing_supplier", [False, True])
+@pytest.mark.usefixtures("price_service")
+async def test_midnight_activation_reports_actual_next_day_problem(hass, freezer, missing_supplier):
+    from custom_components.ha_energy_price_engine.sensor import PricingProblemSensor
+
+    freezer.move_to("2026-10-27T22:59:07Z")
+    data = current_contract(
+        model(),
+        11.1,
+        False,
+        None,
+        False,
+        datetime(2026, 10, 27, 22, 59, 7, tzinfo=UTC),
+        source="Confirmed synthetic current terms",
+    )
+    if missing_supplier:
+        data["dated_components"] = [r for r in data["dated_components"] if r["id"] != "supplier"]
+    entry = await setup(hass, data)
+    assert PricingProblemSensor(entry.runtime_data).native_value == (
+        "supplier" if missing_supplier else "activation"
+    )
+    assert not entry.runtime_data.price_engine.lookup("home", *day_bounds(date(2026, 10, 27)))
+    assert await hass.config_entries.async_unload(entry.entry_id)

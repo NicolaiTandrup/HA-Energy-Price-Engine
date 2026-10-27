@@ -1,35 +1,31 @@
 # First setup
 
-Install the published beta using the exact [HACS procedure](HACS_DISTRIBUTION.md),
-restart HA and follow the [native wizard guide](WIZARD_GUIDE.md). Existing users
-configure their existing site; a separate Add integration creates another site.
-Back up before upgrading. The tested cores are 2026.10.3 and 2026.10.4; real hardware
-capacity and your bill remain acceptance checks.
+Install beta.5 using the [exact HACS procedure](HACS_DISTRIBUTION.md), restart HA,
+and follow the [illustrated native setup](WIZARD_GUIDE.md). Existing installations
+use Configure on their existing site. Back up first. Tested cores: 2026.10.3/.4;
+cloud validation does not establish Raspberry Pi performance.
 
-You need:
+You need your installed **official Nord Pool** entry, actual area/grid product and
+supplier agreement (markup, VAT convention and optional monthly subscription).
+Ordinary setup needs no dates. Public EWII suggestions require agreement confirmation;
+custom rates never assume a private contract. National defaults are bounded dated
+baselines, not an automatic promise of future rates or heating eligibility.
 
-- Your configured **official Home Assistant Nord Pool** entry and actual area.
-- Your actual grid product, e.g. Radius C if applicable.
-- Your electricity supplier's per-kWh markup, unit, VAT convention and effective
-  dates from a bill or contract. Supplier selection alone supplies no amount.
-- Verified national rates for periods outside the documented dated baselines.
+Five stages: site/source → grid → supplier → taxes → review. **Save and continue**
+applies each accepted page. Close/reopen Configure to resume the next stage. Review
+needs no final save. Click any component for correction; use Check prices for a
+fresh verification. Raw coverage and final readiness are separate.
 
-A fixed subscription is not a marginal kWh price. A missing supplier markup never
-becomes zero. If you cannot verify it yet, finish explicitly incomplete or approve
-a clearly labelled visualization estimate. Estimates are excluded from verified
-history and the authoritative API and must never control charging.
+A new current agreement starts at the next complete quarter, open-ended until
+changed. No earlier unknown price is filled and no settled row is rewritten.
+The first day can have only remaining-day final coverage; full-day consumer reads
+remain INCOMPLETE until full coverage exists. Missing values never become zero.
+Estimates require explicit approval, remain separate from ledger/API READY and
+must never control charging. Monthly subscriptions are excluded from marginal prices.
 
-One entry is one independently configurable site. Set a readable name and keep its
-stable ID when editing. Preferred display is øre/kWh; stored prices and existing
-canonical entities remain DKK/kWh including VAT. Official source input is fixed
-DKK/MWh excluding VAT, independent of display.
-
-Review compares Today/Tomorrow and links to missing components. Save & verify
-waits for normal runtime persistence and checks today's complete verified prices.
-A saved-incomplete form asks for corrections; it is not complete setup success.
-Raw prices remain observable separately. Tomorrow may not yet be published.
-
-After saving, inspect final status, raw coverage and a stored quarter breakdown,
-then restart and confirm history/revisions. Run the
-[acceptance checklist](BETA_ACCEPTANCE.md). Isolated simulations do not verify
-your credentials, invoice, provider availability or Raspberry Pi performance.
+One entry is one independently configurable site. Upgrading preserves IDs, mappings,
+entities, advanced dated rules, SQLite rows and revisions. Canonical stored/API prices
+remain DKK/kWh including VAT; ordinary review defaults to øre/kWh including VAT.
+Inspect a stored breakdown, restart, compare with your bill and complete the
+[owner acceptance checklist](BETA_ACCEPTANCE.md). Your credentials, providers,
+invoice and actual hardware are not certified by synthetic software tests.

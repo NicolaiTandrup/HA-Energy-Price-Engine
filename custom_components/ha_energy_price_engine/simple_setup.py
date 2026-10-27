@@ -310,6 +310,9 @@ class SimpleSetup(FlowTools):
     async def async_step_setup_supplier(self, user_input=None):
         if self.draft.get("price_basis") == "all_in":
             return await self._save_step(self.draft, "setup_tax", "supplier")
+        from .localization import review_labels
+
+        labels = await review_labels(self.hass)
         from .supplier_offers import get_offers
 
         self._offers = await get_offers(self.hass)
@@ -347,7 +350,7 @@ class SimpleSetup(FlowTools):
             },
             "3 / 5",
             user_input,
-            catalog="✓" if self._offers else "—",
+            availability="" if self._offers else labels.get("offers_unavailable", ""),
         )
 
     async def async_step_setup_contract(self, user_input=None):
@@ -524,7 +527,12 @@ class SimpleSetup(FlowTools):
     async def async_step_setup_tax_details(self, user_input=None):
         from .component_status import review
 
-        summary, _ = await review(self.hass, self._wizard_entry, details=True)
+        summary, _ = await review(
+            self.hass,
+            self._wizard_entry,
+            details=True,
+            only={"energinet_net", "energinet_system", "electricity_tax", "vat"},
+        )
         summary.pop("rows", None)
         return self.async_show_menu(
             step_id="setup_tax_details",

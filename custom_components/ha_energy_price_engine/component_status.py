@@ -189,7 +189,7 @@ def component_snapshot(hass, entry):
     }
 
 
-async def review(hass, entry, details=False):
+async def review(hass, entry, details=False, only=None):
     labels = await review_labels(hass)
     data = component_snapshot(hass, entry)
 
@@ -201,6 +201,8 @@ async def review(hass, entry, details=False):
     missing = []
     site = settings(entry)
     for key, row in data["components"].items():
+        if only and key not in only:
+            continue
         value = (
             "—"
             if row["display_value"] is None
@@ -239,8 +241,9 @@ async def review(hass, entry, details=False):
         elif source == "confirmed_vat":
             source_text = t("confirmed_vat_label")
         action = t("edit_" + key)
+        period = safe(row["effective_period"]).replace("9999-12-31", t("until_changed"))
         lines.append(
-            f"**{safe(name)}**: {value} {t('unit_incl_vat') if key != 'vat' else '%'} · {safe(status)}\n\n{safe(source_text) or '—'} · {safe(row['effective_period']) or '—'}\n\n{safe(t('fix_' + key)) if row['status'] != 'verified' else safe(action)}"
+            f"**{safe(name)}**: {value} {t('unit_incl_vat') if key != 'vat' else '%'} · {safe(status)}\n\n{safe(source_text) or '—'} · {period or '—'}\n\n{safe(t('fix_' + key)) if row['status'] != 'verified' else safe(action)}"
         )
         if row["status"] not in {"verified"}:
             target = {
@@ -253,7 +256,7 @@ async def review(hass, entry, details=False):
             }.get(key)
             if target:
                 missing.append(target)
-    for monthly in data["monthly_subscription"]:
+    for monthly in data["monthly_subscription"] if only is None else []:
         normalized = normalize_component(monthly)
         lines.append(
             f"**{t('monthly_label')}**: {normalized['incl_vat']:g} {t('monthly_unit')} · {t('subscription_excluded')}"
