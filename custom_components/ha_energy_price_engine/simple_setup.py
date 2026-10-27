@@ -49,6 +49,11 @@ class SimpleSetup(FlowTools):
         progress = await self._progress_store.async_load() or {}
         self._saved_step = progress.get("saved", "")
         target = progress.get("next", "setup_review")
+        if progress.get("flow_version") != 6 and target == "setup_contract":
+            # Beta.5's ordinary product-selection page led here. Resume the new
+            # simple markup page without inventing/accepting the selected offer.
+            # Beta.6 explicitly advanced offer flows retain their own continuation.
+            target = "setup_supplier"
         if target == "setup_tax":
             # Public national defaults need no redundant confirmation. Existing
             # accepted heating evidence/rules remain unchanged and editable.
@@ -97,7 +102,9 @@ class SimpleSetup(FlowTools):
             self.hass, self._wizard_entry, self.draft, reuse_sources=True
         )
         self._saved_step = saved
-        await self._progress_store.async_save({"next": next_step, "saved": saved})
+        await self._progress_store.async_save(
+            {"next": next_step, "saved": saved, "flow_version": 6}
+        )
         return await getattr(self, "async_step_" + next_step)()
 
     async def _simple_form(self, step, fields, progress, data=None, errors=None, **placeholders):
@@ -233,7 +240,9 @@ class SimpleSetup(FlowTools):
         self._initial = False
         self._progress_store = Store(self.hass, 1, f"{DOMAIN}.{self._wizard_entry.entry_id}.setup")
         self._saved_step = "site"
-        await self._progress_store.async_save({"next": "setup_grid", "saved": "site"})
+        await self._progress_store.async_save(
+            {"next": "setup_grid", "saved": "site", "flow_version": 6}
+        )
         # HA explicitly supports a FORM returned after entry creation. The entry
         # is already persisted/set up; subsequent pages operate on that same ID.
         return await self.async_step_setup_grid()
@@ -691,7 +700,7 @@ class SimpleSetup(FlowTools):
 
     async def async_step_setup_done(self, user_input=None):
         await self._progress_store.async_save(
-            {"next": "setup_review", "saved": getattr(self, "_saved_step", "")}
+            {"next": "setup_review", "saved": getattr(self, "_saved_step", ""), "flow_version": 6}
         )
         return self.async_abort(reason="settings_saved")
 

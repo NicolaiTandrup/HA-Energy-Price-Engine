@@ -318,7 +318,7 @@
         }
       },
       "setup_area": {
-        "title": "1 / 5 · Electricity area",
+        "title": "1 / 3 · Delivery area",
         "description": "{saved}\n\nThis source has several areas. Choose the area for this site.",
         "data": {
           "area": "Electricity area"
@@ -438,7 +438,7 @@
         "submit": "Save markup"
       },
       "setup_contract": {
-        "title": "3 / 5 · Confirm your rate",
+        "title": "Confirm optional supplier agreement",
         "description": "{saved}\n\n{quote}\n\nApplies from the next full quarter until changed. Monthly fees stay outside per-kWh prices.",
         "data": {
           "amount": "Supplier markup above spot price (øre/kWh)",
@@ -481,7 +481,7 @@
         }
       },
       "setup_tax": {
-        "title": "4 / 5 · National charges",
+        "title": "Registered electric heating",
         "description": "{saved}\n\nDated Danish network/system charges and electricity tax are included where verified. Heating eligibility is optional.",
         "data": {
           "heating": "Review verified electric-heating registration"
@@ -516,7 +516,7 @@
         }
       },
       "setup_heating": {
-        "title": "4 / 5 · Heating eligibility",
+        "title": "Confirm heating eligibility evidence",
         "description": "{saved}\n\nUse verified registration and measured usage. This does not invent a discounted tax rate.",
         "data": {
           "year": "Verified usage year",
@@ -652,7 +652,7 @@
         }
       },
       "setup_display": {
-        "title": "Display preference",
+        "title": "Display unit",
         "description": "{saved}\n\nExisting history and consumer API remain in DKK/kWh.",
         "data": {
           "display_unit": "Preferred display unit"
@@ -892,7 +892,7 @@
         }
       },
       "setup_offers": {
-        "title": "3 / 5 · Electricity supplier",
+        "title": "Optional public supplier offers",
         "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
         "data": {
           "product": "Supplier agreement"
@@ -1410,7 +1410,7 @@
         }
       },
       "setup_area": {
-        "title": "1 / 5 · Electricity area",
+        "title": "1 / 3 · Delivery area",
         "description": "{saved}\n\nThis source has several areas. Choose the area for this site.",
         "data": {
           "area": "Electricity area"
@@ -1530,7 +1530,7 @@
         "submit": "Save markup"
       },
       "setup_contract": {
-        "title": "3 / 5 · Confirm your rate",
+        "title": "Confirm optional supplier agreement",
         "description": "{saved}\n\n{quote}\n\nApplies from the next full quarter until changed. Monthly fees stay outside per-kWh prices.",
         "data": {
           "amount": "Supplier markup above spot price (øre/kWh)",
@@ -1573,7 +1573,7 @@
         }
       },
       "setup_tax": {
-        "title": "4 / 5 · National charges",
+        "title": "Registered electric heating",
         "description": "{saved}\n\nDated Danish network/system charges and electricity tax are included where verified. Heating eligibility is optional.",
         "data": {
           "heating": "Review verified electric-heating registration"
@@ -1608,7 +1608,7 @@
         }
       },
       "setup_heating": {
-        "title": "4 / 5 · Heating eligibility",
+        "title": "Confirm heating eligibility evidence",
         "description": "{saved}\n\nUse verified registration and measured usage. This does not invent a discounted tax rate.",
         "data": {
           "year": "Verified usage year",
@@ -1744,7 +1744,7 @@
         }
       },
       "setup_display": {
-        "title": "Display preference",
+        "title": "Display unit",
         "description": "{saved}\n\nExisting history and consumer API remain in DKK/kWh.",
         "data": {
           "display_unit": "Preferred display unit"
@@ -1924,7 +1924,7 @@
         }
       },
       "setup_offers": {
-        "title": "3 / 5 · Electricity supplier",
+        "title": "Optional public supplier offers",
         "description": "{saved}\n\nChoose your actual agreement. Public offers are suggestions, not account information.\n\n{availability}",
         "data": {
           "product": "Supplier agreement"

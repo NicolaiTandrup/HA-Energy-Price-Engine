@@ -318,7 +318,7 @@
         }
       },
       "setup_area": {
-        "title": "1 / 5 · Elområde",
+        "title": "1 / 3 · Prisområde",
         "description": "{saved}\n\nKilden har flere områder. Vælg området for dette sted.",
         "data": {
           "area": "Elområde"
@@ -438,7 +438,7 @@
         "submit": "Gem tillæg"
       },
       "setup_contract": {
-        "title": "3 / 5 · Bekræft din sats",
+        "title": "Bekræft valgfri leverandøraftale",
         "description": "{saved}\n\n{quote}\n\nGælder fra næste hele kvarter, indtil den ændres. Abonnement holdes adskilt fra kWh-priser.",
         "data": {
           "amount": "Leverandørtillæg oven i spotprisen (øre/kWh)",
@@ -481,7 +481,7 @@
         }
       },
       "setup_tax": {
-        "title": "4 / 5 · Afgifter og Energinet",
+        "title": "Registreret elvarme",
         "description": "{saved}\n\nDanske net-/systemtariffer og elafgift medtages i verificerede perioder. Opvarmningsberettigelse er valgfri.",
         "data": {
           "heating": "Gennemgå verificeret registrering af elvarme"
@@ -516,7 +516,7 @@
         }
       },
       "setup_heating": {
-        "title": "4 / 5 · Elvarme",
+        "title": "Bekræft dokumenteret elvarme",
         "description": "{saved}\n\nBrug verificeret registrering og målt forbrug. Dette opfinder ikke en nedsat afgift.",
         "data": {
           "year": "Verificeret forbrugsår",
@@ -892,7 +892,7 @@
         }
       },
       "setup_offers": {
-        "title": "3 / 5 · Elleverandør",
+        "title": "Valgfrie offentlige leverandøraftaler",
         "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
         "data": {
           "product": "Elleverandør og aftale"
@@ -1410,7 +1410,7 @@
         }
       },
       "setup_area": {
-        "title": "1 / 5 · Elområde",
+        "title": "1 / 3 · Prisområde",
         "description": "{saved}\n\nKilden har flere områder. Vælg området for dette sted.",
         "data": {
           "area": "Elområde"
@@ -1530,7 +1530,7 @@
         "submit": "Gem tillæg"
       },
       "setup_contract": {
-        "title": "3 / 5 · Bekræft din sats",
+        "title": "Bekræft valgfri leverandøraftale",
         "description": "{saved}\n\n{quote}\n\nGælder fra næste hele kvarter, indtil den ændres. Abonnement holdes adskilt fra kWh-priser.",
         "data": {
           "amount": "Leverandørtillæg oven i spotprisen (øre/kWh)",
@@ -1573,7 +1573,7 @@
         }
       },
       "setup_tax": {
-        "title": "4 / 5 · Afgifter og Energinet",
+        "title": "Registreret elvarme",
         "description": "{saved}\n\nDanske net-/systemtariffer og elafgift medtages i verificerede perioder. Opvarmningsberettigelse er valgfri.",
         "data": {
           "heating": "Gennemgå verificeret registrering af elvarme"
@@ -1608,7 +1608,7 @@
         }
       },
       "setup_heating": {
-        "title": "4 / 5 · Elvarme",
+        "title": "Bekræft dokumenteret elvarme",
         "description": "{saved}\n\nBrug verificeret registrering og målt forbrug. Dette opfinder ikke en nedsat afgift.",
         "data": {
           "year": "Verificeret forbrugsår",
@@ -1924,7 +1924,7 @@
         }
       },
       "setup_offers": {
-        "title": "3 / 5 · Elleverandør",
+        "title": "Valgfrie offentlige leverandøraftaler",
         "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.\n\n{availability}",
         "data": {
           "product": "Elleverandør og aftale"

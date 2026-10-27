@@ -1128,3 +1128,35 @@ sources say user-approved estimate rather than confirmed agreement. Focused nati
 canonical/decimal/old-flow gate rerun before this checkpoint; final full matrix after
 these last UI refinements is still required. Native DA/compatibility/restart/reset
 and final artifact/docs/publication gates remain pending. No beta.6 tag/release yet.
+
+## Beta.6 interrupted-beta.5 continuation compatibility
+
+Checkpoint subject: **fix: resume interrupted beta.5 sites with simple markup**.
+Known prior30736f0: final both-core producer **276 passed/core,88%,zero skips**, two
+upstream HACS warnings. Runtime financial/translation focused39 passed. New native
+EN/en-GB first-run and DA desktop/mobile paths pass, including saved decimal-comma
+0,25/VAT prefill, actual current/future canonical components and named menu payloads.
+
+Native compatibility fixture intentionally supplied old draft_status descriptions
+and missing menu translations in temporary QA copies. Config and Options paths
+rendered descriptions and three named rows with0frontend errors/warnings. The first
+CSS row-count harness targeted the wrong shadow container; corrected verification
+checks actual menu JSON dictionaries plus every expected visible label. Exact tracked
+runtime/translations restored afterward. This is a test fixture, never shipped.
+
+Actual older interrupted beta.5 contract progress must not reopen invoice-style
+controls after upgrade. Store continuations now carry flow_version6; old ordinary
+setup_contract resumes the two-field markup page, keeping identity/config/history
+and the old offer selection without accepting its private terms. Explicit beta.6
+Advanced quote flows still resume their intended confirmation. Optional advanced
+forms have descriptive titles without obsolete five-stage counters. Focused actual
+beta.5 continuation/current old-flow gate **20 passed**. Full matrix must repeat for
+this compatibility change; source/ledger/API arithmetic are unchanged.
+
+SQLite cloud repeat35136rows/18239488bytes: append96=.02875s,reload1.066s,
+lookup5.288us,peak243580KiB. Not Raspberry Pi evidence. Public beta.6 guides are being
+rewritten locally and are not included in this runtime checkpoint until screenshots/
+receipt and final document checks are complete. No beta.6 tag or release yet.
+Next: final copied runtime existing-site/DA missing/provisional/source/restart/reset
+frontend checks; docs/evidence, complete exact-source gates and authorized immutable
+prerelease/public verification, permanent stop handoff. No stable/main/production.

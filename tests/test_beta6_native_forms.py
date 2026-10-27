@@ -125,3 +125,42 @@ async def test_all_advanced_paths_have_labels_and_complete_formatjs_context(
     ]
     assert await hass.config_entries.async_unload(entry.entry_id)
     np.mock_state(hass, ConfigEntryState.NOT_LOADED)
+
+
+@pytest.mark.usefixtures("price_service")
+async def test_interrupted_beta5_product_step_resumes_simple_markup_without_accepting_offer(
+    hass, freezer
+):
+    from datetime import UTC, datetime
+
+    from homeassistant.helpers.storage import Store
+
+    from custom_components.ha_energy_price_engine.api import get_api
+
+    freezer.move_to("2026-10-27T12:07:00Z")
+    data = model()
+    data["dated_components"] = [r for r in data["dated_components"] if r["id"] != "supplier"]
+    data["supplier_selection"] = "ewii_plus"
+    entry = await setup(hass, data)
+    accepted = deepcopy(dict(entry.data))
+    await Store(hass, 1, f"{DOMAIN}.{entry.entry_id}.setup").async_save(
+        {"next": "setup_contract", "saved": "supplier_selection"}
+    )
+    r = await hass.config_entries.options.async_init(entry.entry_id)
+    assert r["step_id"] == "setup_supplier"
+    assert {str(k) for k in r["data_schema"].schema} == {"amount", "vat_included"}
+    assert dict(entry.data) == accepted and not entry.options
+    assert not any(r["id"] == "supplier" for r in entry.data["dated_components"])
+    r = await hass.config_entries.options.async_configure(
+        r["flow_id"], {"amount": "0,5", "vat_included": False}
+    )
+    assert r["step_id"] == "setup_review"
+    report = get_api(hass).lookup(
+        "home",
+        datetime(2026, 10, 27, 12, 15, tzinfo=UTC),
+        datetime(2026, 10, 27, 12, 30, tzinfo=UTC),
+    )
+    assert str(report.status) == "READY"
+    progress = await Store(hass, 1, f"{DOMAIN}.{entry.entry_id}.setup").async_load()
+    assert progress["flow_version"] == 6
+    assert await hass.config_entries.async_unload(entry.entry_id)
