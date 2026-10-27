@@ -40,3 +40,10 @@ Beta.4 repeat (same cloud host class): 35,136 synthetic rows, 18,239,488 bytes,
 244,264 KiB. [Raw receipt](benchmarks/beta4-sqlite-1year.json). Transactional touched-row
 writes and original historical revisions are retained. These cloud results do not
 establish Raspberry Pi performance; measure append/recovery on the target hardware.
+
+Beta.5 repeat during concurrent cloud validation: 35,136 rows, 18,239,488 bytes;
+96-row append 0.0457s, reload 2.240s, lookup mean 10.06µs; process peak 243,448KiB.
+[Raw receipt](benchmarks/beta5-sqlite-1year.json). The original touched-row SQLite
+implementation is retained. Load/concurrency affect timings; these remain cloud
+measurements and do not establish Raspberry Pi performance. Recovery, revision,
+migration and multi-site failure/isolation tests run in both supported core suites.

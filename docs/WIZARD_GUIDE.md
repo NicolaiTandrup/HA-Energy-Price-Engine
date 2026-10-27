@@ -72,7 +72,7 @@ are tracked separately and excluded from marginal kWh scheduling prices.
 
 Raw spot sensors/source coverage remain independent of final prices. Diagnostics
 identify the missing component, affected period and settings action. For a stored
-quarter use Diagnostics → Advanced → Storage / site tools → Inspect stored quarter;
+quarter use Diagnostics → Advanced → Storage / site management → Inspect stored quarter;
 this exposes canonical components, VAT, provenance and revisions. Downloadable
 diagnostics redact private free-form source text. Negative spot prices remain
 negative before additions; DST days require 92/96/100 quarters. Mandatory refreshes
@@ -84,7 +84,7 @@ require valid public components. Never use them for charging control.
 
 ## Remove or reset one site
 
-Diagnostics → Advanced → Storage / site tools → **Remove / delete this site** lists
+Diagnostics → Advanced → Storage / site management → **Remove / delete this site** lists
 only the selected site's owned paths. Ordinary HA removal or **Remove with archive**
 retains identified history and records `.storage/ha_energy_price_engine.archives`.
 It is not silently attached to a new same-name site.
@@ -101,7 +101,7 @@ If HACS shows a commit hash, see the [beta-channel repair](HACS_DISTRIBUTION.md)
 
 These are real disposable HA 2026.10.4/frontend 20260930.5 screens with synthetic
 Nord Pool/Radius boundaries and fictional private rates. They are software evidence;
-your PAHA02-DEV acceptance remains separate. Only unrelated decorative brands were
+your development HA acceptance remains separate. Only unrelated decorative brands were
 mocked; PE's local native brand route was served normally.
 
 | Journey | Evidence |

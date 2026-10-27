@@ -1,0 +1,1584 @@
+{
+  "schema": 1,
+  "synthetic": true,
+  "owner_acceptance": false,
+  "verified_at": "2026-10-27T18:15:29.432726+00:00",
+  "ha_core": "2026.10.4",
+  "frontend": "20260930.5",
+  "provider_boundaries": "Disposable HA only: synthetic official Nord Pool read-only action 100 DKK/MWh ex VAT, Radius .200 DKK/kWh ex VAT, fictional custom supplier11.1ore ex VAT or approved estimate12.4ore incl VAT; official public EWII quote with explicitly fictional customer confirmation incl VAT; documented national baselines. No owner HA, credentials, CM or equipment accessed.",
+  "browser": "Playwright/system Chromium; Browser plugin unavailable. Only unrelated decorative brands mocked, PE served by native local brand route. System ffmpeg for requested webm recording.",
+  "frontend_cases": {
+    "en_custom_first_run": true,
+    "en_missing_supplier_correction": true,
+    "en_approved_provisional": true,
+    "da_named_ewii_plus_confirmation": true,
+    "save_each_step_and_close_resume_tax": true,
+    "final_review_requires_no_commit": true,
+    "direct_edit_returns_review": true,
+    "grid_source_outage_and_recovery": true,
+    "explicit_check_prices": true,
+    "native_desktop": [
+      1440,
+      1000
+    ],
+    "native_mobile": [
+      390,
+      844
+    ],
+    "mobile_document_width": 390,
+    "per_user_languages": [
+      "en",
+      "da"
+    ],
+    "system_language": "en",
+    "console_errors": [],
+    "custom_current_rate_prefill_and_close_without_unsubmitted_confirmation": true
+  },
+  "expected_final_dkk_per_kwh": {
+    "custom_11_1ore_ex_vat": 0.6675,
+    "ewii_plus_6_5ore_assumed_confirmed_incl_vat": 0.59375,
+    "estimate_12_4ore_incl_vat": 0.65275
+  },
+  "restart": {
+    "same_entries": 9,
+    "settings_unchanged": true,
+    "ledgers": {
+      "01M5YVE80CEV1R71HAHVE97RTJ": {
+        "before_rows": 192,
+        "after_rows": 192,
+        "settled_rows_unchanged": 77
+      },
+      "01M5YVQBC1X7JXWW8TS9X509VA": {
+        "before_rows": 192,
+        "after_rows": 192,
+        "settled_rows_unchanged": 77
+      },
+      "01M5Z392EH0CG6S4CVX9JXAW4A": {
+        "before_rows": 192,
+        "after_rows": 192,
+        "settled_rows_unchanged": 77
+      },
+      "01M5Z3FYTMQS958VJ3TXCKSM4R": {
+        "before_rows": 192,
+        "after_rows": 192,
+        "settled_rows_unchanged": 77
+      },
+      "01M5Z71AMNAAY5Y2YB22DGQM6X": {
+        "before_rows": 117,
+        "after_rows": 117,
+        "settled_rows_unchanged": 2
+      },
+      "01M5Z89PZQPVPT9MPA2M1F36RC": {
+        "before_rows": 115,
+        "after_rows": 115,
+        "settled_rows_unchanged": 0
+      }
+    }
+  },
+  "deletion": {
+    "entry_id": "01M5Z94HWZW8Y1PW2GDAW5GMW9",
+    "site_id": "qa_beta5_demo_custom_en",
+    "rows_before": 115,
+    "recorder_inode": 220844,
+    "wrong_confirmation_rejected": true,
+    "permanently_deleted": true,
+    "owned_files_remaining": [],
+    "new_entry_id": "01M5Z94ZGBXKCKGGN5KY63QYD9",
+    "new_same_name_site_has_empty_history_and_no_contract": true,
+    "second_sites_preserved": true,
+    "global_recorder_same_inode": true
+  },
+  "states": [
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_current_final_electricity_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_missing_en",
+        "readiness": "INCOMPLETE",
+        "revision": 0,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Current final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_estimated_unverified_current_price",
+      "state": "0.65275",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN ESTIMATED / UNVERIFIED current price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_estimated_unverified_next_quarter_price",
+      "state": "0.65275",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN ESTIMATED / UNVERIFIED next-quarter price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_current_raw_spot_price_before_additions",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Current raw spot price (before additions)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_next_quarter_raw_spot_price",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Next quarter raw spot price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:13:22.556685+00:00",
+        "last_attempt": "2026-10-27T18:13:22.556685+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Missing EN Today raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_tomorrow_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:13:22.556685+00:00",
+        "last_attempt": "2026-10-27T18:13:22.556685+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Missing EN Tomorrow raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_final_pricing_status_localized",
+      "state": "incomplete",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_missing_en",
+        "site_name": "QA Beta5 Missing EN",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": null,
+        "last_attempt": "2026-10-27T18:13:22.556685+00:00",
+        "last_error": "Missing verified components: supplier for 2026-10-27T19:15:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+        "missing_components": [
+          "supplier"
+        ],
+        "affected_period": "2026-10-27T19:15:00+01:00",
+        "valid_slots": 0,
+        "stored_slots": 0,
+        "verified_final_slots": 0,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:13:22.556685+00:00",
+        "expected_slots": 96,
+        "prices_start_at": "2026-10-27T18:15:00+00:00",
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "radius_c",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Missing EN Final pricing status (localized)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_pricing_problem_corrective_action",
+      "state": "supplier",
+      "attributes": {
+        "options": [
+          "none",
+          "source",
+          "grid",
+          "storage",
+          "composition",
+          "configuration",
+          "activation",
+          "supplier",
+          "electricity_tax",
+          "energinet_net",
+          "energinet_system",
+          "dso"
+        ],
+        "prices_start_at": "2026-10-27T18:15:00+00:00",
+        "affected_period": "2026-10-27T19:15:00+01:00",
+        "missing_components": [
+          "supplier"
+        ],
+        "reason": "Missing verified components: supplier for 2026-10-27T19:15:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+        "failure_stage": "configuration",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Missing EN Pricing problem — corrective action"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_price_readiness",
+      "state": "INCOMPLETE",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_missing_en",
+        "site_name": "QA Beta5 Missing EN",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": null,
+        "last_attempt": "2026-10-27T18:13:22.556685+00:00",
+        "last_error": "Missing verified components: supplier for 2026-10-27T19:15:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+        "missing_components": [
+          "supplier"
+        ],
+        "affected_period": "2026-10-27T19:15:00+01:00",
+        "valid_slots": 0,
+        "stored_slots": 0,
+        "verified_final_slots": 0,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:13:22.556685+00:00",
+        "expected_slots": 96,
+        "prices_start_at": "2026-10-27T18:15:00+00:00",
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "radius_c",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Missing EN Price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_next_quarter_final_electricity_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_missing_en",
+        "readiness": "INCOMPLETE",
+        "revision": 0,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Next quarter final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_minimum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Today minimum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_maximum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Today maximum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_average_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Missing EN Today average final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_tomorrow_price_readiness",
+      "state": "INCOMPLETE",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "valid_slots": 0,
+        "expected_slots": 96,
+        "last_success": null,
+        "reason": "Missing verified components: supplier for 2026-10-28T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Missing EN Tomorrow price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_current_final_price_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_missing_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Missing EN Current final price (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_next_quarter_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_missing_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Missing EN Next quarter (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_minimum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_missing_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Missing EN Today minimum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_maximum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_missing_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Missing EN Today maximum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_missing_en_today_average_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_missing_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Missing EN Today average (preferred display)"
+      }
+    },
+    {
+      "entity_id": "update.qa_beta5_missing_en_published_pe_release_update_through_hacs",
+      "state": "off",
+      "attributes": {
+        "auto_update": false,
+        "display_precision": 0,
+        "installed_version": "0.1.0-beta.5",
+        "in_progress": false,
+        "latest_version": "0.1.0-beta.5",
+        "release_summary": null,
+        "release_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.5",
+        "skipped_version": null,
+        "title": null,
+        "update_percentage": null,
+        "entity_picture": "/api/brands/integration/ha_energy_price_engine/icon.png",
+        "friendly_name": "QA Beta5 Missing EN Published PE release (update through HACS)",
+        "supported_features": 0
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_current_final_electricity_price",
+      "state": "0.59375",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_ewii_plus_da",
+        "readiness": "READY",
+        "revision": 2,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Current final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_estimated_unverified_current_price",
+      "state": "unknown",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA ESTIMATED / UNVERIFIED current price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_estimated_unverified_next_quarter_price",
+      "state": "unknown",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA ESTIMATED / UNVERIFIED next-quarter price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_current_raw_spot_price_before_additions",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Current raw spot price (before additions)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_next_quarter_raw_spot_price",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Next quarter raw spot price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:13:22.606606+00:00",
+        "last_attempt": "2026-10-27T18:13:22.606606+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 EWII Plus DA Today raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_tomorrow_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:13:22.606606+00:00",
+        "last_attempt": "2026-10-27T18:13:22.606606+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 EWII Plus DA Tomorrow raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_final_pricing_status_localized",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_ewii_plus_da",
+        "site_name": "QA Beta5 EWII Plus DA",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": "2026-10-27T18:13:22.606606+00:00",
+        "last_attempt": "2026-10-27T18:13:22.606606+00:00",
+        "last_error": "Confirmed prices start at 2026-10-27T18:15:00+00:00; earlier unverified intervals were not backfilled",
+        "required_action": null,
+        "missing_components": [],
+        "affected_period": null,
+        "valid_slots": 19,
+        "stored_slots": 19,
+        "verified_final_slots": 19,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:13:22.606606+00:00",
+        "expected_slots": 96,
+        "prices_start_at": "2026-10-27T18:15:00+00:00",
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "radius_c",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 EWII Plus DA Final pricing status (localized)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_pricing_problem_corrective_action",
+      "state": "none",
+      "attributes": {
+        "options": [
+          "none",
+          "source",
+          "grid",
+          "storage",
+          "composition",
+          "configuration",
+          "activation",
+          "supplier",
+          "electricity_tax",
+          "energinet_net",
+          "energinet_system",
+          "dso"
+        ],
+        "prices_start_at": "2026-10-27T18:15:00+00:00",
+        "affected_period": null,
+        "missing_components": [],
+        "reason": null,
+        "required_action": null,
+        "failure_stage": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 EWII Plus DA Pricing problem — corrective action"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_price_readiness",
+      "state": "READY",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_ewii_plus_da",
+        "site_name": "QA Beta5 EWII Plus DA",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": "2026-10-27T18:13:22.606606+00:00",
+        "last_attempt": "2026-10-27T18:13:22.606606+00:00",
+        "last_error": "Confirmed prices start at 2026-10-27T18:15:00+00:00; earlier unverified intervals were not backfilled",
+        "required_action": null,
+        "missing_components": [],
+        "affected_period": null,
+        "valid_slots": 19,
+        "stored_slots": 19,
+        "verified_final_slots": 19,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:13:22.606606+00:00",
+        "expected_slots": 96,
+        "prices_start_at": "2026-10-27T18:15:00+00:00",
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "radius_c",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 EWII Plus DA Price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_next_quarter_final_electricity_price",
+      "state": "0.59375",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_ewii_plus_da",
+        "readiness": "READY",
+        "revision": 2,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Next quarter final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_minimum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Today minimum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_maximum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Today maximum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_average_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Today average final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_tomorrow_price_readiness",
+      "state": "READY",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "last_success": "2026-10-27T18:13:22.606606+00:00",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 EWII Plus DA Tomorrow price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_current_final_price_preferred_display",
+      "state": "59.375",
+      "attributes": {
+        "site_id": "qa_beta5_ewii_plus_da",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Current final price (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_next_quarter_preferred_display",
+      "state": "59.375",
+      "attributes": {
+        "site_id": "qa_beta5_ewii_plus_da",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Next quarter (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_minimum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_ewii_plus_da",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Today minimum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_maximum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_ewii_plus_da",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Today maximum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_ewii_plus_da_today_average_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_ewii_plus_da",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 EWII Plus DA Today average (preferred display)"
+      }
+    },
+    {
+      "entity_id": "update.qa_beta5_ewii_plus_da_published_pe_release_update_through_hacs",
+      "state": "off",
+      "attributes": {
+        "auto_update": false,
+        "display_precision": 0,
+        "installed_version": "0.1.0-beta.5",
+        "in_progress": false,
+        "latest_version": "0.1.0-beta.5",
+        "release_summary": null,
+        "release_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.5",
+        "skipped_version": null,
+        "title": null,
+        "update_percentage": null,
+        "entity_picture": "/api/brands/integration/ha_energy_price_engine/icon.png",
+        "friendly_name": "QA Beta5 EWII Plus DA Published PE release (update through HACS)",
+        "supported_features": 0
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_current_final_electricity_price",
+      "state": "0.6675",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_custom_en",
+        "readiness": "READY",
+        "revision": 2,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Current final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_estimated_unverified_current_price",
+      "state": "unknown",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN ESTIMATED / UNVERIFIED current price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_estimated_unverified_next_quarter_price",
+      "state": "unknown",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN ESTIMATED / UNVERIFIED next-quarter price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_current_raw_spot_price_before_additions",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Current raw spot price (before additions)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_next_quarter_raw_spot_price",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Next quarter raw spot price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:13:23.507208+00:00",
+        "last_attempt": "2026-10-27T18:13:23.507208+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Custom EN Today raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_tomorrow_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:13:23.507208+00:00",
+        "last_attempt": "2026-10-27T18:13:23.507208+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Custom EN Tomorrow raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_final_pricing_status_localized",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_custom_en",
+        "site_name": "QA Beta5 Custom EN",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": "2026-10-27T18:13:23.507208+00:00",
+        "last_attempt": "2026-10-27T18:13:23.507208+00:00",
+        "last_error": "Confirmed prices start at 2026-10-27T17:45:00+00:00; earlier unverified intervals were not backfilled",
+        "required_action": null,
+        "missing_components": [],
+        "affected_period": null,
+        "valid_slots": 21,
+        "stored_slots": 21,
+        "verified_final_slots": 21,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:13:23.507208+00:00",
+        "expected_slots": 96,
+        "prices_start_at": "2026-10-27T17:45:00+00:00",
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "radius_c",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Custom EN Final pricing status (localized)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_pricing_problem_corrective_action",
+      "state": "none",
+      "attributes": {
+        "options": [
+          "none",
+          "source",
+          "grid",
+          "storage",
+          "composition",
+          "configuration",
+          "activation",
+          "supplier",
+          "electricity_tax",
+          "energinet_net",
+          "energinet_system",
+          "dso"
+        ],
+        "prices_start_at": "2026-10-27T17:45:00+00:00",
+        "affected_period": null,
+        "missing_components": [],
+        "reason": null,
+        "required_action": null,
+        "failure_stage": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Custom EN Pricing problem — corrective action"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_price_readiness",
+      "state": "READY",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_custom_en",
+        "site_name": "QA Beta5 Custom EN",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": "2026-10-27T18:13:23.507208+00:00",
+        "last_attempt": "2026-10-27T18:13:23.507208+00:00",
+        "last_error": "Confirmed prices start at 2026-10-27T17:45:00+00:00; earlier unverified intervals were not backfilled",
+        "required_action": null,
+        "missing_components": [],
+        "affected_period": null,
+        "valid_slots": 21,
+        "stored_slots": 21,
+        "verified_final_slots": 21,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:13:23.507208+00:00",
+        "expected_slots": 96,
+        "prices_start_at": "2026-10-27T17:45:00+00:00",
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "radius_c",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Custom EN Price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_next_quarter_final_electricity_price",
+      "state": "0.6675",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_custom_en",
+        "readiness": "READY",
+        "revision": 2,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Next quarter final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_minimum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Today minimum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_maximum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Today maximum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_average_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Custom EN Today average final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_tomorrow_price_readiness",
+      "state": "READY",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "last_success": "2026-10-27T18:13:23.507208+00:00",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Custom EN Tomorrow price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_current_final_price_preferred_display",
+      "state": "66.75",
+      "attributes": {
+        "site_id": "qa_beta5_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Custom EN Current final price (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_next_quarter_preferred_display",
+      "state": "66.75",
+      "attributes": {
+        "site_id": "qa_beta5_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Custom EN Next quarter (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_minimum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Custom EN Today minimum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_maximum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Custom EN Today maximum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_custom_en_today_average_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Custom EN Today average (preferred display)"
+      }
+    },
+    {
+      "entity_id": "update.qa_beta5_custom_en_published_pe_release_update_through_hacs",
+      "state": "off",
+      "attributes": {
+        "auto_update": false,
+        "display_precision": 0,
+        "installed_version": "0.1.0-beta.5",
+        "in_progress": false,
+        "latest_version": "0.1.0-beta.5",
+        "release_summary": null,
+        "release_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.5",
+        "skipped_version": null,
+        "title": null,
+        "update_percentage": null,
+        "entity_picture": "/api/brands/integration/ha_energy_price_engine/icon.png",
+        "friendly_name": "QA Beta5 Custom EN Published PE release (update through HACS)",
+        "supported_features": 0
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_current_final_electricity_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_demo_custom_en",
+        "readiness": "INCOMPLETE",
+        "revision": 0,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Current final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_estimated_unverified_current_price",
+      "state": "unknown",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN ESTIMATED / UNVERIFIED current price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_estimated_unverified_next_quarter_price",
+      "state": "unknown",
+      "attributes": {
+        "verification": "ESTIMATED_UNVERIFIED",
+        "visualization_only": true,
+        "eligible_for_control": false,
+        "authoritative_api": false,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN ESTIMATED / UNVERIFIED next-quarter price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_current_raw_spot_price_before_additions",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Current raw spot price (before additions)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_next_quarter_raw_spot_price",
+      "state": "0.1",
+      "attributes": {
+        "price_basis": "spot_ex_vat",
+        "currency": "DKK",
+        "final_price": false,
+        "vat_included": false,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Next quarter raw spot price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:14:52.174678+00:00",
+        "last_attempt": "2026-10-27T18:14:52.174678+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Demo Custom EN Today raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_tomorrow_raw_source_readiness",
+      "state": "ready",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "status": "READY",
+        "valid_slots": 96,
+        "expected_slots": 96,
+        "verified_at": "2026-10-27T18:14:52.174678+00:00",
+        "last_attempt": "2026-10-27T18:14:52.174678+00:00",
+        "price_basis": "spot_ex_vat",
+        "reason": null,
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Demo Custom EN Tomorrow raw source readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_final_pricing_status_localized",
+      "state": "incomplete",
+      "attributes": {
+        "options": [
+          "ready",
+          "incomplete",
+          "stale",
+          "error"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_demo_custom_en",
+        "site_name": "QA Beta5 Demo Custom EN",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": null,
+        "last_attempt": "2026-10-27T18:14:52.174678+00:00",
+        "last_error": "Missing verified components: supplier for 2026-10-27T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+        "missing_components": [
+          "supplier"
+        ],
+        "affected_period": "2026-10-27T00:00:00+01:00",
+        "valid_slots": 0,
+        "stored_slots": 0,
+        "verified_final_slots": 0,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:14:52.174678+00:00",
+        "expected_slots": 96,
+        "prices_start_at": null,
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "manual",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Demo Custom EN Final pricing status (localized)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_pricing_problem_corrective_action",
+      "state": "supplier",
+      "attributes": {
+        "options": [
+          "none",
+          "source",
+          "grid",
+          "storage",
+          "composition",
+          "configuration",
+          "activation",
+          "supplier",
+          "electricity_tax",
+          "energinet_net",
+          "energinet_system",
+          "dso"
+        ],
+        "prices_start_at": null,
+        "affected_period": "2026-10-27T00:00:00+01:00",
+        "missing_components": [
+          "supplier"
+        ],
+        "reason": "Missing verified components: supplier for 2026-10-27T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+        "failure_stage": "configuration",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Demo Custom EN Pricing problem — corrective action"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_price_readiness",
+      "state": "INCOMPLETE",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "requested_date": "2026-10-27",
+        "site_id": "qa_beta5_demo_custom_en",
+        "site_name": "QA Beta5 Demo Custom EN",
+        "source": "QA official Nord Pool DK2",
+        "area": "DK2",
+        "currency": "DKK",
+        "resolution_minutes": 15,
+        "health": "INCOMPLETE",
+        "last_success": null,
+        "last_attempt": "2026-10-27T18:14:52.174678+00:00",
+        "last_error": "Missing verified components: supplier for 2026-10-27T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "required_action": "Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify.",
+        "missing_components": [
+          "supplier"
+        ],
+        "affected_period": "2026-10-27T00:00:00+01:00",
+        "valid_slots": 0,
+        "stored_slots": 0,
+        "verified_final_slots": 0,
+        "raw_status": "READY",
+        "raw_valid_slots": 96,
+        "raw_verified_at": "2026-10-27T18:14:52.174678+00:00",
+        "expected_slots": 96,
+        "prices_start_at": null,
+        "next_scheduled_update": "2026-10-27T23:59:00+01:00",
+        "dso_mode": "manual",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Demo Custom EN Price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_next_quarter_final_electricity_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "api_version": 1,
+        "site_id": "qa_beta5_demo_custom_en",
+        "readiness": "INCOMPLETE",
+        "revision": 0,
+        "vat_included": true,
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Next quarter final electricity price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_minimum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Today minimum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_maximum_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Today maximum final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_average_final_price",
+      "state": "unknown",
+      "attributes": {
+        "state_class": "measurement",
+        "unit_of_measurement": "DKK/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Today average final price"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_tomorrow_price_readiness",
+      "state": "INCOMPLETE",
+      "attributes": {
+        "options": [
+          "READY",
+          "INCOMPLETE",
+          "STALE",
+          "ERROR"
+        ],
+        "valid_slots": 0,
+        "expected_slots": 96,
+        "last_success": null,
+        "reason": "Missing verified components: supplier for 2026-10-28T00:00:00+01:00. Open Configure → guided setup: Supplier contract, Grid tariffs or National charges. Add verified dated rates covering this period, then Save & verify. Prices remain unavailable, never zero.",
+        "device_class": "enum",
+        "friendly_name": "QA Beta5 Demo Custom EN Tomorrow price readiness"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_current_final_price_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_demo_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Current final price (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_next_quarter_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_demo_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Next quarter (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_minimum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_demo_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Today minimum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_maximum_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_demo_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Today maximum (preferred display)"
+      }
+    },
+    {
+      "entity_id": "sensor.qa_beta5_demo_custom_en_today_average_preferred_display",
+      "state": "unknown",
+      "attributes": {
+        "site_id": "qa_beta5_demo_custom_en",
+        "stored_and_api_unit": "DKK/kWh",
+        "vat_included": true,
+        "presentation_only": true,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Beta5 Demo Custom EN Today average (preferred display)"
+      }
+    },
+    {
+      "entity_id": "update.qa_beta5_demo_custom_en_published_pe_release_update_through_hacs",
+      "state": "off",
+      "attributes": {
+        "auto_update": false,
+        "display_precision": 0,
+        "installed_version": "0.1.0-beta.5",
+        "in_progress": false,
+        "latest_version": "0.1.0-beta.5",
+        "release_summary": null,
+        "release_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.5",
+        "skipped_version": null,
+        "title": null,
+        "update_percentage": null,
+        "entity_picture": "/api/brands/integration/ha_energy_price_engine/icon.png",
+        "friendly_name": "QA Beta5 Demo Custom EN Published PE release (update through HACS)",
+        "supported_features": 0
+      }
+    }
+  ],
+  "ledgers": {
+    "QA Complete EN": {
+      "entry_id": "01M5YVE80CEV1R71HAHVE97RTJ",
+      "rows": 192,
+      "min_final_dkk": 0.6675,
+      "max_final_dkk": 0.6675,
+      "decoded_rows_sha256": "75ff9b30b5c3206892d91596a668a35d3d27fadb58a9878821551d90f80f1fe9"
+    },
+    "QA Complete DA": {
+      "entry_id": "01M5YVQBC1X7JXWW8TS9X509VA",
+      "rows": 192,
+      "min_final_dkk": 0.6675,
+      "max_final_dkk": 0.6675,
+      "decoded_rows_sha256": "5fd18f15331c5534c112c17a3395f3a61fb4f0576aacdeac21370d2335843d8e"
+    },
+    "QA Missing supplier EN": {
+      "entry_id": "01M5YWEG3MC5N53EMYYXA5F0XD",
+      "rows": 0,
+      "database_exists": false
+    },
+    "QA Beta4 Complete DA": {
+      "entry_id": "01M5Z392EH0CG6S4CVX9JXAW4A",
+      "rows": 192,
+      "min_final_dkk": 0.6675,
+      "max_final_dkk": 0.6675,
+      "decoded_rows_sha256": "9d4be712df91ce88d0959b94d60a9d8bb3b5d427dee6ae8da4ac22d8017fa875"
+    },
+    "QA Beta4 Complete EN": {
+      "entry_id": "01M5Z3FYTMQS958VJ3TXCKSM4R",
+      "rows": 192,
+      "min_final_dkk": 0.6675,
+      "max_final_dkk": 0.6675,
+      "decoded_rows_sha256": "5bd11353a9626b55a0ed50f3195a9d7717496173e417f18c20f9a07830c8f533"
+    },
+    "QA Beta4 Missing EN": {
+      "entry_id": "01M5Z3GP04GMSEMJXYBSQZNYKG",
+      "rows": 0,
+      "database_exists": false
+    },
+    "QA Beta5 Custom EN": {
+      "entry_id": "01M5Z71AMNAAY5Y2YB22DGQM6X",
+      "rows": 117,
+      "min_final_dkk": 0.6675,
+      "max_final_dkk": 0.6675,
+      "decoded_rows_sha256": "e6b1bc911e92ccd2ceabc459163bca5571e4d79b2ea6cff02048617e8d94b5cf"
+    },
+    "QA Beta5 EWII Plus DA": {
+      "entry_id": "01M5Z89PZQPVPT9MPA2M1F36RC",
+      "rows": 115,
+      "min_final_dkk": 0.59375,
+      "max_final_dkk": 0.59375,
+      "decoded_rows_sha256": "51cd6f79b5d1d0381d75e26b14372bc0780fec56a5588fa365e22f1a5e7b0694"
+    },
+    "QA Beta5 Missing EN": {
+      "entry_id": "01M5Z8S3RDAVA3WPZE1KJ505TX",
+      "rows": 0,
+      "database_exists": false
+    },
+    "QA Beta5 Demo Custom EN": {
+      "entry_id": "01M5Z94ZGBXKCKGGN5KY63QYD9",
+      "rows": 0,
+      "database_exists": false
+    }
+  },
+  "beta4_migration": {
+    "QA Complete EN": {
+      "entry_id": "01M5YVE80CEV1R71HAHVE97RTJ",
+      "title_identity_options_source_unchanged": true,
+      "historical_decoded_rows_preserved": 75
+    },
+    "QA Complete DA": {
+      "entry_id": "01M5YVQBC1X7JXWW8TS9X509VA",
+      "title_identity_options_source_unchanged": true,
+      "historical_decoded_rows_preserved": 75
+    },
+    "QA Beta4 Complete DA": {
+      "entry_id": "01M5Z392EH0CG6S4CVX9JXAW4A",
+      "title_identity_options_source_unchanged": true,
+      "historical_decoded_rows_preserved": 75
+    },
+    "QA Beta4 Complete EN": {
+      "entry_id": "01M5Z3FYTMQS958VJ3TXCKSM4R",
+      "title_identity_options_source_unchanged": true,
+      "historical_decoded_rows_preserved": 75
+    }
+  },
+  "tested_runtime_commit": "6d1ef5897b338dc660e9de8ddcec4c6c54d834f4"
+}

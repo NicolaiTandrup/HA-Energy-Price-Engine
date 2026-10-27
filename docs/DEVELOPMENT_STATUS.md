@@ -830,3 +830,46 @@ five saved stages; software/owner acceptance boxes intentionally pending final g
 No beta.5 tag/release yet. Next: finish evidence, unchanged consumer matrix, package
 and metadata gates, commit clean source, exact-source CI, immutable authorized
 prerelease, independent public validation, final handoff and stop.
+
+## Beta.5 native acceptance evidence and clean-source checkpoint
+
+Checkpoint subject: **docs: record beta.5 native journeys and release candidate evidence**.
+Runtime source6d1ef58. Final local producer234/core,88% coverage,zero skips;
+all four unchanged consumer suites153/176/227/228/core and2 actual coupled runtime
+cases per consumer/core passed. PyPI current stable independently rechecked .4.
+Both clean archive layouts installed/imported outside source on both cores,1 native
+smoke/layout/core. Official local hassfest1integration,0invalid. Full source CI at
+6d1ef58 correctly rejected a test-host name introduced in the public guide after
+local suite execution; corrected to generic wording, privacy/package doc gate rerun.
+No test disabled or weakened. Exact final-source push/PR/tag CI remains required.
+
+Actual disposable HA .4/frontend20260930.5 EN/DA desktop1440x1000/mobile390x844:
+custom contract11.1ore exVAT gives.6675DKK; official quoted Plus6.5ore with an
+explicit fictional incl-VAT customer confirmation gives.59375DKK; approved12.4ore
+incl-VAT estimate gives.65275DKK and zero ledger rows/no authoritative READY.
+Ordinary custom rates need no dates. Each accepted step is actual saved config;
+close/reopen resumes tax; direct edits return review, with no final save. Grid
+outage removes final readiness and direct corrective settings work; recovery and
+explicit check restore verified prices. Both languages fit mobile width390,zero
+frontend errors. Two short native webm demos and19 screenshots committed.
+
+Real clone upgrade preserves four beta.4 sites' settings/IDs/source mappings and
+historical decoded SQL rows. Restart preserves nine site configurations and all
+settled rows/revisions; no past unknown quarter backfilled. Wrong permanent-delete
+confirmation rejected; accepted cleanup removed only selected115-row site, including
+setup progress. Same-name recreate has a new ID, no contract and empty history.
+Other sites and global recorder inode retained. Detailed synthetic receipt:
+`docs/receipts/v0.1.0-beta.5-simulation.json`. Owner acceptance is explicitly false.
+
+SQLite repeat during concurrent cloud validation:35136rows/18239488bytes,
+96-row append.0457s,reload2.240s,lookup10.06us,peak243448KiB. Original transactional
+touched-row persistence retained; cloud results do not establish Pi performance.
+Public guides now cover five saved stages, fresh public offers/VAT confirmation,
+standing current agreements and preserved future overrides, partial first-day
+coverage, diagnostics, HACS upgrade and safe selected-site reset.
+
+Next: commit clean source and await every exact-source check, build/hash clean
+source, tag beta.5 immutably, run fixed-source publisher with15 green checks and
+both-layout native installation gates. Independently verify public release/assets/
+HACS/version selection on both cores, update receipt/PR/handoff and stop. No stable,
+main merge or owner equipment access. No beta.5 publication claimed yet.

@@ -44,7 +44,7 @@ version falls back to main's short commit. Selecting a beta download alone is no
 the same as subscribing to beta updates. PE's `hide_default_branch` hides a branch
 choice but cannot override HACS's update property.
 
-Beta.4 provides **Configure → Final prices → Diagnostics → Advanced → Storage / site tools → Repair HACS beta channel**, explicitly
+Beta.4 provides **Configure → Final prices → Diagnostics → Advanced → Storage / site management → Repair HACS beta channel**, explicitly
 approved by an administrator. It uses supported HACS repository WebSocket commands
 against the same local HA socket, enables beta only for PE, refreshes and verifies
 the semantic available version, then persists HACS's own repository state. It does
