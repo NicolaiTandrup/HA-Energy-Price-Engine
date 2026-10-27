@@ -7,6 +7,40 @@ worktree, main merge, stable or production/Node-RED/CM/physical-control changes.
 Owner authorizes immutable beta.7 prerelease after mandatory gates; stop after
 publication and independent verification. Prior beta.6 STOP is historical below.
 
+## Beta.7 native upgrade and minimal-runtime validation
+
+Checkpoint subject: **fix: bundle browser decimal conventions for minimal HA installs**.
+Previous follow-up d6009e0 passed all10 remote push/PR jobs, including corrected
+outside-source package validation. Full307/core passed locally with88% coverage,
+zero skips,two upstream HACS warnings. Unchanged consumer suites/coupled tests pass.
+
+- Native EN/en-GB/DA desktop/mobile full unit/horizon journeys pass. HA formatter
+  shows ore2/DKK4 while actual states/canonical ledger remain full precision. Custom
+  English+comma preference passes. System/browser-format DA exposed an optional
+  Babel dependency absent in minimal HA; removed it.267 bundled Intl decimal-symbol
+  facts now resolve browser conventions in executor, no runtime dependency. Actual
+  failed native System journey re-run passes with no frontend errors/warnings.
+  Standalone package harness now exercises installed system locale data too.
+- Focused33 current presentation/readiness/native-status cases pass, including
+  system format. Download diagnostics now tested at a non-boundary12:07 so current
+  components cannot disappear between quarter starts. Pending full total308/core.
+- Native beta.6 upgrade:15 configurations,1,211 original SQL rows/revisions/source/
+  components,315 existing entity IDs and29 Recorder statistics-unit metadata rows
+  unchanged. Display unit switches produced no price correction/revision. Actual
+  final restart:16 configs/1,314 rows exactly preserved, same original identities.
+- Native final system profile DA with English browser decimal and both four/two
+  decimal entity formats pass; console errors/warnings empty, mobile390wide no
+  horizontal overflow. Current/next READY, history7/96 INCOMPLETE, tomorrow96 READY;
+  requested midnight window READY, missing future INCOMPLETE. Final native fixtures
+  are synthetic/recorded; owner HA never accessed. Browser plugin absent; existing
+  Playwright/Chromium used. Screenshots remain outside source per testing skill.
+- New complete beta.7 setup/readiness/examples/API/acceptance docs and simulation
+  receipt are being committed separately. Cloud1-year SQLite repeat unchanged
+  storage18,239,488 bytes/35,136 rows:append96=.0302s,reload1.599s,lookup11.51µs.
+  These concurrent cloud measurements do not establish Pi performance.
+- No beta.7 tag/release; continue full308/core, final HACS/hassfest/clean package/CI,
+  immutable source/tag/publication/public verification and final STOP handoff.
+
 ## Beta.7 render and package follow-up
 
 Checkpoint subject: **fix: align localized presentation and beta.7 package validation**.

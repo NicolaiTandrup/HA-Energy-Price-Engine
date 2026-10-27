@@ -12,6 +12,8 @@ DOMAIN = "ha_energy_price_engine"
 PACKAGE = PurePosixPath("custom_components") / DOMAIN
 REQUIRED = {
     "manifest.json",
+    "presentation.py",
+    "data/decimal_symbols.json",
     "__init__.py",
     "api.py",
     "config_flow.py",

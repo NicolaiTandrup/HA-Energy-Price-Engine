@@ -126,7 +126,12 @@ async def test_review_diagnostics_and_technical_picker_follow_one_unit(
 
 @pytest.mark.parametrize(
     "language,mode,separator",
-    [("en", "decimal_comma", ","), ("da", "comma_decimal", "."), ("en-GB", "quote_decimal", ".")],
+    [
+        ("en", "decimal_comma", ","),
+        ("da", "comma_decimal", "."),
+        ("en-GB", "quote_decimal", "."),
+        ("en", "system", ","),
+    ],
 )
 async def test_native_user_number_format_overrides_language(hass, language, mode, separator):
     from types import SimpleNamespace
@@ -134,7 +139,10 @@ async def test_native_user_number_format_overrides_language(hass, language, mode
 
     from custom_components.ha_energy_price_engine.localization import review_labels
 
-    request = {"hass_user": SimpleNamespace(id="fictional-qa-user")}
+    request = SimpleNamespace(
+        get={"hass_user": SimpleNamespace(id="fictional-qa-user")}.get,
+        headers={"Accept-Language": "da-DK,da;q=0.9,en;q=0.8"},
+    )
     store = SimpleNamespace(data={"language": {"language": language, "number_format": mode}})
     with (
         patch("custom_components.ha_energy_price_engine.localization.current_request") as context,

@@ -55,12 +55,20 @@ async def review_labels(hass):
         elif mode in {"comma_decimal", "quote_decimal", "none"}:
             result["decimal_separator"] = "."
         elif mode == "system":
-            from babel.core import UnknownLocaleError
-            from babel.numbers import get_decimal_symbol
-
             locale = request.headers.get("Accept-Language", language).split(",")[0].split(";")[0]
-            try:
-                result["decimal_separator"] = get_decimal_symbol(locale.replace("-", "_"))
-            except UnknownLocaleError, ValueError:
-                pass
+            result["decimal_separator"] = await hass.async_add_executor_job(
+                _system_decimal_separator, locale, result["decimal_separator"]
+            )
     return result
+
+
+def _system_decimal_separator(locale, fallback):
+    """Read bundled Intl facts in the executor; no optional HA dependencies."""
+    import json
+    from pathlib import Path
+
+    symbols = json.loads((Path(__file__).parent / "data/decimal_symbols.json").read_text())[
+        "symbols"
+    ]
+    key = locale.strip().replace("_", "-").lower()
+    return symbols.get(key, symbols.get(key.split("-")[0], fallback))

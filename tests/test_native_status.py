@@ -134,9 +134,11 @@ async def test_diagnostics_expose_storage_policy_and_unloaded_entry_safely(hass,
         async_get_config_entry_diagnostics,
     )
 
-    freezer.move_to("2026-10-23T12:00:00Z")
+    freezer.move_to("2026-10-23T12:07:00Z")
     entry = await setup(hass)
     result = await async_get_config_entry_diagnostics(hass, entry)
+    assert result["current_components"]["spot"]["ex_vat"] == -0.1
+    assert result["canonical_technical_unit"] == "DKK/kWh"
     assert result["storage"]["bytes"] > 0 and result["storage"]["free_bytes"] > 0
     assert result["storage"]["memory_index"] == "all_history"
     assert "no_automatic_pruning" in result["storage"]["retention"]
