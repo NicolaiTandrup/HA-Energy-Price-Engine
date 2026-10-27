@@ -85,3 +85,40 @@ async def test_current_provisional_is_visual_only_and_not_backfilled(hass, freez
     assert rows and rows[0].start == datetime(2026, 10, 27, 16, 15, tzinfo=UTC)
     assert get_api(hass).lookup("home", rows[0].start, rows[-1].end).status == Status.INCOMPLETE
     assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+def test_current_terms_retain_future_dated_and_hourly_overrides():
+    from custom_components.ha_energy_price_engine.configuration import tariff_for
+    from custom_components.ha_energy_price_engine.models import PriceSlot
+    from custom_components.ha_energy_price_engine.price_components import compose_dated
+
+    from .test_price_components import rule
+
+    data = model()
+    data["dated_components"][0]["valid_to"] = "2026-12-01"
+    scheduled = rule(
+        "supplier",
+        99,
+        valid_from="2026-12-01",
+        valid_to="2026-12-03",
+        hours=[17],
+        locked=True,
+        source="Already verified future override",
+    )
+    data["dated_components"].append(scheduled)
+    current = current_contract(
+        data,
+        11.1,
+        False,
+        None,
+        False,
+        datetime(2026, 10, 27, 16, 7, tzinfo=UTC),
+        source="Confirmed current contract",
+    )
+    assert scheduled in current["dated_components"]
+    for hour, expected in ((15, 11.1), (16, 99), (17, 11.1)):
+        start = datetime(2026, 12, 1, hour, tzinfo=UTC)  # Local 16/17/18 in Denmark.
+        _, components = compose_dated(
+            PriceSlot(start, start + timedelta(minutes=15), -0.1), tariff_for(current)
+        )
+        assert components["components"]["supplier"]["ex_vat"] == pytest.approx(expected / 100)

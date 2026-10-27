@@ -95,6 +95,25 @@ frontend evidence/demo, concise public docs, current-core/consumer/HACS/hassfest
 package/migration/SQLite checks, clean source and exact-source CI before beta.5 tag
 and authorized immutable prerelease publication. No beta.5 tag/assets/release yet.
 
+
+## Beta.5 current-rate refinement
+
+Checkpoint subject: **fix: preserve scheduled overrides when accepting current terms**.
+Known native implementation **8b52444**. Both full local core suites **230 passed**,
+87% coverage, zero skips, two upstream HACS warnings; all **10** push/PR checks at
+8b52444 green (full unchanged consumers/runtimes, metadata and independent packages).
+Local hassfest0 invalid. Final ordinary review/diagnostics basis is explicitly
+including VAT; canonical component diagnostics retain ex-VAT applied values too.
+
+Current-rate confirmation now retains existing future supplier/grid/subscription
+schedules and fills only uncovered date/hour ranges with the new standing rate.
+Old settled history remains untouched. Focused contract/new-flow/advanced/migration
+suite **33 passed**. Same-site unique active private markup can be prefilled when
+editing; no expired/other-site/private rates discovered or guessed. Final full
+matrix must be rerun after refinements; final native DA/public product/diagnostic/
+missing/provisional/restart/reset evidence and docs/publication remain pending.
+No beta.5 tag/release/publication yet.
+
 ## Earlier beta.4 handoff (historical)
 
 ## Completed beta.4 publication

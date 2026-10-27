@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from uuid import uuid4
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import voluptuous as vol
 from homeassistant.helpers import selector
@@ -249,26 +249,24 @@ class SimpleSetup(FlowTools):
             else:
                 now = dt_util.utcnow()
                 day = str(now.astimezone(ZoneInfo(self.draft["timezone"])).date())
-                rules = []
-                for r in self.draft.get("dated_components", []):
-                    if r["id"] != "dso" or r["valid_to"] <= day:
-                        rules.append(r)
-                    elif r["valid_from"] < day:
-                        rules.append({**r, "valid_to": day})
-                rules.append(
-                    {
-                        "id": "dso",
-                        "amount": user_input["amount"],
-                        "unit": "ore/kWh",
-                        "vat_included": user_input["vat_included"],
-                        "vat_rate": self.draft["vat"],
-                        "valid_from": day,
-                        "valid_to": "9999-12-31",
-                        "source": "user_confirmed_current_grid_rate",
-                        "verified_on": day,
-                        "locked": True,
-                    }
+                new_rule = {
+                    "id": "dso",
+                    "amount": user_input["amount"],
+                    "unit": "ore/kWh",
+                    "vat_included": user_input["vat_included"],
+                    "vat_rate": self.draft["vat"],
+                    "valid_from": day,
+                    "valid_to": "9999-12-31",
+                    "source": "user_confirmed_current_grid_rate",
+                    "verified_on": day,
+                    "locked": True,
+                }
+                from .contracts import replace_current_rules
+
+                retained, segments = replace_current_rules(
+                    self.draft.get("dated_components", []), new_rule, day
                 )
+                rules = retained + segments
                 try:
                     from datetime import UTC, datetime
                     from math import ceil
@@ -382,12 +380,29 @@ class SimpleSetup(FlowTools):
                     return await self._save_step(site, "setup_tax", "supplier")
                 except ValueError, KeyError, TypeError:
                     errors["base"] = "invalid_rate"
+        today = str(dt_util.utcnow().astimezone(ZoneInfo(self.draft["timezone"])).date())
+        existing = [
+            r
+            for r in self.draft.get("dated_components", [])
+            if r["id"] == "supplier"
+            and r["valid_from"] <= today < r["valid_to"]
+            and not r.get("hours")
+            and r.get("eligibility", "all") == "all"
+        ]
+        known = existing[0] if len(existing) == 1 else None
+        amount_default = (
+            {"default": float(known["amount"]) * (100 if known["unit"] == "DKK/kWh" else 1)}
+            if known
+            else {}
+        )
         fields = (
             {}
             if offer
             else {
-                vol.Required("amount"): number(),
-                vol.Required("vat_included", default=True): bool,
+                vol.Required("amount", **amount_default): number(),
+                vol.Required(
+                    "vat_included", default=known["vat_included"] if known else True
+                ): bool,
                 vol.Optional("monthly"): number(),
             }
         )
@@ -590,7 +605,7 @@ class SimpleSetup(FlowTools):
         if user_input:
             try:
                 return await self._save_step({**self.draft, **user_input}, "setup_review", "site")
-            except ValueError, KeyError, TypeError:
+            except ValueError, KeyError, TypeError, ZoneInfoNotFoundError:
                 errors["base"] = "invalid_configuration"
         return self.async_show_form(
             step_id="source_details",
