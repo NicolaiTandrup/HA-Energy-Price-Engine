@@ -31,7 +31,11 @@ jobs:
                   parser=Text();parser.feed(body.decode());text=' '.join(p for p in parser.parts if p)
                   matches=list(re.finditer(r'(?i)(øre|moms|tillæg|abonnement|kr./md|kr/md)',text))
                   spans=[text[max(0,m.start()-120):m.end()+220] for m in matches]
-                  data={'product':product,'url':final,'verified_at':datetime.now(UTC).isoformat(),'sha256':hashlib.sha256(body).hexdigest(),'terms':spans[:35]}
+                  data={'product':product,'url':final,'verified_at':datetime.now(UTC).isoformat(),'sha256':hashlib.sha256(body).hexdigest()}
+                  unique=list(dict.fromkeys(spans[:8]+[v for v in spans if 'moms' in v.lower()]))
+                  for i,term in enumerate(unique[:15]):
+                      row=json.dumps({'product':product,'term':term},ensure_ascii=False).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+                      print('::notice title=EWII term::'+row)
               except Exception as err:data={'product':product,'url':url,'error':str(err)}
               message=json.dumps(data,ensure_ascii=False).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
               print('::notice title=EWII authoritative source::'+message)
