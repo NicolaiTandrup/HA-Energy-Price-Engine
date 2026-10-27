@@ -67,6 +67,26 @@ mobile/restart/delete/recreate checks and screenshots; clean packages and CI; on
 then immutable source/tag and authorized beta.4 publication/integrity verification.
 No beta.4 tag/release/assets have been published. Owner acceptance remains pending.
 
+Third checkpoint subject: **fix: retain destructive form choices and fetch beta.3 migration source**.
+Known second checkpoint 9512a77. Both full local suites now **217 passed**, 88%
+coverage, zero skips, two upstream HACS warnings. Four unchanged consumer suites
+153/176/227/228 and paired runtime cases2 each passed on BOTH HA cores. Both ZIP
+layouts passed independent imports/install on both cores; local hassfest0 invalid.
+Native DA desktop/mobile table follows user language with system EN; mobile width
+390=document390, no console errors. Verified synthetic all-in .6675 DKK/kWh.
+
+CI failure at 9512a77 precisely diagnosed via check annotations: shallow checkout
+lacks the newly added immutable beta.3 migration source; preparer fetched only
+beta.1/.2. Added beta.3 source to the same preparer (no weakening of migration test).
+
+Actual mobile reset exposed operation resetting to archive after confirmation
+error. It safely archived the disposable provisional entry but violated selected
+intent. Preserve operation/typed ID/confirmation on validation errors; native test
+asserts retained defaults. Five focused tests passed, including actual HACS store
+restore with semantic version values after restart. Native destructive retest with
+an actual ledger and fresh recreation is in progress. Final CI/screenshots/release
+integrity remain pending. No beta.4 publication yet.
+
 ---
 
 ## Completed beta.3 software publication

@@ -217,6 +217,10 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
             hass, "repositories"
         )
         assert saved_hacs[str(repo.data.id)]["show_beta"] is True
+        repo.data.show_beta = False
+        assert native_update.latest_version == repo.data.last_commit
+        hacs.data.async_restore_repository(str(repo.data.id), saved_hacs[str(repo.data.id)])
+        assert native_update.latest_version == TAG
         assert repo.data.show_beta is True
 
         assert TAG in repo.data.published_tags

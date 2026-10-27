@@ -70,6 +70,8 @@ async def test_permanent_delete_native_confirmation_is_required(hass, freezer):
     ):
         r = await hass.config_entries.options.async_configure(fid, data)
         assert r["errors"]["base"] == "deletion_confirmation"
+        defaults = {str(k): k.default() for k in r["data_schema"].schema}
+        assert defaults["operation"] == "permanent" and defaults["site_id"] == data["site_id"]
         assert ledger.exists() and entry.entry_id in hass.data[DOMAIN]
     r = await hass.config_entries.options.async_configure(
         fid, {"operation": "permanent", "site_id": "home", "confirm": True}

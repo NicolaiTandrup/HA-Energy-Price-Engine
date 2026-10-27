@@ -1006,11 +1006,11 @@ class Wizard:
             description_placeholders={"site_id": self.draft["id"], "files": files},
             data_schema=vol.Schema(
                 {
-                    vol.Required("operation", default="archive"): choice(
-                        [("archive", "archive"), ("permanent", "permanent")], "site_removal"
-                    ),
-                    vol.Optional("site_id", default=""): str,
-                    vol.Required("confirm", default=False): bool,
+                    vol.Required(
+                        "operation", default=(user_input or {}).get("operation", "archive")
+                    ): choice([("archive", "archive"), ("permanent", "permanent")], "site_removal"),
+                    vol.Optional("site_id", default=(user_input or {}).get("site_id", "")): str,
+                    vol.Required("confirm", default=(user_input or {}).get("confirm", False)): bool,
                 }
             ),
         )
