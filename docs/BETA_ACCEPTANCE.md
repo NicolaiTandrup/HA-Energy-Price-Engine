@@ -4,30 +4,30 @@ Software checks and owner Home Assistant acceptance are separate. Automated nati
 HA tests use recorded/synthetic provider boundaries and do not certify your private
 contract, real provider availability or hardware performance. Exact results, source,
 CI, package hashes and simulation screenshots are in the release receipt and
-[permanent development handoff](DEVELOPMENT_STATUS.md).
+[permanent development handoff](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/DEVELOPMENT_STATUS.md).
 
 ## Software release gates
 
-- [ ] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
-- [ ] Unchanged consumer API suites and both actual runtime startup orders.
-- [ ] Official Nord Pool action/config discovery, automatic Radius C, bounded
+- [x] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
+- [x] Unchanged consumer API suites and both actual runtime startup orders.
+- [x] Official Nord Pool action/config discovery, automatic Radius C, bounded
   national rates, component expiry, negative prices and 92/96/100-quarter DST days.
-- [ ] Missing/incorrect supplier verification, explicit provisional approval,
+- [x] Missing/incorrect supplier verification, explicit provisional approval,
   fail-closed API/ledger and raw source independence.
-- [ ] Step-confirmed persistence, interrupted native setup, unsubmitted changes, close/resume,
+- [x] Step-confirmed persistence, interrupted native setup, unsubmitted changes, close/resume,
   actual persisted current-day readiness, storage failure and restart.
-- [ ] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
-- [ ] Beta.1–.5 config, ledger rows, revisions, entity IDs and source references.
-- [ ] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
+- [x] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
+- [x] Beta.1–.5 config, ledger rows, revisions, entity IDs and source references.
+- [x] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
   clean reinstall and second-site/global recorder isolation.
-- [ ] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
+- [x] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
   authenticated channel repair, persisted beta state and semantic version reporting.
-- [ ] Hassfest, translations, HACS validation, clean deterministic packages and
+- [x] Hassfest, translations, HACS validation, clean deterministic packages and
   both ZIP layouts installed/imported outside the repository.
 - [ ] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
 
-Publication software receipt: [beta.6 verification](receipts/v0.1.0-beta.6.json).
+Publication software receipt: [beta.6 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.6.json).
 Publication gates are recorded after exact-source CI and independent public verification.
 All owner acceptance items below remain unchecked.
 

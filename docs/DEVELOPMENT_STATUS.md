@@ -9,7 +9,7 @@ Main remains `56cdb3c10993179371483812cbc36f651ba3ad8e`; prior releases preserve
 
 ## Beta.6 validated implementation and native evidence
 
-Runtime checkpoint **a9ef054966b09815a29d819cc99417a32a90bf63**. Current evidence/doc
+Runtime checkpoint **a9ef054966b09815a29d819cc99417a32a90bf63**. Evidence/doc
 checkpoint subject: **docs: record beta.6 native acceptance simulations and setup**.
 Foundations continue beta.5 final checkpoint a7a6b04; preserve existing PR history.
 
@@ -61,6 +61,10 @@ Foundations continue beta.5 final checkpoint a7a6b04; preserve existing PR histo
 - Cloud SQLite repeat35,136 rows/18,239,488 bytes:96-row append.0288s/reload1.066s/
   lookup5.29µs; original touched-row writes preserved. **Not Pi measurements**.
   Raw benchmark in docs/benchmarks/beta6-sqlite-1year.json.
+
+Publication receipt/handoff links in the immutable acceptance guide point to the
+permanent development branch, where postpublication evidence can actually exist.
+Candidate software gates are checked; publication and all owner boxes remain open.
 
 ## Next: authorized immutable beta.6 publication
 
