@@ -131,7 +131,9 @@ async def test_upgrade_preserves_rates_and_refuses_future_entry_versions(hass):
 @pytest.mark.usefixtures("price_service")
 async def test_reconfigure_and_remove_keep_identity_and_other_site(hass, freezer):
     freezer.move_to("2026-10-23T12:00:00Z")
-    np = MockConfigEntry(domain="nordpool", entry_id="np", state=ConfigEntryState.LOADED)
+    np = MockConfigEntry(
+        domain="nordpool", entry_id="np", data={"areas": ["DK2"]}, state=ConfigEntryState.LOADED
+    )
     np.add_to_hass(hass)
     home = await setup(hass)
     away = await setup(hass, model("away"))
@@ -140,20 +142,13 @@ async def test_reconfigure_and_remove_keep_identity_and_other_site(hass, freezer
         DOMAIN, context={"source": "reconfigure", "entry_id": home.entry_id}
     )
     result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], {"name": "Renamed", "source_type": "nordpool"}
+        result["flow_id"], {"next_step_id": "setup_spot"}
     )
     result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], {"nordpool_entry": "np"}
-    )
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25, "navigation": "review"},
-    )
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], {"next_step_id": "wizard_save"}
+        result["flow_id"], {"name": "Renamed", "nordpool_entry": "np"}
     )
     await hass.async_block_till_done()
-    assert result["type"] == "abort" and result["reason"] == "reconfigure_successful"
+    assert result["step_id"] == "setup_review"
     assert (
         home.options["id"] == config["id"]
         and home.options["dated_components"] == config["dated_components"]
@@ -204,18 +199,18 @@ async def test_native_verified_backup_and_supplier_label_do_not_mutate_rates(has
     before = entry.runtime_data.price_engine.records["home"]
     flow = await options_advanced(hass, entry.entry_id)
     fid = flow["flow_id"]
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "storage_tools"})
     await hass.config_entries.options.async_configure(fid, {"next_step_id": "storage"})
     result = await hass.config_entries.options.async_configure(fid, {})
     assert result["type"] == "menu"
-    assert "✓ .storage/" in result["description_placeholders"]["draft_status"]
+    assert "✓ .storage/" in result["description_placeholders"]["operation"]
     assert list(entry.runtime_data.price_engine.database.path.parent.glob("*.backup-*"))
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "wizard_supplier"})
-    result = await hass.config_entries.options.async_configure(
-        fid, {"supplier": "ewii", "navigation": "review"}
-    )
-    assert result["type"] == "menu"
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "setup_supplier"})
+    result = await hass.config_entries.options.async_configure(fid, {"product": "ewii_other"})
+    assert result["step_id"] == "setup_contract"
     assert entry.runtime_data.price_engine.records["home"] == before
-    assert not entry.options  # Both editor actions leave saved business rates unchanged.
+    assert entry.options["supplier"] == "ewii"
+    assert entry.options["dated_components"] == entry.data["dated_components"]
     hass.config_entries.options.async_abort(fid)
     assert await hass.config_entries.async_unload(entry.entry_id)
 
@@ -240,7 +235,5 @@ async def test_legacy_hacs_domain_is_never_discovered_as_official_nordpool(hass)
     MockConfigEntry(domain="nordpool", entry_id="legacy", data={"areas": ["DK2"]}).add_to_hass(hass)
     assert await async_source_defaults(hass) == {}
     result = await source_page(hass, "Legacy test")
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], {"nordpool_entry": "legacy"}
-    )
-    assert result["errors"]["nordpool_entry"] == "legacy_source"
+    assert result["errors"]["base"] == "invalid_source"
+    assert not hass.config_entries.async_entries(DOMAIN)

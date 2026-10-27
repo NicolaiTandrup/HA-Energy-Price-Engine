@@ -217,29 +217,31 @@
         "submit": "Fortsæt"
       },
       "advanced": {
-        "title": "Daterede satser og diagnostik",
-        "description": "{draft_status} · Daterede satser. Indsend hver ændring for at bevare den, og gå derefter til Oversigt → Gem og kontrollér.",
+        "title": "Avancerede indstillinger",
+        "description": "Godkendte ændringer gemmes med det samme.",
         "data": {},
-        "data_description": {},
-        "submit": "Fortsæt",
+        "submit": "Gem og fortsæt",
         "menu_options": {
-          "wizard_review": "Oversigt og gem",
-          "add_rate": "Tilføj dateret sats",
-          "edit_rate": "Ret dateret sats",
-          "remove_rate": "Fjern dateret sats",
-          "storage": "Verificeret sikkerhedskopi",
-          "breakdown": "Undersøg gemt kvarter",
-          "wizard_grid": "Ret nettarif / Radius",
-          "wizard_supplier": "Ret leverandøraftale",
-          "wizard_charges": "Ret Energinet / elafgift",
-          "wizard_save": "Gem og kontrollér",
-          "wizard_display": "Tilbage til visning",
-          "wizard_discard": "Kassér kladde…",
-          "wizard_source": "Ret spotkilde",
-          "wizard_recheck": "Kontrollér kilder og beregning igen",
-          "wizard_site": "Ret stedets navn",
-          "wizard_location": "Ret område / tidszone / moms",
-          "hacs_channel": "Ret HACS-betakanal"
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
         }
       },
       "wizard_recheck": {
@@ -267,6 +269,558 @@
         "data": {
           "confirm": "Aktivér PE-betakanalen i HACS"
         }
+      },
+      "setup_site": {
+        "title": "1 / 5 · Sted og Nord Pool",
+        "description": "{saved}\n\nVælg din installerede Nord Pool-kilde. Område og enheder findes automatisk.",
+        "data": {
+          "name": "Stedets navn",
+          "nordpool_entry": "Nord Pool-kilde"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_area": {
+        "title": "1 / 5 · Elområde",
+        "description": "{saved}\n\nKilden har flere områder. Vælg området for dette sted.",
+        "data": {
+          "area": "Elområde"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_grid": {
+        "title": "2 / 5 · Nettarif",
+        "description": "{saved}\n\nBekræft dit faktiske netprodukt én gang. Elområdet kan ikke alene bestemme det.",
+        "data": {
+          "grid": "Netselskab og tarif"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_grid_rate": {
+        "title": "2 / 5 · Anden nettarif",
+        "description": "{saved}\n\nBrug din aktuelle nettarif pr. kWh. Tidsopdelte satser findes under Avanceret.",
+        "data": {
+          "amount": "Nettarif (øre/kWh)",
+          "vat_included": "Beløbet er inkl. moms",
+          "confirm": "Satsen svarer til min nettarif"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_supplier": {
+        "title": "3 / 5 · Elleverandør",
+        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.",
+        "data": {
+          "product": "Elleverandør og aftale"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_contract": {
+        "title": "3 / 5 · Bekræft din sats",
+        "description": "{saved}\n\n{quote}\n\nGælder fra næste hele kvarter, indtil den ændres. Abonnement holdes adskilt fra kWh-priser.",
+        "data": {
+          "amount": "Leverandørtillæg oven i spotprisen (øre/kWh)",
+          "vat_included": "Tillægget er inkl. moms",
+          "monthly": "Abonnement (kr./md., valgfrit)",
+          "estimate": "Brug kun som uverificeret estimat til visning",
+          "confirm": "Jeg bekræfter aftalen/satsen eller godkender udtrykkeligt estimatet",
+          "vat_basis": "Moms ifølge din aftale"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        },
+        "data_description": {
+          "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
+        }
+      },
+      "setup_tax": {
+        "title": "4 / 5 · Afgifter og Energinet",
+        "description": "{saved}\n\nDanske net-/systemtariffer og elafgift medtages i verificerede perioder. Opvarmningsberettigelse er valgfri.",
+        "data": {
+          "heating": "Gennemgå verificeret registrering af elvarme"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_heating": {
+        "title": "4 / 5 · Elvarme",
+        "description": "{saved}\n\nBrug verificeret registrering og målt forbrug. Dette opfinder ikke en nedsat afgift.",
+        "data": {
+          "year": "Verificeret forbrugsår",
+          "usage": "Verificeret årsforbrug (kWh)",
+          "confirm": "Jeg har kontrolleret registrering og forbrug"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_review": {
+        "title": "5 / 5 · Dine elpriser",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Alle beløb er inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_diagnostics": {
+        "title": "Komponentdiagnostik",
+        "description": "{components}",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_tax_details": {
+        "title": "Energinet, elafgift og moms",
+        "description": "{components}",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_display": {
+        "title": "Visningsenhed",
+        "description": "{saved}\n\nEksisterende historik og forbruger-API forbliver i DKK/kWh.",
+        "data": {
+          "display_unit": "Foretrukken visningsenhed"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "source_details": {
+        "title": "Avanceret priskilde",
+        "description": "Godkendte ændringer gemmes med det samme.",
+        "data": {
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-integration",
+          "area": "Prisområde (fx DK2)",
+          "timezone": "IANA-tidszone (fx Europe/Copenhagen)",
+          "vat": "Momsandel for spot og automatisk nettarif (0,25 = 25 %)",
+          "source_type": "Spotkilde (officiel Nord Pool eller udtrykkelig entitetsaftale)",
+          "price_entity": "Tidsstemplet leverandørentitet (kun entitetskilde)",
+          "price_unit": "Bekræftet inputenhed (officiel Nord Pool: DKK/MWh)",
+          "price_basis": "Bekræftet moms-/prisgrundlag (officiel Nord Pool: spot uden moms)",
+          "price_attribute": "Attribut med tidsstemplede intervaller (kun entitetskilde)",
+          "stale_minutes": "Maksimal alder på kildekontrol (minutter, kun entitetskilde)"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        },
+        "data_description": {}
+      },
+      "setup_change": {
+        "title": "Ret indstillinger",
+        "description": "",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "rates": {
+        "title": "Avancerede datoperioder",
+        "description": "Hver godkendt ændring gemmes med det samme.",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "storage_tools": {
+        "title": "Lager og håndtering af sted",
+        "description": "",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "add_rate": {
+        "title": "Tilføj dateret priskomponent",
+        "description": "Angiv en dokumenteret sats for dette sted med eksklusiv slutdato. EWII-husstandseksemplet 0,030 DKK/kWh uden moms gælder kun juni–september 2026. Ingen senere aftale eller sommerhussats antages. Abonnementer i DKK/month indgår ikke i kvartersprisen.",
+        "data": {
+          "id": "Priskomponent",
+          "amount": "Beløb (i valgt enhed)",
+          "unit": "Prisenhed (ore = øre)",
+          "vat_included": "Beløbet indeholder allerede moms",
+          "vat_rate": "Komponentens momsandel (0,25 = 25 %)",
+          "valid_from": "Gældende fra (inklusive lokal dato)",
+          "valid_to": "Gældende indtil (eksklusive lokal dato)",
+          "source": "Kilde- eller aftalereference (ingen kundeidentifikatorer)",
+          "verified_on": "Kontrolleret den",
+          "locked": "Manuel lås (automatiske satser kan ikke tilsidesætte)",
+          "eligibility": "Berettigelse (elvarme kræver dokumenteret registrering og forbrug)",
+          "hours": "Lokale timer (tomt = hele dagen; brug særskilte daterede regler til tidszoner)"
+        }
+      },
+      "rate": {
+        "title": "Redigér dateret priskomponent",
+        "description": "Redigér beløb eller gyldighedsdatoer. Overlap afvises. Allerede påbegyndte priser bevares; kun berørte fremtidige kvarterer genberegnes efter Gem og kontrollér.",
+        "data": {
+          "id": "Priskomponent",
+          "amount": "Beløb (i valgt enhed)",
+          "unit": "Prisenhed (ore = øre)",
+          "vat_included": "Beløbet indeholder allerede moms",
+          "vat_rate": "Komponentens momsandel (0,25 = 25 %)",
+          "valid_from": "Gældende fra (inklusive lokal dato)",
+          "valid_to": "Gældende indtil (eksklusive lokal dato)",
+          "source": "Kilde- eller aftalereference (ingen kundeidentifikatorer)",
+          "verified_on": "Kontrolleret den",
+          "locked": "Manuel lås (automatiske satser kan ikke tilsidesætte)",
+          "eligibility": "Berettigelse (elvarme kræver dokumenteret registrering og forbrug)",
+          "hours": "Lokale timer (tomt = hele dagen; brug særskilte daterede regler til tidszoner)"
+        }
+      },
+      "edit_rate": {
+        "title": "Vælg en dateret sats at redigere",
+        "data": {
+          "rate": "Komponent og gyldighedsperiode"
+        }
+      },
+      "remove_rate": {
+        "title": "Vælg en dateret sats at fjerne",
+        "description": "Fjernelse kan gøre fremtidig dækning ufuldstændig. Afregnet historik bevares.",
+        "data": {
+          "rate": "Komponent og gyldighedsperiode"
+        }
+      },
+      "storage": {
+        "title": "Opret kontrolleret lokal sikkerhedskopi",
+        "description": "{backup_result}\n\nFortsæt opretter en ny kontrolleret SQLite-kopi i .storage. Eksisterende kopier overskrives ikke. Medtag kopien i en HA-sikkerhedskopi. Gendannelse foregår kun offline: stop HA, bevar aktuelle filer og følg gendannelsesguiden."
+      },
+      "breakdown": {
+        "title": "Gemt prisopdeling",
+        "description": "Vælg et gemt kvarter. Tom liste betyder manglende gemte priser: ret perioder/kilde via Oversigt. Tekniske fakta bruger lagerets/APIens stabile feltnavne. start/end er UTC, revision er oprindelig prisversion, final_price_incl_vat er DKK/kWh, display_value bruger valgt visningsenhed. components viser satser/moms/kilder; abonnementer indgår ikke i kvartersprisen. Ingen kilder hentes ved læsning.\n\n{slot_breakdown}",
+        "data": {
+          "slot": "Kvarter (lokal dato/tid og UTC-forskydning)"
+        }
       }
     },
     "error": {
@@ -287,7 +841,10 @@
       "estimate_approval_required": "Godkend udtrykkeligt et estimat kun til visning.",
       "deletion_confirmation": "Skriv sted-ID nøjagtigt og bekræft permanent sletning.",
       "deletion_failed": "Oprydning mislykkedes. Stedet er stoppet. Ret filadgang og prøv igen; kontrollér diagnostik før geninstallation.",
-      "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger."
+      "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger.",
+      "confirmation_required": "Bekræft aftalen eller det godkendte estimat.",
+      "invalid_source": "Vælg en officiel Nord Pool-kilde med et understøttet dansk område.",
+      "grid_required": "Vælg dit faktiske netprodukt."
     },
     "abort": {
       "already_configured": "Dette sted-ID er allerede konfigureret.",
@@ -296,7 +853,8 @@
       "saved_incomplete": "Opsætningen er gemt med manglende verificerede priser. Åbn Konfigurér for at fortsætte. Foreløbige estimater er kun til visning.",
       "site_archived": "Stedet er fjernet. Identificeret prishistorik beholdes i PE-arkivoversigten.",
       "site_deleted": "Dette steds PE-data er slettet permanent.",
-      "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}."
+      "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}.",
+      "settings_saved": "Dine indstillinger er gemt."
     },
     "create_entry": {
       "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten.",
@@ -607,30 +1165,31 @@
         "submit": "Fortsæt"
       },
       "advanced": {
-        "title": "Daterede satser og diagnostik",
-        "description": "{draft_status} · Daterede satser. Indsend hver ændring for at bevare den, og gå derefter til Oversigt → Gem og kontrollér.",
+        "title": "Avancerede indstillinger",
+        "description": "Godkendte ændringer gemmes med det samme.",
         "data": {},
-        "data_description": {},
-        "submit": "Fortsæt",
+        "submit": "Gem og fortsæt",
         "menu_options": {
-          "wizard_review": "Oversigt og gem",
-          "add_rate": "Tilføj dateret sats",
-          "edit_rate": "Ret dateret sats",
-          "remove_rate": "Fjern dateret sats",
-          "storage": "Verificeret sikkerhedskopi",
-          "breakdown": "Undersøg gemt kvarter",
-          "wizard_grid": "Ret nettarif / Radius",
-          "wizard_supplier": "Ret leverandøraftale",
-          "wizard_charges": "Ret Energinet / elafgift",
-          "wizard_save": "Gem og kontrollér",
-          "wizard_display": "Tilbage til visning",
-          "wizard_discard": "Kassér kladde…",
-          "wizard_source": "Ret spotkilde",
-          "wizard_recheck": "Kontrollér kilder og beregning igen",
-          "wizard_site": "Ret stedets navn",
-          "wizard_location": "Ret område / tidszone / moms",
-          "hacs_channel": "Ret HACS-betakanal",
-          "site_management": "Fjern / slet dette sted…"
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
         }
       },
       "wizard_recheck": {
@@ -658,6 +1217,498 @@
         "data": {
           "confirm": "Aktivér PE-betakanalen i HACS"
         }
+      },
+      "setup_site": {
+        "title": "1 / 5 · Sted og Nord Pool",
+        "description": "{saved}\n\nVælg din installerede Nord Pool-kilde. Område og enheder findes automatisk.",
+        "data": {
+          "name": "Stedets navn",
+          "nordpool_entry": "Nord Pool-kilde"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_area": {
+        "title": "1 / 5 · Elområde",
+        "description": "{saved}\n\nKilden har flere områder. Vælg området for dette sted.",
+        "data": {
+          "area": "Elområde"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_grid": {
+        "title": "2 / 5 · Nettarif",
+        "description": "{saved}\n\nBekræft dit faktiske netprodukt én gang. Elområdet kan ikke alene bestemme det.",
+        "data": {
+          "grid": "Netselskab og tarif"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_grid_rate": {
+        "title": "2 / 5 · Anden nettarif",
+        "description": "{saved}\n\nBrug din aktuelle nettarif pr. kWh. Tidsopdelte satser findes under Avanceret.",
+        "data": {
+          "amount": "Nettarif (øre/kWh)",
+          "vat_included": "Beløbet er inkl. moms",
+          "confirm": "Satsen svarer til min nettarif"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_supplier": {
+        "title": "3 / 5 · Elleverandør",
+        "description": "{saved}\n\nVælg din faktiske aftale. Offentlige tilbud er forslag, ikke kundeoplysninger.",
+        "data": {
+          "product": "Elleverandør og aftale"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_contract": {
+        "title": "3 / 5 · Bekræft din sats",
+        "description": "{saved}\n\n{quote}\n\nGælder fra næste hele kvarter, indtil den ændres. Abonnement holdes adskilt fra kWh-priser.",
+        "data": {
+          "amount": "Leverandørtillæg oven i spotprisen (øre/kWh)",
+          "vat_included": "Tillægget er inkl. moms",
+          "monthly": "Abonnement (kr./md., valgfrit)",
+          "estimate": "Brug kun som uverificeret estimat til visning",
+          "confirm": "Jeg bekræfter aftalen/satsen eller godkender udtrykkeligt estimatet",
+          "vat_basis": "Moms ifølge din aftale"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        },
+        "data_description": {
+          "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
+        }
+      },
+      "setup_tax": {
+        "title": "4 / 5 · Afgifter og Energinet",
+        "description": "{saved}\n\nDanske net-/systemtariffer og elafgift medtages i verificerede perioder. Opvarmningsberettigelse er valgfri.",
+        "data": {
+          "heating": "Gennemgå verificeret registrering af elvarme"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_heating": {
+        "title": "4 / 5 · Elvarme",
+        "description": "{saved}\n\nBrug verificeret registrering og målt forbrug. Dette opfinder ikke en nedsat afgift.",
+        "data": {
+          "year": "Verificeret forbrugsår",
+          "usage": "Verificeret årsforbrug (kWh)",
+          "confirm": "Jeg har kontrolleret registrering og forbrug"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_review": {
+        "title": "5 / 5 · Dine elpriser",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Alle beløb er inkl. moms.\n\n{coverage}\n\n{start}\n\n{operation}",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_diagnostics": {
+        "title": "Komponentdiagnostik",
+        "description": "{components}",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_tax_details": {
+        "title": "Energinet, elafgift og moms",
+        "description": "{components}",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "setup_display": {
+        "title": "Visningsenhed",
+        "description": "{saved}\n\nEksisterende historik og forbruger-API forbliver i DKK/kWh.",
+        "data": {
+          "display_unit": "Foretrukken visningsenhed"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "source_details": {
+        "title": "Avanceret priskilde",
+        "description": "Godkendte ændringer gemmes med det samme.",
+        "data": {
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-integration",
+          "area": "Prisområde (fx DK2)",
+          "timezone": "IANA-tidszone (fx Europe/Copenhagen)",
+          "vat": "Momsandel for spot og automatisk nettarif (0,25 = 25 %)",
+          "source_type": "Spotkilde (officiel Nord Pool eller udtrykkelig entitetsaftale)",
+          "price_entity": "Tidsstemplet leverandørentitet (kun entitetskilde)",
+          "price_unit": "Bekræftet inputenhed (officiel Nord Pool: DKK/MWh)",
+          "price_basis": "Bekræftet moms-/prisgrundlag (officiel Nord Pool: spot uden moms)",
+          "price_attribute": "Attribut med tidsstemplede intervaller (kun entitetskilde)",
+          "stale_minutes": "Maksimal alder på kildekontrol (minutter, kun entitetskilde)"
+        },
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        },
+        "data_description": {}
+      },
+      "setup_change": {
+        "title": "Ret indstillinger",
+        "description": "",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "rates": {
+        "title": "Avancerede datoperioder",
+        "description": "Hver godkendt ændring gemmes med det samme.",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
+      },
+      "storage_tools": {
+        "title": "Lager og håndtering af sted",
+        "description": "",
+        "data": {},
+        "submit": "Gem og fortsæt",
+        "menu_options": {
+          "setup_review": "Tilbage til priser",
+          "setup_check": "Kontrollér priser",
+          "setup_site": "Sted og kilde",
+          "setup_grid": "Nettarif",
+          "setup_supplier": "Elleverandør og aftale",
+          "setup_tax": "Elafgift / elvarme",
+          "setup_diagnostics": "Komponentdiagnostik",
+          "advanced": "Avancerede indstillinger",
+          "rates": "Datoperioder og tilsidesættelser",
+          "source_details": "Kildedetaljer",
+          "setup_display": "Visningsenhed",
+          "storage_tools": "Lager / håndtering af sted",
+          "add_rate": "Tilføj datoperiode",
+          "edit_rate": "Ret datoperiode",
+          "remove_rate": "Fjern datoperiode",
+          "storage": "Sikkerhedskopiér historik",
+          "breakdown": "Gemt prisopdeling pr. kvarter",
+          "site_management": "Fjern / slet det valgte sted",
+          "hacs_channel": "HACS-betakanal",
+          "setup_done": "Luk"
+        }
       }
     },
     "error": {
@@ -680,7 +1731,10 @@
       "estimate_approval_required": "Godkend udtrykkeligt et estimat kun til visning.",
       "deletion_confirmation": "Skriv sted-ID nøjagtigt og bekræft permanent sletning.",
       "deletion_failed": "Oprydning mislykkedes. Stedet er stoppet. Ret filadgang og prøv igen; kontrollér diagnostik før geninstallation.",
-      "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger."
+      "hacs_channel_failed": "HACS kunne ikke bekræfte betakanalen. Log ind som administrator. Åbn PE i HACS, aktivér Vis betaversioner og opdatér oplysninger.",
+      "confirmation_required": "Bekræft aftalen eller det godkendte estimat.",
+      "invalid_source": "Vælg en officiel Nord Pool-kilde med et understøttet dansk område.",
+      "grid_required": "Vælg dit faktiske netprodukt."
     },
     "abort": {
       "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",
@@ -689,7 +1743,8 @@
       "saved_incomplete": "Opsætningen er gemt med manglende verificerede priser. Åbn Konfigurér for at fortsætte. Foreløbige estimater er kun til visning.",
       "site_archived": "Stedet er fjernet. Identificeret prishistorik beholdes i PE-arkivoversigten.",
       "site_deleted": "Dette steds PE-data er slettet permanent.",
-      "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}."
+      "hacs_channel_updated": "HACS-betakanalen er gemt. Seneste udgivelse: {version}.",
+      "settings_saved": "Dine indstillinger er gemt."
     },
     "create_entry": {
       "saved_pending_verification": "Indstillinger gemt. Kontrol udført før lagring:\n\nRå kildekvarterer:\n{raw}\n\nBeregnede slutpriskvarterer:\n{final}\n\nVed mangler: Åbn Konfigurér og vælg det markerede leverandør-/net-/afgiftstrin. Driften kontrollerer kilder og beregning igen; lager-/kildefejl vises på prisproblem-entiteten.",
@@ -783,7 +1838,8 @@
           "dso": "Nettarif mangler i perioden — konfigurér dateret sats",
           "energinet_net": "Energinets nettarif mangler i perioden — konfigurér dateret sats",
           "energinet_system": "Energinets systemtarif mangler i perioden — konfigurér dateret sats",
-          "electricity_tax": "Elafgift mangler i perioden — konfigurér dateret sats"
+          "electricity_tax": "Elafgift mangler i perioden — konfigurér dateret sats",
+          "activation": "Priser starter ved næste hele kvarter"
         }
       },
       "final_status": {
@@ -891,7 +1947,53 @@
         "provisional": "Foreløbig",
         "unavailable": "Utilgængelig",
         "included": "Inkluderet",
-        "save_failed": "Genindlæsning af de gemte indstillinger mislykkedes. Kontrollér lageradgang og PE-diagnostik. Prøv Gem & verificér igen; tidligere priser bekræfter ikke disse ændringer."
+        "save_failed": "Genindlæsning af de gemte indstillinger mislykkedes. Kontrollér lageradgang og PE-diagnostik. Prøv Gem & verificér igen; tidligere priser bekræfter ikke disse ændringer.",
+        "saved_site": "✓ Sted og kilde gemt.",
+        "saved_grid": "✓ Nettarif gemt.",
+        "saved_supplier_selection": "✓ Aftalevalg gemt.",
+        "saved_supplier": "✓ Leverandøraftale gemt.",
+        "saved_tax": "✓ Afgiftsindstillinger gemt.",
+        "check_prices": "Kontrollér priser",
+        "tax_source": "Dansk elafgift",
+        "contract_source": "Din aftale",
+        "decimal_separator": ",",
+        "edit_source": "Sted og kilde",
+        "fix_source": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "edit_dso": "Nettarif",
+        "fix_dso": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "edit_supplier": "Elleverandør og aftale",
+        "fix_supplier": "Vælg din aftale eller indtast dit eget tillæg.",
+        "edit_energinet_net": "Elafgift / elvarme",
+        "fix_energinet_net": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "edit_energinet_system": "Elafgift / elvarme",
+        "fix_energinet_system": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "edit_electricity_tax": "Elafgift / elvarme",
+        "fix_electricity_tax": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "edit_vat": "Elafgift / elvarme",
+        "fix_vat": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "edit_final": "Elafgift / elvarme",
+        "fix_final": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "vat": "Moms",
+        "raw_label": "spot",
+        "final_label": "verificeret",
+        "starts_at": "Priser fra",
+        "provider_source": "Priskilde",
+        "confirm_vat": "Bekræft moms nedenfor",
+        "vat_included_label": "inkl. moms",
+        "monthly_unit": "kr./md.",
+        "compact_dso": "Net",
+        "compact_supplier": "Tillæg",
+        "compact_energinet_net": "Energinet net",
+        "compact_energinet_system": "Energinet system",
+        "compact_electricity_tax": "Elafgift (DK)",
+        "own_source": "Egen",
+        "own_source_details": "Din bekræftede aftale",
+        "public_baseline": "Verificerede danske satser med afgrænsede perioder",
+        "confirmed_vat_label": "Bekræftet moms",
+        "monthly_label": "Abonnement",
+        "subscription_excluded": "Ikke med i kWh-prisen",
+        "unit_incl_vat": "øre/kWh inkl. moms",
+        "unit_ex_vat": "øre/kWh ekskl. moms"
       }
     },
     "contract_mode": {
@@ -921,6 +2023,29 @@
       "options": {
         "archive": "Fjern stedet, men behold identificeret arkiv",
         "permanent": "Slet dette steds PE-data permanent"
+      }
+    },
+    "simple_grid": {
+      "options": {
+        "radius_c": "Radius C – automatisk verificerede tariffer",
+        "manual": "Andet netprodukt – indtast aktuel sats",
+        "keep": "Behold eksisterende verificerede nettariffer"
+      }
+    },
+    "simple_product": {
+      "options": {
+        "ewii_basis": "EWII Basis El",
+        "ewii_plus": "EWII Plus El",
+        "ewii_other": "Anden EWII-aftale",
+        "custom": "Anden leverandør / eget tillæg",
+        "keep": "Behold min gemte aftale",
+        "missing": "Jeg kender ikke aftalen endnu"
+      }
+    },
+    "vat_basis": {
+      "options": {
+        "included": "De viste beløb er inkl. moms",
+        "excluded": "De viste beløb er ekskl. moms"
       }
     }
   }

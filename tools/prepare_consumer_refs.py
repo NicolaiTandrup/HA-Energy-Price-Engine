@@ -22,6 +22,7 @@ def prepare(source_git=None):
         "56cdb3c10993179371483812cbc36f651ba3ad8e",
         "0c93d2bfac88878cff46e7726f59accbeababf85",
         "78ef9ba4d02ccb85b9395991d1376fbdec34bb84",
+        "38973d88ad67758b419dfc45c193a8c85674afda",
     ):
         if subprocess.run(
             ["git", "cat-file", "-e", released + "^{commit}"], cwd=ROOT, capture_output=True

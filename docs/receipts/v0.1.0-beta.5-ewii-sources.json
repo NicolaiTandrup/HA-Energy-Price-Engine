@@ -1,0 +1,89 @@
+{
+  "run": 40550840062,
+  "check": 122353823837,
+  "data": [
+    {
+      "product": "sammensaetning-af-elpris",
+      "url": "https://www.ewii.dk/privat/el/sammensaetning-af-elpris/",
+      "verified_at": "2026-10-27T17:28:04.717925+00:00",
+      "sha256": "c7c2d63da5cd4ff49da48ab7036be6c166788e1225e653d3ae5ac53aac120d46",
+      "prices": [],
+      "vat": [
+        "nt\" >\n                Din elregning best&#xE5;r af flere dele: str&#xF8;m, transport af str&#xF8;m, moms og afgifter til staten. Kun &#xE9;n af delene kan du selv forhandle &#x2013; resten betaler du, uanset hvilket elselskab du har. Her f&#xE5;r du den fulde ford",
+        "/h2>\n Cirka halvdelen af din elregning g&aring;r til transport af str&oslash;mmen (nettarif) samt moms og afgifter til staten. Den anden halvdel er selve betalingen for str&oslash;mmen til din elleverand&oslash;r &ndash; og det er her, elselskabernes priser og v",
+        "/el/saenket-elafgift/\">elafgiften s&aelig;nket  fra 90 &oslash;re til 1 &oslash;re pr. kWh inkl. moms. Hos EWII giver vi hele den besparelse videre til dig. Vi har nemlig ikke foretaget nogle &aelig;ndringer i din elaftale for at hente gevinsten tilbage et ande",
+        ";n elregning. Her betaler du b&aring;de for selve str&oslash;mmen, transporten gennem elnettet samt moms og afgifter. Din elleverand&oslash;r s&oslash;rger derefter for at afregne bel&oslash;bene med staten og dit netselskab. \n     \n   \n<",
+        "hvordan elprisen er sammensat i procenter fordelt p&#xE5; elleverand&#xF8;r, transport, elafgift og moms.\" title=\"\">\n     \n\n         \n     \n        \r\n S&aring;dan kan",
+        "lash;m gennem elnettet: Cirka 31 % ● &nbsp; &nbsp;Elafgift til staten: 1 % ● &nbsp; &nbsp;Moms: 20 % \n Fordelingen afh&aelig;nger blandt andet af elprisen, dit netselskab, dit abonnement, hvor i landet du bor, og hvor meget str&oslash;m du bruger. D",
+        "lass=\"ewii-table__cell\">Staten \n \n \n Moms \n 0,304 kr. \n Staten \n \n \n<th class=\"ewii-table__cell\" style",
+        "able__row\">\n Samlet elpris inkl. moms \n 1,521 kr. \n &nbsp; \n \n \n \n  <d"
+      ],
+      "terms_links": [
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/"
+      ]
+    },
+    {
+      "product": "hvilken-elaftale-skal-du-vaelge/sammenlign-elpriser",
+      "url": "https://www.ewii.dk/privat/el/hvilken-elaftale-skal-du-vaelge/sammenlign-elpriser/",
+      "verified_at": "2026-10-27T17:28:04.353278+00:00",
+      "sha256": "331a38494ae013e808439170b2069cef25e70ee48bf57e17fb757a43f5746ca7",
+      "prices": [],
+      "vat": [],
+      "terms_links": [
+        "https://www.ewii.dk/privat/el/hvilken-elaftale-skal-du-vaelge/sammenlign-elpriser/"
+      ]
+    },
+    {
+      "product": "elpriser",
+      "url": "https://www.ewii.dk/privat/el/elpriser/",
+      "verified_at": "2026-10-27T17:28:04.076662+00:00",
+      "sha256": "4304a3858dbc36f1beb7075497ee47e9dda6d95a5dc1f48366a64f5576f7e911",
+      "prices": [
+        "tro El være noget for dig. De første 6 måneder betaler du 0 kr. i abonnement og 0 øre/kWh i tillæg. Derefter er tillægget 6,5 øre/kWh, og abonnementet er 29 kr./md. Bestil senest 18. april 2027. Intro El har en variabel elpris, der følg"
+      ],
+      "vat": [
+        "dre del af din samlede elregning.  Afgifter , transport og moms fylder ogs&aring;. Derfor kan det virke forvirrende at finde ud af, hvad du egentlig betaler. \n <a href=\"/privat/el/samm",
+        "id2\">\n                    \r\n En stor del af din samlede elpris g&aring;r til afgifter til staten, moms og transportudgifter, som er ens, uanset hvilken elaftale og elleverand&oslash;r du v&aelig;lger.  L&aelig;s mere",
+        "t andet den aktuelle elpris, din elaftale, dit abonnement samt betaling til netselskab, afgifter og moms. \n Det har derfor stor betydning,&nbsp; hvilken elaftale du har , og hvad du betaler i abonnement ",
+        "\r\n Fra 1. januar 2026 er elafgiften s&aelig;nket fra 90 &oslash;re til 1 &oslash;re pr. kWh inkl. moms. For en typisk b&oslash;rnefamilie svarer det til en &aring;rlig besparelse p&aring; 4.000&ndash;6.000 kr. \n Hos EWII g&aring;r hele besparelsen direkte t"
+      ],
+      "terms_links": [
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/sammenlign-elpriser/",
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/"
+      ]
+    },
+    {
+      "product": "plus-el",
+      "url": "https://www.ewii.dk/privat/el/plus-el/",
+      "verified_at": "2026-10-27T17:28:03.714653+00:00",
+      "sha256": "a6980cdc23191344a0862883682a3b7dd6efb4154f66375357a78fb045a1743f",
+      "prices": [
+        "betaler den aktuelle elpris fra elbørsen Nord Pool, plus et tillæg på 6,5 øre/kWh. Derudover er der et månedligt abonnement på 29 kr. Prisen, du ser ved bestilling, er et gennemsnit af sidste måneds elpriser på Nord Pool inkl. ti",
+        "rd Pool, plus et tillæg på 6,5 øre/kWh. Derudover er der et månedligt abonnement på 29 kr. Prisen, du ser ved bestilling, er et gennemsnit af sidste måneds elpriser på Nord Pool inkl. tillæg. Den reelle pris følger dit faktiske forbrug og a",
+        "tro El være noget for dig. De første 6 måneder betaler du 0 kr. i abonnement og 0 øre/kWh i tillæg. Derefter er tillægget 6,5 øre/kWh, og abonnementet er 29 kr./md. Bestil senest 18. april 2027. Intro El har en variabel elpris, der følg"
+      ],
+      "vat": [],
+      "terms_links": [
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/el-der-passer-til-dig/",
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/sammenlign-elpriser/",
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/"
+      ]
+    },
+    {
+      "product": "basis-el",
+      "url": "https://www.ewii.dk/privat/el/basis-el/",
+      "verified_at": "2026-10-27T17:28:02.976330+00:00",
+      "sha256": "8025bfe50b86ad3c82ab32650fcf3cfd59d836d2beeb441856810a4a983d0d4d",
+      "prices": [
+        " en variabel elpris, der følger markedet. Variabel elpris 0 kr. i abonnement Gratis oprettelse og ingen binding Billig el uden abonnement Har du et lavt elforbrug, kan Basis El være en billig elaftale for dig. Med Basis El følger din el",
+        " Med Basis El følger din elpris markedsprisen. Du betaler 0 kr. i abonnement og kan nemt følge både din elpris og dit forbrug i vores energiapp eller på selvbetjeningen . Det giver dig et godt overblik og mulighed for at bruge strømmen,",
+        " betaler den aktuelle elpris fra elbørsen Nord Pool plus et tillæg på 16,5 øre/kWh. Prisen, du ser, når du bestiller, er et gennemsnit af sidste måneds elpriser på Nord Pool inklusive tillæg. Din faktiske pris afhænger af, hvornå"
+      ],
+      "vat": [],
+      "terms_links": [
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/sammenlign-elpriser/",
+        "/privat/el/hvilken-elaftale-skal-du-vaelge/"
+      ]
+    }
+  ]
+}

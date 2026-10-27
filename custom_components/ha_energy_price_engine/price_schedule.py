@@ -103,7 +103,7 @@ class PriceSchedule:
         await self.store.async_save(self.days)
         return changed
 
-    async def startup(self):
+    async def startup(self, *, force=True):
         self.days = await self.store.async_load() or {}
         now = dt_util.utcnow()
         for optimizer in self.coordinator.sites.values():
@@ -111,7 +111,7 @@ class PriceSchedule:
             today = now.astimezone(ZoneInfo(site["timezone"])).date()
             # Always verify current day; also reconcile known/missing next day.
             for day in (today, today + timedelta(days=1)):
-                await self.refresh_day(site, day, now)
+                await self.refresh_day(site, day, now, force=force)
 
     async def run(self, now, hour, minute):
         changed = False

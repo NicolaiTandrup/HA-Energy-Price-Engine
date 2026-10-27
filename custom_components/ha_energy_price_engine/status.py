@@ -59,6 +59,7 @@ def source_status(coordinator, now=None):
         ),
         "raw_verified_at": coordinator.price_updater.raw_reports.get(today, {}).get("verified_at"),
         "expected_slots": result.expected_slots,
+        "prices_start_at": site.get("pricing_start"),
         "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
         "dso_mode": site.get("dso_mode", "manual"),
     }

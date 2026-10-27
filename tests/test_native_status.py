@@ -19,7 +19,7 @@ from custom_components.ha_energy_price_engine.status import slot_breakdown, sour
 
 from .test_integration import model, price_service, setup  # noqa: F401
 from .test_price_engine import rows
-from .wizard_helpers import options_advanced, source_page
+from .wizard_helpers import options_advanced
 
 
 @pytest.mark.usefixtures("price_service")
@@ -34,7 +34,9 @@ async def test_opaque_entry_selection_replacement_and_readable_status(hass, free
     )
     first.add_to_hass(hass)
     assert (await async_source_defaults(hass))["nordpool_entry"] == first.entry_id
-    form = await source_page(hass)
+    form = await hass.config_entries.flow.async_init(
+        "ha_energy_price_engine", context={"source": "user"}
+    )
     field = next(v for k, v in form["data_schema"].schema.items() if str(k) == "nordpool_entry")
     assert isinstance(field, selector.ConfigEntrySelector)
     assert (
@@ -54,19 +56,12 @@ async def test_opaque_entry_selection_replacement_and_readable_status(hass, free
     assert await async_source_defaults(hass) == {}
     options = await hass.config_entries.options.async_init(entry.entry_id)
     options = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"name": "House", "source_type": "nordpool"}
-    )
-    options = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"nordpool_entry": second.entry_id}
-    )
-    options = await hass.config_entries.options.async_configure(
-        options["flow_id"],
-        {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25, "navigation": "review"},
+        options["flow_id"], {"next_step_id": "setup_spot"}
     )
     saved = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"next_step_id": "wizard_save"}
+        options["flow_id"], {"name": "House", "nordpool_entry": second.entry_id}
     )
-    assert saved["type"] == "create_entry"
+    assert saved["step_id"] == "setup_review"
     await hass.async_block_till_done()
     assert entry.options["nordpool_entry"] == second.entry_id
     assert entry.runtime_data.site["id"] == "home"
@@ -107,6 +102,9 @@ async def test_daily_stats_next_price_and_selected_breakdown_do_not_fetch(hass, 
         assert status["resolution_minutes"] == 15 and status["currency"] == "DKK"
         assert status["next_scheduled_update"].endswith("23:59:00+02:00")
         options = await options_advanced(hass, entry.entry_id)
+        await hass.config_entries.options.async_configure(
+            options["flow_id"], {"next_step_id": "storage_tools"}
+        )
         result = await hass.config_entries.options.async_configure(
             options["flow_id"], {"next_step_id": "breakdown"}
         )

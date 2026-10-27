@@ -43,6 +43,58 @@ implement/test incremental saving and current-rate activation, then simple nativ
 setup/diagnostics, full regression/consumer/HACS/package/CI gates and actual frontend
 journey screenshots/demonstration before immutable prerelease publication.
 
+
+## Beta.5 native saved-step checkpoint
+
+Checkpoint subject: **feat: replace draft onboarding with saved native setup and rate checklist**.
+PR **#14**; latest prior committed foundation032a502. No beta.5 publication or owner acceptance claimed.
+
+- Five ordinary stages. First source confirmation creates the actual entry; each
+  accepted page writes actual ConfigEntry options and updates pricing. Native HA
+  post-create FORM continuation keeps the same stable site ID. Closing resumes
+  saved progress; review needs no final commit or incomplete-finish form.
+- Source area/timezone/unit inferred only from official source facts. Radius C
+  requires explicit actual-product confirmation; other rates accept current values.
+- Named EWII suggestions fetched/parsed from official pages, with URL/time/HTML
+  digest and a strictly24h fallback snapshot. Basis16.5øre/0monthly and Plus6.5øre/
+  29monthly independently retrieved by runner40550840062. Product pages/general
+  pages do NOT state a reliable markup VAT convention: it remains null and the
+  user must explicitly select the actual VAT basis before confirming agreement.
+  No campaign/historical/private terms inferred. Public rates are suggestions only.
+- Custom markup is øre/kWh, optional monthly subscription and VAT, no dates. Current
+  agreement confirmation or explicit visualization-only estimate; open-ended until
+  changed, no earlier unknown intervals backfilled. Advanced dated edits retained
+  and now applied on acceptance too. Old unpublished beta.4 drafts are not silently
+  activated. Existing active entries/rates/history remain authoritative.
+- Compact native component checklist: numerical rate/source/status, each row opens
+  its relevant settings; one Check prices action. Advanced details behind final
+  price/Diagnostics. Review rates include VAT; structured diagnostics retain explicit
+  canonical ex-/incl-VAT values. Download diagnostics redact private free-form sources.
+- Step changes reuse only the existing verified Nord Pool cache with original
+  timestamp/error/backoff; explicit recheck and mandatory schedules still force
+  verification. Config reload failure marks consumers STALE before retry, never
+  certifies previous READY prices for newly changed settings. SQLite engine writes
+  and persistence remain unchanged.
+- Local focused gates: foundation35; UI/core24; migrated flow regression50; remaining
+  compatibility20 passed. Initial full run225 passed/5 obsolete navigation failures;
+  those tests migrated without dropping underlying identity/source/history checks.
+  Full second suite: **230 passed**, two upstream HACS warnings. Current-core repeats pending. Root ZIP independent native
+  installation1 passed; manual layout/remote gates still pending.
+- Actual HA .4/frontend20260930.5 EN desktop/mobile first run passed, including
+  close after supplier acceptance and Configure resuming tax. New site has source96,
+  remaining-day verified21/96, tomorrow96/96; future confirmed price.6675 DKK with
+  fictional.111exVAT supplier, no past backfill. Native start-time explanation.
+  Width390=document390; final console errors0. System ffmpeg used for requested
+  recording because Playwright CDN encoder download was blocked. Only non-PE
+  decorative branding mocked; native PE icon served normally. Old draft wizard implementation removed after replacement tests passed; management
+  actions reused unchanged in flow_tools.py. Final UI refresh/DA/product/missing/
+  provisional/restart/delete journeys still required.
+
+Next: complete local full gates; commit/push this checkpoint, then final native
+frontend evidence/demo, concise public docs, current-core/consumer/HACS/hassfest/
+package/migration/SQLite checks, clean source and exact-source CI before beta.5 tag
+and authorized immutable prerelease publication. No beta.5 tag/assets/release yet.
+
 ## Earlier beta.4 handoff (historical)
 
 ## Completed beta.4 publication

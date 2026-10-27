@@ -29,10 +29,15 @@ class PriceCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, entry):
         super().__init__(hass, LOGGER, config_entry=entry, name=DOMAIN, always_update=True)
         self.entry = entry
+        self.settings_current = True
         self.site = validate_site(settings(entry))
         self.sites = {self.site["id"]: SimpleNamespace(site=self.site)}
         self.price_engine = PriceEngine(hass, entry.entry_id)
         self.price_updater = PriceUpdater(hass, self.price_engine, self._changed)
+        reused = hass.data.get(DOMAIN + "_reload_sources", {}).pop(entry.entry_id, None)
+        self.reuse_sources = reused is not None
+        if reused is not None:
+            self.price_updater.official = reused
         self.schedule = PriceSchedule(self)
         self.pending = None
         self.stopped = False
@@ -76,7 +81,7 @@ class PriceCoordinator(DataUpdateCoordinator):
                 # Keep authoritative prior prices; startup re-verifies sources and
                 # records precise missing/expired component errors per requested day.
                 LOGGER.warning("Pricing configuration requires fresh verified source coverage")
-        await self.schedule.startup()
+        await self.schedule.startup(force=not self.reuse_sources)
         self.schedule.listen()
         self.entry.async_on_unload(self.stop)
         self._watch_source_entities()

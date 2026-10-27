@@ -61,6 +61,8 @@ async def async_setup_entry(hass, entry):
 
 
 async def async_update_options(hass, entry):
+    if runtime := hass.data.get(DOMAIN, {}).get(entry.entry_id):
+        runtime.settings_current = False
     waiter = hass.data.get(DOMAIN + "_save_waiters", {}).get(entry.entry_id)
     try:
         loaded = await hass.config_entries.async_reload(entry.entry_id)
@@ -72,13 +74,17 @@ async def async_update_options(hass, entry):
         waiter.set_result(loaded)
 
 
-async def apply_settings(hass, entry, site):
+async def apply_settings(hass, entry, site, *, reuse_sources=False):
     """Await one normal reload, including actual transactional persistence."""
     import asyncio
 
     waiters = hass.data.setdefault(DOMAIN + "_save_waiters", {})
     if entry.entry_id in waiters:
         return False
+    if reuse_sources and (runtime := hass.data.get(DOMAIN, {}).get(entry.entry_id)):
+        hass.data.setdefault(DOMAIN + "_reload_sources", {})[entry.entry_id] = (
+            runtime.price_updater.official
+        )
     waiter = asyncio.get_running_loop().create_future()
     waiters[entry.entry_id] = waiter
     try:
@@ -92,6 +98,7 @@ async def apply_settings(hass, entry, site):
         return False
     finally:
         waiters.pop(entry.entry_id, None)
+        hass.data.get(DOMAIN + "_reload_sources", {}).pop(entry.entry_id, None)
 
 
 async def async_unload_entry(hass, entry):

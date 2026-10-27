@@ -1,0 +1,36 @@
+{
+  "source_run": 40550840062,
+  "source_check": 122353823837,
+  "offers": {
+    "ewii_plus": {
+      "name": "EWII Plus El",
+      "markup_ore": 6.5,
+      "monthly_dkk": 29.0,
+      "vat_included": null,
+      "url": "https://www.ewii.dk/privat/el/plus-el/",
+      "vat_source": "user_confirmation_required",
+      "verified_at": "2026-10-27T17:28:03.714653+00:00",
+      "expires_at": "2026-10-28T17:28:03.714653+00:00",
+      "html_sha256": "a6980cdc23191344a0862883682a3b7dd6efb4154f66375357a78fb045a1743f",
+      "vat_html_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "public_offer_only": true,
+      "evidence_run": 40550840062,
+      "evidence_kind": "Official product-page retrieval; markup/monthly verified. VAT requires agreement confirmation."
+    },
+    "ewii_basis": {
+      "name": "EWII Basis El",
+      "markup_ore": 16.5,
+      "monthly_dkk": 0.0,
+      "vat_included": null,
+      "url": "https://www.ewii.dk/privat/el/basis-el/",
+      "vat_source": "user_confirmation_required",
+      "verified_at": "2026-10-27T17:28:02.976330+00:00",
+      "expires_at": "2026-10-28T17:28:02.976330+00:00",
+      "html_sha256": "8025bfe50b86ad3c82ab32650fcf3cfd59d836d2beeb441856810a4a983d0d4d",
+      "vat_html_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "public_offer_only": true,
+      "evidence_run": 40550840062,
+      "evidence_kind": "Official product-page retrieval; markup/monthly verified. VAT requires agreement confirmation."
+    }
+  }
+}

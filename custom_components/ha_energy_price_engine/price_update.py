@@ -25,6 +25,7 @@ class PriceUpdater:
         self.status = {}
         self.raw_reports, self.raw_slots = {}, {}
         self.estimated_slots = {}
+        self.component_inputs = {}
         self.lock = Lock()
         self.on_change = on_change
 
@@ -58,6 +59,7 @@ class PriceUpdater:
             ]
             for day in days:
                 self.estimated_slots.pop(str(day), None)
+                self.component_inputs.pop(str(day), None)
             old = self.status.get(key, {})
             report = {
                 "last_success": old.get("last_success"),
@@ -237,6 +239,15 @@ class PriceUpdater:
                 )
                 if activation:
                     slots = [slot for slot in slots if slot.start >= activation]
+                for requested in days:
+                    self.component_inputs[str(requested)] = {
+                        "tariff": tariff,
+                        "source": source,
+                        "at": now.isoformat(),
+                    }
+                self.component_inputs = {
+                    d: v for d, v in self.component_inputs.items() if d >= cutoff
+                }
                 stage = "composition"
                 report["grid_status"] = "STALE" if source.get("dso", {}).get("warning") else "READY"
                 if not (site.get("nordpool_entry") and self.official.last_errors):

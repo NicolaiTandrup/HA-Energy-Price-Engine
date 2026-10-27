@@ -146,6 +146,12 @@ class ConsumerAPI:
             ):
                 status = Status.STALE
             reason = reason or next((r.get("reason") for r in reports if r.get("reason")), None)
+        if end > now and not getattr(c, "settings_current", True):
+            status, reason = Status.STALE, "Configuration changed; waiting for successful reload"
+        if status == Status.INCOMPLETE and not reason and c.site.get("pricing_start"):
+            activation = utc(datetime.fromisoformat(c.site["pricing_start"]))
+            if start < activation:
+                reason = f"Confirmed prices start at {activation.isoformat()}; earlier unverified intervals were not backfilled"
         if site_id in c.price_engine.load_errors:
             status, reason = Status.ERROR, c.price_engine.load_errors[site_id]
         return PriceResult(

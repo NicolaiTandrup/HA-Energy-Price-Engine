@@ -54,7 +54,25 @@ async def async_get_config_entry_diagnostics(hass, entry):
         storage = await hass.async_add_executor_job(storage_usage)
     except OSError:
         storage = {"error": "Storage usage unavailable"}
+    from .component_status import component_snapshot
+
+    snapshot = component_snapshot(hass, entry)
+    public_components = {}
+    for key, row in snapshot["components"].items():
+        source = row["source"]
+        if not source.startswith(
+            ("https://www.ewii.dk/", "Rate specified by owner")
+        ) and source not in {
+            "Nord Pool",
+            "Radius",
+            "Energi Data Service",
+            "calculated",
+            "confirmed_vat",
+        }:
+            source = "user_confirmed_or_unavailable"
+        public_components[key] = {**row, "source": source}
     return {
+        "component_breakdown": public_components,
         "storage": storage,
         "api_version": 1,
         "raw_source_days": {

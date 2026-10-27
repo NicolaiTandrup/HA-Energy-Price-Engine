@@ -311,6 +311,7 @@ class PricingProblemSensor(BaseSensor):
         "storage",
         "composition",
         "configuration",
+        "activation",
         "supplier",
         "electricity_tax",
         "energinet_net",
@@ -325,6 +326,9 @@ class PricingProblemSensor(BaseSensor):
 
     @property
     def native_value(self):
+        activation = dt_util.parse_datetime(self.site.get("pricing_start", ""))
+        if activation and activation > dt_util.utcnow():
+            return "activation"
         report = self.coordinator.data or {}
         missing = report.get("missing_components", [])
         return next(
@@ -340,14 +344,17 @@ class PricingProblemSensor(BaseSensor):
     def extra_state_attributes(self):
         report = self.coordinator.data or {}
         return {
-            k: report.get(k)
-            for k in (
-                "affected_period",
-                "missing_components",
-                "reason",
-                "required_action",
-                "failure_stage",
-            )
+            "prices_start_at": self.site.get("pricing_start"),
+            **{
+                k: report.get(k)
+                for k in (
+                    "affected_period",
+                    "missing_components",
+                    "reason",
+                    "required_action",
+                    "failure_stage",
+                )
+            },
         }
 
 

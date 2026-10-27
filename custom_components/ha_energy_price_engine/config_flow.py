@@ -443,88 +443,36 @@ class LegacyEnergyPriceOptionsFlow(config_entries.OptionsFlow):
         return self.async_create_entry(title="", data=validate_site(self.draft))
 
 
-from .wizard import Wizard  # noqa: E402
+from .simple_setup import SimpleSetup  # noqa: E402
 
 
-class EnergyPriceConfigFlow(Wizard, LegacyEnergyPriceConfigFlow, domain=DOMAIN):
+class EnergyPriceConfigFlow(SimpleSetup, LegacyEnergyPriceConfigFlow, domain=DOMAIN):
     VERSION = 3
 
+    @property
+    def config_entry(self):
+        return self._wizard_entry
+
     async def async_step_user(self, user_input=None):
-        return await self._start_wizard()
+        return await self._start_setup()
 
     async def async_step_reconfigure(self, user_input=None):
-        return await self._start_wizard(self._get_reconfigure_entry())
+        return await self._start_setup(self._get_reconfigure_entry())
 
     _rate = LegacyEnergyPriceOptionsFlow._rate
-    _stage = LegacyEnergyPriceOptionsFlow._stage
     _choose = LegacyEnergyPriceOptionsFlow._choose
     async_step_add_rate = LegacyEnergyPriceOptionsFlow.async_step_add_rate
     async_step_edit_rate = LegacyEnergyPriceOptionsFlow.async_step_edit_rate
     async_step_rate = LegacyEnergyPriceOptionsFlow.async_step_rate
-    async_step_remove_rate = LegacyEnergyPriceOptionsFlow.async_step_remove_rate
+    async_step_storage = LegacyEnergyPriceOptionsFlow.async_step_storage
+    async_step_breakdown = LegacyEnergyPriceOptionsFlow.async_step_breakdown
 
     async def async_step_init(self, user_input=None):
-        await self._persist("advanced")
-        return await self.async_step_advanced()
-
-    async def async_step_advanced(self, user_input=None):
-        return self.async_show_menu(
-            step_id="advanced",
-            description_placeholders={
-                "draft_status": self._state()
-                + ("\n" + self.backup_result if getattr(self, "backup_result", None) else "")
-            },
-            menu_options=[
-                "wizard_review",
-                "wizard_grid",
-                "wizard_supplier",
-                "wizard_charges",
-                "wizard_site",
-                "wizard_location",
-                "wizard_source",
-                "wizard_display",
-                "wizard_recheck",
-                "wizard_discard",
-                "hacs_channel",
-                "add_rate",
-                "edit_rate",
-                "remove_rate",
-            ],
-        )
+        return await self.async_step_setup_review()
 
 
-class EnergyPriceOptionsFlow(Wizard, LegacyEnergyPriceOptionsFlow):
+class EnergyPriceOptionsFlow(SimpleSetup, LegacyEnergyPriceOptionsFlow):
     async def async_step_init(self, user_input=None):
-        if self.draft is None:
-            return await self._start_wizard(self.config_entry)
-        await self._persist("advanced")
-        return await self.async_step_advanced()
-
-    async def async_step_advanced(self, user_input=None):
-        self._advanced = True
-        return self.async_show_menu(
-            step_id="advanced",
-            description_placeholders={
-                "draft_status": self._state()
-                + ("\n" + self.backup_result if getattr(self, "backup_result", None) else "")
-            },
-            menu_options=[
-                "wizard_review",
-                "wizard_grid",
-                "wizard_supplier",
-                "wizard_charges",
-                "wizard_site",
-                "wizard_location",
-                "wizard_source",
-                "wizard_display",
-                "wizard_recheck",
-                "wizard_discard",
-                "hacs_channel",
-                "add_rate",
-                "edit_rate",
-                "remove_rate",
-                "storage",
-                "breakdown",
-                "site_management",
-            ],
-        )
+        if self._wizard_entry is None:
+            return await self._start_setup(self.config_entry)
+        return await self.async_step_setup_review()

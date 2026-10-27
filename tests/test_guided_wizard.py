@@ -1,6 +1,5 @@
 """User-visible native wizard, durable drafts, atomic apply and presentation invariants."""
 
-from copy import deepcopy
 from datetime import UTC, datetime
 
 import pytest
@@ -21,91 +20,50 @@ from .wizard_helpers import options_review, source_page
 async def test_new_official_wizard_source_defaults_review_save_incomplete(hass, freezer):
     freezer.move_to("2026-10-23T12:00:00Z")
     source = MockConfigEntry(
-        domain="nordpool",
-        title="Official DK2",
-        data={"areas": ["DK2"]},
-        state=ConfigEntryState.LOADED,
+        domain="nordpool", entry_id="np", data={"areas": ["DK2"]}, state=ConfigEntryState.LOADED
     )
     source.add_to_hass(hass)
     r = await source_page(hass, "Sommerhus")
-    fields = {str(k) for k in r["data_schema"].schema}
-    assert fields == {"nordpool_entry", "navigation"}
-    assert not fields & {"price_entity", "price_unit", "price_basis", "stale_minutes"}
     fid = r["flow_id"]
-    r = await hass.config_entries.flow.async_configure(fid, {"nordpool_entry": source.entry_id})
-    defaults = {str(k): k.default() for k in r["data_schema"].schema if callable(k.default)}
-    assert defaults["area"] == "DK2" and defaults["timezone"] == "Europe/Copenhagen"
-    assert defaults["vat_percent"] == 25
-    assert hass.config_entries.flow._progress[fid].draft["danish_public_rates"] is True
-    r = await hass.config_entries.flow.async_configure(
-        fid, {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25}
-    )
-    assert r["step_id"] == "wizard_grid"
-    r = await hass.config_entries.flow.async_configure(
-        fid, {"dso_mode": "manual", "navigation": "next"}
-    )
-    r = await hass.config_entries.flow.async_configure(
-        fid, {"supplier": "ewii", "add_contract": False}
-    )
-    r = await hass.config_entries.flow.async_configure(fid, {"danish_public_rates": False})
-    r = await hass.config_entries.flow.async_configure(fid, {"display_unit": "øre/kWh"})
-    assert r["step_id"] == "wizard_review"
-    assert r["menu_options"][0] == "wizard_save"
-    assert "✕" in r["description_placeholders"]["supplier"]
-    created = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "wizard_save"})
-    await hass.async_block_till_done()
-    assert created["step_id"] == "wizard_saved"  # Incomplete is never native success.
+    assert r["step_id"] == "setup_grid"
     entry = hass.config_entries.async_entries(DOMAIN)[0]
-    assert entry.unique_id == "sommerhus" and entry.version == 3
+    assert entry.unique_id == "sommerhus" and entry.data["timezone"] == "Europe/Copenhagen"
     assert entry.data["price_unit"] == "DKK/MWh" and entry.data["vat"] == 0.25
-    assert entry.data["dated_components"] == []  # EWII label did not manufacture a rate.
+    await hass.config_entries.flow.async_configure(fid, {"grid": "manual"})
+    await hass.config_entries.flow.async_configure(
+        fid, {"amount": 20, "vat_included": False, "confirm": True}
+    )
+    await hass.config_entries.flow.async_configure(fid, {"product": "missing"})
+    r = await hass.config_entries.flow.async_configure(fid, {"heating": False})
+    assert r["step_id"] == "setup_review" and "Missing" in r["menu_options"]["setup_supplier"]
     assert entry.runtime_data.data["status"] != "READY"
     assert "supplier" in entry.runtime_data.data["missing_components"]
-    assert "2026-10-23" in entry.runtime_data.data["reason"]
-    assert "Configure" in entry.runtime_data.data["required_action"]
+    assert not any(x["id"] == "supplier" for x in entry.options["dated_components"])
     assert await hass.config_entries.async_unload(entry.entry_id)
     source.mock_state(hass, ConfigEntryState.NOT_LOADED)
 
 
 @pytest.mark.usefixtures("price_service")
-async def test_interrupted_options_resume_back_discard_does_not_apply(hass, freezer):
+async def test_accepted_options_survive_close_and_later_step_changes(hass, freezer):
     freezer.move_to("2026-10-23T12:00:00Z")
     source = MockConfigEntry(
         domain="nordpool", entry_id="np", data={"areas": ["DK2"]}, state=ConfigEntryState.LOADED
     )
     source.add_to_hass(hass)
     entry = await setup(hass)
-    before = deepcopy(dict(entry.options))
     rows = entry.runtime_data.price_engine.records["home"]
-    r = await hass.config_entries.options.async_init(entry.entry_id)
-    fid = r["flow_id"]
+    r = await options_review(hass, entry.entry_id)
     r = await hass.config_entries.options.async_configure(
-        fid, {"name": "Changed draft name", "source_type": "nordpool"}
-    )
-    assert r["step_id"] == "wizard_source"
-    hass.config_entries.options.async_abort(fid)
-    saved = await Store(hass, 1, f"{DOMAIN}.wizard.{entry.entry_id}").async_load()
-    assert saved["draft"]["name"] == "Changed draft name"
-    assert dict(entry.options) == before and entry.runtime_data.price_engine.records["home"] == rows
-    r = await hass.config_entries.options.async_init(entry.entry_id)
-    assert r["step_id"] == "wizard_source"
-    r = await hass.config_entries.options.async_configure(r["flow_id"], {"navigation": "back"})
-    assert r["step_id"] == "wizard_site"
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"],
-        {"name": "Changed draft name", "source_type": "nordpool", "navigation": "review"},
+        r["flow_id"], {"next_step_id": "setup_spot"}
     )
     r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "advanced"}
+        r["flow_id"], {"name": "Saved name", "nordpool_entry": "np"}
     )
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "wizard_discard"}
-    )
-    assert r["step_id"] == "wizard_discard"
-    r = await hass.config_entries.options.async_configure(r["flow_id"], {"confirm": True})
-    assert r["reason"] == "draft_discarded"
-    assert not await Store(hass, 1, f"{DOMAIN}.wizard.{entry.entry_id}").async_load()
-    assert dict(entry.options) == before
+    assert r["step_id"] == "setup_review" and entry.options["name"] == "Saved name"
+    hass.config_entries.options.async_abort(r["flow_id"])
+    r = await options_review(hass, entry.entry_id)
+    assert r["step_id"] == "setup_review" and r["description_placeholders"]["name"] == "Saved name"
+    assert entry.runtime_data.price_engine.records["home"] == rows
     assert await hass.config_entries.async_unload(entry.entry_id)
     source.mock_state(hass, ConfigEntryState.NOT_LOADED)
 
@@ -119,7 +77,7 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
     c = entry.runtime_data
     assert entry.version == 3
     device = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)[0]
-    assert device.sw_version == "0.1.0-beta.4"  # Installed manifest, not flow/core version.
+    assert device.sw_version == "0.1.0-beta.5"  # Installed manifest, not flow/core version.
     now = datetime(2026, 10, 23, 12, tzinfo=UTC)
     original = c.price_engine.records["home"]
     price = PriceSensor(c).native_value
@@ -128,14 +86,14 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
     assert display.native_unit_of_measurement == "øre/kWh"
     assert display.state_class is None  # Display preferences never reinterpret statistics.
     uid = display.unique_id
-    r = await options_review(hass, entry.entry_id)
+    from .wizard_helpers import options_advanced
+
+    r = await options_advanced(hass, entry.entry_id)
     r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "wizard_display"}
+        r["flow_id"], {"next_step_id": "setup_display"}
     )
     r = await hass.config_entries.options.async_configure(r["flow_id"], {"display_unit": "DKK/kWh"})
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "wizard_save"}
-    )
+    assert r["step_id"] == "setup_review"
     await hass.async_block_till_done()
     c = entry.runtime_data
     assert c.price_engine.records["home"] == original
@@ -151,90 +109,43 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
 
 
 @pytest.mark.usefixtures("price_service")
-async def test_invalid_contract_fields_survive_close_and_block_silent_save(hass, freezer):
+async def test_invalid_contract_confirmation_never_changes_active_rate(hass, freezer):
     freezer.move_to("2026-10-23T12:00:00Z")
-    source = MockConfigEntry(domain="nordpool", entry_id="np", state=ConfigEntryState.LOADED)
+    source = MockConfigEntry(
+        domain="nordpool", entry_id="np", data={"areas": ["DK2"]}, state=ConfigEntryState.LOADED
+    )
     source.add_to_hass(hass)
     entry = await setup(hass)
     r = await options_review(hass, entry.entry_id)
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "advanced"}
-    )
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "wizard_supplier"}
-    )
-    values = {
-        "supplier": "ewii",
-        "add_contract": True,
-        "amount": 0.123456,
-        "unit": "DKK/kWh",
-        "vat_included": False,
-        "rate_vat_percent": 25,
-        "valid_from": "2027-01-01",
-        "valid_to": "2028-01-01",
-        "verified_on": "2026-10-23",
-        "source": "",
-    }
-    r = await hass.config_entries.options.async_configure(r["flow_id"], values)
-    assert r["errors"]["source"] == "rate_required"
     fid = r["flow_id"]
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "setup_supplier"})
+    await hass.config_entries.options.async_configure(fid, {"product": "custom"})
+    r = await hass.config_entries.options.async_configure(
+        fid, {"amount": 12.3456, "vat_included": False, "estimate": False, "confirm": False}
+    )
+    assert r["errors"]["confirm"] == "confirmation_required"
+    assert next(k.default() for k in r["data_schema"].schema if str(k) == "amount") == 12.3456
+    assert [x["amount"] for x in entry.options["dated_components"] if x["id"] == "supplier"] == [11]
     hass.config_entries.options.async_abort(fid)
     r = await hass.config_entries.options.async_init(entry.entry_id)
-    assert r["step_id"] == "wizard_supplier"
-    schema = r["data_schema"].schema
-    assert next(k.default() for k in schema if str(k) == "amount") == 0.123456
+    assert r["step_id"] == "setup_contract"
     r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {**values, "source": "Fictional QA contract", "navigation": "back"}
+        r["flow_id"], {"amount": 12.3456, "vat_included": False, "estimate": False, "confirm": True}
     )
-    assert r["step_id"] == "wizard_grid"
-    r = await hass.config_entries.options.async_configure(r["flow_id"], {"navigation": "review"})
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "wizard_save"}
-    )
-    assert r["step_id"] == "wizard_supplier" and r["errors"]["base"] == "pending_page"
-    assert not entry.options
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {**values, "source": "Fictional QA contract", "navigation": "review"}
-    )
-    r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"next_step_id": "wizard_save"}
-    )
-    assert r["type"] == "create_entry"
-    await hass.async_block_till_done()
-    assert len(entry.options["dated_components"]) == 3
-    assert entry.options["dated_components"][-1]["amount"] == 0.123456
+    assert [x["amount"] for x in entry.options["dated_components"] if x["id"] == "supplier"][
+        -1
+    ] == 12.3456
     assert await hass.config_entries.async_unload(entry.entry_id)
     source.mock_state(hass, ConfigEntryState.NOT_LOADED)
 
 
-async def test_initial_draft_resume_and_entity_source_fields_are_separate(hass):
-    r = await source_page(hass, "Sommerhus entity", "entity")
-    keys = {str(k) for k in r["data_schema"].schema}
-    assert "price_entity" in keys and "nordpool_entry" not in keys
-    fid = r["flow_id"]
-    hass.config_entries.flow.async_abort(fid)
+async def test_unaccepted_initial_input_creates_no_hidden_draft(hass):
     r = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
-    assert r["step_id"] == "wizard_resume"
-    options = next(v for k, v in r["data_schema"].schema.items() if str(k) == "draft")
-    draft = next(o["value"] for o in options.config["options"] if o["value"] != "new")
-    r = await hass.config_entries.flow.async_configure(r["flow_id"], {"draft": draft})
-    assert r["step_id"] == "wizard_source"
-    r = await hass.config_entries.flow.async_configure(
-        r["flow_id"],
-        {
-            "price_entity": "sensor.qa_source",
-            "price_unit": "DKK/kWh",
-            "price_basis": "all_in",
-            "price_attribute": "slots",
-            "stale_minutes": 40,
-        },
-    )
-    r = await hass.config_entries.flow.async_configure(
-        r["flow_id"], {"area": "DK2", "timezone": "Europe/Copenhagen", "vat_percent": 25}
-    )
-    assert {str(k) for k in r["data_schema"].schema} == {
-        "navigation"
-    }  # No duplicate tariffs on all-in input.
+    assert {str(k) for k in r["data_schema"].schema} == {"name", "nordpool_entry"}
+    hass.config_entries.flow.async_abort(r["flow_id"])
+    r = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    assert r["step_id"] == "setup_site" and not hass.config_entries.async_entries(DOMAIN)
+    assert not await Store(hass, 1, f"{DOMAIN}.wizard.initial").async_load()
     hass.config_entries.flow.async_abort(r["flow_id"])
 
 
@@ -272,6 +183,7 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
         ("56cdb3c10993179371483812cbc36f651ba3ad8e", 2),
         ("0c93d2bfac88878cff46e7726f59accbeababf85", 3),
         ("78ef9ba4d02ccb85b9395991d1376fbdec34bb84", 3),
+        ("38973d88ad67758b419dfc45c193a8c85674afda", 3),
     ],
 )
 async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(
@@ -381,11 +293,11 @@ async def test_save_verify_unchanged_options_rechecks_sources_and_preserves_hist
         hass.config_entries, "async_reload", wraps=hass.config_entries.async_reload
     ) as reload:
         result = await hass.config_entries.options.async_configure(
-            result["flow_id"], {"next_step_id": "wizard_save"}
+            result["flow_id"], {"next_step_id": "setup_check"}
         )
         await hass.async_block_till_done()
-        reload.assert_awaited_once_with(entry.entry_id)
-    assert result["type"] == "create_entry"
+        reload.assert_not_awaited()  # Recheck reads sources without an unnecessary reload.
+    assert result["step_id"] == "setup_review"
     assert entry.runtime_data.price_engine.records["home"] == rows
     assert entry.runtime_data.price_engine.revisions["home"] == revision
     assert await hass.config_entries.async_unload(entry.entry_id)

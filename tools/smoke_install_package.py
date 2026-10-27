@@ -22,7 +22,7 @@ from custom_components.ha_energy_price_engine.price_engine import day_bounds
 @pytest.fixture(autouse=True)
 def release_metadata():
     from unittest.mock import AsyncMock,patch
-    with patch("custom_components.ha_energy_price_engine.update.fetch_releases",AsyncMock(return_value=[])):
+    with (patch("custom_components.ha_energy_price_engine.update.fetch_releases",AsyncMock(return_value=[])),patch("custom_components.ha_energy_price_engine.supplier_offers._fetch",AsyncMock(side_effect=OSError("Offline source")))):
         yield
 
 @pytest.fixture
@@ -33,52 +33,51 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
-    assert manifest["version"]=="0.1.0-beta.4"
+    assert manifest["version"]=="0.1.0-beta.5"
     freezer.move_to("2026-10-24T10:00:00Z")
     now=datetime(2026,10,24,10,tzinfo=UTC)
-    slots=[]
-    for day in (date(2026,10,24),date(2026,10,25)):
-        start,end=day_bounds(day)
+    from homeassistant.core import SupportsResponse
+    from pytest_homeassistant_custom_component.common import MockConfigEntry,MockModule,mock_integration
+    mock_integration(hass,MockModule("nordpool"))
+    source=MockConfigEntry(domain="nordpool",entry_id="package-np",data={"areas":["DK2"]},state=ConfigEntryState.LOADED)
+    source.add_to_hass(hass)
+    async def prices(call):
+        start,end=day_bounds(date.fromisoformat(call.data["date"]));rows=[]
         while start<end:
-            slots.append({"start":start.isoformat(),"end":(start+timedelta(minutes=15)).isoformat(),"price":-.25})
-            start+=timedelta(minutes=15)
-    hass.states.async_set("sensor.package_source","-.25",{"slots":slots,"currency":"DKK","unit_of_measurement":"DKK/kWh","vat_included":True,"verified_at":now.isoformat()})
+            rows.append({"start":start.isoformat(),"end":(start+timedelta(minutes=15)).isoformat(),"price":-250});start+=timedelta(minutes=15)
+        return {"DK2":rows}
+    hass.services.async_register("nordpool","get_prices_for_date",prices,supports_response=SupportsResponse.ONLY)
     form=await hass.config_entries.flow.async_init("ha_energy_price_engine",context={"source":"user"})
     assert form["type"]=="form"
-    configuration={
-        "id":"installed","name":"Installed package","source_type":"entity","price_entity":"sensor.package_source",
-        "price_unit":"DKK/kWh","price_basis":"all_in","price_attribute":"slots","stale_minutes":40,
-        "area":"DK2","timezone":"Europe/Copenhagen","vat":.25}
     async def complete_wizard(form):
         flow=form["flow_id"]
-        if form["step_id"]=="wizard_resume":
-            form=await hass.config_entries.flow.async_configure(flow,{"draft":"new"})
-        pages=[
-            {"id":"installed","name":"Installed package","source_type":"entity"},
-            {k:configuration[k] for k in ("price_entity","price_unit","price_basis","price_attribute","stale_minutes")},
-            {"area":"DK2","timezone":"Europe/Copenhagen","vat_percent":25},
-            {}, {}, {}, {"display_unit":"øre/kWh"},
-        ]
-        for values in pages:
-            form=await hass.config_entries.flow.async_configure(flow,{**values,"navigation":"next"})
+        for page in [
+            {"name":"Installed","nordpool_entry":source.entry_id},
+            {"grid":"manual"},
+            {"amount":20,"vat_included":False,"confirm":True},
+            {"product":"custom"},
+            {"amount":11.1,"vat_included":False,"estimate":False,"confirm":True},
+            {"heating":False},
+        ]:
+            form=await hass.config_entries.flow.async_configure(flow,page)
             assert form["type"] in ("form","menu"),form
-        assert form["step_id"]=="wizard_review"
-        return await hass.config_entries.flow.async_configure(flow,{"next_step_id":"wizard_save"})
-    created=await complete_wizard(form)
-    assert created["type"]=="create_entry"
+        assert form["step_id"]=="setup_review"
+        entry=next(e for e in hass.config_entries.async_entries("ha_energy_price_engine") if e.unique_id=="installed")
+        hass.config_entries.flow.async_abort(flow)
+        return entry
+    entry=await complete_wizard(form)
     await hass.async_block_till_done()
-    entry=created["result"]
     assert entry.state==ConfigEntryState.LOADED
     result=get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now)
     assert str(result.status)=="READY" and len(result.records)==100
-    assert all(r.final_price_incl_vat==-.25 for r in result.records)
+    assert all(abs(r.final_price_incl_vat-.23)<1e-9 for r in result.records)
     before=result.records
     assert entry.runtime_data.price_engine.database.path.is_file()
     assert await hass.config_entries.async_reload(entry.entry_id)
     await hass.async_block_till_done()
     assert get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now).records==before
     options=await hass.config_entries.options.async_init(entry.entry_id)
-    assert options["type"]=="form" and options["step_id"]=="wizard_site"
+    assert options["type"]=="menu" and options["step_id"]=="setup_review"
     hass.config_entries.options.async_abort(options["flow_id"])
     old_id=entry.entry_id
     old_ledger=entry.runtime_data.price_engine.database.path
@@ -86,14 +85,13 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     assert result["require_restart"] is False
     assert old_ledger.is_file()  # Removal cannot erase accounting references.
     form=await hass.config_entries.flow.async_init("ha_energy_price_engine",context={"source":"user"})
-    created=await complete_wizard(form)
-    assert created["type"]=="create_entry"
+    replacement=await complete_wizard(form)
     await hass.async_block_till_done()
-    replacement=created["result"]
     assert replacement.entry_id != old_id and replacement.state==ConfigEntryState.LOADED
     assert replacement.runtime_data.price_engine.database.path != old_ledger
     assert get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now).records
     assert await hass.config_entries.async_unload(replacement.entry_id)
+    source.mock_state(hass,ConfigEntryState.NOT_LOADED)
     await hass.async_block_till_done()
 """
 

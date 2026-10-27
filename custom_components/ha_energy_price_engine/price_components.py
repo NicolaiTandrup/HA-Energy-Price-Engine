@@ -127,35 +127,8 @@ def compose_dated(slot, tariff):
         raise ValueError("Dated components cannot be added to all-in input")
     if any(tariff.get(key, 0) for key in ("tax", "supplier")):
         raise ValueError("Dated and legacy tax/supplier fees would be duplicated")
+    active, fixed = resolved_rules(slot, tariff)
     local = slot.start.astimezone(ZoneInfo(tariff.get("timezone", "Europe/Copenhagen")))
-    day = local.date()
-    rules = tariff["components"]
-    if not isinstance(rules, list):
-        raise ValueError("Dated components must be a list")
-    active = {}
-    fixed = []
-    for rule in rules:
-        start, end = date.fromisoformat(rule["valid_from"]), date.fromisoformat(rule["valid_to"])
-        if end <= start:
-            raise ValueError("Invalid component effective period")
-        if not start <= day < end or local.hour not in active_hours(rule):
-            continue
-        if not eligible(rule, tariff, day):
-            continue
-        component = normalize_component(rule)
-        if rule["unit"] == "DKK/month":
-            fixed.append(component)
-            continue
-        name = rule["id"]
-        if name in active:
-            previous = active[name]
-            score = (component["locked"], component["eligibility"] == "heating_above_4000")
-            old_score = (previous["locked"], previous["eligibility"] == "heating_above_4000")
-            if score == old_score:
-                raise ValueError("Overlapping component rate versions")
-            if score < old_score:
-                continue
-        active[name] = component
     if not REQUIRED <= active.keys():
         raise MissingPriceComponents(REQUIRED - active.keys(), local)
     vat = float(tariff["vat"])
@@ -192,3 +165,37 @@ def compose_dated(slot, tariff):
         "components": active,
         "fixed_subscriptions_excluded": fixed,
     }
+
+
+def resolved_rules(slot, tariff):
+    """Canonical active dated rules, also used by component diagnostics."""
+    local = slot.start.astimezone(ZoneInfo(tariff.get("timezone", "Europe/Copenhagen")))
+    day = local.date()
+    rules = tariff["components"]
+    if not isinstance(rules, list):
+        raise ValueError("Dated components must be a list")
+    active = {}
+    fixed = []
+    for rule in rules:
+        start, end = date.fromisoformat(rule["valid_from"]), date.fromisoformat(rule["valid_to"])
+        if end <= start:
+            raise ValueError("Invalid component effective period")
+        if not start <= day < end or local.hour not in active_hours(rule):
+            continue
+        if not eligible(rule, tariff, day):
+            continue
+        component = normalize_component(rule)
+        if rule["unit"] == "DKK/month":
+            fixed.append(component)
+            continue
+        name = rule["id"]
+        if name in active:
+            previous = active[name]
+            score = (component["locked"], component["eligibility"] == "heating_above_4000")
+            old_score = (previous["locked"], previous["eligibility"] == "heating_above_4000")
+            if score == old_score:
+                raise ValueError("Overlapping component rate versions")
+            if score < old_score:
+                continue
+        active[name] = component
+    return active, fixed
