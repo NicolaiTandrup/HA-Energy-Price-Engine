@@ -33,7 +33,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
-    assert manifest["version"]=="0.1.0-beta.5"
+    assert manifest["version"]=="0.1.0-beta.6"
     freezer.move_to("2026-10-24T10:00:00Z")
     now=datetime(2026,10,24,10,tzinfo=UTC)
     from homeassistant.core import SupportsResponse
@@ -55,9 +55,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
             {"name":"Installed","nordpool_entry":source.entry_id},
             {"grid":"manual"},
             {"amount":20,"vat_included":False,"confirm":True},
-            {"product":"custom"},
-            {"amount":11.1,"vat_included":False,"estimate":False,"confirm":True},
-            {"heating":False},
+            {"amount":"11.1","vat_included":False},
         ]:
             form=await hass.config_entries.flow.async_configure(flow,page)
             assert form["type"] in ("form","menu"),form

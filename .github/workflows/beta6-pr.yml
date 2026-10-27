@@ -1,7 +1,7 @@
-name: Open beta.6 development PR
+name: Continue beta.6 development PR
 on:
   push:
-    branches: [feat/beta6-marginal-pricing]
+    branches: [feat/beta5-simple-onboarding]
     paths: [.github/workflows/beta6-pr.yml]
 permissions:
   contents: read
@@ -21,15 +21,18 @@ jobs:
 
           First tested checkpoint accepts point/comma decimal markup without rounding, persists exact decimal input and preserves canonical numeric DKK/kWh API values. Ordinary setup has three stages, no product/date/subscription/heating decision. Advanced offers, dated rules, estimates and source contracts remain. Menus resolve explicit nonempty labels on the server; old cached draft_status descriptions receive a safe compatibility placeholder. Official-source forms hide alternate entity fields.
 
-          Focused native flow/decimal/localization/current-contract tests:32 passed. Full old-flow regression adaptation, canonical current/future breakdown, read-only allocated-energy session estimate, beta.5 migration, actual EN/en-GB/DA desktop/mobile frontend, HACS/packages/hassfest/consumer/CI gates and beta.6 publication remain in progress. No beta.6 tag/release yet; no owner acceptance claimed.
+          Focused canonical/recorded-Radius/decimal/localization tests35 passed; combined diagnostics and adapted historical flow regression49 passed. Canonical current/future breakdown and a read-only allocated-energy session estimate are implemented. Actual released beta.5 migration is included. Full both-core suites, native EN/en-GB/DA desktop/mobile, HACS/packages/hassfest/consumers/CI and publication remain in progress. No beta.6 tag/release yet; no owner acceptance claimed.
 
           Owner authorizes beta.6 prerelease after mandatory validation only. Preserve main and prior releases, proven pricing engine, SQLite history/performance, site IDs and CM APIv1. No production HA, Node-RED, Tesla, Easee or CM/control changes. No stable or merge. Issue#10 graphs stay separate.
 
           Refs #8, #12. Permanent handoff: docs/DEVELOPMENT_STATUS.md.
           PR_BODY
-          existing="$(gh pr list --head feat/beta6-marginal-pricing --base main --state open --json number --jq '.[0].number // empty')"
-          if test -n "$existing"; then
-            gh api "repos/$GITHUB_REPOSITORY/pulls/$existing" --jq '{number,html_url,draft}'
-          else
-            gh pr create --base main --head feat/beta6-marginal-pricing --draft --title 'Beta.6: simple marginal charging prices and fractional markup' --body-file "$RUNNER_TEMP/pe-beta6-body.md"
-          fi
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" > "$RUNNER_TEMP/pe-existing-pr.json"
+          python - <<'CHECK_PR'
+          import json,os
+          data=json.load(open(os.environ['RUNNER_TEMP']+'/pe-existing-pr.json'))
+          assert data['state']=='open' and data['draft'] is True
+          assert data['head']['ref']=='feat/beta5-simple-onboarding'
+          assert data['head']['sha']==os.environ['GITHUB_SHA']
+          CHECK_PR
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" --method PATCH --raw-field title='Beta.6: simple marginal charging prices and fractional markup' -F body=@"$RUNNER_TEMP/pe-beta6-body.md" --jq '{number,html_url,draft}'

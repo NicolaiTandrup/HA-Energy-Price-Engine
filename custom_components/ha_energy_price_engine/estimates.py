@@ -7,6 +7,14 @@ from .price_engine import calculate
 
 
 def estimate(site, slots, tariff, source, now):
+    return tuple(
+        PriceSlot(r.start, r.end, r.final_price_incl_vat)
+        for r in estimate_records(site, slots, tariff, source, now)
+    )
+
+
+def estimate_records(site, slots, tariff, source, now):
+    """Transient canonical components for UI reads; never ledger/API records."""
     provisional = site.get("provisional_supplier")
     if not provisional or not provisional.get("approved") or not slots:
         return ()
@@ -27,4 +35,4 @@ def estimate(site, slots, tariff, source, now):
         records = calculate(site["id"], slots, draft, {**source, "estimated": True}, now, 0)
     except ValueError, TypeError, KeyError:
         return ()
-    return tuple(PriceSlot(r.start, r.end, r.final_price_incl_vat) for r in records)
+    return records

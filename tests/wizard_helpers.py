@@ -36,3 +36,10 @@ async def source_page(hass, name="Test site", source_type="nordpool"):
     return await hass.config_entries.flow.async_configure(
         result["flow_id"], {"name": name, "nordpool_entry": entries[0].entry_id if entries else ""}
     )
+
+
+async def advanced_target(hass, flow_id, target, *, options=True):
+    manager = hass.config_entries.options if options else hass.config_entries.flow
+    for step in ("setup_final", "advanced", target):
+        result = await manager.async_configure(flow_id, {"next_step_id": step})
+    return result

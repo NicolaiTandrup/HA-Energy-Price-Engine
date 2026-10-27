@@ -22,7 +22,15 @@ async def flow_labels(hass):
     result = {}
     for locale in dict.fromkeys(("en", language.split("-")[0], language)):
         for category in ("config", "options"):
-            result.update(await async_get_translations(hass, locale, category, {DOMAIN}))
+            result.update(
+                {
+                    k: v
+                    for k, v in (
+                        await async_get_translations(hass, locale, category, {DOMAIN})
+                    ).items()
+                    if v and v.strip()
+                }
+            )
     return result
 
 

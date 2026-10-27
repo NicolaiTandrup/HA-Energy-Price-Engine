@@ -679,14 +679,109 @@ class SimpleSetup(FlowTools):
         )
 
     async def async_step_setup_diagnostics(self, user_input=None):
-        from .component_status import review
+        from .charging_diagnostics import charging_breakdown
+        from .component_status import component_snapshot
 
-        summary, missing = await review(self.hass, self._wizard_entry, details=True)
-        summary.pop("rows", None)
+        now = dt_util.utcnow()
+        selected = getattr(
+            self,
+            "_selected_quarter",
+            now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0),
+        )
+        snapshot = component_snapshot(self.hass, self._wizard_entry, reference=selected)
+        targets = {
+            "source": "setup_site",
+            "dso": "setup_grid",
+            "supplier": "setup_supplier",
+            "energinet_net": "setup_tax_details",
+            "energinet_system": "setup_tax_details",
+            "electricity_tax": "setup_tax_details",
+        }
+        missing = [
+            targets[key]
+            for key, row in snapshot["components"].items()
+            if key in targets and row["status"] not in {"verified", "included"}
+        ]
         return self.async_show_menu(
             step_id="setup_diagnostics",
-            description_placeholders=summary,
-            menu_options=list(dict.fromkeys(missing)) + ["setup_review", "advanced"],
+            description_placeholders={
+                "components": await charging_breakdown(self.hass, self._wizard_entry, selected)
+            },
+            menu_options=list(dict.fromkeys(missing))
+            + ["select_quarter", "session_estimate", "setup_review", "advanced"],
+        )
+
+    async def async_step_select_quarter(self, user_input=None):
+        from .charging_diagnostics import quarter_choices
+
+        choices = quarter_choices(self.hass, self._wizard_entry)
+        errors = {}
+        if user_input is not None:
+            selected = user_input["slot"]
+            if selected in dict(choices):
+                self._selected_quarter = dt_util.parse_datetime(selected)
+                return await self.async_step_setup_diagnostics()
+            errors["slot"] = "invalid_quarter"
+        return await self._simple_form(
+            "select_quarter", {vol.Required("slot"): choice(choices)}, "", user_input, errors
+        )
+
+    async def async_step_session_estimate(self, user_input=None):
+        from decimal import Decimal
+
+        from .api import ConsumerAPI
+        from .charging_cost import estimate_charging_cost
+        from .charging_diagnostics import quarter_choices
+        from .component_status import safe
+        from .localization import review_labels
+
+        labels = await review_labels(self.hass)
+        errors, result = {}, ""
+        choices = quarter_choices(self.hass, self._wizard_entry)
+        if user_input is not None:
+            try:
+                start = dt_util.parse_datetime(user_input["slot"])
+                if not start or user_input["slot"] not in dict(choices):
+                    raise ValueError("Choose an available quarter")
+                from datetime import timedelta
+
+                allocations = [
+                    (start + timedelta(minutes=15 * i), line.strip())
+                    for i, line in enumerate(user_input["energy"].splitlines())
+                ]
+                report = estimate_charging_cost(
+                    ConsumerAPI(self.hass),
+                    self.draft["id"],
+                    allocations,
+                    energy_kind=user_input["energy_kind"],
+                    producer_entry_id=self._wizard_entry.entry_id,
+                )
+                self._session_report = report
+                if report["estimated_cost_dkk"] is None:
+                    result = labels["cost_unavailable"] + " " + safe(report["reason"] or "")
+                else:
+                    cost = f"{Decimal(report['estimated_cost_dkk']):.4f}".replace(
+                        ".", labels["decimal_separator"]
+                    )
+                    energy = report["energy_kwh"].replace(".", labels["decimal_separator"])
+                    result = f"**{labels['cost_estimate']}: {cost} DKK** · {energy} kWh · {labels['energy_' + report['energy_kind']]}\n\n{labels['marginal_only']}"
+            except ValueError, TypeError, KeyError:
+                errors["energy"] = "invalid_energy"
+        return await self._simple_form(
+            "session_estimate",
+            {
+                vol.Required("slot"): choice(choices),
+                vol.Required("energy"): selector.TextSelector(
+                    selector.TextSelectorConfig(multiline=True)
+                ),
+                vol.Required("energy_kind", default="planned"): choice(
+                    [("planned", "planned"), ("measured", "measured")], "energy_kind"
+                ),
+            },
+            "",
+            user_input,
+            errors,
+            result=result,
         )
 
     async def async_step_advanced(self, user_input=None):

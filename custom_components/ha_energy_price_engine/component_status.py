@@ -1,5 +1,6 @@
 """Concrete applied component values and native corrective routes per saved site."""
 
+import json
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
@@ -35,13 +36,14 @@ def safe(value):
     )
 
 
-def component_snapshot(hass, entry):
+def component_snapshot(hass, entry, reference=None):
     site = settings(entry)
     now = dt_util.utcnow()
     runtime = hass.data.get(DOMAIN, {}).get(entry.entry_id)
-    reference = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
+    selected = reference is not None
+    reference = reference or now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
     activation = dt_util.parse_datetime(site.get("pricing_start", ""))
-    if activation:
+    if activation and not selected:
         reference = max(reference, activation)
     day = str(reference.astimezone(ZoneInfo(site["timezone"])).date())
     if runtime and not getattr(runtime, "settings_current", True):
@@ -64,11 +66,20 @@ def component_snapshot(hass, entry):
         if runtime
         else None
     )
-    parts, _ = (
-        resolved_rules(spot or PriceSlot(reference, reference + timedelta(minutes=15), 0), tariff)
-        if tariff.get("mode") != "all_in"
-        else ({}, [])
+    lookup = ConsumerAPI(hass).lookup(
+        site["id"], reference, reference + timedelta(minutes=15), producer_entry_id=entry.entry_id
     )
+    stored = lookup.records[0] if len(lookup.records) == 1 else None
+    if stored:
+        parts = json.loads(stored.components_json).get("components", {})
+    else:
+        parts, _ = (
+            resolved_rules(
+                spot or PriceSlot(reference, reference + timedelta(minutes=15), 0), tariff
+            )
+            if tariff.get("mode") != "all_in"
+            else ({}, [])
+        )
     result = {}
 
     def add(key, value=None, source_key="", status="missing", period="", **more):
@@ -109,9 +120,9 @@ def component_snapshot(hass, entry):
             add(
                 key,
                 part["ex_vat"] * 100,
-                part["source"],
+                part.get("source", ""),
                 "verified",
-                part["valid_from"] + " → " + part["valid_to"],
+                (part.get("valid_from", "") + " → " + part.get("valid_to", "")).strip(" →"),
                 display_value=part["incl_vat"] * 100,
             )
         elif key == "dso" and inputs:
@@ -153,7 +164,6 @@ def component_snapshot(hass, entry):
         else:
             add(key)
     add("vat", site["vat"] * 100, "confirmed_vat", "verified")
-    lookup = ConsumerAPI(hass).lookup(site["id"], reference, reference + timedelta(minutes=15))
     final = (
         lookup.records[0].final_price_incl_vat * 100
         if lookup.records and str(lookup.status) == "READY"
@@ -164,7 +174,7 @@ def component_snapshot(hass, entry):
             (r for r in runtime.price_updater.estimated_slots.get(day, ()) if r.start == reference),
             None,
         )
-        if runtime
+        if runtime and fresh and raw.get("status") == "READY"
         else None
     )
     add(
@@ -174,12 +184,79 @@ def component_snapshot(hass, entry):
         "verified" if final is not None else "provisional" if estimated else "missing",
         reference.isoformat(),
     )
+    record = stored
+    provisional_record = False
+    if not record and runtime and fresh and raw.get("status") == "READY":
+        record = next(
+            (
+                r
+                for r in runtime.price_updater.estimated_records.get(day, ())
+                if r.start == reference
+            ),
+            None,
+        )
+        provisional_record = record is not None
+    canonical_vat = canonical_ex = None
+    if record:
+        components = json.loads(record.components_json)
+        parts = components.get("components", {})
+        provenance = json.loads(record.source_json)
+        state = (
+            "provisional"
+            if provisional_record
+            else "verified"
+            if str(lookup.status) == "READY"
+            else "stale"
+        )
+        for key in (
+            "source",
+            "dso",
+            "supplier",
+            "energinet_net",
+            "energinet_system",
+            "electricity_tax",
+        ):
+            part = parts.get("spot" if key == "source" else key)
+            if part:
+                result[key].update(
+                    value=part["ex_vat"] * 100,
+                    display_value=part["incl_vat"] * 100,
+                    source=part.get("source")
+                    or (
+                        provenance.get("dso", {}).get("provider", "Radius")
+                        if key == "dso"
+                        else "Nord Pool"
+                    ),
+                    status="verified" if provisional_record and key != "supplier" else state,
+                    effective_period=(
+                        part.get("valid_from", "") + " → " + part.get("valid_to", "")
+                    ).strip(" →"),
+                    vat_value=part["vat"] * 100,
+                )
+            elif "external_all_in" in components:
+                result[key].update(
+                    value=None, display_value=None, status="included", source="provider_included"
+                )
+        if parts:
+            canonical_vat = sum(p["vat"] for p in parts.values()) * 100
+            canonical_ex = sum(p["ex_vat"] for p in parts.values()) * 100
+        result["final"].update(
+            value=record.final_price_incl_vat * 100,
+            display_value=record.final_price_incl_vat * 100,
+            status=state,
+        )
+    elif activation and reference < activation:
+        result["supplier"].update(value=None, display_value=None, status="missing")
     return {
         "components": result,
         "reference": reference.isoformat(),
         "scope_start": site.get("pricing_start"),
         "api_status": str(lookup.status),
+        "reason": lookup.reason,
         "raw_status": raw.get("status", "INCOMPLETE"),
+        "canonical_vat_ore": canonical_vat,
+        "canonical_ex_vat_ore": canonical_ex,
+        "verified_at": raw.get("verified_at"),
         "monthly_subscription": [
             r
             for r in site.get("dated_components", [])
@@ -206,7 +283,7 @@ async def review(hass, entry, details=False, only=None):
         value = (
             "—"
             if row["display_value"] is None
-            else f"{row['display_value']:.3f}".rstrip("0").rstrip(".")
+            else f"{row['display_value']:.6f}".rstrip("0").rstrip(".")
         )
         value = value.replace(".", t("decimal_separator"))
         unit = "%" if key == "vat" else "øre"

@@ -1,8 +1,8 @@
 # Development handoff
 
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.6 active**, explicitly authorized by
-new owner mission after beta.5 acceptance feedback. Branch `feat/beta6-marginal-pricing`
-continues final beta.5 checkpoint **a7a6b04**; all10 prior handoff CI jobs verified
+new owner mission after beta.5 acceptance feedback. Continuing existing PR#14 on `feat/beta5-simple-onboarding` (beta.6 target); topic
+foundation retained as `feat/beta6-marginal-pricing`. This continues final beta.5 checkpoint **a7a6b04**; all10 prior handoff CI jobs verified
 successful. Main/prior tags/releases remain unchanged. No worktree, production HA,
 Node-RED, Tesla/Easee/CM controls, stable release or main merge. Owner authorizes
 beta.6 prerelease only after mandatory gates; stop after publication/verification.
@@ -1027,3 +1027,40 @@ layouts, and test actual public semantic release selection. Audit commits perman
 receipt and updates existing PR14 only after both pass. Local read-only public
 release/assets/tag checks and final handoff still follow. No beta.5 publication
 claimed at this checkpoint. Stop after authorized beta publication and verification.
+
+## Beta.6 canonical marginal diagnostics checkpoint
+
+Checkpoint subject: **feat: expose canonical quarter prices and allocated-energy charging estimates**.
+Known foundation2959142. Continue existing draft PR14/history on its unchanged
+head-branch name `feat/beta5-simple-onboarding`; no new-PR permission required.
+Initial new-draft runner failed(code1; public annotation supplies no further reason).
+PR update uses the already verified supported existing-draft API path; no main merge.
+
+- Current/selectable future quarter diagnostics read stored canonical component
+  JSON, source/period/status and final price, never recompose verified prices on
+  UI reads. Display VAT once and exclude fixed fees. Optional approved estimates
+  retain transient canonical components only, never ledger/API READY. Quarter
+  choices use indexed range lookup rather than scanning all historical records.
+- Read-only charging-cost helper/native advanced calculator accepts supplied
+  consecutive quarter kWh allocations, labelled planned/measured. CM owns planning/
+  measurement; PE writes/commands nothing. Requires verified APIv1 coverage, tracks
+  price revisions, preserves negative prices and excludes subscriptions. Missing,
+  ambiguous, negative or gapped energy is not zero; future energy is not measured.
+- Official advanced source hides entity controls; changing source type redraws
+  only the relevant fields. Source/area/timezone errors preserve entered values.
+  Shared cached draft_status placeholder is supplied on all native form/menu paths.
+- First full producer run261 cases:254 passed/7 old navigation failures. Updated
+  paths retain original persistence/history/approval checks; regression40 passed.
+  Canonical/recorded-Radius normal92/96/100-day/financial + markup/locale35 passed;
+  combined diagnostics/old flows49 passed. All input examples preserve decimals
+  and VAT basis. Both-core full/CI/package gates still pending; no broad green claim.
+- Actual released beta.5 source fixture added to beta.1–.4 migration matrix. Manifest,
+  public verifier and package metadata now beta.6. Disposable HA.4 clone prepared
+  with10 beta.5 sites/1000SQL rows for upgrade/native frontend checks. New test sites
+  use recorded Radius timebands; older fixtures retain their prior identical sources.
+  No owner credentials or production/control endpoints accessed.
+
+Next: full both-core and unchanged consumer/HACS/package gates; actual native
+EN/en-GB/DA first run/fractional/quarter diagnostics/cost/missing/provisional/old-cache
+and upgrade/restart/delete evidence, final docs, immutable source/tag, authorized
+beta.6 prerelease and independent public verification. No beta.6 publication yet.

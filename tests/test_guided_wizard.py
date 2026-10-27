@@ -33,8 +33,7 @@ async def test_new_official_wizard_source_defaults_review_save_incomplete(hass, 
     await hass.config_entries.flow.async_configure(
         fid, {"amount": 20, "vat_included": False, "confirm": True}
     )
-    await hass.config_entries.flow.async_configure(fid, {"product": "missing"})
-    r = await hass.config_entries.flow.async_configure(fid, {"heating": False})
+    r = await hass.config_entries.flow.async_configure(fid, {"vat_included": True})
     assert r["step_id"] == "setup_review" and "Missing" in r["menu_options"]["setup_supplier"]
     assert entry.runtime_data.data["status"] != "READY"
     assert "supplier" in entry.runtime_data.data["missing_components"]
@@ -77,7 +76,7 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
     c = entry.runtime_data
     assert entry.version == 3
     device = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)[0]
-    assert device.sw_version == "0.1.0-beta.5"  # Installed manifest, not flow/core version.
+    assert device.sw_version == "0.1.0-beta.6"  # Installed manifest, not flow/core version.
     now = datetime(2026, 10, 23, 12, tzinfo=UTC)
     original = c.price_engine.records["home"]
     price = PriceSensor(c).native_value
@@ -118,23 +117,26 @@ async def test_invalid_contract_confirmation_never_changes_active_rate(hass, fre
     entry = await setup(hass)
     r = await options_review(hass, entry.entry_id)
     fid = r["flow_id"]
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "setup_supplier"})
+    from .wizard_helpers import advanced_target
+
+    await advanced_target(hass, fid, "setup_offers")
     await hass.config_entries.options.async_configure(fid, {"product": "custom"})
     r = await hass.config_entries.options.async_configure(
-        fid, {"amount": 12.3456, "vat_included": False, "estimate": False, "confirm": False}
+        fid, {"amount": "12.3456", "vat_included": False, "estimate": False, "confirm": False}
     )
     assert r["errors"]["confirm"] == "confirmation_required"
-    assert next(k.default() for k in r["data_schema"].schema if str(k) == "amount") == 12.3456
+    assert next(k.default() for k in r["data_schema"].schema if str(k) == "amount") == "12.3456"
     assert [x["amount"] for x in entry.options["dated_components"] if x["id"] == "supplier"] == [11]
     hass.config_entries.options.async_abort(fid)
     r = await hass.config_entries.options.async_init(entry.entry_id)
     assert r["step_id"] == "setup_contract"
     r = await hass.config_entries.options.async_configure(
-        r["flow_id"], {"amount": 12.3456, "vat_included": False, "estimate": False, "confirm": True}
+        r["flow_id"],
+        {"amount": "12.3456", "vat_included": False, "estimate": False, "confirm": True},
     )
     assert [x["amount"] for x in entry.options["dated_components"] if x["id"] == "supplier"][
         -1
-    ] == 12.3456
+    ] == "12.3456"
     assert await hass.config_entries.async_unload(entry.entry_id)
     source.mock_state(hass, ConfigEntryState.NOT_LOADED)
 
@@ -184,6 +186,7 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
         ("0c93d2bfac88878cff46e7726f59accbeababf85", 3),
         ("78ef9ba4d02ccb85b9395991d1376fbdec34bb84", 3),
         ("38973d88ad67758b419dfc45c193a8c85674afda", 3),
+        ("a4ede923e42573def49026a8d1d817c37a979171", 3),
     ],
 )
 async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(

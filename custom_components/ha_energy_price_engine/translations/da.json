@@ -194,7 +194,9 @@
           "wizard_location": "Ret område / tidszone / moms",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "wizard_resume": {
@@ -247,7 +249,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "wizard_recheck": {
@@ -308,7 +312,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_area": {
@@ -341,7 +347,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_grid": {
@@ -374,7 +382,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_grid_rate": {
@@ -409,7 +419,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_supplier": {
@@ -460,7 +472,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         },
         "data_description": {
           "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
@@ -496,7 +510,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_heating": {
@@ -531,7 +547,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_review": {
@@ -562,7 +580,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_diagnostics": {
@@ -593,7 +613,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_tax_details": {
@@ -624,7 +646,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_display": {
@@ -657,7 +681,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "source_details": {
@@ -700,7 +726,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         },
         "data_description": {}
       },
@@ -732,7 +760,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "rates": {
@@ -763,7 +793,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "storage_tools": {
@@ -794,7 +826,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "add_rate": {
@@ -887,7 +921,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_estimate": {
@@ -899,6 +935,24 @@
           "confirm": "Jeg godkender kun et uverificeret visualiseringsestimat"
         },
         "submit": "Gem estimat"
+      },
+      "select_quarter": {
+        "title": "Vælg kvarter",
+        "description": "Vis den faktisk gemte prisopdeling. UTC-forskydningen adskiller gentagne timer ved sommertid.",
+        "data": {
+          "slot": "Kvarter (lokal tid og UTC-forskydning)"
+        },
+        "submit": "Vis pris"
+      },
+      "session_estimate": {
+        "title": "Anslået pris for opladning",
+        "description": "Angiv kWh for hvert kvarter fra det valgte starttidspunkt, ét tal pr. linje. Fx 0,5 på første linje og 1,0 på næste. Ingen energimåling eller ladeplan opfindes.\n\n{result}",
+        "data": {
+          "slot": "Første kvarter",
+          "energy": "Energi pr. kvarter (kWh, ét tal pr. linje)",
+          "energy_kind": "Energiens grundlag"
+        },
+        "submit": "Beregn estimat"
       }
     },
     "error": {
@@ -924,7 +978,9 @@
       "invalid_source": "Vælg en officiel Nord Pool-kilde med et understøttet dansk område.",
       "grid_required": "Vælg dit faktiske netprodukt.",
       "invalid_decimal": "Indtast et ikke-negativt decimaltal, fx 0,25 eller 3,125.",
-      "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde."
+      "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde.",
+      "invalid_energy": "Angiv et ikke-negativt kWh-tal for hvert sammenhængende kvarter, fx 0,5. Tomme eller manglende kvarterer er ikke nul.",
+      "invalid_quarter": "Vælg et kvarter fra listen."
     },
     "abort": {
       "already_configured": "Dette sted-ID er allerede konfigureret.",
@@ -959,7 +1015,9 @@
           "breakdown": "Se en gemt kvarterspris",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "site": {
@@ -1225,7 +1283,9 @@
           "wizard_location": "Ret område / tidszone / moms",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "wizard_resume": {
@@ -1278,7 +1338,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "wizard_recheck": {
@@ -1339,7 +1401,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_area": {
@@ -1372,7 +1436,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_grid": {
@@ -1405,7 +1471,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_grid_rate": {
@@ -1440,7 +1508,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_supplier": {
@@ -1491,7 +1561,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         },
         "data_description": {
           "vat_basis": "EWII-siden angiver ikke momsen for dette tilbud. Bekræft den i din egen aftale; vi gætter ikke."
@@ -1527,7 +1599,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_heating": {
@@ -1562,7 +1636,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_review": {
@@ -1593,7 +1669,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_diagnostics": {
@@ -1624,7 +1702,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_tax_details": {
@@ -1655,7 +1735,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_display": {
@@ -1688,7 +1770,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "source_details": {
@@ -1731,7 +1815,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         },
         "data_description": {}
       },
@@ -1763,7 +1849,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "rates": {
@@ -1794,7 +1882,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "storage_tools": {
@@ -1825,7 +1915,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_offers": {
@@ -1858,7 +1950,9 @@
           "setup_done": "Luk",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
-          "setup_tax_details": "Energinet, elafgift og moms"
+          "setup_tax_details": "Energinet, elafgift og moms",
+          "select_quarter": "Vælg et andet kvarter",
+          "session_estimate": "Anslået ladepris"
         }
       },
       "setup_estimate": {
@@ -1870,6 +1964,24 @@
           "confirm": "Jeg godkender kun et uverificeret visualiseringsestimat"
         },
         "submit": "Gem estimat"
+      },
+      "select_quarter": {
+        "title": "Vælg kvarter",
+        "description": "Vis den faktisk gemte prisopdeling. UTC-forskydningen adskiller gentagne timer ved sommertid.",
+        "data": {
+          "slot": "Kvarter (lokal tid og UTC-forskydning)"
+        },
+        "submit": "Vis pris"
+      },
+      "session_estimate": {
+        "title": "Anslået pris for opladning",
+        "description": "Angiv kWh for hvert kvarter fra det valgte starttidspunkt, ét tal pr. linje. Fx 0,5 på første linje og 1,0 på næste. Ingen energimåling eller ladeplan opfindes.\n\n{result}",
+        "data": {
+          "slot": "Første kvarter",
+          "energy": "Energi pr. kvarter (kWh, ét tal pr. linje)",
+          "energy_kind": "Energiens grundlag"
+        },
+        "submit": "Beregn estimat"
       }
     },
     "error": {
@@ -1897,7 +2009,9 @@
       "invalid_source": "Vælg en officiel Nord Pool-kilde med et understøttet dansk område.",
       "grid_required": "Vælg dit faktiske netprodukt.",
       "invalid_decimal": "Indtast et ikke-negativt decimaltal, fx 0,25 eller 3,125.",
-      "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde."
+      "entity_required": "Vælg en tidsstemplet prisentitet til denne alternative kilde.",
+      "invalid_energy": "Angiv et ikke-negativt kWh-tal for hvert sammenhængende kvarter, fx 0,5. Tomme eller manglende kvarterer er ikke nul.",
+      "invalid_quarter": "Vælg et kvarter fra listen."
     },
     "abort": {
       "no_rates": "Ingen daterede satser er konfigureret. Åbn Konfigurér og vælg Tilføj dateret sats.",
@@ -2123,7 +2237,7 @@
         "edit_source": "Sted og kilde",
         "fix_source": "Kontrollér den valgte kilde og dens gyldige dækning.",
         "edit_dso": "Nettarif",
-        "fix_dso": "Kontrollér den valgte kilde og dens gyldige dækning.",
+        "fix_dso": "Kontrollér dit netprodukt og adgangen til den verificerede tarifkilde.",
         "edit_supplier": "Elleverandør og aftale",
         "fix_supplier": "Vælg din aftale eller indtast dit eget tillæg.",
         "edit_energinet_net": "Elafgift / elvarme",
@@ -2158,7 +2272,15 @@
         "unit_incl_vat": "øre/kWh inkl. moms",
         "unit_ex_vat": "øre/kWh ekskl. moms",
         "until_changed": "indtil ændret",
-        "offers_unavailable": "Aktuelle EWII-tilbud kunne ikke verificeres. Indtast tillægget fra din egen aftale."
+        "offers_unavailable": "Aktuelle EWII-tilbud kunne ikke verificeres. Indtast tillægget fra din egen aftale.",
+        "stale": "Forældet",
+        "vat_amount": "Momsbeløb",
+        "marginal_only": "Kun marginal elpris. Faste abonnementer er ikke med. Estimatet er ikke et afregnet beløb.",
+        "checked_at": "Kildekontrol",
+        "cost_unavailable": "Kan ikke beregnes uden verificerede priser for alle kvarterer.",
+        "cost_estimate": "Anslået ladepris",
+        "energy_planned": "Planlagt energi",
+        "energy_measured": "Målt energi"
       }
     },
     "contract_mode": {
@@ -2211,6 +2333,12 @@
       "options": {
         "included": "De viste beløb er inkl. moms",
         "excluded": "De viste beløb er ekskl. moms"
+      }
+    },
+    "energy_kind": {
+      "options": {
+        "planned": "Planlagt energi (ikke målt)",
+        "measured": "Målt energi"
       }
     }
   }

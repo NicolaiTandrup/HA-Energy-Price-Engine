@@ -24,11 +24,10 @@ async def test_direct_supplier_contract_approval_and_compact_review(hass, freeze
     r = await options_review(hass, entry.entry_id)
     fid = r["flow_id"]
     r = await hass.config_entries.options.async_configure(fid, {"next_step_id": "setup_supplier"})
-    r = await hass.config_entries.options.async_configure(fid, {"product": "custom"})
-    data = {"amount": 3, "vat_included": False, "estimate": False, "confirm": False}
+    data = {"amount": "3", "vat_included": False}
+    r = await hass.config_entries.options.async_configure(fid, {**data, "amount": "3..0"})
+    assert r["errors"]["amount"] == "invalid_decimal"
     r = await hass.config_entries.options.async_configure(fid, data)
-    assert r["errors"]["confirm"] == "confirmation_required"
-    r = await hass.config_entries.options.async_configure(fid, {**data, "confirm": True})
     assert r["step_id"] == "setup_review" and len(r["menu_options"]) == 9
     coverage = r["description_placeholders"]["coverage"]
     assert coverage.count("2026-10-23") == 1 and coverage.count("2026-10-24") == 1
@@ -37,7 +36,7 @@ async def test_direct_supplier_contract_approval_and_compact_review(hass, freeze
     assert (
         len(supplier) == 2
         and supplier[0]["valid_to"] == "2026-10-23"
-        and supplier[1]["amount"] == 3
+        and supplier[1]["amount"] == "3"
     )
     assert await hass.config_entries.async_unload(entry.entry_id)
     source.mock_state(hass, ConfigEntryState.NOT_LOADED)

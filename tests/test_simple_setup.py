@@ -53,24 +53,20 @@ async def test_new_site_saves_every_step_and_reopens_without_final_commit(hass, 
 
     assert PricingProblemSensor(site.runtime_data).native_value == "supplier"
     assert site.options["dated_components"][0]["id"] == "dso"
-    r = await hass.config_entries.options.async_configure(fid, {"product": "custom"})
-    assert r["step_id"] == "setup_contract"
-    assert not {"valid_from", "valid_to", "verified_on"} & {str(k) for k in r["data_schema"].schema}
+    assert not {"valid_from", "valid_to", "verified_on", "monthly", "product"} & {
+        str(k) for k in r["data_schema"].schema
+    }
     r = await hass.config_entries.options.async_configure(
-        fid,
-        {"amount": 11.1, "vat_included": False, "monthly": 29, "estimate": False, "confirm": False},
+        fid, {"amount": "11..1", "vat_included": False}
     )
-    assert r["errors"]["confirm"] == "confirmation_required"
+    assert r["errors"]["amount"] == "invalid_decimal"
     r = await hass.config_entries.options.async_configure(
-        fid,
-        {"amount": 11.1, "vat_included": False, "monthly": 29, "estimate": False, "confirm": True},
+        fid, {"amount": "11.1", "vat_included": False}
     )
-    assert r["step_id"] == "setup_tax"
+    assert r["step_id"] == "setup_review"
     assert any(x["id"] == "supplier" for x in site.options["dated_components"])
     hass.config_entries.options.async_abort(fid)
     r = await hass.config_entries.options.async_init(site.entry_id)
-    assert r["step_id"] == "setup_tax"
-    r = await hass.config_entries.options.async_configure(r["flow_id"], {"heating": False})
     assert r["step_id"] == "setup_review" and len(r["menu_options"]) == 9
     assert "wizard_save" not in r["menu_options"] and "setup_done" not in r["menu_options"]
     start = datetime(2026, 10, 27, 16, 15, tzinfo=UTC)
@@ -98,11 +94,13 @@ async def test_provisional_and_missing_are_actionable_and_never_ready(hass, free
     r = await hass.config_entries.flow.async_configure(
         fid, {"amount": 20, "vat_included": False, "confirm": True}
     )
-    r = await hass.config_entries.flow.async_configure(fid, {"product": "custom"})
+    await hass.config_entries.flow.async_configure(fid, {"vat_included": True})
+    from .wizard_helpers import advanced_target
+
+    await advanced_target(hass, fid, "setup_estimate", options=False)
     r = await hass.config_entries.flow.async_configure(
-        fid, {"amount": 11.1, "vat_included": False, "estimate": True, "confirm": True}
+        fid, {"amount": "11.1", "vat_included": False, "confirm": True}
     )
-    r = await hass.config_entries.flow.async_configure(fid, {"heating": False})
     entry = hass.config_entries.async_entries(DOMAIN)[0]
     snapshot = component_snapshot(hass, entry)
     assert snapshot["components"]["supplier"]["status"] == "provisional"
@@ -136,6 +134,10 @@ async def test_confirmed_ewii_offer_requires_explicit_vat_without_dates(hass, fr
         await hass.config_entries.flow.async_configure(
             fid, {"amount": 20, "vat_included": False, "confirm": True}
         )
+        await hass.config_entries.flow.async_configure(fid, {"vat_included": True})
+        from .wizard_helpers import advanced_target
+
+        await advanced_target(hass, fid, "setup_offers", options=False)
         r = await hass.config_entries.flow.async_configure(fid, {"product": "ewii_basis"})
         fields = {str(k) for k in r["data_schema"].schema}
         assert fields == {"vat_basis", "estimate", "confirm"}
@@ -145,7 +147,7 @@ async def test_confirmed_ewii_offer_requires_explicit_vat_without_dates(hass, fr
         r = await hass.config_entries.flow.async_configure(
             fid, {"vat_basis": "included", "estimate": False, "confirm": True}
         )
-        assert r["step_id"] == "setup_tax"
+        assert r["step_id"] == "setup_review"
         snapshot = component_snapshot(hass, entry)
         assert snapshot["components"]["supplier"]["value"] == pytest.approx(13.2)
         assert snapshot["api_status"] == "READY"

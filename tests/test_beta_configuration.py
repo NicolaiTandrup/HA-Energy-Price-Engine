@@ -205,7 +205,9 @@ async def test_native_verified_backup_and_supplier_label_do_not_mutate_rates(has
     assert result["type"] == "menu"
     assert "✓ .storage/" in result["description_placeholders"]["operation"]
     assert list(entry.runtime_data.price_engine.database.path.parent.glob("*.backup-*"))
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "setup_supplier"})
+    from .wizard_helpers import advanced_target
+
+    await advanced_target(hass, fid, "setup_offers")
     result = await hass.config_entries.options.async_configure(fid, {"product": "ewii_other"})
     assert result["step_id"] == "setup_contract"
     assert entry.runtime_data.price_engine.records["home"] == before

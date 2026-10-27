@@ -194,7 +194,9 @@
           "wizard_location": "Correct area / timezone / VAT",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "wizard_resume": {
@@ -247,7 +249,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "wizard_recheck": {
@@ -308,7 +312,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_area": {
@@ -341,7 +347,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_grid": {
@@ -374,7 +382,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_grid_rate": {
@@ -409,7 +419,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_supplier": {
@@ -460,7 +472,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         },
         "data_description": {
           "vat_basis": "The product page does not state this offer’s VAT basis. Confirm it from your agreement; PE does not guess."
@@ -496,7 +510,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_heating": {
@@ -531,7 +547,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_review": {
@@ -562,7 +580,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_diagnostics": {
@@ -593,7 +613,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_tax_details": {
@@ -624,7 +646,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_display": {
@@ -657,7 +681,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "source_details": {
@@ -700,7 +726,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         },
         "data_description": {}
       },
@@ -732,7 +760,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "rates": {
@@ -763,7 +793,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "storage_tools": {
@@ -794,7 +826,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "add_rate": {
@@ -887,7 +921,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_estimate": {
@@ -899,6 +935,24 @@
           "confirm": "I approve an unverified visualization estimate only"
         },
         "submit": "Save estimate"
+      },
+      "select_quarter": {
+        "title": "Choose a quarter",
+        "description": "Inspect the actual stored price components. UTC offsets distinguish repeated DST hours.",
+        "data": {
+          "slot": "Quarter (local time and UTC offset)"
+        },
+        "submit": "Show price"
+      },
+      "session_estimate": {
+        "title": "Charging cost estimate",
+        "description": "Supply kWh for each consecutive quarter from the selected start, one number per line. For example 0.5 on the first line and 1.0 on the next. No energy measurement or charging plan is invented.\n\n{result}",
+        "data": {
+          "slot": "First quarter",
+          "energy": "Energy per quarter (kWh, one number per line)",
+          "energy_kind": "Energy basis"
+        },
+        "submit": "Calculate estimate"
       }
     },
     "error": {
@@ -924,7 +978,9 @@
       "invalid_source": "Choose an official Nord Pool source with a supported Danish area.",
       "grid_required": "Choose your actual grid product.",
       "invalid_decimal": "Enter a non-negative decimal amount, for example 0.25 or 3.125.",
-      "entity_required": "Select a timestamped price entity for this alternate source."
+      "entity_required": "Select a timestamped price entity for this alternate source.",
+      "invalid_energy": "Supply non-negative kWh for every consecutive quarter, for example 0.5. Blank or missing quarters are not zero.",
+      "invalid_quarter": "Choose a quarter from the list."
     },
     "abort": {
       "already_configured": "This site ID is already configured.",
@@ -959,7 +1015,9 @@
           "breakdown": "Inspect a stored quarter-hour price",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "site": {
@@ -1225,7 +1283,9 @@
           "wizard_location": "Correct area / timezone / VAT",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "wizard_resume": {
@@ -1278,7 +1338,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "wizard_recheck": {
@@ -1339,7 +1401,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_area": {
@@ -1372,7 +1436,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_grid": {
@@ -1405,7 +1471,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_grid_rate": {
@@ -1440,7 +1508,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_supplier": {
@@ -1491,7 +1561,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         },
         "data_description": {
           "vat_basis": "The product page does not state this offer’s VAT basis. Confirm it from your agreement; PE does not guess."
@@ -1527,7 +1599,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_heating": {
@@ -1562,7 +1636,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_review": {
@@ -1593,7 +1669,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_diagnostics": {
@@ -1624,7 +1702,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_tax_details": {
@@ -1655,7 +1735,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_display": {
@@ -1688,7 +1770,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "source_details": {
@@ -1731,7 +1815,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         },
         "data_description": {}
       },
@@ -1763,7 +1849,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "rates": {
@@ -1794,7 +1882,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "storage_tools": {
@@ -1825,7 +1915,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_offers": {
@@ -1858,7 +1950,9 @@
           "setup_done": "Close",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
-          "setup_tax_details": "Energinet, electricity tax and VAT"
+          "setup_tax_details": "Energinet, electricity tax and VAT",
+          "select_quarter": "Choose another quarter",
+          "session_estimate": "Charging cost estimate"
         }
       },
       "setup_estimate": {
@@ -1870,6 +1964,24 @@
           "confirm": "I approve an unverified visualization estimate only"
         },
         "submit": "Save estimate"
+      },
+      "select_quarter": {
+        "title": "Choose a quarter",
+        "description": "Inspect the actual stored price components. UTC offsets distinguish repeated DST hours.",
+        "data": {
+          "slot": "Quarter (local time and UTC offset)"
+        },
+        "submit": "Show price"
+      },
+      "session_estimate": {
+        "title": "Charging cost estimate",
+        "description": "Supply kWh for each consecutive quarter from the selected start, one number per line. For example 0.5 on the first line and 1.0 on the next. No energy measurement or charging plan is invented.\n\n{result}",
+        "data": {
+          "slot": "First quarter",
+          "energy": "Energy per quarter (kWh, one number per line)",
+          "energy_kind": "Energy basis"
+        },
+        "submit": "Calculate estimate"
       }
     },
     "error": {
@@ -1897,7 +2009,9 @@
       "invalid_source": "Choose an official Nord Pool source with a supported Danish area.",
       "grid_required": "Choose your actual grid product.",
       "invalid_decimal": "Enter a non-negative decimal amount, for example 0.25 or 3.125.",
-      "entity_required": "Select a timestamped price entity for this alternate source."
+      "entity_required": "Select a timestamped price entity for this alternate source.",
+      "invalid_energy": "Supply non-negative kWh for every consecutive quarter, for example 0.5. Blank or missing quarters are not zero.",
+      "invalid_quarter": "Choose a quarter from the list."
     },
     "abort": {
       "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
@@ -2123,7 +2237,7 @@
         "edit_source": "Site and source",
         "fix_source": "Check the selected source and its verified coverage.",
         "edit_dso": "Grid tariff",
-        "fix_dso": "Check the selected source and its verified coverage.",
+        "fix_dso": "Confirm your grid product and restore access to its verified tariff source.",
         "edit_supplier": "Supplier agreement",
         "fix_supplier": "Select your agreement or enter your own markup.",
         "edit_energinet_net": "Tax / heating eligibility",
@@ -2158,7 +2272,15 @@
         "unit_incl_vat": "øre/kWh including VAT",
         "unit_ex_vat": "øre/kWh excluding VAT",
         "until_changed": "until changed",
-        "offers_unavailable": "Current EWII offers could not be verified. Enter the markup from your own agreement."
+        "offers_unavailable": "Current EWII offers could not be verified. Enter the markup from your own agreement.",
+        "stale": "Stale",
+        "vat_amount": "VAT amount",
+        "marginal_only": "Marginal electricity price only. Fixed subscriptions are excluded. A cost estimate is not settled accounting.",
+        "checked_at": "Source check",
+        "cost_unavailable": "Cannot estimate cost without verified prices for every quarter.",
+        "cost_estimate": "Estimated charging cost",
+        "energy_planned": "Planned energy",
+        "energy_measured": "Measured energy"
       }
     },
     "contract_mode": {
@@ -2211,6 +2333,12 @@
       "options": {
         "included": "The quoted amounts include VAT",
         "excluded": "The quoted amounts exclude VAT"
+      }
+    },
+    "energy_kind": {
+      "options": {
+        "planned": "Planned energy (not measured)",
+        "measured": "Measured energy"
       }
     }
   }
