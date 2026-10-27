@@ -102,3 +102,26 @@ uses decimal weighted addition without per-quarter rounding, and explicitly mark
 `fixed_subscriptions_included=false` and`is_settled_accounting=false`. It is a session
 cost estimate using supplied energy, not settlement or household invoice reconstruction.
 Native access: Final prices → Diagnostics → Charging cost estimate.
+
+
+## Beta.7 readiness and presentation
+
+API v1 and PriceRecord remain canonical technical DKK/kWh, with full numeric precision.
+Preferred presentation is separate:øre/kWh2 decimals, optional DKK/kWh4. Consumers
+must use stored API values, not rounded display entities, when computing energy cost.
+
+`lookup(site_id,start,end,producer_entry_id=...)` checks exactly the half-open UTC
+quarter-aligned range. A complete verified future window can be READY while a
+full-day query is INCOMPLETE because pre-activation history is absent. Do not gate a
+charging horizon on historical full-day coverage. Missing future quarters, stale/
+failed verification and unconfirmed components remain fail-closed. UI window checks
+use this same unchanged API and create no charging plan or consumer configuration.
+
+Canonical records include normalized original spot in
+`components_json.components.spot.ex_vat` (official Nord Pool); `incl_vat` retains its
+VAT-inclusive counterpart. `source_json.input_unit/input_vat/verified_at` preserve
+input/verification conventions. Full provider HTTP responses are not persisted.
+The unchanged SQLite primary-key index and startup-loaded bisect memory index serve
+stored values. Consumer reads do not connect to SQLite, fetch providers or compose.
+Repeated-read, cold-reload, source-revision and 92/96/100-quarter tests are in
+`tests/test_beta7_readiness.py`. Fixed subscriptions remain excluded.

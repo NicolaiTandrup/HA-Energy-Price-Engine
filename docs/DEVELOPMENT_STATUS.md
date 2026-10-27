@@ -1,11 +1,38 @@
 # Development handoff
 
-Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 active**, newly authorized by the
+Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 candidate complete; release gates in progress**, newly authorized by the
 owner's uploaded beta.7 mission and issue#8 comments21:20/21:28UTC. Continue existing
 PR14/`feat/beta5-simple-onboarding` from final beta.6 checkpoint22a1c83. No restart,
 worktree, main merge, stable or production/Node-RED/CM/physical-control changes.
 Owner authorizes immutable beta.7 prerelease after mandatory gates; stop after
 publication and independent verification. Prior beta.6 STOP is historical below.
+
+## Beta.7 source/evidence checkpoint
+
+Checkpoint subject: **docs: prepare beta.7 setup, readiness and persistent-price evidence**.
+Runtime de15c69 plus native/browser-system dependency fix is complete. Source proof:
+`docs/receipts/v0.1.0-beta.7-simulation.json`. Native EN/en-GB/DA desktop/mobile,
+current/future breakdown, two/four places, user decimal override and minimal HA
+system/browser decimal all pass.15 beta.6 configs/1,211rows/315entity IDs/29 statistics
+unit metadata rows preserved. Final restart16configs/1,314rows exact. Source data
+and API/ledger/engine remain unchanged. Screenshots outside source; proof hashes and
+native excerpts in receipt. Complete setup, examples, API and acceptance docs updated.
+
+Prior full307/core passed; final308/core runs include added system-format and current
+mid-quarter diagnostic regression. Producer coverage88%,zero skips; only two expected
+HACS warnings. Four unchanged consumer suites/coupled runs pass both cores. Recent
+runtime CI d6009e0 all10 green. Exact final source CI and new PR candidate updater
+still need verification; no beta.7 tag/release yet. No production, main or stable work.
+
+Next:finish308/core/package/HACS/hassfest gates, clean source build/both layouts/both
+cores; await source push/PR plus candidate PR-update checks. Annotate immutable7 only
+at validated source; tag CI adds five jobs (source has extra draft-updater check).
+Dedicated publish-beta7 workflow must require all exact-source jobs green, source/tag/
+hashes and prior main/releases. Publish prerelease/latest=false four assets, then
+fresh public HACS/native verification on both cores and semantic beta6→7 channel.
+Receipt/update existing draft14, independent local public verification, final handoff
+and checklist, final CI then STOP. Owner already authorizes beta.7 publication after
+gates; no additional owner publication approval is pending.
 
 ## Beta.7 native upgrade and minimal-runtime validation
 

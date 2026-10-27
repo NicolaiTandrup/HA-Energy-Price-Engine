@@ -7,19 +7,19 @@ estimated charging costs. Prices include spot, grid time-of-use tariffs, supplie
 markup, Energinet charges, electricity tax and VAT. Fixed subscriptions are excluded.
 Each pricing site has independent settings and persistent SQLite history.
 
-**v0.1.0-beta.6** · [Prereleases](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases)
+**v0.1.0-beta.7** · [Prereleases](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases)
 
 ## Install or upgrade
 
 1. Add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` to **HACS → Custom
    repositories**, category **Integration**.
 2. Open Energy Price Engine, persist **Show beta versions**, refresh information,
-   choose **v0.1.0-beta.6**, download and restart Home Assistant. Reload the browser/app.
+   choose **v0.1.0-beta.7**, download and restart Home Assistant. Reload the browser/app.
 3. Existing sites: choose **Configure** on the existing entry. New sites: install
    Home Assistant's **official Nord Pool** integration first, then **Settings →
    Devices & services → Add integration → Energy Price Engine**.
 
-[Exact HACS procedure](docs/HACS_DISTRIBUTION.md) · [Setup and screenshots](docs/WIZARD_GUIDE.md)
+[Exact HACS procedure](docs/HACS_DISTRIBUTION.md) · [Setup, readiness and examples](docs/WIZARD_GUIDE.md)
 
 ## Three setup stages
 
@@ -38,6 +38,15 @@ verify sources. New rates start at the next complete quarter without rewriting
 settled history or filling earlier unknown prices.
 
 ## Understand and use prices
+
+**All preferred prices use øre/kWh with exactly two decimals**; optional DKK/kWh uses
+four. Raw spot, final/current/next, statistics and provisional prices share the site
+preference. Canonical technical sensors retain DKK/kWh, their IDs and statistics.
+
+Current/next readiness is separate from historical full-day coverage. **Check future
+window** tests an explicit requested range using API v1. An evening setup can have
+7/96 historical quarters and still have a fully verified future window READY.
+Earlier unknown prices remain absent.
 
 Final prices opens current/future quarter diagnostics: actual stored component
 amounts, sources, periods and verification, with VAT applied once. An optional

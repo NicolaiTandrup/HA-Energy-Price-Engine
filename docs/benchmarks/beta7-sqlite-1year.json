@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "hardware": "cloud Linux x86_64; not Raspberry Pi",
+  "years": 1,
+  "records": 35136,
+  "initial_seconds": 6.281842301017605,
+  "append_96_seconds": 0.030226267990656197,
+  "reload_seconds": 1.598764095979277,
+  "lookup_96_mean_seconds": 1.151270599802956e-05,
+  "storage_bytes": 18239488,
+  "peak_process_rss_kib": 243720
+}

@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "synthetic": true,
+  "owner_acceptance": false,
+  "verified_at": "2026-10-27T22:12:27.290705+00:00",
+  "ha_core": "2026.10.4",
+  "frontend": "20260930.5",
+  "provider_boundaries": "Disposable local HA only; synthetic official Nord Pool 100DKK/MWh exVAT plus actual recorded Radius C Datahub normalizer and fictional supplier0.5ore exVAT, bounded verified national baselines. Old QA sites retain their original synthetic provider contracts. No owner system, credentials, production or equipment.",
+  "browser": {
+    "tool": "Playwright/system Chromium",
+    "reason": "Browser plugin unavailable",
+    "url": "http://127.0.0.1:8127",
+    "desktop": [
+      1440,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "mobile_document_width": 390,
+    "identity_verified": true,
+    "meaningful_content": true,
+    "framework_overlay": false,
+    "console_errors": [],
+    "console_warnings": [],
+    "interactions": "Review → requested future window → ready across midnight / incomplete beyond published data; current/selected future breakdown; Advanced display ore→DKK→ore; native entity More info; en/en-GB/da and explicit decimal override; browser-system locale after restart.",
+    "pe_local_brand_unmocked": true
+  },
+  "display": {
+    "preferred_unit": "øre/kWh",
+    "precision": 2,
+    "optional_unit": "DKK/kWh",
+    "optional_precision": 4,
+    "canonical_state_example": ".683155",
+    "native_ore_example": "68.32 øre/kWh",
+    "native_dkk_example": "0.6832 DKK/kWh",
+    "native_raw_dkk_example": "0.1000 DKK/kWh",
+    "custom_english_decimal_comma_passed": true,
+    "danish_system_english_browser_decimal_passed": true,
+    "system_decimal_symbols": "267 bundled Intl-derived locale facts; no optional runtime dependency",
+    "all_preferred_numeric_entity_prices_two_digits": true,
+    "underlying_values_unrounded": true,
+    "contract_input_precision_preserved": true
+  },
+  "future_readiness": {
+    "late_activation": "2026-10-27T21:15:00+00:00",
+    "current": "READY",
+    "next": "READY",
+    "today_history": "INCOMPLETE",
+    "today_stored": 7,
+    "today_expected": 96,
+    "tomorrow": "READY",
+    "tomorrow_stored": 96,
+    "tomorrow_expected": 96,
+    "requested_midnight_window": "READY",
+    "beyond_published_window": "INCOMPLETE",
+    "current_next_independent_from_day": true,
+    "no_unknown_past_backfill": true,
+    "native_ready_view": "horizon-ready-en-mobile - dialog:\n  - banner:\n    - button \"Close\"\n    - text: Check future window\n    - link \"Help\":\n      - /url: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine\n      - button \"Help\"\n  - paragraph: Choose the required window. The end boundary is excluded. The picker covers the next 48 hours, including times without published prices. This check changes no charging plan. CM queries API v1 for its own window.\n  - paragraph:\n    - strong: \"Current quarter: Ready\"\n    - text: · 1/1\n  - paragraph:\n    - strong: \"Next quarter: Ready\"\n    - text: · 1/1\n  - paragraph:\n    - strong: \"Requested future window: Ready\"\n    - text: · 7/7\n  - paragraph: 2026-10-27T22:45+01:00 → 2026-10-28T00:30+01:00\n  - paragraph:\n    - strong: \"Today’s full-day history: Incomplete\"\n    - text: · 7/96\n  - paragraph:\n    - strong: \"Tomorrow’s full-day coverage: Ready\"\n    - text: · 96/96\n  - paragraph: Earlier quarters before setup are intentionally unavailable. This does not block a future window whose prices are all verified.\n  - listitem: First quarter * 2026-10-27T22:45+01:00\n  - listitem: End (excluded) * 2026-10-28T00:30+01:00\n  - contentinfo:\n    - contentinfo:\n      - button \"Check window\"",
+    "native_missing_view": "horizon-missing-en-mobile - dialog:\n  - banner:\n    - button \"Close\"\n    - text: Check future window\n    - link \"Help\":\n      - /url: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine\n      - button \"Help\"\n  - paragraph: Choose the required window. The end boundary is excluded. The picker covers the next 48 hours, including times without published prices. This check changes no charging plan. CM queries API v1 for its own window.\n  - paragraph:\n    - strong: \"Current quarter: Ready\"\n    - text: · 1/1\n  - paragraph:\n    - strong: \"Next quarter: Ready\"\n    - text: · 1/1\n  - paragraph:\n    - strong: \"Requested future window: Incomplete\"\n    - text: · 101/103\n  - paragraph: 2026-10-27T22:45+01:00 → 2026-10-29T00:30+01:00\n  - paragraph: Only a complete window of verified prices is ready. Check component diagnostics and source availability; missing prices are never zero.\n  - paragraph:\n    - strong: \"Today’s full-day history: Incomplete\"\n    - text: · 7/96\n  - paragraph:\n    - strong: \"Tomorrow’s full-day coverage: Ready\"\n    - text: · 96/96\n  - paragraph: Earlier quarters before setup are intentionally unavailable. This does not block a future window whose prices are all verified.\n  - listitem: First quarter * 2026-10-27T22:45+01:00\n  - listitem: End (excluded) * 2026-10-29T00:30+01:00\n  - contentinfo:\n    - contentinfo:\n      - button \"Check window\"",
+    "normal_fall_spring_day_slots": [
+      96,
+      100,
+      92
+    ]
+  },
+  "current_next_simulation": {
+    "local_clock": "2026-10-27T16:50:00+01:00",
+    "current": "2026-10-27T16:45:00+01:00",
+    "next": "2026-10-27T17:00:00+01:00",
+    "input_spot_dkk_per_mwh": 100,
+    "fictional_supplier_ore_ex_vat": "0.5",
+    "current_components_dkk_ex_vat": {
+      "spot": 0.1,
+      "dso": 0.318524,
+      "energinet_net": 0.043,
+      "energinet_system": 0.072,
+      "supplier": 0.005,
+      "electricity_tax": 0.008
+    },
+    "next_components_dkk_ex_vat": {
+      "spot": 0.1,
+      "dso": 0.955573,
+      "energinet_net": 0.043,
+      "energinet_system": 0.072,
+      "supplier": 0.005,
+      "electricity_tax": 0.008
+    },
+    "canonical_current_dkk_incl_vat": 0.683155,
+    "canonical_next_dkk_incl_vat": 1.47946625,
+    "current_ore_display": "68.32",
+    "next_ore_display": "147.95",
+    "current_dkk_display": "0.6832",
+    "next_dkk_display": "1.4795",
+    "planned_quarter_kwh": [
+      "1.25",
+      "2.0"
+    ],
+    "estimated_cost_dkk": "3.81287625",
+    "displayed_cost_dkk": "3.8129",
+    "cost_from_unrounded_api_values": true,
+    "fixed_subscriptions_included": false,
+    "is_settled_accounting": false,
+    "test": "tests/test_beta7_readiness.py::test_current_next_radius_transition_keeps_cost_precision"
+  },
+  "persistence": {
+    "schema_version": 1,
+    "unchanged_design": true,
+    "sqlite_query_plan": [
+      "SEARCH prices USING INDEX sqlite_autoindex_prices_1 (site=? AND start>? AND start<?)"
+    ],
+    "read_only_connection_for_sql_evidence": true,
+    "live_api": "Immutable startup-loaded sorted bisect index over checked SQLite records",
+    "consumer_reads_per_dst_case": 250,
+    "requested_records_per_repeated_query": 15,
+    "guarded_no_external_fetch_composition_or_sqlite_connection": true,
+    "normalized_original_spot_path": "components_json.components.spot.ex_vat for official exVAT input; source input convention retained",
+    "stored_example": {
+      "start": "2026-10-27T21:15:00+00:00",
+      "end": "2026-10-27T21:30:00+00:00",
+      "final_dkk_per_kwh": 0.683155,
+      "revision": 1,
+      "spot_dkk_per_kwh": 0.1,
+      "input_unit": "DKK/MWh",
+      "verified_at": "2026-10-27T21:41:04.251798+00:00"
+    },
+    "changed_future_input_writes_only_changed_row": true,
+    "settled_and_other_rows_and_revisions_preserved": true
+  },
+  "beta6_upgrade": {
+    "same_site_configurations": 15,
+    "same_original_sqlite_rows": 1211,
+    "same_entity_ids": 315,
+    "all_original_rows_revisions_source_and_components_preserved": true,
+    "recorder_statistics_metadata_preserved": 29,
+    "canonical_units_unchanged": true
+  },
+  "unit_switch": {
+    "late_site_rows": 103,
+    "no_price_revision_created_by_display_changes": true
+  },
+  "restart": {
+    "same_configs": 16,
+    "same_rows": 1314,
+    "verified": true
+  },
+  "screenshots": {
+    "location": "Outside repository; captured QA artifacts, not release assets",
+    "sha256": {
+      "/tmp/pe7-review-ore-en-mobile.png": "e8622d725920c8c1cd70ca78a5085b03f4dabdf7fbf37923b90aedcc10b4a181",
+      "/tmp/pe7-horizon-ready-en-mobile.png": "15b0f5493c2e1122bb3f695e6401adeb774e218207ecee59e2902a8424559034",
+      "/tmp/pe7-horizon-missing-en-mobile.png": "9f7f9427f4bc62654290a0d44ea2d0071827c47b4879abbec00238e328d11744",
+      "/tmp/pe7-current-ore-en-mobile.png": "1eb43437084bd72789257c005253b596acd0bbd344566be8bdb862249ed82c48",
+      "/tmp/pe7-future-ore-en-mobile.png": "78e85b2b69aeb05e8c1257dc63b6896b0247fce082e87a50ac567b6b39a68cea",
+      "/tmp/pe7-review-dkk-en-mobile.png": "9eed619420cb452f3e20d8826f40f8051eaeefb58b338d6ed6662904cd31bb74",
+      "/tmp/pe7-current-dkk-en-mobile.png": "df45d864439934766fd376b5109ed411df0aaf4969a0979773c1f4fbaa8b13df",
+      "/tmp/pe7-native-entity-dkk-en-mobile.png": "5dbe002d886286dac1ba59c849c6a2fb09bb98df878a9e4bc70e838d83763c7e",
+      "/tmp/pe7-review-dkk-da-mobile.png": "ec6fee9b54868c86933f7319b4a62334010a8025bc1c83ab210b82245b942893",
+      "/tmp/pe7-current-dkk-da-mobile.png": "12473b7be8acc812ac115a0f07f333f4a05b7b8a71b4b1741d1b0ec501d4b4b4",
+      "/tmp/pe7-review-ore-da-mobile.png": "594856f11c7aca57f34e74d42efd811a935fd2d25c9b4a9c18af103f7bd99c8d",
+      "/tmp/pe7-horizon-ready-da-mobile.png": "6664987e4fbe14e569b20f2d9dd5692b7fc1b9dafbe0fbec5b47dfbf65327bfd",
+      "/tmp/pe7-review-ore-da-desktop.png": "98553e05fac782602dd9c44c296650463d363bad755cefacc39434f0a64c68a2",
+      "/tmp/pe7-current-ore-da-desktop.png": "5ae0e12a2d006bc351bf85e18edc0e966e6963cc4e41e3d35c331ea26659f954",
+      "/tmp/pe7-number-override-en-comma.png": "a1f43e05a951c8ef6bc3fb06bf6a49e832029adf6162ec2620aeaf3600f0b4c6",
+      "/tmp/pe7-native-entity-ore-en-mobile.png": "aa589baf0003a7932911b0f762334fa90e7019455b927640c66e2d29cc6e6517",
+      "/tmp/pe7-da-system-browser-format.png": "2a28dc941544500cf0060488f5af6b036c99d1f7bc14a7393f31aba87a9903e3"
+    }
+  },
+  "production_controls_touched": false
+}

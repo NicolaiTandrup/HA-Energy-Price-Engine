@@ -1,8 +1,8 @@
 # Install and update with HACS
 
 Repository: **NicolaiTandrup/HA-Energy-Price-Engine**. Category: **Integration**.
-Target: **v0.1.0-beta.6** (manifest `0.1.0-beta.6`). The
-[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.6)
+Target: **v0.1.0-beta.7** (manifest `0.1.0-beta.7`). The
+[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.7)
 is the installation source. The reproducible package and release receipt identify the exact immutable
 source and checksums; a moving branch is not a release.
 
@@ -11,9 +11,9 @@ source and checksums; a moving branch is not a release.
 2. **HACS → Custom repositories**: add
    `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine`, category **Integration**.
 3. Open Energy Price Engine in HACS. Persist **Show beta versions**, refresh
-   repository information, select **v0.1.0-beta.6**, then Download.
+   repository information, select **v0.1.0-beta.7**, then Download.
 4. Restart HA. HACS must show the installed semantic beta version. Device info must
-   show manifest version **0.1.0-beta.6**. Reload the browser/app after restart so it loads the new fields and translations.
+   show manifest version **0.1.0-beta.7**. Reload the browser/app after restart so it loads the new fields and translations.
 5. Configure the official Home Assistant **Nord Pool** integration with your actual
    area first. PE needs no additional credentials. A legacy custom component
    shadowing the official domain is rejected. Recorded legacy comparisons are

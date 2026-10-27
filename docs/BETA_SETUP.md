@@ -1,6 +1,6 @@
 # First setup
 
-Back up your development Home Assistant, install beta.6 using the
+Back up your development Home Assistant, install beta.7 using the
 [HACS procedure](HACS_DISTRIBUTION.md), restart HA and reload the browser/app.
 Existing users configure their existing site; no deletion/recreation is needed.
 Tested cores: 2026.10.3 and 2026.10.4. Hardware performance remains your acceptance check.

@@ -1,148 +1,145 @@
-# Configure marginal charging prices
+# Configure and understand charging prices
 
-Upgrade to beta.6 through HACS, restart HA and reload the browser/app. Existing
-users choose **Configure** on the existing site. Device info must show manifest
-version **0.1.0-beta.6**. Keep existing identities and history.
+Install **v0.1.0-beta.7** through HACS, restart HA and reload the browser/app.
+Existing users choose **Configure** on their existing site. Device info must show
+manifest version **0.1.0-beta.7**. Site identities, entities, source mappings, dated
+rules, SQLite history and original revisions remain.
 
-## Three ordinary stages
+## Three setup stages
 
-1. **Site and Nord Pool.** Name the site and select an installed official Nord Pool
-   integration. A sole supported area is automatic; multiple areas need a choice.
-   Danish source facts establish Copenhagen and DKK/MWh excluding-VAT input. These
-   provider conventions are not editable display preferences. Ordinary setup shows
-   no provider entity, attributes, technical IDs or unit-contract fields.
-2. **Grid tariff.** Confirm **Radius C** only if it is your actual operator/product.
-   DK1/DK2 alone cannot establish this. PE reads verified dated time-of-use rates
-   and resolves every future quarter independently, including seasonal/midnight/DST
-   changes. Other products need verified manual flat/hourly rules under Advanced.
-   An unavailable automatic source does not turn into a zero or flat current tariff.
-3. **Supplier markup.** Enter the actual supplement above spot in **øre/kWh** and
-   its VAT basis. Examples: **0.25, 0.50, 0.75, 3.125**; Danish comma works too. Saving
-   confirms your agreement and VAT choice. A zero needs an actual confirmed zero.
-   Leave blank if unknown; existing saved rates are kept. No dates, subscription,
-   product selection or heating question is required.
+1. **Site and official Nord Pool.** Select an installed official integration and
+   actual area. A sole supported area is automatic. Provider input conventions
+   (Danish DKK/MWh excluding VAT, Copenhagen) are detected; no entity, attribute,
+   technical ID or editable provider-unit contract is required here.
+2. **Grid tariff.** Confirm automatic **Radius C** only if it is your actual product.
+   DK1/DK2 cannot establish a private grid class. Each quarter resolves its own
+   recorded time-of-use/date/version. Other products need verified manual rates.
+3. **Supplier markup.** Enter the actual **øre/kWh** supplement and VAT basis.
+   Point/comma fractions such as **0.25, 0.50, 0.75, 3.125** retain their exact input
+   precision. Saving confirms your agreement. Blank keeps an existing agreement;
+   unknown is never silently zero. No dates, monthly fees, product or heating choice
+   is mandatory. Contract input units are explicitly labelled, independent of display.
 
-**Save and continue / Gem og fortsæt** applies each completed page. The markup page
-uses **Save markup / Gem tillæg**. Close and reopen Configure to resume the last
-accepted stage. Invalid values remain visible for correction. Review requires no
-additional save. Tap any component to edit; accepted changes return to Review and
-keep the other completed settings. Native forms have no dedicated per-page Back
-button and cannot save typing that was never submitted.
+Each accepted page saves immediately. Close/reopen resumes. Review requires no final
+save; tap a component to edit. **Check prices** forces source verification. Native
+forms cannot save typing that was never submitted and have no per-page Back button.
+New current terms begin next complete quarter, until changed. Settled prices,
+historical terms and scheduled future date/hour overrides survive ordinary edits.
 
-New current values start at the **next complete 15-minute quarter**, until changed.
-Earlier unknown quarters are not filled; settled prices are never rewritten.
-Historical contracts and explicitly scheduled future date/hour overrides survive
-ordinary edits. A new site's first day may have only remaining-day final coverage;
-full-day consumer reads remain INCOMPLETE, while complete active future ranges can
-be READY. The start time is shown. Tomorrow can remain unavailable before publication.
+## One preferred price unit
 
-## Public charges and private agreements
+All preferred raw spot/current/next/final/statistic/provisional price entities and
+native monetary breakdowns use **øre/kWh, exactly 2 decimal places** by default.
+Advanced → Display unit optionally selects **DKK/kWh, exactly 4 places**. Forms use
+English/British-English/Danish and the user's HA number-format preference, including
+point/comma overrides and supported browser-system decimal conventions. VAT
+percentages are not per-kWh prices. Missing amounts show a dash, never a numeric zero.
 
-Danish official-source sites receive bounded verified defaults: Energinet net
-**4.3 øre**, system **7.2 øre** excluding VAT during 2026; electricity tax **0.8 øre**
-excluding VAT during 2026–2027; VAT 25%. These are documented dated baselines, not live
-legislation discovery or a promise of future rates. Expired/unavailable components
-block final readiness and point to the relevant settings. Heating eligibility is
-optional Advanced configuration and needs actual evidence and verified rates.
+Raw preferred entities explicitly identify their input VAT basis. Final preferred
+entities include VAT. Review's component checklist shows VAT-inclusive amounts;
+Detailed diagnostics show components excluding VAT, a subtotal, VAT amount and final
+inclusive total, with actual source/period/verification. Rounding is presentation
+only. Rounded components/subtotals can differ in their last digit from the rounded
+final total; calculations and charging costs always use the unrounded stored values.
 
-Optional public EWII offers are under Advanced. Fresh official quotes require your
-actual agreement/VAT confirmation; they never silently replace a private contract.
-A cached public snapshot expires within 24h. Current custom input works independently
-of public-offer availability. Historical EWII household 0.030 DKK/kWh ex VAT applies
-June–September 2026 only, never as a current/other-site default. Monthly subscription
-metadata remains optional Advanced data and is excluded from every marginal price
-and charging estimate.
+Canonical technical sensors retain **DKK/kWh**, stable IDs, complete numeric values
+and measurement/statistics units. They are labelled technical and grouped as
+diagnostics. Their supported presentation precision is four, while their recorded
+values and API retain full precision. Preferred display entities have fixed unit
+identities and no statistics state class. Switching units leaves the previous unit's
+presentation entities unavailable, preserving history; use the currently selected
+unit's entities. Explicit HA entity/card precision overrides can supersede integration
+suggestions: reset those to Default, or choose 2/4, to use the standard presentation.
 
-## Read the calculation
+## Readiness is a range, not a promise about missing history
 
-Review's monetary amounts are **øre/kWh including VAT**. Raw spot readiness is
-separate from final readiness. One **Check prices** action forces source verification.
-Select **Final prices** to open component diagnostics. Choose another quarter to
-inspect stored current/future amounts, sources, validity and verification. UTC offsets
-distinguish repeated autumn DST hours; nonexistent spring quarters are not invented.
-UI reads use canonical stored components and never retrieve/recompose verified prices.
+Review and diagnostics distinguish:
 
-The breakdown lists components **excluding VAT**, then their stored VAT and final
-VAT-inclusive price. Selected future peak-quarter example from a disposable native HA simulation:
+- **Current quarter**: one verified stored final interval.
+- **Next quarter**: its own interval, including the first interval after midnight.
+- **Requested future window**: every requested interval must exist and be verified.
+- **Today's historical full day**: all 92/96/100 quarters, including earlier history.
+- **Tomorrow's full day**: complete published and verified coverage, when available.
 
-| Component | øre/kWh excluding VAT |
-| --- | ---: |
-| Spot |10.000000 |
-| Radius C peak |95.557300 |
-| Energinet net |4.300000 |
-| Energinet system |7.200000 |
-| Fictional confirmed supplier markup |0.500000 |
-| Electricity tax |0.800000 |
-| Subtotal |118.357300 |
-| VAT |29.589325 |
-| **Final including VAT** |**147.946625** |
+A site activated at 22:15 CET can correctly show **7/96 history INCOMPLETE**, current
+and next **READY**, tomorrow **96/96 READY**, and a requested 22:15–00:30 window
+**9/9 READY**. Earlier unknown quarters are intentionally not backfilled. Historical
+incompleteness does not invalidate a fully priced future window. Missing future
+quarters, failed sources/components, stale verification and provisional estimates
+still prevent READY. No future price is assumed zero.
 
-A separate current-quarter example, with 0.25 øre **including VAT** supplier markup,
-resolves 54.3524 øre subtotal + 13.5881 øre VAT = **67.9405 øre/kWh**.
+Use **Check future window**, directly from Review or Final prices. Select start and
+end; the end boundary is excluded. The picker shows the next 48 actual hours,
+including calendar boundaries where prices may not yet exist. UTC offsets distinguish
+repeated DST hours. This picker limit is not an API limit or a charging plan. The
+check changes no configuration; CM submits its own exact quarter-aligned range to
+unchanged read-only API v1. A window across an unpublished date remains INCOMPLETE.
 
-This combines **synthetic 100 DKK/MWh spot**, recorded public Radius data and a
-fictional private agreement. It is not a live market quote or your contract. The
-following normal-band quarter is 68.3155 øre including VAT. Each uses its own stored
-grid rate. Missing or stale prices never become free electricity. Negative spot
-prices are preserved; the final price includes applicable additions.
+## Current and next-quarter example
 
-Explicitly approved estimates are available under **Advanced → Provisional
-visualization estimate**. They use separate transient canonical components and
-are labelled Provisional. They never enter verified SQLite rows/revisions or make
-CM READY. Old retained ledger values remain intact, even when a different estimate
-is visualized. Missing/stale public components block final estimates too.
+This reproducible simulation uses synthetic **100 DKK/MWh spot**, recorded public
+Radius C winter rates and a **fictional confirmed 0.50 øre/kWh excluding-VAT** supplier
+markup. It is not a live quote or your private agreement. Frozen local time is
+27 October 2026, 16:50 CET: current quarter 16:45, next quarter 17:00 peak.
 
-## Estimate a charging session
+| Component (øre/kWh excluding VAT) | Current 16:45 | Next 17:00 |
+| --- | ---: | ---: |
+| Nord Pool | 10.00 | 10.00 |
+| Radius C | 31.85 | 95.56 |
+| Energinet network | 4.30 | 4.30 |
+| Energinet system | 7.20 | 7.20 |
+| Supplier | 0.50 | 0.50 |
+| Electricity tax | 0.80 | 0.80 |
+| Subtotal | 54.65 | 118.36 |
+| VAT amount | 13.66 | 29.59 |
+| **Final including VAT** | **68.32** | **147.95** |
 
-Diagnostics → **Charging cost estimate** takes a first quarter, one kWh amount per
-consecutive quarter and **Planned** or **Measured** energy. A point/comma is accepted.
-For example, enter 1.25 on the first line and 2.0 on the next. Explicit zero-energy
-quarters are allowed; missing quarters or measurements are not assumed zero.
-Future energy must be planned. The calculator uses verified API v1 prices and shows
-an estimate, even for measured energy; it does not settle an account or create a
-charging plan. CM remains responsible for session measurement/planning/control.
+Optional DKK/kWh display: **0.6832 → 1.4795**. Canonical technical API values remain
+**0.683155 → 1.47946625 DKK/kWh**. Each quarter uses its own stored tariff. No UI read
+fetches Nord Pool/Radius or recomposes a verified electricity price.
 
-In the example above, 1.25 kWh in the peak quarter and 2.0 kWh in the following normal
-quarter cost **3.2156428125 DKK**, displayed 3.2156 DKK. Fixed fees are excluded. A missing,
-stale or provisional price makes the estimate unavailable. Supplied allocations
-are not persisted as an energy ledger or sent as charging commands.
+Diagnostics → Charging cost estimate accepts explicitly supplied kWh per consecutive
+quarter and Planned or Measured energy. Future measured energy is rejected. In this
+example, planned **1.25/2.0 kWh** costs **3.81287625 DKK**, displayed **3.8129 DKK**;
+using rounded display prices would be wrong. Missing/stale/provisional prices make
+this estimate unavailable. PE invents no energy, session or charging plan; CM owns
+those responsibilities. Fixed subscriptions are excluded, and this is not accounting.
 
-## Advanced, recovery and safe reset
+## Verification, storage and recovery
 
-Diagnostics → **Advanced** retains dated rates/overrides, public supplier offers,
-heating eligibility, display preferences, explicit alternate source contracts and
-storage/site tools. Official Nord Pool mode hides entity-only fields; choosing an
-alternate source redraws those fields and requires a complete verified contract.
-Preferred display is øre/kWh; original entities and API v1 remain DKK/kWh including VAT.
-Forms follow the current English/British-English/Danish user language. Existing
-entity names follow HA's system language and registry.
+Danish public defaults remain bounded verified baselines: 2026 Energinet net 4.3/system 7.2
+øre excluding VAT, 2026–2027 tax 0.8 øre,25% VAT. Expired periods need verified rules;
+this is not live legislation discovery. Private agreements/heating eligibility are
+never guessed. Optional public EWII offers remain Advanced and require actual agreement/
+VAT confirmation. Historical household 0.030 DKK exVAT applies June–September2026 only,
+not a current/other-site default. Fixed subscriptions never enter marginal prices.
 
-Storage/site tools provide backups and a stored-quarter technical view. Ordinary
-removal retains an identified history archive. Permanent selected-site deletion
-requires its exact ID and confirmation, stops writers and removes only that entry's
-owned config/history/cache/setup/registry data. Another site, external backups and
-HA's recorder are preserved. HACS uninstall removes software and retains data.
+Price calculation happens on verified input refresh. SQLite stores UTC start/end,
+final DKK/kWh, applied component amounts (including original spot normalized once),
+source/input convention/verification and revisions. Startup checks and loads those
+rows into an immutable sorted memory index. API reads use indexed range slices with
+no network, composition, SQLite connection or writes. Offline SQLite range queries
+also use the existing primary-key index. Changed future records alone are replaced;
+settled and unchanged records retain their values and revisions. No schema rewrite.
 
-[HACS update/repair](HACS_DISTRIBUTION.md) · [Recovery](ADR-002-ledger-storage.md) ·
-[Owner acceptance](BETA_ACCEPTANCE.md)
+Provisional visualization prices remain separate transient records, explicitly labelled
+unverified. They never enter verified SQLite rows/revisions or make CM API READY.
+Advanced retains dated rules, display, source contracts, optional heating and storage/
+site tools. HACS uninstall retains data. Permanent selected-site deletion requires
+exact ID and confirmation; other sites, external backups and HA recorder are preserved.
 
-## Native frontend evidence
+[HACS procedure](HACS_DISTRIBUTION.md) · [Acceptance checklist](BETA_ACCEPTANCE.md) ·
+[Storage/recovery](ADR-002-ledger-storage.md) · [Performance limits](PERFORMANCE.md)
 
-Real disposable HA 2026.10.4/frontend 20260930.5 with recorded/synthetic provider
-boundaries, not owner acceptance. Native PE branding was served normally; only
-unrelated decorative brands were mocked. Browser plugin unavailable; Playwright/
-system Chromium used. Desktop 1440×1000 and mobile 390×844.
+## Reproducible validation
 
-| Case | Evidence |
-| --- | --- |
-| Source/grid | [Source](images/beta6/site-enGB.png), [Radius](images/beta6/grid-enGB.png) |
-| Fractional agreement | [Saved input](images/beta6/saved-markup-mobile-enGB.png), [Danish comma](images/beta6/markup-da-mobile.png) |
-| Prices | [English review](images/beta6/review-mobile-enGB.png), [Danish](images/beta6/review-da-mobile.png) |
-| Canonical calculation | [Current](images/beta6/current-quarter-mobile-enGB.png), [future quarter](images/beta6/verified-quarter-mobile-enGB.png) |
-| Session estimate | [Allocated energy](images/beta6/cost-estimate-mobile-enGB.png) |
-| Incomplete/estimated | [Missing](images/beta6/missing-review-mobile-en.png), [provisional](images/beta6/provisional-review-da-mobile.png), [future components](images/beta6/provisional-future-mobile-en.png) |
-| Source errors/recovery | [Official mode](images/beta6/official-source-fields-en.png), [timezone](images/beta6/invalid-timezone-en.png), [outage](images/beta6/outage-review-en.png), [recovered](images/beta6/recovered-review-en.png) |
-| Safe reset | [Confirmation](images/beta6/delete-confirmation-error-en.png), [new empty agreement](images/beta6/recreated-empty-supplier-en.png) |
-| Old resource compatibility | [Description](images/beta6/legacy-description-compat-enGB.png), [named menu](images/beta6/legacy-menu-compat-enGB.png) |
+[Price/locale/registry tests](../tests/test_beta7_presentation.py) ·
+[Late activation, indexed reads, midnight/DST and current/next tests](../tests/test_beta7_readiness.py) ·
+[Native HA simulation receipt](receipts/v0.1.0-beta.7-simulation.json).
 
-[Simulation and migration receipt](receipts/v0.1.0-beta.6-simulation.json)
+Native QA uses isolated HA 2026.10.4/frontend 20260930.5, desktop 1440×1000/mobile 390×844,
+EN/en-GB/DA with synthetic/recorded provider boundaries. Browser plugin unavailable;
+existing Playwright/system Chromium used. Native PE branding loads normally; only
+unrelated decorative brands are mocked. This is software evidence, not owner acceptance.
+Actual private terms, provider availability, physical mobile experience and Pi
+capacity/recovery remain owner-run checks. Cloud benchmarks do not establish Pi speed.
