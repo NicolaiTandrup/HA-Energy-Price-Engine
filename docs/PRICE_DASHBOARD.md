@@ -79,6 +79,11 @@ price dashboard to the sidebar.
 - Amounts are independently rounded only for display. Component rows may differ
   by 0.01 from their rounded total; unrounded stored values remain authoritative.
   English/British-English and Danish UI/number preferences are supported.
+  Primary readiness displays use Title Case (localized in Danish). Legacy canonical
+  technical enum states remain uppercase for automation/API compatibility; HA does
+  not support uppercase translation keys. Their lowercase presentation counterparts
+  supply the ordinary readiness display. Canonical technical entities can be
+  disabled manually if unused; their states/IDs are never silently reinterpreted.
 
 The card refreshes from HA state updates and at least once per minute, plus manual
 **Refresh**. Verified future revisions appear without a browser reload. Reads use
@@ -125,9 +130,10 @@ No HA/HACS/frontend monkeypatch, external JS/CDN or extra database is used.
   Dashboard Refresh only reads stored data; **Check prices** in Configure performs
   normal verified retrieval. Tomorrow is never supplied from today's prices.
 - **Optional ESTIMATED/UNVERIFIED entities:** new sites leave them disabled when
-  provisional pricing is unconfigured; older entries are hidden by the integration,
-  preserving IDs/history and user-owned hides. Explicit provisional configuration
-  restores integration-hidden/disabled optional entities. They remain opt-in in the
+  provisional pricing is unconfigured; older unused entries receive a one-time integration-owned disable,
+  preserving IDs/history and user-owned hides/disables. Explicit provisional configuration
+  restores integration-hidden/disabled optional entities. An explicit user enable
+  after the default cleanup survives reloads. They remain opt-in in the
   entity registry and never authorize CM.
 - HACS uninstall retains price history; normal restart restores ledger records.
   The card is bundled under `custom_components/ha_energy_price_engine/www`, not

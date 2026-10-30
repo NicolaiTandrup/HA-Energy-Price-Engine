@@ -1,8 +1,8 @@
 # Configure and understand charging prices
 
-Install **v0.1.0-beta.7** through HACS, restart HA and reload the browser/app.
+Install **v0.1.0-beta.8** through HACS, restart HA and reload the browser/app.
 Existing users choose **Configure** on their existing site. Device info must show
-manifest version **0.1.0-beta.7**. Site identities, entities, source mappings, dated
+manifest version **0.1.0-beta.8**. Site identities, entities, source mappings, dated
 rules, SQLite history and original revisions remain.
 
 ## Three setup stages
@@ -143,3 +143,13 @@ existing Playwright/system Chromium used. Native PE branding loads normally; onl
 unrelated decorative brands are mocked. This is software evidence, not owner acceptance.
 Actual private terms, provider availability, physical mobile experience and Pi
 capacity/recovery remain owner-run checks. Cloud benchmarks do not establish Pi speed.
+
+
+## Price dashboard
+
+Beta.8 adds the [complete dashboard guide and ready-to-paste YAML](PRICE_DASHBOARD.md).
+The bundled card shows both day-ahead graphs, every applied quarter/component and
+only today's merged DSO tariff ranges. Register the local module in HA Resources;
+no onboarding or price-engine redesign is needed. Current/future inspection reads
+stored records. Existing canonical numeric and legacy machine enum entities remain
+compatible; ordinary presentation statuses use translated Ready/Incomplete/Stale/Error.

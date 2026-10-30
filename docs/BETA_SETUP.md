@@ -1,6 +1,6 @@
 # First setup
 
-Back up your development Home Assistant, install beta.7 using the
+Back up your development Home Assistant, install beta.8 using the
 [HACS procedure](HACS_DISTRIBUTION.md), restart HA and reload the browser/app.
 Existing users configure their existing site; no deletion/recreation is needed.
 Tested cores: 2026.10.3 and 2026.10.4. Hardware performance remains your acceptance check.
@@ -28,6 +28,8 @@ Final prices opens Diagnostics and shows the selected current/future stored calc
 An optional cost estimate takes one kWh value per consecutive quarter and a planned/
 measured designation. Unknown energy/prices are not zero; all prices must be verified.
 Provisional prices support visualization only and never make the CM API READY.
+
+For graphs and complete today/tomorrow tables, follow the [dashboard installation](PRICE_DASHBOARD.md) and paste its YAML after registering the bundled local module.
 
 Follow the [illustrated guide](WIZARD_GUIDE.md) and [acceptance checklist](BETA_ACCEPTANCE.md).
 Your real agreement, sources, bill, physical mobile experience and Raspberry Pi

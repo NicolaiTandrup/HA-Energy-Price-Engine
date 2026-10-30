@@ -50,3 +50,31 @@ jobs:
         run: |
           uv run --no-project python tools/test_two_runtime.py --consumer pr26
           uv run --no-project python tools/run_consumer_suite.py --consumer pr26
+  dashboard:
+    name: dashboard browser desktop and mobile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv venv && uv pip sync --require-hashes requirements-ha-current.lock
+      - name: Generate actual HA producer/source/ledger frontend fixtures
+        env:
+          PE_FRONTEND_FIXTURES: ${{ runner.temp }}/pe-dashboard-fixtures
+        run: uv run --no-project pytest tests/test_beta8_dashboard.py -W error::ResourceWarning
+      - name: Install locked browser test dependencies
+        run: |
+          npm ci --ignore-scripts --prefix tests/frontend
+          cd tests/frontend
+          npx playwright install --with-deps chromium
+      - name: Check shipped module and test graphs/tables/interaction/locale/revisions
+        env:
+          PE_FRONTEND_FIXTURES: ${{ runner.temp }}/pe-dashboard-fixtures
+        run: |
+          node --check custom_components/ha_energy_price_engine/www/energy-price-engine-card.js
+          node --test tests/frontend/dashboard.test.mjs

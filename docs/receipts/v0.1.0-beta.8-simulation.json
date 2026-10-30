@@ -1,0 +1,441 @@
+{
+  "schema": 1,
+  "synthetic": true,
+  "owner_acceptance": false,
+  "verified_at": "2026-10-30T08:09:36.993469+00:00",
+  "ha_core": "2026.10.4",
+  "frontend": "20260930.5",
+  "provider_boundaries": "Disposable local HA: synthetic varying official-service-format Nord Pool, recorded Radius C Datahub response, fictional0.5ore exVAT supplier, unchanged bounded national baselines. No owner credentials/system/controls.",
+  "browser": {
+    "tool": "Playwright/system Chromium",
+    "reason": "Browser plugin not available",
+    "native_url": "http://127.0.0.1:8127/lovelace/electricity-prices",
+    "page_title": "Overview – Home Assistant",
+    "viewports": [
+      [
+        1440,
+        1000
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "mobile_document_width": 390,
+    "console_errors": [],
+    "console_warnings": [],
+    "supported_persisted_user_locale": {
+      "language": "da",
+      "number_format": "language",
+      "time_format": "language",
+      "date_format": "language",
+      "time_zone": "local",
+      "first_weekday": "language"
+    },
+    "copy_paste_yaml": "Actual native YAML-mode HA dashboard uses docs/dashboard.yaml, one actual entity substitution; bundled local module registered in lovelace.resources. Same supported resource interface as storage dashboard Resources UI."
+  },
+  "native_scenarios": {
+    "home": {
+      "site_id": "qa_home",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        }
+      ],
+      "tariff_ranges_today": 4,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_unpublished": {
+      "site_id": "qa_unpublished",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 0,
+          "status": "INCOMPLETE"
+        }
+      ],
+      "tariff_ranges_today": 4,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_missing": {
+      "site_id": "qa_missing",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        }
+      ],
+      "tariff_ranges_today": 1,
+      "current": "INCOMPLETE",
+      "next": "INCOMPLETE"
+    },
+    "qa_partial": {
+      "site_id": "qa_partial",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 61,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        }
+      ],
+      "tariff_ranges_today": 4,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_gap": {
+      "site_id": "qa_gap",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 95,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        }
+      ],
+      "tariff_ranges_today": 6,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_provisional": {
+      "site_id": "qa_provisional",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        }
+      ],
+      "tariff_ranges_today": 1,
+      "current": "INCOMPLETE",
+      "next": "INCOMPLETE"
+    }
+  },
+  "provider_calls": {
+    "before_reads": {
+      "spot": 12,
+      "grid": 11,
+      "delta": 100
+    },
+    "after_reads": {
+      "spot": 12,
+      "grid": 11,
+      "delta": 100
+    },
+    "unchanged": true,
+    "after_explicit_QA_source_revision": {
+      "spot": 13,
+      "grid": 12,
+      "delta": 200
+    }
+  },
+  "revision": {
+    "before": 3,
+    "after": 4,
+    "today_preserved": true,
+    "automatic_state_update": true
+  },
+  "upgrade": {
+    "from": "v0.1.0-beta.7",
+    "configs_preserved": 6,
+    "original_entity_ids_preserved": 162,
+    "logical_ledgers_preserved": 4,
+    "new_presentation_status_per_site": 1,
+    "optional_registry_cleanup": [
+      {
+        "entity_id": "sensor.qa_home_canonical_technical_estimated_unverified_current_price_dkk_kwh",
+        "unique_id": "qa_home_estimated_price_0",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_canonical_technical_estimated_unverified_next_quarter_price_dkk_kwh",
+        "unique_id": "qa_home_estimated_price_1",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_current_quarter_readiness",
+        "unique_id": "qa_home_readiness",
+        "hidden_by": "integration",
+        "disabled_by": null
+      },
+      {
+        "entity_id": "sensor.qa_home_tomorrows_full_day_coverage",
+        "unique_id": "qa_home_tomorrow_status",
+        "hidden_by": "integration",
+        "disabled_by": null
+      },
+      {
+        "entity_id": "sensor.qa_home_provisional_current_price_preferred_display",
+        "unique_id": "qa_home_display_estimated_current_ore",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_provisional_next_quarter_preferred_display",
+        "unique_id": "qa_home_display_estimated_next_ore",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_tomorrows_full_day_coverage_2",
+        "unique_id": "qa_home_tomorrow_readiness",
+        "hidden_by": null,
+        "disabled_by": null
+      }
+    ]
+  },
+  "sqlite_parity": {
+    "compared_browser_rows_against_exact_current_or_historical_revision": 636,
+    "current_persisted_rows": 637,
+    "audit_rows": 384,
+    "integrity": [
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000002.ledger.sqlite3",
+        "rows": 96,
+        "quick_check": "ok"
+      },
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000004.ledger.sqlite3",
+        "rows": 157,
+        "quick_check": "ok"
+      },
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000001.ledger.sqlite3",
+        "rows": 192,
+        "quick_check": "ok"
+      },
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000005.ledger.sqlite3",
+        "rows": 192,
+        "quick_check": "ok"
+      }
+    ],
+    "component_values_VAT_and_final_exact": true,
+    "source_snapshots_exact": true
+  },
+  "sample_radius_transition": [
+    {
+      "start": "2026-10-30T15:45:00+00:00",
+      "end": "2026-10-30T16:00:00+00:00",
+      "local_start": "2026-10-30T16:45+01:00",
+      "local_end": "2026-10-30T17:00+01:00",
+      "status": "READY",
+      "reason": null,
+      "revision": 1,
+      "provenance": "1",
+      "spot": 75.67809999999999,
+      "dso": 31.852399999999996,
+      "energinet_net": 4.3,
+      "energinet_system": 7.199999999999999,
+      "supplier": 0.5,
+      "electricity_tax": 0.8,
+      "vat": 30.082624999999997,
+      "final": 150.41312499999998,
+      "stored_final": 150.41312499999998,
+      "raw_status": "READY",
+      "raw_verified_at": "2026-10-30T08:04:35.209132+00:00",
+      "calculated_at": "2026-10-30T07:46:25.487346+00:00"
+    },
+    {
+      "start": "2026-10-30T16:00:00+00:00",
+      "end": "2026-10-30T16:15:00+00:00",
+      "local_start": "2026-10-30T17:00+01:00",
+      "local_end": "2026-10-30T17:15+01:00",
+      "status": "READY",
+      "reason": null,
+      "revision": 1,
+      "provenance": "1",
+      "spot": 60.987199999999994,
+      "dso": 95.5573,
+      "energinet_net": 4.3,
+      "energinet_system": 7.199999999999999,
+      "supplier": 0.5,
+      "electricity_tax": 0.8,
+      "vat": 42.336124999999996,
+      "final": 211.68062500000002,
+      "stored_final": 211.68062500000002,
+      "raw_status": "READY",
+      "raw_verified_at": "2026-10-30T08:04:35.209132+00:00",
+      "calculated_at": "2026-10-30T07:46:25.487346+00:00"
+    }
+  ],
+  "preserved_runtime_sha256_from_beta7": {
+    "api.py": "01a16de472155d1dbe13af2b01ebd0a2b1c34ba5cdc7a8b9f0a5381643b0d425",
+    "coordinator.py": "71153be367ebafd23cfcbf53b639e8fc269acbb20103363f94de186e632b9028",
+    "ledger.py": "3fb161f450aa0e329e386c99e8498c7624f502415a0673edaaee98d76bf8acf4",
+    "price_engine.py": "3842c6d21f579b5dd25141ac66649b5f4d7ee19a5220cde57722171e5bb87ff2",
+    "price_schedule.py": "d924fa4e6cfa67813220443b8b4e8d928148319116a38096981e86029c456918",
+    "price_update.py": "ceb3955c0b96f743cc22a90d76ce6cd0868d4c53836afb2755a2fcbd9ec3610d",
+    "tariff_source.py": "dfdf30b8da837403da51998f2dc61c2cd8c940702404672af29254054fba73e5",
+    "prices.py": "fe5fdc82bc47d7d6404727a1d9ba53cf9c1a03b58f031019a467c6888fe1a21d",
+    "price_components.py": "d87fe36b36162f4d37af3da5c311879d03ef44c994071932e9854988c4ab31b9"
+  },
+  "browser_regressions": {
+    "cases": 15,
+    "passed": 15,
+    "skipped": 0,
+    "data": "Generated by real producer tests, not hand-authored price arithmetic",
+    "scenarios": "92/96/100 slot days including96+100=196 two-day calendar, negative/zero, missing/unpublished/gap, revisions, EN/en-GB/DA/explicit/browser locale, XSS, keyboard/touch-size layout, two series/tables/all intervals"
+  },
+  "screenshots": [
+    {
+      "filename": "pe8-graphs-desktop.png",
+      "sha256": "a42559063b15eee74f8d2ecc9b0fb20aa016124bbb1347c3497d9a2685f45afe",
+      "width": 1440,
+      "height": 1000,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-tariffs-desktop.png",
+      "sha256": "7d65d6dfd66902d88ae9cce044eaf92d3a04602f3dbd0cbc5d714c3685638d3c",
+      "width": 1136,
+      "height": 361,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-quarters-desktop.png",
+      "sha256": "853b5456429c1bbe542dfd9f4e69583b001be99ca96a26d93a4f0d6749de9a7b",
+      "width": 1136,
+      "height": 745,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-components-future-desktop.png",
+      "sha256": "3b54c8f8bd5971fb68921bd1d9b093713d66bc4f40f52c5c3079762e1100c77b",
+      "width": 1136,
+      "height": 736,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-raw-mobile.png",
+      "sha256": "303b52ca52dabaa50dbfc5deb962c55654c1d8d63b974ef40122bba54278673e",
+      "width": 362,
+      "height": 286,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-final-mobile.png",
+      "sha256": "6fef3d5eadd12a4577abff5d898816ac664e5db69a256f460396c7582211e1a7",
+      "width": 362,
+      "height": 286,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-tariffs-mobile.png",
+      "sha256": "1ba954932a5b2cd949ae31fec28256570c431966bedf1fda670d377521078c41",
+      "width": 362,
+      "height": 423,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-quarters-mobile.png",
+      "sha256": "5cd614c77ab05420528723194850e996987c1f637d7c1bd440e1acdcc1d496fa",
+      "width": 362,
+      "height": 763,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-unpublished-mobile.png",
+      "sha256": "20e3b429693f28f8617e2c6ea92f5b1accfb436a8bdc1770ab9f0597fd306f8d",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-missing-components-mobile.png",
+      "sha256": "5a94baf64b4680368d3011ceac08612edfad4c6f7bfeeba81d2f59752a9e85ae",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-graphs-da-mobile.png",
+      "sha256": "69a0a464f38a229b064c47abd2d235af61ad1563bcf643f6acf686f8bd2caa01",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-graphs-da-desktop.png",
+      "sha256": "abb3f39ec11cedb88c108741fa4972640a8fe218f0d0e396151bfcb14ccdfa5f",
+      "width": 1440,
+      "height": 1000,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-device-da-desktop.png",
+      "sha256": "6d3f36d5d1bcc7f7df4bc2e170421bbf994e9a2efbff31275ae4b6ccd70de9cd",
+      "width": 1440,
+      "height": 1000,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-device-da-mobile.png",
+      "sha256": "e7f77b30839e117529bcc18bf8394ac4ff5c9c93e7c160332357ff125bf61b76",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    }
+  ],
+  "restart": "pending final native restart verification",
+  "production_controls_touched": false
+}

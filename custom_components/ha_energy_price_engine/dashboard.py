@@ -218,6 +218,7 @@ def price_schedule(coordinator, *, now=None):
         "site": {
             **{key: site[key] for key in ("id", "name", "timezone", "area")},
             "source_type": site.get("source_type"),
+            "dso_mode": site.get("dso_mode"),
         },
         "generated_at": now.isoformat(),
         "current_start": current.isoformat(),

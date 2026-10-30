@@ -124,7 +124,7 @@ export class EnergyPriceEngineCard extends HTMLElement {
     if (!present(value)) return "—";
     const pref = this._hass?.locale?.number_format;
     const locale = ({decimal_comma: "de-DE", space_comma: "fr-FR", comma_decimal: "en-US", quote_decimal: "de-CH", none: "en-US", system: navigator.language})[pref] || this._hass?.locale?.language || "en";
-    return new Intl.NumberFormat(locale, {minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false}).format(value);
+    return new Intl.NumberFormat(locale, {minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false}).format(Math.abs(value) < 0.005 ? 0 : value);
   }
   _status(value) {
     const key = ["READY", "INCOMPLETE", "STALE", "ERROR"].includes(value) ? value.toLowerCase() : "incomplete";
@@ -163,7 +163,9 @@ export class EnergyPriceEngineCard extends HTMLElement {
     const ticks = [low + (high - low) * .15, low + (high - low) * .55, low + (high - low) * .9];
     const bars = slots.filter(good).map(r => {
       const top = y(r[key]);
-      const label = `${r.local_start} → ${r.local_end} · ${this._format(r[key])} øre/kWh · ${t.ready} · ${t.revision} ${r.revision ?? "—"}`;
+      const evidence = data.provenance[r.provenance];
+      const source = key === "spot" ? (data.site.source_type === "nordpool" ? "Official Nord Pool" : evidence?.source.entity_id || "Configured spot source") : "Energy Price Engine";
+      const label = `${r.local_start} → ${r.local_end} · ${this._format(r[key])} øre/kWh · ${t.ready} · ${source} · ${t.checked}: ${r.raw_verified_at || "—"} · ${t.revision} ${r.revision ?? "—"}`;
       return `<rect class="bar ${key === "spot" ? "spot" : "final"}-bar" x="${x(r.start)}" y="${Math.min(top,zero)}" width="${Math.max(.6,x(r.end)-x(r.start)-.5)}" height="${Math.max(.8,Math.abs(top-zero))}" tabindex="0" role="button" data-start="${esc(r.start)}" aria-label="${esc(label)}"><title>${esc(label)}</title></rect>`;
     }).join("");
     const boundary = x(data.days[1].start);
@@ -193,7 +195,7 @@ export class EnergyPriceEngineCard extends HTMLElement {
   }
   _tariffs() {
     const t = this._words();
-    return `<section class="section" data-table="tariffs"><h2>${t.grid}</h2><p class="muted">${this._data.days[0].date} · ${esc(this._data.site.timezone)} · ${t.applied}</p><div class="scroll"><table><thead><tr><th>${t.slot}</th><th>${t.rate}</th><th>${t.status}</th><th>${t.source}</th></tr></thead><tbody>${this._data.dso_today.map(r => `<tr><td class="time">${esc(this._interval(r))}</td><td class="numeric value">${esc(this._format(r.value))}</td><td>${this._status(r.status)}</td><td class="source">${esc(r.source || t.missing)}<small>${esc(r.verified_on || r.verified_at || "")}</small>${r.valid_from ? `<small>${esc(r.valid_from)} → ${esc(r.valid_to)}</small>` : ""}</td></tr>`).join("")}</tbody></table></div></section>`;
+    return `<section class="section" data-table="tariffs"><h2>${t.grid}</h2><p class="muted">${this._data.site.dso_mode === "radius_c" ? "Radius C · " : ""}${this._data.days[0].date} · ${esc(this._data.site.timezone)} · ${t.applied}</p><div class="scroll"><table><thead><tr><th>${t.slot}</th><th>${t.rate}</th><th>${t.status}</th><th>${t.source}</th></tr></thead><tbody>${this._data.dso_today.map(r => `<tr><td class="time">${esc(this._interval(r))}</td><td class="numeric value">${esc(this._format(r.value))}</td><td>${this._status(r.status)}</td><td class="source">${esc(r.source || t.missing)}<small>${esc(r.verified_on || r.verified_at || "")}</small>${r.valid_from ? `<small>${esc(r.valid_from)} → ${esc(r.valid_to)}</small>` : ""}</td></tr>`).join("")}</tbody></table></div></section>`;
   }
   _schedule() {
     const t = this._words();
@@ -212,7 +214,7 @@ export class EnergyPriceEngineCard extends HTMLElement {
     const t = this._words(), d = this._data;
     const body = d ? `<header><div><div class="eyebrow">Energy Price Engine · ${esc(d.site.area)}</div><h1>${esc(d.site.name)}</h1><div class="muted">${esc(d.site.timezone)} · øre/kWh</div></div><button data-refresh aria-label="${t.retry}">${t.retry}</button></header><div class="body"><div class="health">${[[t.current,d.current],[t.next,d.next],[t.history,d.days[0]],[t.publication,d.days[1]]].map(([name,f]) => `<div><p>${name}</p>${this._status(f.status)}<p class="muted" style="margin-top:6px">${f.stored_slots}/${f.expected_slots}</p></div>`).join("")}</div>
       ${this._error ? `<p role="alert" class="notice error">${esc(this._error)}</p>` : ""}
-      ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || (i === 1 && day.raw_ready_slots === 0 ? t.wait : t.noRecord))}</p>${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
+      ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || t.noRecord)}</p>${i === 1 && day.status === "INCOMPLETE" && day.failure_stage === "source" && day.raw_ready_slots === 0 ? `<p>${t.wait}</p>` : ""}<p>${t.update}: ${esc(this._local(d.next_scheduled_update))}</p>${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
       <div class="charts">${this._chart("spot")}${this._chart("final")}</div><p class="muted">${t.gaps} ${t.rawOnly}</p>${this._inspector()}${this._tariffs()}${this._schedule()}<footer class="footer">${t.update}: ${esc(this._local(d.next_scheduled_update))}<br>${t.generated}: ${esc(this._local(d.generated_at))} · ${t.revision} ${d.revision}</footer></div>` : `<header><h1>${t.title}</h1></header><div class="body"><p role="status">${esc(this._error || t.loading)}</p><button data-refresh>${t.retry}</button></div>`;
     this.shadowRoot.innerHTML = `<style>${STYLE}</style><ha-card>${body}</ha-card>`;
     if (hadDetails) for (const e of this.shadowRoot.querySelectorAll("details")) e.open = open.has(e.dataset.day);

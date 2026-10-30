@@ -125,3 +125,18 @@ The unchanged SQLite primary-key index and startup-loaded bisect memory index se
 stored values. Consumer reads do not connect to SQLite, fetch providers or compose.
 Repeated-read, cold-reload, source-revision and 92/96/100-quarter tests are in
 `tests/test_beta7_readiness.py`. Fixed subscriptions remain excluded.
+
+
+## Beta.8 frontend transport (separate from CM APIv1)
+
+The bundled Lovelace card uses the authenticated read-only HA WebSocket command
+`ha_energy_price_engine/price_schedule` with one loaded PE `entity_id`. It checks
+that user's HA entity read permission and returns at most today/tomorrow's quarters,
+explicit null gaps, applied component/source snapshots, UTC/local-offset identities,
+record revisions, today's DSO ranges and readiness. Arbitrary date/export parameters
+are rejected. This adds no HA write service or charging control. It creates no large
+Recorder attributes and does no provider/SQL/tariff recomposition on reads.
+`schema_version:1` is the presentation response, not a new canonical consumer API.
+Dashboard numbers are unrounded ore/kWh, formatted with2decimals by the card.
+CM retains the unchanged full-precision DKK/kWh `get_api(hass,version=1)` contract.
+See [dashboard installation/semantics](PRICE_DASHBOARD.md).

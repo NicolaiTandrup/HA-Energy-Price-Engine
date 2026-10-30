@@ -1,8 +1,8 @@
 # Install and update with HACS
 
 Repository: **NicolaiTandrup/HA-Energy-Price-Engine**. Category: **Integration**.
-Target: **v0.1.0-beta.7** (manifest `0.1.0-beta.7`). The
-[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.7)
+Target: **v0.1.0-beta.8** (manifest `0.1.0-beta.8`). The
+[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.8)
 is the installation source. The reproducible package and release receipt identify the exact immutable
 source and checksums; a moving branch is not a release.
 
@@ -11,9 +11,9 @@ source and checksums; a moving branch is not a release.
 2. **HACS → Custom repositories**: add
    `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine`, category **Integration**.
 3. Open Energy Price Engine in HACS. Persist **Show beta versions**, refresh
-   repository information, select **v0.1.0-beta.7**, then Download.
+   repository information, select **v0.1.0-beta.8**, then Download.
 4. Restart HA. HACS must show the installed semantic beta version. Device info must
-   show manifest version **0.1.0-beta.7**. Reload the browser/app after restart so it loads the new fields and translations.
+   show manifest version **0.1.0-beta.8**. Reload the browser/app after restart so it loads the new fields and translations.
 5. Configure the official Home Assistant **Nord Pool** integration with your actual
    area first. PE needs no additional credentials. A legacy custom component
    shadowing the official domain is rejected. Recorded legacy comparisons are
@@ -27,6 +27,11 @@ source and checksums; a moving branch is not a release.
    needs no final save. Inspect raw/final coverage and a stored breakdown, then
    complete the [acceptance checklist](BETA_ACCEPTANCE.md), including restart and
    comparison of the marginal components from your agreement/bill. Close cannot submit fields still being typed.
+
+8. Optional price dashboard: add the bundled local module to **Settings → Dashboards →
+   Resources**, then paste [dashboard.yaml](dashboard.yaml) and replace one entity ID.
+   Full [dashboard installation and tables/graphs guide](PRICE_DASHBOARD.md). No extra
+   HACS frontend repository is required.
 
 HACS uses compliant main for registration and the exact selected release tag for
 installation. Beta distribution does not require merging development into main.

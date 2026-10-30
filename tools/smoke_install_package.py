@@ -29,7 +29,7 @@ def release_metadata():
 def hass_config_dir():
     return os.environ["PE_PACKAGE_ROOT"]
 
-async def test_independent_installed_package(hass, freezer, enable_custom_integrations):
+async def test_independent_installed_package(hass, freezer, enable_custom_integrations, hass_client):
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
@@ -72,6 +72,15 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     result=get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now)
     assert str(result.status)=="READY" and len(result.records)==100
     assert all(abs(r.final_price_incl_vat-.23)<1e-9 for r in result.records)
+    from custom_components.ha_energy_price_engine.dashboard import price_schedule,CARD_URL
+    schedule=price_schedule(entry.runtime_data,now=now)
+    assert len(schedule["days"][1]["slots"])==100
+    assert all(abs(row["final"]-23)<1e-8 for row in schedule["days"][1]["slots"])
+    client=await hass_client()
+    response=await client.get(CARD_URL)
+    assert response.status==200
+    module=await response.text()
+    assert module==(Path(integration.__file__).parent/"www/energy-price-engine-card.js").read_text()
     before=result.records
     assert entry.runtime_data.price_engine.database.path.is_file()
     assert await hass.config_entries.async_reload(entry.entry_id)

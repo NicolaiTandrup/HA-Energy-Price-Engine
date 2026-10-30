@@ -17,10 +17,14 @@ from .presentation import display_precision, display_value
 from .status import day_result, quarter_result, source_status
 
 
+def optional_estimate(unique_id):
+    return "_estimated_price_" in unique_id or "_display_estimated_" in unique_id
+
+
 async def async_setup_entry(hass, entry, async_add_entities):
     c = entry.runtime_data
-    # Default flags affect only new registry entries. Hide pre-existing optional
-    # entities too, without deleting identities/history or overriding user hides.
+    # HA's device page lists hidden entities too. Apply a one-time disabled default
+    # for unused estimates, preserving registry/history and subsequent user opt-in.
     registry = er.async_get(hass)
     configured = bool(c.site.get("provisional_supplier"))
     for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
@@ -30,15 +34,17 @@ async def async_setup_entry(hass, entry, async_add_entities):
                     entity.entity_id, hidden_by=er.RegistryEntryHider.INTEGRATION
                 )
             continue
-        if (
-            "_estimated_price_" not in entity.unique_id
-            and "_display_estimated_" not in entity.unique_id
-        ):
+        if not optional_estimate(entity.unique_id):
             continue
-        if not configured and entity.hidden_by is None:
-            registry.async_update_entity(
-                entity.entity_id, hidden_by=er.RegistryEntryHider.INTEGRATION
-            )
+        preferences = entity.options.get(DOMAIN, {})
+        if not configured and preferences.get("provisional_configured") is not False:
+            updates = {}
+            if entity.hidden_by is None:
+                updates["hidden_by"] = er.RegistryEntryHider.INTEGRATION
+            if entity.disabled_by is None:
+                updates["disabled_by"] = er.RegistryEntryDisabler.INTEGRATION
+            if updates:
+                registry.async_update_entity(entity.entity_id, **updates)
         elif configured:
             updates = {}
             if entity.hidden_by is er.RegistryEntryHider.INTEGRATION:
@@ -47,6 +53,30 @@ async def async_setup_entry(hass, entry, async_add_entities):
                 updates["disabled_by"] = None
             if updates:
                 registry.async_update_entity(entity.entity_id, **updates)
+        if preferences.get("provisional_configured") is not configured:
+            registry.async_update_entity_options(
+                entity.entity_id, DOMAIN, {**preferences, "provisional_configured": configured}
+            )
+
+    @callback
+    def mark_new_defaults(event):
+        if event.data.get("action") != "create":
+            return
+        entity = registry.async_get(event.data["entity_id"])
+        if (
+            entity
+            and entity.config_entry_id == entry.entry_id
+            and optional_estimate(entity.unique_id)
+        ):
+            registry.async_update_entity_options(
+                entity.entity_id,
+                DOMAIN,
+                {**entity.options.get(DOMAIN, {}), "provisional_configured": configured},
+            )
+
+    entry.async_on_unload(
+        hass.bus.async_listen(er.EVENT_ENTITY_REGISTRY_UPDATED, mark_new_defaults)
+    )
     async_add_entities(
         [
             PriceSensor(c),

@@ -12,3 +12,5 @@ dist/
 hacs-references/
 
 .venv-ui/
+
+tests/frontend/node_modules/

@@ -1,4 +1,4 @@
-# Beta.7 acceptance checklist
+# Beta.8 acceptance checklist
 
 Software checks and owner Home Assistant acceptance are separate. Automated native
 HA tests use recorded/synthetic provider boundaries and do not certify your private
@@ -17,25 +17,40 @@ CI, package hashes and simulation screenshots are in the release receipt and
 - [x] Step-confirmed persistence, interrupted native setup, unsubmitted changes, close/resume,
   actual persisted current-day readiness, storage failure and restart.
 - [x] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
-- [x] Beta.1–.5 config, ledger rows, revisions, entity IDs and source references.
+- [x] Beta.1–.7 config, ledger rows, revisions, entity IDs and source references.
 - [x] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
   clean reinstall and second-site/global recorder isolation.
 - [x] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
   authenticated channel repair, persisted beta state and semantic version reporting.
 - [x] Hassfest, translations, HACS validation, clean deterministic packages and
   both ZIP layouts installed/imported outside the repository.
-- [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
+- [ ] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
 
-Publication software receipt: [beta.7 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.7.json).
-All software gates passed, including immutable-source CI and independent public verification.
+Publication software receipt: [beta.8 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.8.json).
+Candidate validation is recorded below. Exact-source CI/publication and independent
+public verification remain pending until the publication receipt exists.
 All owner acceptance items below remain unchecked.
+
+- [x] Native HA and15 browser regression journeys: desktop/mobile graphs, complete
+  tables, source/components/VAT parity, exact DSO merges, negative/zero prices,
+  missing gaps, DST92/96/100, future revision updates and locale/XSS safety.
+- [x] Authenticated site read permissions, bounded two-day responses, no provider/
+  SQL/recomposition on dashboard reads, unchanged CM APIv1.
+- [x] One-time unused optional estimate default disable, stable IDs/history, explicit
+  user opt-in and configured provisional behavior; supported status localization.
 
 ## Your development HA acceptance
 
 - [ ] Back up HA; record core/HACS/PE versions and storage/hardware.
 - [ ] Update through HACS with **Show beta versions enabled**, restart and confirm
-  manifest version **0.1.0-beta.7**. Existing site IDs/entities/history remain.
+  manifest version **0.1.0-beta.8**. Existing site IDs/entities/history remain.
+- [ ] Register the bundled local module in HA Resources; paste the complete
+  [dashboard YAML](dashboard.yaml) changing one actual site entity ID. View both
+  graphs, all quarter rows, today's DSO ranges and selected future components.
+  Check local offsets/negative prices/gaps, source/VAT and current/history readiness.
+- [ ] Confirm unused optional estimates no longer clutter the default device page.
+  Canonical technical data remains in its original machine unit/state for compatibility.
 - [ ] Verify official Nord Pool's actual area and daily quarter coverage without
   simultaneously running a legacy broker. Compare recorded legacy data offline.
 - [ ] Confirm your real grid class, VAT and current supplier contract from a bill.

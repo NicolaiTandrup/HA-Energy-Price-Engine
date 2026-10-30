@@ -7,14 +7,14 @@ estimated charging costs. Prices include spot, grid time-of-use tariffs, supplie
 markup, Energinet charges, electricity tax and VAT. Fixed subscriptions are excluded.
 Each pricing site has independent settings and persistent SQLite history.
 
-**v0.1.0-beta.7** · [Prereleases](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases)
+**v0.1.0-beta.8** · [Prereleases](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases)
 
 ## Install or upgrade
 
 1. Add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` to **HACS → Custom
    repositories**, category **Integration**.
 2. Open Energy Price Engine, persist **Show beta versions**, refresh information,
-   choose **v0.1.0-beta.7**, download and restart Home Assistant. Reload the browser/app.
+   choose **v0.1.0-beta.8**, download and restart Home Assistant. Reload the browser/app.
 3. Existing sites: choose **Configure** on the existing entry. New sites: install
    Home Assistant's **official Nord Pool** integration first, then **Settings →
    Devices & services → Add integration → Energy Price Engine**.
@@ -36,6 +36,18 @@ Each accepted page saves immediately. Close and reopen Configure to resume.
 Review needs no final save; tap a component to edit and use **Check prices** to
 verify sources. New rates start at the next complete quarter without rewriting
 settled history or filling earlier unknown prices.
+
+## See every quarter-hour
+
+The bundled [price dashboard](docs/PRICE_DASHBOARD.md) shows two today/tomorrow
+graphs (raw Nord Pool spot and verified final price), today's applied network tariff
+ranges, and every quarter's components, VAT, source and revision. Includes a Now
+marker, future inspection, negative prices, explicit missing-price gaps and DST.
+
+[Ready-to-paste dashboard YAML](docs/dashboard.yaml): register the bundled local
+JavaScript module once in HA Resources and change one site entity ID. No Python,
+SQL, external services or extra chart-card repository. Unused provisional entities
+are disabled by default; verified and provisional prices stay separate.
 
 ## Understand and use prices
 
