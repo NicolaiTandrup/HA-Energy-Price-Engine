@@ -1,207 +1,177 @@
 # Development handoff
 
-Updated 2026-10-30 (Europe/Copenhagen). **Beta.8 active**, explicitly authorized by
-the owner's new mission; supersedes the historical beta.7 STOP below. Resume from
-11294f709b1b3539300baa7653e7e8e4a4657958, do not restart. Existing draft PR14 and branch
-`feat/beta5-simple-onboarding` retained. Main56cdb3c and beta.1–.7 tags/assets untouched.
-Only beta.8 prerelease is authorized after mandatory tests/integrity checks. No merge,
-stable release, owner HA, Node-RED, CM source/control, Tesla/Easee or charging actions.
+Updated 2026-10-30 (Europe/Copenhagen). **Beta.8 published and independently verified.
+STOP: owner mission complete.** No beta.9, stable release, main merge, production
+cutover, Node-RED, CM source/control, Tesla/Easee or charging actions authorized.
 
-## Beta.8 first milestone
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.8
 
-- Added bounded authenticated HA WebSocket presentation transport (today/tomorrow,
-  per-site entity read permission), shipped local Lovelace module, raw/final graphs,
-  applied component/UTC/revision schedule and today's exact-merged DSO ranges.
-  Data uses immutable ledger/source snapshots, no provider/SQL/recomposition on reads.
-  Spot remains independently available when final supplier components are missing.
-- Missing/stale/error final prices stay gaps. Full precision canonical APIv1, engine,
-  persistence/recovery/revisions, source normalizers and required refreshes retained.
-  Provisional never becomes verified. Optional entities default disabled when unused;
-  existing identities hidden with integration-owned flags; user hides preserved.
-  Lowercase presentation enums give title-case readiness. Hassfest forbids uppercase
-  translation keys: two legacy uppercase sensors are hidden technical compatibility
-  entities; existing current + new tomorrow presentation status stay visible. Canonical
-  enum/API values and identities remain unchanged.
-- Copy/paste `docs/dashboard.yaml` + `docs/PRICE_DASHBOARD.md` document one actual
-  site entity ID and supported local Resources module registration. No fake action,
-  device-page injection or third-party chart/CDN. Integration manifest beta.8; build
-  and actual HACS test payloads include bundled JS. Added actual beta.7 migration pin.
-- Local13 focused dashboard tests pass; normal/fall/spring92/96/100, source/components/
-  VAT parity, repeated guarded reads, partial/missing publication, single gaps,
-  future revisions, real authenticated permission/site checks, native static route,
-  optional registry migration/defaults and title-case translations. Initial fixture
-  clock/token ordering and recorded provider-name expectations corrected; no runtime
-  verification relaxed. Earlier15 lifecycle/provisional/native-status cases pass.
-  Ruff check/format pass. Full suites/CI/browser/packaging still pending.
-- Browser plugin unavailable; frontend-testing-debugging skill uses existing system
-  Chromium/Playwright (dev npm cache outside repo). Disposable HA2026.10.4/frontend
-  20260930.5 planned; no owner access. Current stable checked PyPI2026.10.4.
-- Cloud API CONNECT403 confirmed; Git/public HTML work. Existing authorized runner
-  PR updater pattern retained, no secret/proxy bypass. Public Issues10/8/12 and PR14
-  read before edits. No subagents. No worktree.
+- Immutable source **cbad4e7595e7eba4080aca295bfca521f9b0409a**.
+- Annotated tag **3dc0e28c119128e8ad397fc44da3b6b6c613b260**.
+- Release **428809496**, prerelease/latest=false. All four asset IDs/sizes/digests
+  preserved after initial creation; no reupload/republish, tag move or asset overwrite.
+- Existing [draft PR14](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/pull/14),
+  branch `feat/beta5-simple-onboarding`, unmerged; all implementation/PR history kept.
+  Resumed11294f7, featurec656e4c/fix5990369/browser-evidenceeeb8af9/freezecbad4e7.
+- Main unchanged **56cdb3c10993179371483812cbc36f651ba3ad8e**; all beta.1–.7 release
+  IDs/tags/available asset IDs/sizes/digests verified before and after publication.
+- Initial creation [41028385355](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41028385355)
+  passed all19 exact-source gates and clean hash-identical native packages. Its .4
+  public verifier passed; .3 combined verifier failed and audit correctly skipped.
+  Full clean .3 same-artifact diagnosis [41029815961](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41029815961)
+  then passed. Original raw log unavailable; exact initial failure cause unconfirmed.
+- Final read-only release verification [41031172162](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41031172162),
+  orchestration **16ff2e183792e714fb8bf35bfff8d38b257b982b**: all16 jobs green,
+  including fresh .3/.4 public HACS/native/channel verification and audit. Creation/
+  upload logic replaced with strict existing-release/ALL4asset identity checks.
+  Audit receipt checkpoint **eb0c3e9f2548ade63236a466b37183850d19ca8a** updated PR14.
+- One tag .3 job initially failed pinned-consumer preparation before tests. Clean
+  immutable replay and the original full job rerun passed, all19 latest source
+  checks green. No tests waived or source/tag changed. Authenticated run/jobs metadata
+  enabled diagnostics; direct original log API was unavailable. An early job-ID
+  mapping assumption was not established as the failure cause. Diagnostic history
+  remains in Git/receipts; final complete verifications are green.
+- Owner explicitly authorized only tested beta.8 prerelease. No owner HA/equipment
+  accessed; no owner real-HA acceptance claimed. Owned disposable HA server stopped.
 
-Second milestone (checkpoint **fix: use supported status localization and preserve legacy enums**):
-- Official hassfest now1integration/0invalid; added config-entry-only YAML schema.
-  First run correctly rejected uppercase translation keys; fixed via hidden legacy
-  identities plus lowercase presentation counterpart, no enum automation break.
--50 targeted regression cases pass (dashboard/presentation/actual beta.1–.7 migration
-  and guided flows). Earlier full run320passed/2failed on stale beta.7 manifest
-  assertion and newly disabled optional entity precision metadata; expectations now
-  verify beta.8 and disabled/no-state when unused. Full rerun remains pending.
-- Native beta.7→.8 upgrade preserves6configs/all4 logical ledgers/all162 original
-  entity IDs; one new presentation status/site. Isolated native dashboard renders
-  two192-bar graphs with no browser errors/warnings. Full visual/interaction work
-  remains; initial screenshot exposed a QA HTTP config confirmation overlay, which
-  must be accepted only in that disposable instance before final evidence.
+## Delivered beta.8
 
-Third milestone (checkpoint **feat: validate dashboard graphs and tables in desktop and mobile browsers**):
--324 producer cases/core HA2026.10.3/.4,89% coverage,0skips,2 unchanged upstream
-  HACS warnings. Four unchanged CM suites153/176/227/228 +2 coupled runtime cases
-  per ref/core pass. Official hassfest1integration/0invalid, Ruff green. One final
-  additive configured DSO-label field is covered by15 focused dashboard cases.
--15 reproducible Playwright/Chromium card regressions pass, generated by real HA
-  source/SQLite tests:92/96/100, both series/all quarters, exact DSO merges, negative/
-  zero/missing/unpublished/gaps, source revisions, keyboard/mobile, EN/en-GB/DA/user/
-  browser number formats, source-text XSS. Locked browser deps and CI job added.
-  Normal24October plus DST25October correctly has196 quarters across two days.
-  Initial test expected192 and first harness favicon404 corrected; no app error.
-- Native HA2026.10.4/frontend20260930.5 desktop1440×1000/mobile390×844 passes two
- 192-point graphs,192-row schedule,four today-only DSO ranges,current/future inspector,
-  unpublished/raw-only/partial/gap/provisional sites, persisted Danish locale,
-  automatic graph revision update, native Device info8 and cleaned optional entities.
-  Browser errors/warnings empty; read-only provider counters unchanged.14 screenshots
-  outside source, hashes in `docs/receipts/v0.1.0-beta.8-simulation.json`.
-- Native test showed hidden estimates still appear on HA's device page: fixed to a
-  one-time unused-entity default disable, registry IDs/history and explicit user
-  opt-in on later reload preserved. Configured provisional restores integration-only
-  flags; user hides/disables retained.23 focused optional/provisional cases pass.
-  Legacy canonical machine enum states stay uppercase/unchanged; presentation enums
-  localized Title Case. HA does not permit uppercase translation keys.
-- Native beta7 upgrade6 configs/all4 logical ledgers/162 original IDs unchanged.
- 636 displayed stored rows match exact current OR historical SQLite revisions,
-  all components/VAT/final/source snapshots.637 current SQL rows;9 core runtime files
-  byte-identical beta7 (API/coordinator/engine/ledger/schedule/adapters/component math).
-  Restart check pending: QA global artificial source delta legitimately revised
-  two other sites on restart; isolating that fixture delta, not changing the engine.
-- Complete current beta8 README/setup/HACS/dashboard/YAML/API/acceptance guides and
-  compact software simulation evidence. Owner boxes remain unchecked. Exact-source
-  CI/tag/publication/public-asset install gates pending. No beta8 release claimed.
+- Bundled dependency-free Lovelace card: today/tomorrow **raw official Nord Pool
+  exVAT** and **verified final variable inclVAT** graphs, ore/kWh2 decimals, Now/day
+  markers, negative prices and explicit unavailable gaps. Every quarter includes
+  UTC identity/local offset, raw spot, DSO, Energinet network/system, supplier, tax,
+  VAT, final, verification and record revision. Current/selected-future inspector
+  shows actual applied source/effective/verification metadata. All rows available
+  in scrollable day tables;92/96/100-slot days/repeated hours handled correctly.
+- Today's network table merges only adjacent exact equal applied stored DSO amounts
+  with matching source/verification. Only today, including explicit missing ranges;
+  no seasonal/annual catalogue or guessed tariff. Configured Radius C labelled.
+- Supported HA authenticated WebSocket command, site entity-read permission and
+  bounded two local days; no price arrays in Recorder, hundreds of entities, provider
+  fetch, SQLite connection or tariff composition on reads. Separate presentation
+  schema1 does not change canonical CM Python APIv1/full DKK precision.
+- Current/next readiness independent of historical gaps, raw independently verified
+  when final rates missing, actionable period/component/corrective guidance and
+  tomorrow publication/next-check message. Stale/error/provisional final never Ready
+  or zero; retained stale amounts labelled, not plotted. Subscriptions excluded.
+- Unused estimates default disabled; one-time cleanup of beta7 registry preserves
+  IDs/history/user hides/disables and subsequent explicit opt-in. Configured
+  provisional restores integration-owned flags, stays outside ledger/API Ready.
+  Primary status enums localized Title Case. Legacy technical machine enum states
+  retain uppercase values/IDs for automation compatibility; HA translation keys
+  cannot be uppercase. Technical entities can be disabled manually if unused.
+- API/coordinator/engine/ledger/schedule/updater/tariff/spot/component math are nine
+  byte-identical beta7 files (SHA proof in simulation receipt). Config/onboarding/
+  source architecture retained. Original CM11/12 attribution and required local
+ 13:05/13:20/13:40/23:59/00:01 refreshes preserved. No inferred future EWII/private
+  agreement/heating eligibility; historical0.030DKKexVAT only June–September2026.
 
-Final candidate milestone, based on **eeb8af911f08dd58e8bfa67cab9bd0db52a1296d**:
-- Final focused15 + full324/core and browser15 pass. Both clean native ZIP layouts
-  pass outside source on both cores, including installed static HTTP module and
-  two-day100-slot DST schedule. Final official hassfest1valid/0invalid.
-- Final native journey re-run on exact runtime bytes passes all14 screenshots,
-  zero browser errors/warnings, real persisted Danish preferences, source revision
- 4→5 updating graphs automatically without rewriting today's rows. Read provider
-  counters unchanged. The configured automatic product is explicitly labelled Radius C.
-- Final restart after isolating QA source deltas preserves6configs/168IDs/all4logical
-  ledgers/637price rows and revisions/14Recorder statistics-unit identities. Engine
-  was not changed to accommodate the fixture. Final SQL/browser parity636rows includes
-  exact recoverable historical revisions; nine original core files remain identical.
-- Native/screenshot/checksum/source evidence in the beta8 simulation receipt. Owner
-  acceptance false. Screenshots are temporary/chat artifacts outside source.
-- Remote eeb checkpoint:12checks observed,8green (including both browser/metadata/
-  package runs),4 core suites in progress at last read. No pending local failure.
-  This final source checkpoint triggers updated draft PR and a fresh full CI matrix.
+## Validation and reproducible evidence
 
-Frozen candidate subject **docs: freeze tested beta.8 dashboard candidate for publication**.
-Do not change runtime after this point unless a mandatory gate fails. Next: wait
-for13 exact-source push/PR/draft-updater checks, create annotated immutable beta8 tag,
-verify six tag checks (19source checks total), rebuild clean hash-identical assets,
-then run owner-authorized prerelease/public HACS verification workflow. Preserve main
-and all seven previous releases/tags/assets. Record public receipt, final handoff
-and final CI; stop. No stable/merge/owner HA/control access. Only this file is the
-permanent handoff. A file cannot state its own final commit hash.
+- **324 producer tests/core HA2026.10.3/current2026.10.4,89% coverage,zero skips**;
+  two unchanged pinned upstream HACS deprecation warnings. Current stable .4 rechecked
+  PyPI30October. Four unchanged CM suites **153/176/227/228/core**, plus2 coupled
+  startup/runtime/revision/unload cases/reference/core. Ruff check/format, official
+  hassfest1integration/0invalid, HACS/translations and packaging gates pass.
+- **15 locked browser regression cases** with actual producer-generated fixtures:
+ 92/96/100, both series/every interval, tariff ranges, negative/zero, missing/gap/
+  unpublished, future revisions, keyboard/mobile, EN/en-GB/DA/explicit/browser-system
+  numbers and source-text XSS. CI runs these on actual Chromium.24October96 plus
+ 25October100 correctly gives196 quarters across the two-day view, not192.
+- Native HA2026.10.4/frontend20260930.5, desktop1440x1000/mobile390x844, recorded
+  public Radius and synthetic spot/private rate boundaries. Both192-point graphs,
+  all192 rows/four today-only DSO ranges, current/future/source inspection, six
+  healthy/unpublished/missing/partial/gap/provisional sites, persisted Danish locale,
+  automatic source-revision graph update and cleaned native device diagnostics pass.
+  Browser plugin unavailable; Playwright/system Chromium, no frontend errors/warnings,
+  no overlays/mobile document overflow.14 screenshots outside source; hashes and
+  native/source data evidence in `docs/receipts/v0.1.0-beta.8-simulation.json`.
+- Native beta7 upgrade preserves6configs/4logical ledgers/162original entity IDs.
+  Restart preserves6configs/168IDs/all637current price rows/revisions/14Recorder
+  statistics-unit identities.636 displayed records match exact current OR historical
+  SQL revisions, all components/VAT/final/source. One gap deliberately simulated in
+  the read index. An initial global synthetic-source delta changed two other sites
+  on restart; isolated fixture deltas, then all logical ledgers remained unchanged.
+  Engine was not changed for the fixture. Read provider counters unchanged.
+- Both clean ZIP layouts install/import outside source on both cores, and again
+  from independently downloaded public ZIPs locally and in fresh public runner jobs.
+  Installed local HTTP card module and100-quarter DST schedule explicitly verified.
+  Public bytes/member hashes match exact Git source and immutable public tag.
+- Fresh independent .3/.4 public jobs exercise pinned actual HACS2.0.5/upstream
+  registration/discovery/tag install/update/uninstall/reinstall with downloaded public
+  metadata/source/main, both native ZIPs, beta7→8/current8/stable semantic selection.
+  Independent local HACS **2cases/core** additionally seeds verified public beta7 ZIP,
+  upgrades through unchanged real HACS code to public8, verifies installed/latest8
+  and all runtime/card bytes, and preserves real SQLite history through update and
+  uninstall/reinstall. Metadata from fresh authenticated public diagnosis, tag/main/
+  ZIP bytes downloaded independently locally. No owner HACS token or HA access.
+- All19 exact-source push/PR/tag/updater checks, all16 final verification/orchestration
+  checks green. Permanent publication receipt `docs/receipts/v0.1.0-beta.8.json`,
+  prior diagnostic `v0.1.0-beta.8-public-diagnosis.json`. Software checklist complete;
+  all owner acceptance boxes remain unchecked. Cloud API CONNECT403 handled via
+  supported authorized runners, not a credential/proxy/integrity bypass.
 
+Exact commands used (core matrices substitute `.venv-ha-current` for `.venv`):
 
-Tag gate follow-up (**ci: inspect and retry immutable beta.8 dependency preparation**):
-- All13 source push/PR/updater checks passed. Annotated beta8 tag
- 3dc0e28c119128e8ad397fc44da3b6b6c613b260 points to immutable
- **cbad4e7595e7eba4080aca295bfca521f9b0409a**. No tag moved or release uploaded.
-- Tag suite reached17green/1failed/1pending. Failed .3 job123965561777/run41026439801
-  stopped in **Prepare immutable consumer test dependencies**, before tests. Product
-  code/source/tag unchanged. Public logs require authenticated API; cloud API403.
-- Supported runner inspection downloads the original job/log into its summary,
-  verifies the only failed step, repeats pinned preparation on the exact tag with
-  hash-verified .3 environment, and requests ONE original failed-job rerun only if
-  that clean preparation succeeds and original run completes. All original full
-  producer/consumer/CI gates still mandatory. No test is skipped/weakened or release
-  gate bypassed. Next: read diagnostic evidence + require all19 latest source checks
-  green, then use already-prepared publisher template (ZIP hashes09c259/d181c4).
+```sh
+.venv/bin/pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing -W error::ResourceWarning
+.venv/bin/ruff check custom_components tests tools
+.venv/bin/ruff format --check custom_components tests tools
+.venv/bin/python tools/test_two_runtime.py --consumer pr15
+.venv/bin/python tools/run_consumer_suite.py --consumer pr15
+# Repeat both consumer commands for pr16, pr25 and pr26 (unchanged pinned sources).
+PE_FRONTEND_FIXTURES=/tmp/pe8-front-data .venv/bin/pytest tests/test_beta8_dashboard.py -W error::ResourceWarning
+PE_FRONTEND_FIXTURES=/tmp/pe8-front-data PE_PLAYWRIGHT_MODULE=/tmp/pe8-npm/_npx/e41f203b7505f1fb/node_modules/playwright/index.mjs PE_CHROMIUM=/usr/bin/chromium node --test tests/frontend/dashboard.test.mjs
+docker run --rm -v "$PWD:/github/workspace" ghcr.io/home-assistant/hassfest:latest
+.venv/bin/python tools/smoke_install_package.py /tmp/pe8-public-local/ha_energy_price_engine.zip
+.venv/bin/python tools/smoke_install_package.py /tmp/pe8-public-local/ha_energy_price_engine-manual.zip
+```
 
+Native temporary harness `/tmp/pe8-native-browser.cjs`, proof
+`/tmp/pe8-native-browser-proof.json`, public bytes/local receipt
+`/tmp/pe8-public-local`, actual public beta7→8 HACS cases
+`/tmp/pe8-hacs-update-tests/test_beta7_to_beta8.py`. Temporary auth/profile files are
+synthetic and must never be printed/committed. Portable locked browser setup is in
+CONTRIBUTING.md and the Tests workflow. Screenshots exist only in temporary/chat
+workspace evidence; hashes retained. No competing permanent handoff document.
 
-CI inspection transport correction (checkpoint **ci: resolve actual job ID before reading failed-run logs**):
-- Initial inspection stopped before replay/retry because the public Actions URL
-  uses a check-run identifier, not necessarily the Jobs API database identifier.
-  Resolve the authenticated original run/jobs record by exact failing target/name;
-  verify the same sole failed dependency-preparation step; fetch that actual job's
-  log if available. Log access is diagnostic only; clean pinned replay and all full
-  original source CI remain mandatory before release. Source/tag remain immutable.
+SHA256:
+- HACS-layout ZIP **09c259261e494e4ee1c074d049679b480be63d2a24790ad65bc58846ce165a08**.
+- Manual ZIP **d181c4dc488d3633b2a75bbd80e39f75a85268651bca3ae5e43ee12857510337**.
+- BUILD_MANIFEST.json **34d09835cc844e94323d8f264b4f5cd1db7f6ec12424d8ddfd0eda51adbab5e5**.
+- SHA256SUMS **5405e8a404c5f30ee1e322e67b142a3855e29ef159e4d6ab463cf7605381a8b1**.
 
+## Installation, acceptance and limits
 
-Publication gate passed (checkpoint **ci: publish authorized beta.8 with immutable public verification**):
-- CI inspection41027777595 succeeded: authenticated original failure metadata/log
-  inspected, clean exact-tag/pinned preparation passed, original full failed job
-  rerun requested once. All19 latest exact-source push/PR/tag/updater checks are now
-  green, including the complete retried .3 producer/consumer job. No test waived,
-  source/tag moved or product-code change. Initial failure was dependency preparation,
-  before tests. Public check-run/job ID mapping corrected in the diagnostic helper.
-- Exact source **cbad4e7595e7eba4080aca295bfca521f9b0409a**; annotated tag
- **3dc0e28c119128e8ad397fc44da3b6b6c613b260**. Frozen clean BUILD hash
- 34d09835cc844e94323d8f264b4f5cd1db7f6ec12424d8ddfd0eda51adbab5e5.
-- HACS ZIP09c259261e494e4ee1c074d049679b480be63d2a24790ad65bc58846ce165a08;
-  manualZIPd181c4dc488d3633b2a75bbd80e39f75a85268651bca3ae5e43ee12857510337.
-- Owner-authorized publisher is pinned to that immutable tag/SHA/object and19green
-  checks; clean rebuild hashes/native installs, main/all7prior tag/asset gates,
-  prerelease/latest=false, two fresh independent public HACS2.0.5/upstream and both
-  native ZIP layouts on locked .3/.4, then receipt + existing draft14 update.
-  Publication/public verification pending at this commit; do not claim complete yet.
-- Owned disposable HA server stopped after final evidence. No owner/live equipment
-  access. Local dist remains clean frozen-source cbad bytes; do not rebuild at later
-  orchestration/documentation HEAD and confuse BUILD identity with released source.
-Next: wait for publisher/both public verification/audit; independently download and
-compare public artifacts/tag source locally, verify refs/old assets/semantic channel,
-finalize receipt/checklist/permanent STOP, require final branch CI, stop.
+HACS:back up development HA,persist Show beta versions,refresh,selectv0.1.0-beta.8,
+download/restart/reload. Device info0.1.0-beta.8. Keep existing sites. Register bundled
+`/ha_energy_price_engine/energy-price-engine-card.js?v=0.1.0-beta.8` as JavaScript
+module in HA Dashboards Resources (Advanced mode), then paste `docs/dashboard.yaml`
+in a new empty dashboard raw editor, replacing one actual PE sensor entity ID.
+Complete guide `docs/PRICE_DASHBOARD.md`; no Python/SQLite/external chart service.
+Main is already compliant for HACS registration; no new main merge required.
 
+Two-day dashboard only; canonical historical API unchanged. Missing final ledger
+records cannot prove applied component/DSO values, all-in inputs cannot reveal unknown
+splits. Dedicated dashboard, no arbitrary device-page Lovelace injection. Primary
+presentation statuses localized; canonical technical units/states remain machine
+values. Source/private rates/VAT/grid/heating/hardware and physical app acceptance
+remain owner checks. National baselines bounded, no future/private terms guessed.
+HACS external catalog branding may fall back. Accepted wizard pages persist; native
+Close cannot submit typing; no per-page Back. No simultaneous legacy broker required.
 
-Public verification follow-up (**ci: diagnose beta.8 public installation verification**):
-- Beta8 is public; original publisher41028385355 passed immutable gates/build/upload.
-  Source/tag/assets unchanged. Independent .4 public HACS/native verification passed.
-  .3 failed inside the combined public download/HACS/native/channel step (preparation
-  passed), so audit correctly skipped. Mission is NOT complete; no success claimed.
-- Fresh authorized diagnostic runner resolves actual original job/log metadata,
-  repeats the full exact-source public verifier on locked .3 with pinned HACS, and
-  commits compact redacted diagnostic/public metadata evidence. It preserves return
-  codes and asserts release ID/asset IDs/sizes/digests unchanged before/after. No
-  republish/asset overwrite/tag move/test relaxation. Next: read that evidence,
-  resolve actual cause; require successful independent both-core verification and
-  permanent receipt before final STOP. .4 success alone is not sufficient.
+Original verified SQLite improvement remains intact; source unchanged and recovery/
+revision/migration/isolation tests pass. Existing1/5year cloud measurements are in
+PERFORMANCE.md. **Cloud benchmarks do not establish Raspberry Pi performance.**
+History remains in RAM for synchronous APIv1; no site cap is no hardware guarantee.
 
-
-Final independent verification run (checkpoint **ci: verify published beta.8 without release mutation**):
-- Diagnostic41029815961 succeeded on exact cbad tag/core.3: real public metadata,
-  four assets/tag/main, pinned HACS2.0.5/upstream and both native ZIPs outside source.
-  Receipt `v0.1.0-beta.8-public-diagnosis.json` records exit0 and unchanged release
-  ID428809496/asset IDs/sizes/digests. Original raw log is unavailable, so exact
-  original combined-step failure cause remains unconfirmed; do not call it a
-  confirmed code defect/network root cause. Clean full same-artifact replay passed.
-- Local independent public downloads all four assets byte-equal frozen local build;
-  every runtime byte matches public tag + exact Git source. Main and all7old tags,
-  original beta7 ZIP preserved. Public pageHTTP200/prerelease badge. Local receipt
-  `/tmp/pe8-public-local/LOCAL_PUBLIC_RECEIPT.json`; no API credential/proxy bypass.
-- Re-run the complete public both-core/channel/audit workflow under a fresh run ID,
-  with source/tag fixed. Creation/upload logic is now REPLACED with strict read-only
-  checks of existing release ID and ALL4 asset IDs/sizes/digests. It cannot mutate
-  the release, assets or tags. Fresh run avoids artifact-name collisions across old
-  failed attempts; all verifier checks remain mandatory. Audit records initial
-  creation run and diagnostic history. Do not declare complete before both pass.
-- Clarification of earlier diagnostic assumption: direct raw-log API access was
-  unavailable. Resolving run/jobs metadata and making logs optional enabled clean
-  mandatory replay; a check-run/job-ID mismatch was not proven as the original
-  failure cause. Product code/source/tag remained unchanged throughout.
-Next: verify fresh both-core/channel/audit; local public HACS/native replay; final
-receipt/checklist/permanent STOP and final branch CI. No release republish/overwrite.
+No publication blockers. Final documentation checkpoint subject:
+**docs: finalize verified beta.8 publication and stop handoff**.
+A file cannot contain its own final SHA; identify that checkpoint/checks in branch
+history. Its ordinary12 documentation CI jobs run after commit; the final response
+confirms their observed result. All immutable-source/public release gates above
+already passed. Stop after that final CI confirmation. No beta9/main/stable/owner
+HA/control actions. Only this file is the permanent development handoff.
 
 ## Completed beta.7 checkpoint (historical)
 
