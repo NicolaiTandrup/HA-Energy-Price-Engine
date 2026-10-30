@@ -93,7 +93,90 @@
     "html_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339557",
     "head_sha": "176906a47a8e3907ab6b053d4a0db3877e3904d7",
     "publication_and_both_verification_jobs": "success",
-    "workflow_final_conclusion": "pending audit completion"
+    "workflow_final_conclusion": "success",
+    "post_audit_confirmed_at": "2026-10-30T19:31:51.710118+00:00",
+    "all_orchestration_checks": [
+      {
+        "name": "hassfest",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114346511/job/124264547596"
+      },
+      {
+        "name": "hacs",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114346511/job/124264548071"
+      },
+      {
+        "name": "independent beta install",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114346214/job/124264546998"
+      },
+      {
+        "name": "tests (fixture-supported-ha-2026.10.3)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114346187/job/124264546609"
+      },
+      {
+        "name": "tests (current-ha-2026.10.4)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114346187/job/124264546029"
+      },
+      {
+        "name": "dashboard browser desktop and mobile",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114346187/job/124264546379"
+      },
+      {
+        "name": "publish",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339557/job/124264523664"
+      },
+      {
+        "name": "Verify public beta.9 (ha-2026.10.3)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339557/job/124264934453"
+      },
+      {
+        "name": "Verify public beta.9 (ha-2026.10.4)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339557/job/124264934490"
+      },
+      {
+        "name": "Record verified beta.9 publication",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339557/job/124265381826"
+      },
+      {
+        "name": "independent beta install",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339526/job/124264524118"
+      },
+      {
+        "name": "tests (fixture-supported-ha-2026.10.3)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339406/job/124264523672"
+      },
+      {
+        "name": "tests (current-ha-2026.10.4)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339406/job/124264523804"
+      },
+      {
+        "name": "dashboard browser desktop and mobile",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339406/job/124264523218"
+      },
+      {
+        "name": "hassfest",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339313/job/124264523093"
+      },
+      {
+        "name": "hacs",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339313/job/124264523470"
+      }
+    ]
   },
   "exact_source_checks": [
     {
@@ -947,5 +1030,119 @@
     "Cloud benchmarks do not establish Raspberry Pi performance; original SQLite improvement and synchronous history-in-memory API retained.",
     "HACS external brand catalog can show a fallback."
   ],
-  "production_controls_touched": false
+  "production_controls_touched": false,
+  "independent_local_public_verification": {
+    "schema": 1,
+    "verified_at": "2026-10-30T19:22:12.311940+00:00",
+    "source_commit": "6c588323786cc5f8f696d553e02213ef8b169286",
+    "tag_object": "4366f00efcacb3e858d6cf42a9623e691d371ba8",
+    "release_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.9",
+    "unauthenticated_release_page_http": 200,
+    "prerelease_badge": true,
+    "all_four_assets_equal_clean_local_source_build": true,
+    "all_runtime_bytes_equal_public_tag_and_exact_git_source": true,
+    "main_and_all_eight_prior_tags_preserved": true,
+    "assets": {
+      "ha_energy_price_engine.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.9/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 186258,
+        "sha256": "b95058c3a25fc393ee9052b4d9daf83af2da2487858e7522b8138d9fd5c87c31",
+        "transient_retries": []
+      },
+      "ha_energy_price_engine-manual.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.9/ha_energy_price_engine-manual.zip",
+        "status": 200,
+        "bytes": 190112,
+        "sha256": "58d0679d98925eb846ee1d1e189aff5ff0ff49f88a724550d93eb6a88fcfa6bc",
+        "transient_retries": []
+      },
+      "BUILD_MANIFEST.json": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.9/BUILD_MANIFEST.json",
+        "status": 200,
+        "bytes": 4642,
+        "sha256": "3e836b3b6019985611111c99225713c74f699f6e55830a790d2ad897bd0c496c",
+        "transient_retries": []
+      },
+      "SHA256SUMS": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.9/SHA256SUMS",
+        "status": 200,
+        "bytes": 193,
+        "sha256": "4c5c91140904d29a1ee9bc1632022100946c1661def978bf3456846c7add57b0",
+        "transient_retries": []
+      },
+      "public-tag-source.zip": {
+        "url": "https://codeload.github.com/NicolaiTandrup/HA-Energy-Price-Engine/zip/refs/tags/v0.1.0-beta.9",
+        "status": 200,
+        "bytes": 10344876,
+        "sha256": "862224096bb38e1bd645f84d371d2a0a81d49946f452af6b1d786e7781517bce",
+        "transient_retries": []
+      },
+      "public-main-source.zip": {
+        "url": "https://codeload.github.com/NicolaiTandrup/HA-Energy-Price-Engine/zip/56cdb3c10993179371483812cbc36f651ba3ad8e",
+        "status": 200,
+        "bytes": 451133,
+        "sha256": "35a62e81c6001ff1cd97efa43d0a4cac4f00a87165432098988e2e0a7be5e82f",
+        "transient_retries": []
+      },
+      "previous-beta7.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.7/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 165022,
+        "sha256": "b382f8d06901c72c2a305d9c09d700154d9f326fc8576266d599711fc820987b",
+        "transient_retries": []
+      },
+      "previous-beta1.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.1/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 51024,
+        "sha256": "2d5d205d4151c28c15d280df4ee6fa161b9fb86cea4c8ca94b316530cddb801e",
+        "transient_retries": []
+      },
+      "previous-beta2.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.2/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 73436,
+        "sha256": "968a3436d7d44f20b4e86db405dcd26b553b9baa2a81dcfbf6eb9daf70776d91",
+        "transient_retries": []
+      },
+      "previous-beta3.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.3/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 81727,
+        "sha256": "300741806e86d5566b6ab025f814aac1c52d21c50bc2273c3a5ff4b20387c3e9",
+        "transient_retries": []
+      },
+      "previous-beta4.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.4/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 93299,
+        "sha256": "8204ef21583927b0973d59becf33f66575618cde755371989ef835e5af183d58",
+        "transient_retries": []
+      },
+      "previous-beta5.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.5/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 123890,
+        "sha256": "9f8ea839a04b5d67f61dc0e49f11611abcb4c85cdfced809f813937548dc0ad0",
+        "transient_retries": []
+      },
+      "previous-beta6.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.6/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 156946,
+        "sha256": "909c75c26649e91f6dfb4d908f36db8dd65cd83c4a72153be9beef6d890630de",
+        "transient_retries": []
+      },
+      "previous-beta8.zip": {
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/download/v0.1.0-beta.8/ha_energy_price_engine.zip",
+        "status": 200,
+        "bytes": 178140,
+        "sha256": "09c259261e494e4ee1c074d049679b480be63d2a24790ad65bc58846ce165a08",
+        "transient_retries": []
+      }
+    },
+    "owner_acceptance": false
+  },
+  "publication_blockers": []
 }

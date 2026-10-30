@@ -1,11 +1,51 @@
 # Development handoff
 
-Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 source/tag fully validated; authorized publication
-and independent public verification IN PROGRESS.** The latest owner mission authorizes tested
-beta9 prerelease publication and supersedes the historical beta8 STOP below.
-Branch `feat/beta5-simple-onboarding`, existing draft PR14 unmerged, main unchanged
-`56cdb3c10993179371483812cbc36f651ba3ad8e`. No stable, main merge, production HA,
+Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 published and independently verified.
+STOP: owner mission complete.** No beta10, stable release, main merge, production HA,
 Node-RED, CM source/control, Tesla/Easee or charging actions authorized.
+
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.9
+
+- Immutable source **6c588323786cc5f8f696d553e02213ef8b169286**.
+- Annotated tag **4366f00efcacb3e858d6cf42a9623e691d371ba8**.
+- Release **429404977**, prerelease/latest=false. All4 public assets match the clean
+  local source build, Git tagged runtime bytes and original published digests.
+- Publisher **176906a47a8e3907ab6b053d4a0db3877e3904d7**,
+  [41114339557](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41114339557):
+  creation, both fresh public verification cores and audit all green on first run.
+  All19 exact-source checks and all16 orchestration/verification checks green.
+  Audit receipt checkpoint **86a7571** (full hash in Git); existing draft PR14 updated.
+- Branch `feat/beta5-simple-onboarding` unmerged; main remains
+  **56cdb3c10993179371483812cbc36f651ba3ad8e**. All prior releases1–8 retain IDs,
+  prerelease flags, tag identities and recorded asset IDs/sizes/digests.
+  Independently downloaded all8 old public HACS ZIPs locally; every original hash
+  matches. No tag move, asset overwrite, reupload, main merge or stable release.
+- Exact source/CI/public/core/HACS evidence in `docs/receipts/v0.1.0-beta.9.json`;
+  native screenshot/data/core-file proof in `v0.1.0-beta.9-simulation.json`.
+  Independent local public bytes `/tmp/pe9-public-local`, evidence ZIP
+  `/workspace/pe9-evidence.zip`. Owned disposable HA server stopped, no owner access.
+- **No software/publication blocker remains.** Owner real-HA/private contract,
+  provider availability and physical/hardware acceptance stay unchecked; software
+  QA is recorded/synthetic. Cloud benchmarks do not establish Raspberry Pi speed.
+
+SHA256:
+- HACS ZIP **b95058c3a25fc393ee9052b4d9daf83af2da2487858e7522b8138d9fd5c87c31**.
+- Manual ZIP **58d0679d98925eb846ee1d1e189aff5ff0ff49f88a724550d93eb6a88fcfa6bc**.
+- BUILD_MANIFEST.json **3e836b3b6019985611111c99225713c74f699f6e55830a790d2ad897bd0c496c**.
+- SHA256SUMS **4c5c91140904d29a1ee9bc1632022100946c1661def978bf3456846c7add57b0**.
+
+HACS on the development installation: back up; persist Show beta versions, refresh,
+selectv0.1.0-beta.9, download/restart/reload. Keep existing entries, confirm device
+version9. Done closes saved Options. Inspect Component period, eight amounts,
+availability and exact first-pricing time. On old sites, optionally use Technical
+diagnostics to deselect only unused canonical entities; used/explicitly enabled
+ones must remain. Update existing dashboard Resource query to?v=0.1.0-beta.9.
+No legacy broker needs to run simultaneously. Setup/HACS/acceptance docs complete.
+
+Final checkpoint subject **Record verified beta.9 publication and permanent handoff**.
+Its documentation-only CI is pending at commit creation; inspect that exact head
+before future work. Release source and publisher checks above are actually green.
+Do not edit the publisher/republish9 or start another beta absent a new owner request.
 
 ## Beta.9 completed implementation and validation
 
@@ -88,37 +128,29 @@ env -u DOCKER_HOST -u DOCKER_CONTEXT -u DOCKER_TLS -u DOCKER_TLS_VERIFY -u DOCKE
 .venv/bin/python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
 ```
 
-## Next action: exact-source release integrity
+## Completed publication integrity
 
-The evidence freeze is09476c3 (full hash available in Git). Final source checkpoint
-**Clarify pending public verification in beta.9 checklist** corrects inherited beta8
-publication wording: tag/public checks are explicitly pending in the source snapshot.
-Its runtime is identical ec33fb4 and the evidence freeze. Pin that final clean source. Build/check both layouts again at that exact SHA;
-wait for all13 push/PR/draft checks. Create new annotated immutable beta9 tag only,
-wait for all19 exact-source checks including tag CI, then execute pinned authorized
-publisher. Do not move/overwrite any tag or asset. Independently verify public
-metadata/tag/main/assets, actual beta8→9 HACS2.0.5/upstream and both native layouts on
-both cores, semantic beta8→9/current9/stable channels and all prior releases1–8.
-Commit verification receipt, update PR14 and this handoff, stop after verified9.
-Exact source **6c588323786cc5f8f696d553e02213ef8b169286**, annotated tag
-**4366f00efcacb3e858d6cf42a9623e691d371ba8**, all19 exact-source checks green:
-https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/commit/6c588323786cc5f8f696d553e02213ef8b169286/checks
+Final source checkpoint **Clarify pending public verification in beta.9 checklist**
+followed evidence freeze09476c3. Its runtime is identical ec33fb4. All13 branch/PR/
+draft gates passed, new annotated tag9 created, all19 source/tag gates passed,
+then pinned publisher created only9 with exact source and latest=false. Both fresh
+public jobs downloaded all4 assets/tag/main plus hash-verified original public8 ZIP;
+actual pinned HACS2.0.5/upstream beta8→9/update/uninstall/reinstall retained real
+SQLite; both native layouts installed/imported outside source on both cores.
+Beta8→9/current9/stable-channel semantics passed. Audit verified old releases1–8
+and committed receipt/update to draft14. All16 orchestration checks passed.
 
-Clean source packages: HACS ZIP **b95058c3a25fc393ee9052b4d9daf83af2da2487858e7522b8138d9fd5c87c31**,
-manual ZIP **58d0679d98925eb846ee1d1e189aff5ff0ff49f88a724550d93eb6a88fcfa6bc**.
-Both layouts independently installed on both cores; final build Source6c/dirty=false,
-archive bytes identical previous tested runtime. Owned disposable HA server stopped.
-Pinned `.github/workflows/publish-beta9.yml` creates only authorized prerelease9
-from that tag/source after rechecking19 gates, main/PR/prior releases1–8. Two fresh
-public jobs independently verify actual tag/assets/source/main, public beta8 bytes,
-real HACS update+SQLite retention/native layouts/channels on both cores; audit commits
-receipt/updates existing PR only after both pass. Workflow Bash and all5 embedded
-Python blocks parsed locally. Do not claim public success until actual jobs pass.
-Next: monitor publisher/CI, fetch audit receipt, independently download public bytes,
-verify all prior identities/source/checksums again, update final handoff/checklist,
-stop. No stable/main/production HA/controls. Public GitHub checks HTML briefly returned502;
-normal retry succeeded, no proxy/TLS/policy bypass. API domain is blocked locally;
-use authorized GitHub Actions as in previous releases. No owner acceptance claimed.
+Independent local public download additionally verifies all4 bytes equal source-built
+assets, every runtime file equals public tag AND exact Git source, main/all old tags,
+all8 previous public HACS archive hashes and unauthenticated prerelease pageHTTP200.
+Permanent receipt now confirms post-audit workflow success, not a pending claim.
+Local API CONNECT403 remains managed network policy; authorized standard GitHub
+Actions performed repository API operations. A public checks-page502 was resolved by
+normal retry. No proxy/TLS/policy bypass or approval gate was circumvented.
+
+Stop after this handoff. Owner acceptance remains separate; no production/control
+changes and no merge/stable release. No further implementation/publication work is
+needed for the authorized beta9 mission.
 
 ## Historical completed beta.8 checkpoint
 

@@ -36,14 +36,15 @@ acceptance remains separate. Publication verification is recorded after publishi
   authenticated channel repair, persisted beta state and semantic version reporting.
 - [x] Hassfest, translations, HACS validation, clean deterministic packages and
   both ZIP layouts installed/imported outside the repository.
-- [ ] Exact-source green CI, immutable prerelease tag, public assets/source hashes
+- [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
 
 Publication software receipt: [beta.9 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.9.json).
-This is the pre-publication source snapshot. Exact-source tag/public installation
-checks are pending here; the linked publication receipt records their actual results
-once publishing and both independent public verifications succeed. No publication
-success is inferred from local or earlier-commit tests.
+All19 exact-source checks and all16 publication/orchestration checks passed.
+Both fresh public verifier jobs passed on HA2026.10.3/.4: actual public beta8→9
+HACS update, preserved real SQLite, both native package layouts and semantic
+channels. Independent local downloads match all4 source-built assets; all8 prior
+public HACS ZIP hashes and main/prior tag identities match. No tag/asset overwrite.
 All owner acceptance items below remain unchecked.
 
 - [x] Native HA and17 browser regression journeys: desktop/mobile graphs, complete
