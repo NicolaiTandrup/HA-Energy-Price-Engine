@@ -114,6 +114,22 @@ and all seven previous releases/tags/assets. Record public receipt, final handof
 and final CI; stop. No stable/merge/owner HA/control access. Only this file is the
 permanent handoff. A file cannot state its own final commit hash.
 
+
+Tag gate follow-up (**ci: inspect and retry immutable beta.8 dependency preparation**):
+- All13 source push/PR/updater checks passed. Annotated beta8 tag
+ 3dc0e28c119128e8ad397fc44da3b6b6c613b260 points to immutable
+ **cbad4e7595e7eba4080aca295bfca521f9b0409a**. No tag moved or release uploaded.
+- Tag suite reached17green/1failed/1pending. Failed .3 job123965561777/run41026439801
+  stopped in **Prepare immutable consumer test dependencies**, before tests. Product
+  code/source/tag unchanged. Public logs require authenticated API; cloud API403.
+- Supported runner inspection downloads the original job/log into its summary,
+  verifies the only failed step, repeats pinned preparation on the exact tag with
+  hash-verified .3 environment, and requests ONE original failed-job rerun only if
+  that clean preparation succeeds and original run completes. All original full
+  producer/consumer/CI gates still mandatory. No test is skipped/weakened or release
+  gate bypassed. Next: read diagnostic evidence + require all19 latest source checks
+  green, then use already-prepared publisher template (ZIP hashes09c259/d181c4).
+
 ## Completed beta.7 checkpoint (historical)
 
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 published and independently verified.
