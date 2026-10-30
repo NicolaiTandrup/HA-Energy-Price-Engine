@@ -178,6 +178,31 @@ Public verification follow-up (**ci: diagnose beta.8 public installation verific
   resolve actual cause; require successful independent both-core verification and
   permanent receipt before final STOP. .4 success alone is not sufficient.
 
+
+Final independent verification run (checkpoint **ci: verify published beta.8 without release mutation**):
+- Diagnostic41029815961 succeeded on exact cbad tag/core.3: real public metadata,
+  four assets/tag/main, pinned HACS2.0.5/upstream and both native ZIPs outside source.
+  Receipt `v0.1.0-beta.8-public-diagnosis.json` records exit0 and unchanged release
+  ID428809496/asset IDs/sizes/digests. Original raw log is unavailable, so exact
+  original combined-step failure cause remains unconfirmed; do not call it a
+  confirmed code defect/network root cause. Clean full same-artifact replay passed.
+- Local independent public downloads all four assets byte-equal frozen local build;
+  every runtime byte matches public tag + exact Git source. Main and all7old tags,
+  original beta7 ZIP preserved. Public pageHTTP200/prerelease badge. Local receipt
+  `/tmp/pe8-public-local/LOCAL_PUBLIC_RECEIPT.json`; no API credential/proxy bypass.
+- Re-run the complete public both-core/channel/audit workflow under a fresh run ID,
+  with source/tag fixed. Creation/upload logic is now REPLACED with strict read-only
+  checks of existing release ID and ALL4 asset IDs/sizes/digests. It cannot mutate
+  the release, assets or tags. Fresh run avoids artifact-name collisions across old
+  failed attempts; all verifier checks remain mandatory. Audit records initial
+  creation run and diagnostic history. Do not declare complete before both pass.
+- Clarification of earlier diagnostic assumption: direct raw-log API access was
+  unavailable. Resolving run/jobs metadata and making logs optional enabled clean
+  mandatory replay; a check-run/job-ID mismatch was not proven as the original
+  failure cause. Product code/source/tag remained unchanged throughout.
+Next: verify fresh both-core/channel/audit; local public HACS/native replay; final
+receipt/checklist/permanent STOP and final branch CI. No release republish/overwrite.
+
 ## Completed beta.7 checkpoint (historical)
 
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 published and independently verified.
