@@ -2,7 +2,7 @@
   "schema": 1,
   "synthetic": true,
   "owner_acceptance": false,
-  "verified_at": "2026-10-30T08:09:36.993469+00:00",
+  "verified_at": "2026-10-30T08:16:52.095993+00:00",
   "ha_core": "2026.10.4",
   "frontend": "20260930.5",
   "provider_boundaries": "Disposable local HA: synthetic varying official-service-format Nord Pool, recorded Radius C Datahub response, fictional0.5ore exVAT supplier, unchanged bounded national baselines. No owner credentials/system/controls.",
@@ -172,23 +172,23 @@
     "before_reads": {
       "spot": 12,
       "grid": 11,
-      "delta": 100
+      "delta": 200
     },
     "after_reads": {
       "spot": 12,
       "grid": 11,
-      "delta": 100
+      "delta": 200
     },
     "unchanged": true,
     "after_explicit_QA_source_revision": {
       "spot": 13,
       "grid": 12,
-      "delta": 200
+      "delta": 300
     }
   },
   "revision": {
-    "before": 3,
-    "after": 4,
+    "before": 4,
+    "after": 5,
     "today_preserved": true,
     "automatic_state_update": true
   },
@@ -246,7 +246,7 @@
   "sqlite_parity": {
     "compared_browser_rows_against_exact_current_or_historical_revision": 636,
     "current_persisted_rows": 637,
-    "audit_rows": 384,
+    "audit_rows": 672,
     "integrity": [
       {
         "ledger": "ha_energy_price_engine.01QAPE8000000000000000000002.ledger.sqlite3",
@@ -292,7 +292,7 @@
       "final": 150.41312499999998,
       "stored_final": 150.41312499999998,
       "raw_status": "READY",
-      "raw_verified_at": "2026-10-30T08:04:35.209132+00:00",
+      "raw_verified_at": "2026-10-30T08:15:49.667774+00:00",
       "calculated_at": "2026-10-30T07:46:25.487346+00:00"
     },
     {
@@ -314,7 +314,7 @@
       "final": 211.68062500000002,
       "stored_final": 211.68062500000002,
       "raw_status": "READY",
-      "raw_verified_at": "2026-10-30T08:04:35.209132+00:00",
+      "raw_verified_at": "2026-10-30T08:15:49.667774+00:00",
       "calculated_at": "2026-10-30T07:46:25.487346+00:00"
     }
   ],
@@ -339,14 +339,14 @@
   "screenshots": [
     {
       "filename": "pe8-graphs-desktop.png",
-      "sha256": "a42559063b15eee74f8d2ecc9b0fb20aa016124bbb1347c3497d9a2685f45afe",
+      "sha256": "1077c2006842bae5d9e10e929638b450f9f3cd0d1a0edf1903592c48c9f37d6a",
       "width": 1440,
       "height": 1000,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-tariffs-desktop.png",
-      "sha256": "7d65d6dfd66902d88ae9cce044eaf92d3a04602f3dbd0cbc5d714c3685638d3c",
+      "sha256": "eab473340eab06e72628c086039277ae0d497e96874523f8ddcc344ffaeae825",
       "width": 1136,
       "height": 361,
       "location": "temporary workspace/chat evidence, outside source"
@@ -360,30 +360,30 @@
     },
     {
       "filename": "pe8-components-future-desktop.png",
-      "sha256": "3b54c8f8bd5971fb68921bd1d9b093713d66bc4f40f52c5c3079762e1100c77b",
+      "sha256": "d9923bb1b577b8b8284a18a12359e869486202d54686ef7f0b554f1c3bc3ea75",
       "width": 1136,
       "height": 736,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-raw-mobile.png",
-      "sha256": "303b52ca52dabaa50dbfc5deb962c55654c1d8d63b974ef40122bba54278673e",
+      "sha256": "2c36b83c50e245eaf39b086dca9b44593e55d26380999730ec81b86ae229ef27",
       "width": 362,
       "height": 286,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-final-mobile.png",
-      "sha256": "6fef3d5eadd12a4577abff5d898816ac664e5db69a256f460396c7582211e1a7",
+      "sha256": "d73d1d2b4dfc29b70513e5a60fc49008a8f1d190c06d6010b8744541c88bd547",
       "width": 362,
       "height": 286,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-tariffs-mobile.png",
-      "sha256": "1ba954932a5b2cd949ae31fec28256570c431966bedf1fda670d377521078c41",
+      "sha256": "11f9e8659ab8f11061215fd419dd6489a1bfa99a2575ff9a8131480b52669217",
       "width": 362,
-      "height": 423,
+      "height": 441,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
@@ -395,7 +395,7 @@
     },
     {
       "filename": "pe8-unpublished-mobile.png",
-      "sha256": "20e3b429693f28f8617e2c6ea92f5b1accfb436a8bdc1770ab9f0597fd306f8d",
+      "sha256": "dc0fb20881d9acb87f69db106e9a4778e54e3bec2e00fd0673291d468988b1a6",
       "width": 390,
       "height": 844,
       "location": "temporary workspace/chat evidence, outside source"
@@ -409,33 +409,42 @@
     },
     {
       "filename": "pe8-graphs-da-mobile.png",
-      "sha256": "69a0a464f38a229b064c47abd2d235af61ad1563bcf643f6acf686f8bd2caa01",
+      "sha256": "947b0c3b83fc413410dbfdb02c8933c18ce774b9d836d84a32cb68681ce80f75",
       "width": 390,
       "height": 844,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-graphs-da-desktop.png",
-      "sha256": "abb3f39ec11cedb88c108741fa4972640a8fe218f0d0e396151bfcb14ccdfa5f",
+      "sha256": "36d0257190d4678bc36cc3ed0147466ae3e0f567252314fb5f837e61751ea061",
       "width": 1440,
       "height": 1000,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-device-da-desktop.png",
-      "sha256": "6d3f36d5d1bcc7f7df4bc2e170421bbf994e9a2efbff31275ae4b6ccd70de9cd",
+      "sha256": "5a859472f9d3fdfe2e976c94f53e6b5e4e2d609dee70bd92d8480848eef76481",
       "width": 1440,
       "height": 1000,
       "location": "temporary workspace/chat evidence, outside source"
     },
     {
       "filename": "pe8-device-da-mobile.png",
-      "sha256": "e7f77b30839e117529bcc18bf8394ac4ff5c9c93e7c160332357ff125bf61b76",
+      "sha256": "edc15cd351d8adaff01f4e01574e3e5eed66b284083d975015b80cc96964ce52",
       "width": 390,
       "height": 844,
       "location": "temporary workspace/chat evidence, outside source"
     }
   ],
-  "restart": "pending final native restart verification",
-  "production_controls_touched": false
+  "restart": {
+    "passed": true,
+    "configs_preserved": 6,
+    "entity_ids_preserved": 168,
+    "logical_ledgers_preserved": 4,
+    "ledger_rows": 637,
+    "recorder_statistics_unit_identities_preserved": 14,
+    "same_verified_provider_inputs_keep_all_rows_and_revisions": true
+  },
+  "production_controls_touched": false,
+  "fixture_correction": "An initial QA global synthetic source delta changed two other sites on restart; isolated per-source fixture deltas, then verified all logical ledgers unchanged. Engine was not modified."
 }

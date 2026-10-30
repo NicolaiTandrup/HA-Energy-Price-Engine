@@ -87,12 +87,32 @@ Third milestone (checkpoint **feat: validate dashboard graphs and tables in desk
   compact software simulation evidence. Owner boxes remain unchecked. Exact-source
   CI/tag/publication/public-asset install gates pending. No beta8 release claimed.
 
-Next: complete native desktop/mobile graphs/tables/locale/diagnostics/revision/restart
-journeys; full producer/unchanged CM/core matrices, HACS and hassfest; improve any
-findings; update exact-source release integrity/guide/acceptance, publish immutable
-beta.8 only after gates, independently download/install through actual HACS on both
-cores, record permanent receipt/final STOP. Screenshots remain outside source.
-Checkpoint subject: **feat: expose stored quarter prices in a native read-only dashboard**.
+Final candidate milestone, based on **eeb8af911f08dd58e8bfa67cab9bd0db52a1296d**:
+- Final focused15 + full324/core and browser15 pass. Both clean native ZIP layouts
+  pass outside source on both cores, including installed static HTTP module and
+  two-day100-slot DST schedule. Final official hassfest1valid/0invalid.
+- Final native journey re-run on exact runtime bytes passes all14 screenshots,
+  zero browser errors/warnings, real persisted Danish preferences, source revision
+ 4→5 updating graphs automatically without rewriting today's rows. Read provider
+  counters unchanged. The configured automatic product is explicitly labelled Radius C.
+- Final restart after isolating QA source deltas preserves6configs/168IDs/all4logical
+  ledgers/637price rows and revisions/14Recorder statistics-unit identities. Engine
+  was not changed to accommodate the fixture. Final SQL/browser parity636rows includes
+  exact recoverable historical revisions; nine original core files remain identical.
+- Native/screenshot/checksum/source evidence in the beta8 simulation receipt. Owner
+  acceptance false. Screenshots are temporary/chat artifacts outside source.
+- Remote eeb checkpoint:12checks observed,8green (including both browser/metadata/
+  package runs),4 core suites in progress at last read. No pending local failure.
+  This final source checkpoint triggers updated draft PR and a fresh full CI matrix.
+
+Frozen candidate subject **docs: freeze tested beta.8 dashboard candidate for publication**.
+Do not change runtime after this point unless a mandatory gate fails. Next: wait
+for13 exact-source push/PR/draft-updater checks, create annotated immutable beta8 tag,
+verify six tag checks (19source checks total), rebuild clean hash-identical assets,
+then run owner-authorized prerelease/public HACS verification workflow. Preserve main
+and all seven previous releases/tags/assets. Record public receipt, final handoff
+and final CI; stop. No stable/merge/owner HA/control access. Only this file is the
+permanent handoff. A file cannot state its own final commit hash.
 
 ## Completed beta.7 checkpoint (historical)
 
