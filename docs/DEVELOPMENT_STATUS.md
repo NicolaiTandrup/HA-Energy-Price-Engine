@@ -139,6 +139,31 @@ CI inspection transport correction (checkpoint **ci: resolve actual job ID befor
   log if available. Log access is diagnostic only; clean pinned replay and all full
   original source CI remain mandatory before release. Source/tag remain immutable.
 
+
+Publication gate passed (checkpoint **ci: publish authorized beta.8 with immutable public verification**):
+- CI inspection41027777595 succeeded: authenticated original failure metadata/log
+  inspected, clean exact-tag/pinned preparation passed, original full failed job
+  rerun requested once. All19 latest exact-source push/PR/tag/updater checks are now
+  green, including the complete retried .3 producer/consumer job. No test waived,
+  source/tag moved or product-code change. Initial failure was dependency preparation,
+  before tests. Public check-run/job ID mapping corrected in the diagnostic helper.
+- Exact source **cbad4e7595e7eba4080aca295bfca521f9b0409a**; annotated tag
+ **3dc0e28c119128e8ad397fc44da3b6b6c613b260**. Frozen clean BUILD hash
+ 34d09835cc844e94323d8f264b4f5cd1db7f6ec12424d8ddfd0eda51adbab5e5.
+- HACS ZIP09c259261e494e4ee1c074d049679b480be63d2a24790ad65bc58846ce165a08;
+  manualZIPd181c4dc488d3633b2a75bbd80e39f75a85268651bca3ae5e43ee12857510337.
+- Owner-authorized publisher is pinned to that immutable tag/SHA/object and19green
+  checks; clean rebuild hashes/native installs, main/all7prior tag/asset gates,
+  prerelease/latest=false, two fresh independent public HACS2.0.5/upstream and both
+  native ZIP layouts on locked .3/.4, then receipt + existing draft14 update.
+  Publication/public verification pending at this commit; do not claim complete yet.
+- Owned disposable HA server stopped after final evidence. No owner/live equipment
+  access. Local dist remains clean frozen-source cbad bytes; do not rebuild at later
+  orchestration/documentation HEAD and confuse BUILD identity with released source.
+Next: wait for publisher/both public verification/audit; independently download and
+compare public artifacts/tag source locally, verify refs/old assets/semantic channel,
+finalize receipt/checklist/permanent STOP, require final branch CI, stop.
+
 ## Completed beta.7 checkpoint (historical)
 
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 published and independently verified.
