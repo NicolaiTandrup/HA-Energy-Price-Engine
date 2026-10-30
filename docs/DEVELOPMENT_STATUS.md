@@ -1,7 +1,7 @@
 # Development handoff
 
-Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 candidate complete; publication
-pending exact-source CI/tag gates.** The latest owner mission authorizes tested
+Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 source/tag fully validated; authorized publication
+and independent public verification IN PROGRESS.** The latest owner mission authorizes tested
 beta9 prerelease publication and supersedes the historical beta8 STOP below.
 Branch `feat/beta5-simple-onboarding`, existing draft PR14 unmerged, main unchanged
 `56cdb3c10993179371483812cbc36f651ba3ad8e`. No stable, main merge, production HA,
@@ -100,7 +100,23 @@ publisher. Do not move/overwrite any tag or asset. Independently verify public
 metadata/tag/main/assets, actual beta8→9 HACS2.0.5/upstream and both native layouts on
 both cores, semantic beta8→9/current9/stable channels and all prior releases1–8.
 Commit verification receipt, update PR14 and this handoff, stop after verified9.
-No beta9 release published yet. Public GitHub checks HTML briefly returned502;
+Exact source **6c588323786cc5f8f696d553e02213ef8b169286**, annotated tag
+**4366f00efcacb3e858d6cf42a9623e691d371ba8**, all19 exact-source checks green:
+https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/commit/6c588323786cc5f8f696d553e02213ef8b169286/checks
+
+Clean source packages: HACS ZIP **b95058c3a25fc393ee9052b4d9daf83af2da2487858e7522b8138d9fd5c87c31**,
+manual ZIP **58d0679d98925eb846ee1d1e189aff5ff0ff49f88a724550d93eb6a88fcfa6bc**.
+Both layouts independently installed on both cores; final build Source6c/dirty=false,
+archive bytes identical previous tested runtime. Owned disposable HA server stopped.
+Pinned `.github/workflows/publish-beta9.yml` creates only authorized prerelease9
+from that tag/source after rechecking19 gates, main/PR/prior releases1–8. Two fresh
+public jobs independently verify actual tag/assets/source/main, public beta8 bytes,
+real HACS update+SQLite retention/native layouts/channels on both cores; audit commits
+receipt/updates existing PR only after both pass. Workflow Bash and all5 embedded
+Python blocks parsed locally. Do not claim public success until actual jobs pass.
+Next: monitor publisher/CI, fetch audit receipt, independently download public bytes,
+verify all prior identities/source/checksums again, update final handoff/checklist,
+stop. No stable/main/production HA/controls. Public GitHub checks HTML briefly returned502;
 normal retry succeeded, no proxy/TLS/policy bypass. API domain is blocked locally;
 use authorized GitHub Actions as in previous releases. No owner acceptance claimed.
 
