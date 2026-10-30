@@ -1,0 +1,90 @@
+name: Diagnose beta.8 public verification
+on:
+  push:
+    branches: [feat/beta5-simple-onboarding]
+    paths: [.github/workflows/inspect-beta8-public.yml]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PE_SOURCE: cbad4e7595e7eba4080aca295bfca521f9b0409a
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/beta5-simple-onboarding
+      - uses: actions/checkout@v5
+        with:
+          ref: v0.1.0-beta.8
+          path: released
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14.8'
+      - uses: astral-sh/setup-uv@v6
+      - name: Inspect original verification failure and immutable release metadata
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          def api(path):return json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/{path}']))
+          jobs=api('actions/runs/41028385355/jobs?filter=all')['jobs']
+          job=next(j for j in jobs if j['name']=='Verify public beta.8 (ha-2026.10.3)' and j['conclusion']=='failure')
+          assert [s['name'] for s in job['steps'] if s['conclusion']=='failure']==['Independently download public assets and test HACS and both native layouts']
+          root=Path(os.environ['RUNNER_TEMP'])
+          result=subprocess.run(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/actions/jobs/{job["id"]}/logs'],capture_output=True)
+          (root/'original.log').write_bytes(result.stdout if result.returncode==0 else b'Original log API unavailable')
+          (root/'original-job.json').write_text(json.dumps(job))
+          release=api('releases/tags/v0.1.0-beta.8');assert release['prerelease'] and not release['draft']
+          assert api('commits/v0.1.0-beta.8')['sha']==os.environ['PE_SOURCE']
+          (root/'release-before.json').write_text(json.dumps(release))
+          PY
+      - name: Prepare fresh exact supported core and pinned HACS references
+        working-directory: released
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PE_SOURCE"
+          uv venv
+          uv pip sync --require-hashes requirements-dev.lock
+          uv run --no-project python tools/prepare_hacs_reference.py
+      - name: Reproduce complete public download HACS and native verification
+        working-directory: released
+        run: |
+          set +e
+          uv run --no-project python tools/verify_public_release.py --expected-commit "$PE_SOURCE" --output "$RUNNER_TEMP/public-reproduction" > "$RUNNER_TEMP/reproduction.log" 2>&1
+          pe_status=$?
+          echo "$pe_status" > "$RUNNER_TEMP/reproduction-status"
+          tail -45 "$RUNNER_TEMP/reproduction.log"
+          exit "$pe_status"
+      - name: Record diagnostic evidence without mutating release or assets
+        if: always()
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,re,subprocess
+          from pathlib import Path
+          from datetime import UTC,datetime
+          root=Path(os.environ['RUNNER_TEMP'])
+          def api(path):return json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/{path}']))
+          def safe_tail(name):
+              text=(root/name).read_text(errors='replace') if (root/name).exists() else 'Not run'
+              text=re.sub(r'(?:ghs_|github_pat_)[A-Za-z0-9_]+','[REDACTED]',text)
+              text=re.sub(r'Bearer [A-Za-z0-9._-]+','Bearer [REDACTED]',text)
+              return text.splitlines()[-110:]
+          before=json.loads((root/'release-before.json').read_text());after=api('releases/tags/v0.1.0-beta.8')
+          identity=lambda r:(r['id'],r['tag_name'],[(a['name'],a['id'],a['size'],a.get('digest')) for a in r['assets']])
+          assert identity(before)==identity(after)
+          job=json.loads((root/'original-job.json').read_text())
+          status=int((root/'reproduction-status').read_text()) if (root/'reproduction-status').exists() else None
+          receipt=root/'public-reproduction/PUBLIC_RELEASE_RECEIPT.json'
+          report={'schema':1,'verified_at':datetime.now(UTC).isoformat(),'source_commit':os.environ['PE_SOURCE'],'tag_object':api('git/ref/tags/v0.1.0-beta.8')['object']['sha'],'release_url':after['html_url'],'release_id':after['id'],'release_assets_unchanged':True,'original_run':41028385355,'original_job':job['id'],'original_failed_steps':[s['name'] for s in job['steps'] if s['conclusion']=='failure'],'original_log_tail':safe_tail('original.log'),'fresh_ha_2026_10_3_reproduction_exit_code':status,'reproduction_log_tail':safe_tail('reproduction.log'),'reproduction_receipt':json.loads(receipt.read_text()) if receipt.exists() else None,'diagnostic_run':int(os.environ['GITHUB_RUN_ID']),'owner_acceptance':False}
+          Path('docs/receipts/v0.1.0-beta.8-public-diagnosis.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/receipts/v0.1.0-beta.8-public-diagnosis.json
+          git commit -m 'docs: record beta.8 public verification diagnosis on unchanged artifacts'
+          git push origin HEAD:refs/heads/feat/beta5-simple-onboarding

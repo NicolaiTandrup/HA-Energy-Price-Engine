@@ -164,6 +164,20 @@ Next: wait for publisher/both public verification/audit; independently download 
 compare public artifacts/tag source locally, verify refs/old assets/semantic channel,
 finalize receipt/checklist/permanent STOP, require final branch CI, stop.
 
+
+Public verification follow-up (**ci: diagnose beta.8 public installation verification**):
+- Beta8 is public; original publisher41028385355 passed immutable gates/build/upload.
+  Source/tag/assets unchanged. Independent .4 public HACS/native verification passed.
+  .3 failed inside the combined public download/HACS/native/channel step (preparation
+  passed), so audit correctly skipped. Mission is NOT complete; no success claimed.
+- Fresh authorized diagnostic runner resolves actual original job/log metadata,
+  repeats the full exact-source public verifier on locked .3 with pinned HACS, and
+  commits compact redacted diagnostic/public metadata evidence. It preserves return
+  codes and asserts release ID/asset IDs/sizes/digests unchanged before/after. No
+  republish/asset overwrite/tag move/test relaxation. Next: read that evidence,
+  resolve actual cause; require successful independent both-core verification and
+  permanent receipt before final STOP. .4 success alone is not sufficient.
+
 ## Completed beta.7 checkpoint (historical)
 
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 published and independently verified.
