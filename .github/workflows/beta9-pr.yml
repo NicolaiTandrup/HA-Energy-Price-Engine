@@ -17,7 +17,7 @@ jobs:
         run: |
           set -euo pipefail
           cat > "$RUNNER_TEMP/pe-beta9-pr.md" <<'BODY'
-          Beta.9 candidate completes the focused owner acceptance work on #8 and #10. It continues published beta.8 without restarting the engine. Publication awaits final exact-source CI/tag gates; no beta9 release published yet. Existing PR stays draft/unmerged; main and earlier releases preserved.
+          Beta.9 candidate completes the focused owner acceptance work on #8 and #10. It continues published beta.8 without restarting the engine. Publication awaits final exact-source CI/tag and independent public verification gates; no beta9 release published yet. Existing PR stays draft/unmerged; main and earlier releases preserved.
 
           Native Done explicitly finishes already-saved settings; no second Save/check. Current/tomorrow/statistics availability explains activation/publication/configuration/history/storage/verification with an exact activation timestamp. Eight distinct ore/kWh2 component diagnostics show actual stored spot/grid/Energinet network/system/supplier/tax, applied VAT amount and final, with source/effective/revision and explicit current/next period. No read fetch, SQL or tariff recomposition. Numeric unknown remains unknown; ordinary statuses localize Title Case, canonical machine enums/API unchanged.
 

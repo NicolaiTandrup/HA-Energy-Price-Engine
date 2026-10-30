@@ -90,8 +90,10 @@ env -u DOCKER_HOST -u DOCKER_CONTEXT -u DOCKER_TLS -u DOCKER_TLS_VERIFY -u DOCKE
 
 ## Next action: exact-source release integrity
 
-Checkpoint subject **Freeze validated beta.9 candidate and native acceptance evidence**
-identifies the clean source to pin. Build/check both layouts again at that exact SHA;
+The evidence freeze is09476c3 (full hash available in Git). Final source checkpoint
+**Clarify pending public verification in beta.9 checklist** corrects inherited beta8
+publication wording: tag/public checks are explicitly pending in the source snapshot.
+Its runtime is identical ec33fb4 and the evidence freeze. Pin that final clean source. Build/check both layouts again at that exact SHA;
 wait for all13 push/PR/draft checks. Create new annotated immutable beta9 tag only,
 wait for all19 exact-source checks including tag CI, then execute pinned authorized
 publisher. Do not move/overwrite any tag or asset. Independently verify public

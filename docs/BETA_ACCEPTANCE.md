@@ -29,23 +29,24 @@ acceptance remains separate. Publication verification is recorded after publishi
 - [x] Step-confirmed persistence, interrupted native setup, unsubmitted changes, close/resume,
   actual persisted current-day readiness, storage failure and restart.
 - [x] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
-- [x] Beta.1–.7 config, ledger rows, revisions, entity IDs and source references.
+- [x] Beta.1–.8 config, ledger rows, revisions, entity IDs and source references.
 - [x] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
   clean reinstall and second-site/global recorder isolation.
 - [x] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
   authenticated channel repair, persisted beta state and semantic version reporting.
 - [x] Hassfest, translations, HACS validation, clean deterministic packages and
   both ZIP layouts installed/imported outside the repository.
-- [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
+- [ ] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
 
 Publication software receipt: [beta.9 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.9.json).
-All software gates passed, including19 exact-source checks and fresh independent
-public verification on both cores. All16 verification/orchestration jobs passed.
-Published assets were not replaced during verification.
+This is the pre-publication source snapshot. Exact-source tag/public installation
+checks are pending here; the linked publication receipt records their actual results
+once publishing and both independent public verifications succeed. No publication
+success is inferred from local or earlier-commit tests.
 All owner acceptance items below remain unchecked.
 
-- [x] Native HA and15 browser regression journeys: desktop/mobile graphs, complete
+- [x] Native HA and17 browser regression journeys: desktop/mobile graphs, complete
   tables, source/components/VAT parity, exact DSO merges, negative/zero prices,
   missing gaps, DST92/96/100, future revision updates and locale/XSS safety.
 - [x] Authenticated site read permissions, bounded two-day responses, no provider/
