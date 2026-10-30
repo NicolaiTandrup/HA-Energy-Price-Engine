@@ -1,0 +1,26 @@
+name: Continue beta.9 development PR
+on:
+  push:
+    branches: [feat/beta5-simple-onboarding]
+    paths: [.github/workflows/beta9-pr.yml]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Update existing draft with reviewable beta.9 progress
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta9-pr.md" <<'BODY'
+          Beta.9 continues the published beta.8 implementation for owner acceptance on #8 and #10. This focused release adds explicit native completion, understandable activation-boundary/status explanations and individual stored price component diagnostics. Preserve all beta.8 graphs/tables, pricing/SQLite and CM API v1. No main merge or stable/production/charging changes.
+
+          First checkpoint: visible Done menu action; settings are already saved, no hidden Save or mandatory extra price verification. Options completion retains CURRENT saved options; initial ConfigFlow terminates without creating another site. Check prices and row-level edits retained. Local native flow tests:18 passed. CI for this checkpoint pending; remaining implementation and mandatory core/CM/frontend/migration/HACS/release gates in docs/DEVELOPMENT_STATUS.md. No beta.9 is published yet; owner real-HA acceptance remains outstanding.
+          BODY
+          test "$(gh pr view 14 --json isDraft --jq .isDraft)" = true
+          test "$(gh pr view 14 --json headRefOid --jq .headRefOid)" = "$GITHUB_SHA"
+          gh pr edit 14 --title "Beta.9: explicit setup completion and useful price diagnostics" --body-file "$RUNNER_TEMP/pe-beta9-pr.md"

@@ -1,5 +1,25 @@
 # Development handoff
 
+Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 active**, explicitly authorized by
+the latest owner mission, superseding the historical beta.8 STOP below. Resume
+branch `feat/beta5-simple-onboarding` from checkpoint `9bd7694231ddb92b18ef49495f2394586aa0ddd9`;
+existing draft PR14 and all prior release history remain intact. Main unchanged.
+
+Milestone `Add native explicit setup completion for beta.9` adds a visible Done
+menu action while retaining Check prices and row-level edits. Options completion
+returns CURRENT durable options; initial ConfigFlow completion uses the supported
+settings-saved termination, never creates a second entry. No engine/API changes.
+Local: `.venv/bin/pytest tests/test_simple_setup.py tests/test_guided_wizard.py
+-W error::ResourceWarning` **18 passed**. Remote CI pending for this new checkpoint.
+Next: stored-only eight-component device diagnostics, precise activation/loading/
+publication/history/error explanation, clean NEW-install technical defaults and
+explicit native technical-entity preferences preserving all upgraded enabled IDs;
+full core/CM/native desktop-mobile/migration/HACS/package/release integrity gates.
+Only tested beta.9 prerelease publication is authorized; no stable/main/production
+HA/Node-RED/physical controls. No owner HA acceptance is claimed.
+
+## Historical completed beta.8 checkpoint
+
 Updated 2026-10-30 (Europe/Copenhagen). **Beta.8 published and independently verified.
 STOP: owner mission complete.** No beta.9, stable release, main merge, production
 cutover, Node-RED, CM source/control, Tesla/Easee or charging actions authorized.

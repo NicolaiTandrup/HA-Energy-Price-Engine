@@ -644,6 +644,7 @@ class SimpleSetup(FlowTools):
 
         labels = await review_labels(self.hass)
         choices = {
+            "setup_done": labels["finish"],
             "setup_check": labels.get("check_prices", "Check prices"),
             **summary.pop("rows"),
             "horizon": labels["horizon_label"],
@@ -706,6 +707,12 @@ class SimpleSetup(FlowTools):
         await self._progress_store.async_save(
             {"next": "setup_review", "saved": getattr(self, "_saved_step", ""), "flow_version": 6}
         )
+        # Every accepted page is already durable. End an Options flow with its
+        # CURRENT options, not an empty mapping or the potentially old draft.
+        from homeassistant.config_entries import OptionsFlow
+
+        if isinstance(self, OptionsFlow):
+            return self.async_create_entry(title="", data=dict(self._wizard_entry.options))
         return self.async_abort(reason="settings_saved")
 
     async def async_step_setup_change(self, user_input=None):

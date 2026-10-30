@@ -563,7 +563,7 @@
       },
       "setup_review": {
         "title": "Dine ladepriser",
-        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er {unit} inkl. moms.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er {unit} inkl. moms.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}\n\nVælg **Færdig** for at afslutte. Indstillingerne er allerede gemt; ingen ekstra lagring eller kontrol er nødvendig.",
         "data": {},
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -586,7 +586,7 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk",
+          "setup_done": "Færdig – tilbage til integrationen",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
@@ -1684,7 +1684,7 @@
       },
       "setup_review": {
         "title": "Dine ladepriser",
-        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er {unit} inkl. moms.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Indstillinger gemt. Tryk for at rette. Priser er {unit} inkl. moms.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}\n\nVælg **Færdig** for at afslutte. Indstillingerne er allerede gemt; ingen ekstra lagring eller kontrol er nødvendig.",
         "data": {},
         "submit": "Gem og fortsæt",
         "menu_options": {
@@ -1707,7 +1707,7 @@
           "breakdown": "Gemt prisopdeling pr. kvarter",
           "site_management": "Fjern / slet det valgte sted",
           "hacs_channel": "HACS-betakanal",
-          "setup_done": "Luk",
+          "setup_done": "Færdig – tilbage til integrationen",
           "setup_offers": "Offentlige leverandøraftaler",
           "setup_estimate": "Foreløbigt visualiseringsestimat",
           "setup_tax_details": "Energinet, elafgift og moms",
@@ -2402,7 +2402,8 @@
         "horizon_label": "Kontrollér fremtidigt tidsrum",
         "horizon_unavailable": "Kun et komplet tidsrum med verificerede priser er klar. Kontrollér komponentdiagnostik og kildens tilgængelighed; manglende priser er aldrig nul.",
         "subtotal": "Sum ekskl. moms",
-        "rounding_note": "Kun visningen afrundes. Totaler og ladeomkostninger bruger de uafrundede gemte priser."
+        "rounding_note": "Kun visningen afrundes. Totaler og ladeomkostninger bruger de uafrundede gemte priser.",
+        "finish": "Færdig – tilbage til integrationen"
       }
     },
     "contract_mode": {

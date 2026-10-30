@@ -563,7 +563,7 @@
       },
       "setup_review": {
         "title": "Your charging prices",
-        "description": "**{name}** · Settings saved. Tap to edit. Prices are {unit} including VAT.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Settings saved. Tap to edit. Prices are {unit} including VAT.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}\n\nChoose **Done** to finish. Settings are already saved; no extra save or price check is needed.",
         "data": {},
         "submit": "Save and continue",
         "menu_options": {
@@ -586,7 +586,7 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close",
+          "setup_done": "Done – return to integration",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
@@ -1684,7 +1684,7 @@
       },
       "setup_review": {
         "title": "Your charging prices",
-        "description": "**{name}** · Settings saved. Tap to edit. Prices are {unit} including VAT.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}",
+        "description": "**{name}** · Settings saved. Tap to edit. Prices are {unit} including VAT.\n\n{readiness}\n\n{coverage}\n\n{start}\n\n{operation}\n\nChoose **Done** to finish. Settings are already saved; no extra save or price check is needed.",
         "data": {},
         "submit": "Save and continue",
         "menu_options": {
@@ -1707,7 +1707,7 @@
           "breakdown": "Stored quarter breakdown",
           "site_management": "Remove / delete selected site",
           "hacs_channel": "HACS beta channel",
-          "setup_done": "Close",
+          "setup_done": "Done – return to integration",
           "setup_offers": "Public supplier offers",
           "setup_estimate": "Provisional visualization estimate",
           "setup_tax_details": "Energinet, electricity tax and VAT",
@@ -2402,7 +2402,8 @@
         "horizon_label": "Check future window",
         "horizon_unavailable": "Only a complete window of verified prices is ready. Check component diagnostics and source availability; missing prices are never zero.",
         "subtotal": "Subtotal",
-        "rounding_note": "Rounded for display only. Totals and charging costs use the unrounded stored prices."
+        "rounding_note": "Rounded for display only. Totals and charging costs use the unrounded stored prices.",
+        "finish": "Done – return to integration"
       }
     },
     "contract_mode": {
