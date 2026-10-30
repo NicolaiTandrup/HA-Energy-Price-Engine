@@ -1,5 +1,51 @@
 # Development handoff
 
+Updated 2026-10-30 (Europe/Copenhagen). **Beta.8 active**, explicitly authorized by
+the owner's new mission; supersedes the historical beta.7 STOP below. Resume from
+11294f709b1b3539300baa7653e7e8e4a4657958, do not restart. Existing draft PR14 and branch
+`feat/beta5-simple-onboarding` retained. Main56cdb3c and beta.1–.7 tags/assets untouched.
+Only beta.8 prerelease is authorized after mandatory tests/integrity checks. No merge,
+stable release, owner HA, Node-RED, CM source/control, Tesla/Easee or charging actions.
+
+## Beta.8 first milestone
+
+- Added bounded authenticated HA WebSocket presentation transport (today/tomorrow,
+  per-site entity read permission), shipped local Lovelace module, raw/final graphs,
+  applied component/UTC/revision schedule and today's exact-merged DSO ranges.
+  Data uses immutable ledger/source snapshots, no provider/SQL/recomposition on reads.
+  Spot remains independently available when final supplier components are missing.
+- Missing/stale/error final prices stay gaps. Full precision canonical APIv1, engine,
+  persistence/recovery/revisions, source normalizers and required refreshes retained.
+  Provisional never becomes verified. Optional entities default disabled when unused;
+  existing identities hidden with integration-owned flags; user hides preserved.
+  Enum translations give title-case readiness, canonical enum values unchanged.
+- Copy/paste `docs/dashboard.yaml` + `docs/PRICE_DASHBOARD.md` document one actual
+  site entity ID and supported local Resources module registration. No fake action,
+  device-page injection or third-party chart/CDN. Integration manifest beta.8; build
+  and actual HACS test payloads include bundled JS. Added actual beta.7 migration pin.
+- Local13 focused dashboard tests pass; normal/fall/spring92/96/100, source/components/
+  VAT parity, repeated guarded reads, partial/missing publication, single gaps,
+  future revisions, real authenticated permission/site checks, native static route,
+  optional registry migration/defaults and title-case translations. Initial fixture
+  clock/token ordering and recorded provider-name expectations corrected; no runtime
+  verification relaxed. Earlier15 lifecycle/provisional/native-status cases pass.
+  Ruff check/format pass. Full suites/CI/browser/packaging still pending.
+- Browser plugin unavailable; frontend-testing-debugging skill uses existing system
+  Chromium/Playwright (dev npm cache outside repo). Disposable HA2026.10.4/frontend
+  20260930.5 planned; no owner access. Current stable checked PyPI2026.10.4.
+- Cloud API CONNECT403 confirmed; Git/public HTML work. Existing authorized runner
+  PR updater pattern retained, no secret/proxy bypass. Public Issues10/8/12 and PR14
+  read before edits. No subagents. No worktree.
+
+Next: complete native desktop/mobile graphs/tables/locale/diagnostics/revision/restart
+journeys; full producer/unchanged CM/core matrices, HACS and hassfest; improve any
+findings; update exact-source release integrity/guide/acceptance, publish immutable
+beta.8 only after gates, independently download/install through actual HACS on both
+cores, record permanent receipt/final STOP. Screenshots remain outside source.
+Checkpoint subject: **feat: expose stored quarter prices in a native read-only dashboard**.
+
+## Completed beta.7 checkpoint (historical)
+
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 published and independently verified.
 STOP: owner mission complete.** No beta.8, stable release, main merge, production
 cutover or physical charging actions are authorized by this checkpoint.

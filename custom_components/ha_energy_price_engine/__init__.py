@@ -15,6 +15,13 @@ PLATFORMS = [Platform.SENSOR, Platform.UPDATE]
 LOGGER = logging.getLogger(__name__)
 
 
+async def async_setup(hass, config):
+    from .dashboard import async_setup_dashboard
+
+    await async_setup_dashboard(hass)
+    return True
+
+
 async def async_migrate_entry(hass, entry):
     """Upgrade durable site settings additively, without touching price history."""
     if entry.version > 3:

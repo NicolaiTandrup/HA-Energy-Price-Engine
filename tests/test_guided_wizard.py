@@ -188,6 +188,7 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
         ("38973d88ad67758b419dfc45c193a8c85674afda", 3),
         ("a4ede923e42573def49026a8d1d817c37a979171", 3),
         ("f5a18152748205906bfd5e7ae7a72b592943e742", 3),
+        ("9eb21fc300f9cfdc39b0e0405364bbf543bfc717", 3),
     ],
 )
 async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(

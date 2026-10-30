@@ -1,9 +1,11 @@
 """Stored current price and source readiness; state publication does not fetch."""
 
 from datetime import timedelta
+from zoneinfo import ZoneInfo
 
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.core import callback
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.event import async_track_utc_time_change
@@ -17,6 +19,28 @@ from .status import day_result, quarter_result, source_status
 
 async def async_setup_entry(hass, entry, async_add_entities):
     c = entry.runtime_data
+    # Default flags affect only new registry entries. Hide pre-existing optional
+    # entities too, without deleting identities/history or overriding user hides.
+    registry = er.async_get(hass)
+    configured = bool(c.site.get("provisional_supplier"))
+    for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+        if (
+            "_estimated_price_" not in entity.unique_id
+            and "_display_estimated_" not in entity.unique_id
+        ):
+            continue
+        if not configured and entity.hidden_by is None:
+            registry.async_update_entity(
+                entity.entity_id, hidden_by=er.RegistryEntryHider.INTEGRATION
+            )
+        elif configured:
+            updates = {}
+            if entity.hidden_by is er.RegistryEntryHider.INTEGRATION:
+                updates["hidden_by"] = None
+            if entity.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
+                updates["disabled_by"] = None
+            if updates:
+                registry.async_update_entity(entity.entity_id, **updates)
     async_add_entities(
         [
             PriceSensor(c),
@@ -182,11 +206,24 @@ class TomorrowSensor(BaseSensor):
     @property
     def extra_state_attributes(self):
         result = day_result(self.coordinator, 1)
+        report = self.coordinator.schedule.days.get(self.site["id"], {}).get(
+            str(
+                dt_util.utcnow().astimezone(ZoneInfo(self.site["timezone"])).date()
+                + timedelta(days=1)
+            ),
+            {},
+        )
         return {
             "valid_slots": result.valid_slots,
             "expected_slots": result.expected_slots,
             "last_success": result.last_success,
             "reason": result.reason,
+            "required_action": report.get("required_action"),
+            "missing_components": report.get("missing_components", []),
+            "affected_period": report.get("affected_period"),
+            "next_scheduled_update": self.coordinator.schedule.next_update(
+                dt_util.utcnow()
+            ).isoformat(),
         }
 
 
@@ -204,6 +241,9 @@ class DisplaySensor(BaseSensor):
         suffix = "ore" if self.unit == "øre/kWh" else "dkk"
         self._attr_unique_id = f"{self.site['id']}_display_{kind}_{suffix}"
         self._attr_translation_key = f"display_{kind}"
+        if kind.startswith("estimated_"):
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+            self._attr_entity_registry_enabled_default = bool(self.site.get("provisional_supplier"))
         if kind.startswith("raw_"):
             basis = "incl_vat" if self.site.get("price_basis") == "spot_incl_vat" else "ex_vat"
             self._attr_translation_key += "_" + basis
@@ -434,6 +474,7 @@ class EstimatedPriceSensor(BaseSensor):
 
     def __init__(self, coordinator, offset=0):
         super().__init__(coordinator)
+        self._attr_entity_registry_enabled_default = bool(self.site.get("provisional_supplier"))
         self.offset = offset
         self._attr_unique_id = f"{self.site['id']}_estimated_price_{offset}"
         self._attr_translation_key = "estimated_current" if offset == 0 else "estimated_next"

@@ -1,0 +1,11 @@
+title: Energy prices
+views:
+  - title: Electricity prices
+    path: electricity-prices
+    icon: mdi:chart-timeline-variant
+    type: panel
+    cards:
+      - type: custom:energy-price-engine-card
+        # Replace this one ID with ANY sensor belonging to the desired PE site.
+        # Example: the site's "Final now (incl. VAT)" sensor. No other edits.
+        entity: sensor.your_site_final_now_incl_vat

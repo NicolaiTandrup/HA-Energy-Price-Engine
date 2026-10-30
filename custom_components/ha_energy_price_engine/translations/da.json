@@ -2099,10 +2099,10 @@
       "readiness": {
         "name": "Nuværende kvarters prisberedskab",
         "state": {
-          "ready": "Klar",
-          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "READY": "Klar",
+          "INCOMPLETE": "Ufuldstændig",
+          "STALE": "Forældet",
+          "ERROR": "Fejl"
         }
       },
       "next_price": {
@@ -2120,10 +2120,10 @@
       "tomorrow_status": {
         "name": "Hele morgendagens dækning",
         "state": {
-          "ready": "Klar",
-          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "READY": "Klar",
+          "INCOMPLETE": "Ufuldstændig",
+          "STALE": "Forældet",
+          "ERROR": "Fejl"
         }
       },
       "display_current": {
@@ -2151,18 +2151,18 @@
         "name": "Rå kildeberedskab i dag",
         "state": {
           "ready": "Klar",
-          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "incomplete": "Ufuldstændig",
+          "stale": "Forældet",
+          "error": "Fejl"
         }
       },
       "raw_tomorrow": {
         "name": "Rå kildeberedskab i morgen",
         "state": {
           "ready": "Klar",
-          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "incomplete": "Ufuldstændig",
+          "stale": "Forældet",
+          "error": "Fejl"
         }
       },
       "pricing_problem": {
@@ -2186,9 +2186,9 @@
         "name": "Nuværende kvarters verificerede priser",
         "state": {
           "ready": "Klar",
-          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "incomplete": "Ufuldstændig",
+          "stale": "Forældet",
+          "error": "Fejl"
         }
       },
       "estimated_current": {
@@ -2213,18 +2213,18 @@
         "name": "Næste kvarters prisberedskab",
         "state": {
           "ready": "Klar",
-          "incomplete": "Ufuldstændig — angiv manglende perioder eller afvent offentliggørelse",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "incomplete": "Ufuldstændig",
+          "stale": "Forældet",
+          "error": "Fejl"
         }
       },
       "historical_day_status": {
         "name": "Hele dagens historik",
         "state": {
           "ready": "Klar",
-          "incomplete": "Ufuldstændig historik — tidligere kvarterer kan mangle",
-          "stale": "Forældet — kilden skal kontrolleres igen",
-          "error": "Kontrol fejlet — se prisproblem"
+          "incomplete": "Ufuldstændig",
+          "stale": "Forældet",
+          "error": "Fejl"
         }
       },
       "display_raw_current_ex_vat": {

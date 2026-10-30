@@ -13,6 +13,8 @@ PACKAGE = PurePosixPath("custom_components") / DOMAIN
 REQUIRED = {
     "manifest.json",
     "presentation.py",
+    "dashboard.py",
+    "www/energy-price-engine-card.js",
     "data/decimal_symbols.json",
     "__init__.py",
     "api.py",
@@ -50,7 +52,7 @@ def build(output, *, allow_dirty=False):
         relative = PurePosixPath(name).relative_to(PACKAGE)
         if (
             source.is_symlink()
-            or source.suffix not in {".py", ".json", ".png"}
+            or source.suffix not in {".py", ".json", ".png", ".js"}
             or ".." in relative.parts
         ):
             raise ValueError(f"Unsafe/unexpected runtime package member: {relative}")

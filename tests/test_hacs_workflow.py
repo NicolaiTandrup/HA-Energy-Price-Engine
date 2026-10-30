@@ -38,7 +38,9 @@ def candidate_tree(reference="pe"):
     files = {
         str(p.relative_to(root)): p.read_bytes()
         for p in base.rglob("*")
-        if p.is_file() and p.suffix in {".py", ".json", ".png"} and "__pycache__" not in p.parts
+        if p.is_file()
+        and p.suffix in {".py", ".json", ".png", ".js"}
+        and "__pycache__" not in p.parts
     }
     files["hacs.json"] = (root / "hacs.json").read_bytes()
     return files

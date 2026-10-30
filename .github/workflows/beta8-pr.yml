@@ -1,0 +1,37 @@
+name: Continue beta.8 development PR
+on:
+  push:
+    branches: [feat/beta5-simple-onboarding]
+    paths: [.github/workflows/beta8-pr.yml]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Update existing draft with reviewable beta.8 progress
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pe-beta8-pr.md" <<'BODY'
+          Beta.8 continues the existing beta.7 checkpoint for #10, related #8/#12. Owner authorizes only the tested beta.8 prerelease; this PR remains draft/unmerged, preserving all previous implementation and release history.
+
+          Adds a bundled dependency-free native Lovelace custom card over a bounded authenticated HA WebSocket read: raw spot exVAT and verified final inclVAT graphs for today/tomorrow, every quarter's applied components/source/revision, today's exact-merged DSO tariff ranges, current/future inspection and independent readiness. Missing/stale/error prices are gaps, never zero. No provider request, SQL connection or tariff recomposition on dashboard reads. No new pricing/charging write action. CM Python APIv1, SQLite engine, schedules and onboarding retained.
+
+          Optional estimates are disabled by default on new unconfigured sites and hidden on existing ones, retaining identities/history and user hides. Supported enum translations normalize readiness display without changing canonical states. Native corrective guidance retained. Complete copy/paste dashboard YAML and local module-resource installation guide are included.
+
+          First milestone:13 focused backend/real-HA transport cases pass, including DST92/96/100, negative spot, components/VAT/canonical parity, no-IO reads, missing supplier/provisional separation, partial publication, isolated gaps, future revisions, permission/site isolation, installed static module, estimate registry defaults/migration and title-case localization. Ruff passes. Full suites/native browser/HACS/hassfest/exact-source CI/publication remain in progress; no beta.8 release claimed.
+
+          [Dashboard guide/YAML](docs/PRICE_DASHBOARD.md) · [Permanent handoff](docs/DEVELOPMENT_STATUS.md). No main merge, stable release, owner HA, Node-RED, CM, Tesla/Easee or physical charging changes. Cloud measurements are not Raspberry Pi evidence. Historical EWII terms never extrapolated.
+          BODY
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" > "$RUNNER_TEMP/pr.json"
+          python - <<'CHECK'
+          import json,os
+          p=json.load(open(os.environ['RUNNER_TEMP']+'/pr.json'))
+          assert p['state']=='open' and p['draft'] and p['head']['ref']=='feat/beta5-simple-onboarding'
+          assert p['head']['sha']==os.environ['GITHUB_SHA']
+          CHECK
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" --method PATCH --raw-field title='Beta.8: stored quarter-hour price dashboard, tariffs and components' -F body=@"$RUNNER_TEMP/pe-beta8-pr.md" --jq '{number,html_url,draft}'
