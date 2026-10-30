@@ -333,14 +333,14 @@ async def test_title_case_localized_statuses_preserve_uppercase_legacy_enum(hass
     translations = await async_get_translations(hass, "en", "entity", {DOMAIN})
     prefix = f"component.{DOMAIN}.entity.sensor."
     for key in ("readiness", "tomorrow_status"):
-        assert translations[prefix + key + ".state.READY"] == "Ready"
-        assert translations[prefix + key + ".state.ERROR"] == "Error"
+        assert prefix + key + ".state.READY" not in translations
     for key in (
         "raw_today",
         "raw_tomorrow",
         "final_status",
         "historical_day_status",
         "next_quarter_status",
+        "tomorrow_readiness",
     ):
         assert translations[prefix + key + ".state.ready"] == "Ready"
         assert translations[prefix + key + ".state.incomplete"] == "Incomplete"

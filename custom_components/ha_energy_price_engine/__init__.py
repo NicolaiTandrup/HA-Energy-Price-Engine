@@ -4,6 +4,7 @@ import logging
 
 from homeassistant.const import Platform
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.loader import async_get_integration
 
@@ -13,6 +14,7 @@ from .coordinator import PriceCoordinator
 
 PLATFORMS = [Platform.SENSOR, Platform.UPDATE]
 LOGGER = logging.getLogger(__name__)
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 async def async_setup(hass, config):

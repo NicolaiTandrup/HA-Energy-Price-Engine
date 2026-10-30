@@ -2097,13 +2097,7 @@
         "name": "Canonical technical: Current final electricity price (DKK/kWh)"
       },
       "readiness": {
-        "name": "Current quarter readiness",
-        "state": {
-          "READY": "Ready",
-          "INCOMPLETE": "Incomplete",
-          "STALE": "Stale",
-          "ERROR": "Error"
-        }
+        "name": "Canonical technical: Current quarter readiness"
       },
       "next_price": {
         "name": "Canonical technical: Next quarter final electricity price (DKK/kWh)"
@@ -2118,13 +2112,7 @@
         "name": "Canonical technical: Today average final price (DKK/kWh)"
       },
       "tomorrow_status": {
-        "name": "Tomorrow’s full-day coverage",
-        "state": {
-          "READY": "Ready",
-          "INCOMPLETE": "Incomplete",
-          "STALE": "Stale",
-          "ERROR": "Error"
-        }
+        "name": "Canonical technical: Tomorrow coverage"
       },
       "display_current": {
         "name": "Final now (incl. VAT)"
@@ -2238,6 +2226,15 @@
       },
       "display_raw_next_incl_vat": {
         "name": "Spot next quarter (incl. VAT)"
+      },
+      "tomorrow_readiness": {
+        "name": "Tomorrow’s full-day coverage",
+        "state": {
+          "ready": "Ready",
+          "incomplete": "Incomplete",
+          "stale": "Stale",
+          "error": "Error"
+        }
       }
     },
     "update": {

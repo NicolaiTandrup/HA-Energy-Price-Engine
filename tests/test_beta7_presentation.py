@@ -74,10 +74,14 @@ async def test_all_presentation_entities_and_canonical_registry_survive_unit_cha
             assert sensor.suggested_display_precision == precision and sensor.state_class is None
             assert sensor.native_unit_of_measurement == unit
             eid = registry.async_get_entity_id("sensor", DOMAIN, sensor.unique_id)
-            assert (
-                registry.async_get(eid).options["sensor"]["suggested_display_precision"]
-                == precision
-            )
+            if kind.startswith("estimated_"):
+                assert registry.async_get(eid).disabled_by is er.RegistryEntryDisabler.INTEGRATION
+                assert hass.states.get(eid) is None
+            else:
+                assert (
+                    registry.async_get(eid).options["sensor"]["suggested_display_precision"]
+                    == precision
+                )
         assert DisplaySensor(c, "current").native_value == price * (100 if unit == "øre/kWh" else 1)
         assert DisplaySensor(c, "raw_current").native_value == RawSpotSensor(c).native_value * (
             100 if unit == "øre/kWh" else 1

@@ -18,7 +18,10 @@ stable release, owner HA, Node-RED, CM source/control, Tesla/Easee or charging a
   persistence/recovery/revisions, source normalizers and required refreshes retained.
   Provisional never becomes verified. Optional entities default disabled when unused;
   existing identities hidden with integration-owned flags; user hides preserved.
-  Enum translations give title-case readiness, canonical enum values unchanged.
+  Lowercase presentation enums give title-case readiness. Hassfest forbids uppercase
+  translation keys: two legacy uppercase sensors are hidden technical compatibility
+  entities; existing current + new tomorrow presentation status stay visible. Canonical
+  enum/API values and identities remain unchanged.
 - Copy/paste `docs/dashboard.yaml` + `docs/PRICE_DASHBOARD.md` document one actual
   site entity ID and supported local Resources module registration. No fake action,
   device-page injection or third-party chart/CDN. Integration manifest beta.8; build
@@ -36,6 +39,20 @@ stable release, owner HA, Node-RED, CM source/control, Tesla/Easee or charging a
 - Cloud API CONNECT403 confirmed; Git/public HTML work. Existing authorized runner
   PR updater pattern retained, no secret/proxy bypass. Public Issues10/8/12 and PR14
   read before edits. No subagents. No worktree.
+
+Second milestone (checkpoint **fix: use supported status localization and preserve legacy enums**):
+- Official hassfest now1integration/0invalid; added config-entry-only YAML schema.
+  First run correctly rejected uppercase translation keys; fixed via hidden legacy
+  identities plus lowercase presentation counterpart, no enum automation break.
+-50 targeted regression cases pass (dashboard/presentation/actual beta.1–.7 migration
+  and guided flows). Earlier full run320passed/2failed on stale beta.7 manifest
+  assertion and newly disabled optional entity precision metadata; expectations now
+  verify beta.8 and disabled/no-state when unused. Full rerun remains pending.
+- Native beta.7→.8 upgrade preserves6configs/all4 logical ledgers/all162 original
+  entity IDs; one new presentation status/site. Isolated native dashboard renders
+  two192-bar graphs with no browser errors/warnings. Full visual/interaction work
+  remains; initial screenshot exposed a QA HTTP config confirmation overlay, which
+  must be accepted only in that disposable instance before final evidence.
 
 Next: complete native desktop/mobile graphs/tables/locale/diagnostics/revision/restart
 journeys; full producer/unchanged CM/core matrices, HACS and hassfest; improve any

@@ -2097,13 +2097,7 @@
         "name": "Kanonisk teknisk værdi: Aktuel samlet elpris (DKK/kWh)"
       },
       "readiness": {
-        "name": "Nuværende kvarters prisberedskab",
-        "state": {
-          "READY": "Klar",
-          "INCOMPLETE": "Ufuldstændig",
-          "STALE": "Forældet",
-          "ERROR": "Fejl"
-        }
+        "name": "Kanonisk teknisk værdi: Nuværende kvarters beredskab"
       },
       "next_price": {
         "name": "Kanonisk teknisk værdi: Samlet elpris næste kvarter (DKK/kWh)"
@@ -2118,13 +2112,7 @@
         "name": "Kanonisk teknisk værdi: Gennemsnitlig slutpris i dag (DKK/kWh)"
       },
       "tomorrow_status": {
-        "name": "Hele morgendagens dækning",
-        "state": {
-          "READY": "Klar",
-          "INCOMPLETE": "Ufuldstændig",
-          "STALE": "Forældet",
-          "ERROR": "Fejl"
-        }
+        "name": "Kanonisk teknisk værdi: Morgendagens dækning"
       },
       "display_current": {
         "name": "Samlet pris nu (inkl. moms)"
@@ -2238,6 +2226,15 @@
       },
       "display_raw_next_incl_vat": {
         "name": "Spot næste kvarter (inkl. moms)"
+      },
+      "tomorrow_readiness": {
+        "name": "Hele morgendagens dækning",
+        "state": {
+          "ready": "Klar",
+          "incomplete": "Ufuldstændig",
+          "stale": "Forældet",
+          "error": "Fejl"
+        }
       }
     },
     "update": {

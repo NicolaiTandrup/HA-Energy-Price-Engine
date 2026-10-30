@@ -24,6 +24,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
     registry = er.async_get(hass)
     configured = bool(c.site.get("provisional_supplier"))
     for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+        if entity.unique_id in {f"{c.site['id']}_readiness", f"{c.site['id']}_tomorrow_status"}:
+            if entity.hidden_by is None:
+                registry.async_update_entity(
+                    entity.entity_id, hidden_by=er.RegistryEntryHider.INTEGRATION
+                )
+            continue
         if (
             "_estimated_price_" not in entity.unique_id
             and "_display_estimated_" not in entity.unique_id
@@ -58,6 +64,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
             NextPriceSensor(c),
             *[DayStatisticSensor(c, kind) for kind in ("minimum", "maximum", "average")],
             TomorrowSensor(c),
+            TomorrowReadinessSensor(c),
             *[
                 DisplaySensor(c, kind)
                 for kind in (
@@ -141,6 +148,7 @@ class ReadinessSensor(BaseSensor):
     _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
     _attr_translation_key = "readiness"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_visible_default = False
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -194,6 +202,7 @@ class TomorrowSensor(BaseSensor):
     _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
     _attr_translation_key = "tomorrow_status"
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_visible_default = False
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -443,6 +452,7 @@ class FinalStatusSensor(ReadinessSensor):
 
     _attr_options = ["ready", "incomplete", "stale", "error"]
     _attr_translation_key = "final_status"
+    _attr_entity_registry_visible_default = True
     _readiness_scope = "current_quarter"
 
     def __init__(self, coordinator):
@@ -533,3 +543,24 @@ class HistoricalCoverageSensor(FinalStatusSensor):
 
     def current_result(self, offset=0):
         return day_result(self.coordinator)
+
+
+class TomorrowReadinessSensor(TomorrowSensor):
+    """Supported lowercase enum for UI; legacy uppercase identity stays intact.
+
+    Hassfest requires lowercase translation keys, so the existing enum cannot be
+    translated without changing its machine states. Keep it as hidden technical
+    compatibility data and expose this small presentation counterpart instead.
+    """
+
+    _attr_options = ["ready", "incomplete", "stale", "error"]
+    _attr_translation_key = "tomorrow_readiness"
+    _attr_entity_registry_visible_default = True
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_tomorrow_readiness"
+
+    @property
+    def native_value(self):
+        return super().native_value.lower()
