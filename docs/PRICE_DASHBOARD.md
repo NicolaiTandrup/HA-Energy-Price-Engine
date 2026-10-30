@@ -11,11 +11,11 @@ DKK/kWh. No subscriptions are added to marginal costs.
 ## Install once, without Python or SQLite
 
 1. HACS → Energy Price Engine → enable **Show beta versions**, select
-   **v0.1.0-beta.8**, Download. Restart Home Assistant and reload the browser/app.
-   Device info should show **0.1.0-beta.8**. Configure your existing site normally.
+   **v0.1.0-beta.9**, Download. Restart Home Assistant and reload the browser/app.
+   Device info should show **0.1.0-beta.9**. Configure your existing site normally.
 2. Enable **Advanced mode** in your HA user profile. Open **Settings → Dashboards →
    three-dot menu → Resources**. Add this resource as **JavaScript module**:
-   `/ha_energy_price_engine/energy-price-engine-card.js?v=0.1.0-beta.8`.
+   `/ha_energy_price_engine/energy-price-engine-card.js?v=0.1.0-beta.9`.
    This file is installed by the integration's HACS ZIP; no separate frontend
    repository, external service, or chart-library installation is needed.
    Keep one resource entry. On later updates change its version query and reload.

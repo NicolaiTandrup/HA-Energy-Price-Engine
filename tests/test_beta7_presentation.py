@@ -45,6 +45,12 @@ async def test_all_presentation_entities_and_canonical_registry_survive_unit_cha
     c = entry.runtime_data
     registry = er.async_get(hass)
     canonical_id = registry.async_get_entity_id("sensor", DOMAIN, "home_current_price")
+    # Beta.9 defaults technical duplicates off; explicit opt-in must still retain
+    # their canonical Recorder identity, units and full precision on reload.
+    registry.async_update_entity(canonical_id, disabled_by=None)
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+    c = entry.runtime_data
     old_rows = c.price_engine.records["home"]
     price = PriceSensor(c).native_value
     assert price == pytest.approx(0.41625)

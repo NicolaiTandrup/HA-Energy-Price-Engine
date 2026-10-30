@@ -13,6 +13,7 @@ PACKAGE = PurePosixPath("custom_components") / DOMAIN
 REQUIRED = {
     "manifest.json",
     "presentation.py",
+    "device_diagnostics.py",
     "dashboard.py",
     "www/energy-price-engine-card.js",
     "data/decimal_symbols.json",

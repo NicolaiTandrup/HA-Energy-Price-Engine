@@ -367,6 +367,9 @@ async def test_title_case_localized_statuses_preserve_uppercase_legacy_enum(hass
         assert translations[prefix + key + ".state.ready"] == "Ready"
         assert translations[prefix + key + ".state.incomplete"] == "Incomplete"
     entity = er.async_get(hass).async_get_entity_id("sensor", DOMAIN, "home_readiness")
+    er.async_get(hass).async_update_entity(entity, disabled_by=None)
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
     assert hass.states.get(entity).state == "READY"
     assert await hass.config_entries.async_unload(entry.entry_id)
 

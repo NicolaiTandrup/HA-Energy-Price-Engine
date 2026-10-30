@@ -76,7 +76,7 @@ async def test_beta1_migration_version_display_and_immutable_api(hass, freezer):
     c = entry.runtime_data
     assert entry.version == 3
     device = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)[0]
-    assert device.sw_version == "0.1.0-beta.8"  # Installed manifest, not flow/core version.
+    assert device.sw_version == "0.1.0-beta.9"  # Installed manifest, not flow/core version.
     now = datetime(2026, 10, 23, 12, tzinfo=UTC)
     original = c.price_engine.records["home"]
     price = PriceSensor(c).native_value
@@ -163,6 +163,7 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
     devices = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)
     device_id = devices[0].id
     canonical = er.async_get(hass).async_get_entity_id("sensor", DOMAIN, "home_current_price")
+    er.async_get(hass).async_update_entity(canonical, disabled_by=None)
     with patch(
         "custom_components.ha_energy_price_engine.async_get_integration",
         AsyncMock(return_value=SimpleNamespace(version="0.1.0-test-update")),
@@ -189,6 +190,7 @@ async def test_device_version_updates_without_identity_or_statistic_churn(hass, 
         ("a4ede923e42573def49026a8d1d817c37a979171", 3),
         ("f5a18152748205906bfd5e7ae7a72b592943e742", 3),
         ("9eb21fc300f9cfdc39b0e0405364bbf543bfc717", 3),
+        ("cbad4e7595e7eba4080aca295bfca521f9b0409a", 3),
     ],
 )
 async def test_actual_released_beta1_sqlite_and_configuration_migrate_unchanged(

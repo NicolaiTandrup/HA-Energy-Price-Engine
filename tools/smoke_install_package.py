@@ -33,7 +33,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
-    assert manifest["version"]=="0.1.0-beta.8"
+    assert manifest["version"]=="0.1.0-beta.9"
     from custom_components.ha_energy_price_engine.localization import _system_decimal_separator
     assert await hass.async_add_executor_job(_system_decimal_separator,"da-DK",".")==","
     assert await hass.async_add_executor_job(_system_decimal_separator,"en-US",",")=="."

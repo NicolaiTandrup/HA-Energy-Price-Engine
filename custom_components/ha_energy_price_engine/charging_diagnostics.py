@@ -140,6 +140,14 @@ async def charging_readiness(hass, entry, start=None, end=None):
                 lines.append(labels["horizon_unavailable"])
     if snapshot["missing_before_activation"]:
         lines.append(labels["activation_history"])
+    from .device_diagnostics import availability, explanation
+
+    runtime = hass.data.get("ha_energy_price_engine", {}).get(entry.entry_id)
+    if runtime:
+        for scope in ("current", "history", "tomorrow"):
+            facts = availability(runtime, scope)
+            if facts["code"] != "ready":
+                lines.append(explanation(facts, labels))
     return "\n\n".join(lines)
 
 

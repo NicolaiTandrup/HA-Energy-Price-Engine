@@ -157,6 +157,11 @@ async def test_confirmed_ewii_offer_requires_explicit_vat_without_dates(hass, fr
         snapshot = component_snapshot(hass, entry)
         assert snapshot["components"]["supplier"]["value"] == pytest.approx(13.2)
         assert snapshot["api_status"] == "READY"
+        saved = dict(entry.options)
+        done = await hass.config_entries.flow.async_configure(fid, {"next_step_id": "setup_done"})
+        assert done["type"] == "abort" and done["reason"] == "settings_saved"
+        assert len(hass.config_entries.async_entries(DOMAIN)) == 1
+        assert dict(entry.options) == saved
         assert await hass.config_entries.async_unload(entry.entry_id)
 
 

@@ -1,4 +1,4 @@
-# Beta.8 acceptance checklist
+# Beta.9 acceptance checklist
 
 Software checks and owner Home Assistant acceptance are separate. Automated native
 HA tests use recorded/synthetic provider boundaries and do not certify your private
@@ -7,6 +7,18 @@ CI, package hashes and simulation screenshots are in the release receipt and
 [permanent development handoff](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/DEVELOPMENT_STATUS.md).
 
 ## Software release gates
+
+Beta.9-specific evidence is pending final validation; retained checks below also
+cover the preserved beta.8 capabilities. The permanent handoff identifies each
+completed run exactly.
+
+- [ ] Native Done action, saved settings on close/reopen, no second Save/check.
+- [ ] Real native desktop/mobile activation wait, first-quarter transition, and
+  today-incomplete/tomorrow-Ready without backfill.
+- [ ] Eight stored component diagnostic amounts, mixed VAT correctness, explicit
+  next-quarter period, source/revision details and ordinary localized statuses.
+- [ ] Beta.8 upgrade/restart preserves config, all old IDs, user choices and ledgers.
+- [ ] New technical/unused provisional defaults off; explicit native opt-in/out.
 
 - [x] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
 - [x] Unchanged consumer API suites and both actual runtime startup orders.
@@ -27,7 +39,7 @@ CI, package hashes and simulation screenshots are in the release receipt and
 - [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
 
-Publication software receipt: [beta.8 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.8.json).
+Publication software receipt: [beta.8 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.9.json).
 All software gates passed, including19 exact-source checks and fresh independent
 public verification on both cores. All16 verification/orchestration jobs passed.
 Published assets were not replaced during verification.
@@ -45,7 +57,7 @@ All owner acceptance items below remain unchecked.
 
 - [ ] Back up HA; record core/HACS/PE versions and storage/hardware.
 - [ ] Update through HACS with **Show beta versions enabled**, restart and confirm
-  manifest version **0.1.0-beta.8**. Existing site IDs/entities/history remain.
+  manifest version **0.1.0-beta.9**. Existing site IDs/entities/history remain.
 - [ ] Register the bundled local module in HA Resources; paste the complete
   [dashboard YAML](dashboard.yaml) changing one actual site entity ID. View both
   graphs, all quarter rows, today's DSO ranges and selected future components.

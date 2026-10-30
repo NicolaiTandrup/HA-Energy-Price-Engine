@@ -648,6 +648,7 @@ class SimpleSetup(FlowTools):
             "setup_check": labels.get("check_prices", "Check prices"),
             **summary.pop("rows"),
             "horizon": labels["horizon_label"],
+            "diagnostic_entities": labels["diagnostic_entities"],
         }
         return self.async_show_menu(
             step_id="setup_review", menu_options=choices, description_placeholders=summary
@@ -655,6 +656,54 @@ class SimpleSetup(FlowTools):
 
     async def async_step_setup_spot(self, user_input=None):
         return await self.async_step_setup_site()
+
+    async def async_step_diagnostic_entities(self, user_input=None):
+        """Explicit user choice: never silently disable upgraded canonical entities."""
+        from homeassistant.helpers import entity_registry as er
+
+        from .device_diagnostics import technical_entity
+
+        registry = er.async_get(self.hass)
+        entities = [
+            e
+            for e in er.async_entries_for_config_entry(registry, self._wizard_entry.entry_id)
+            if technical_entity(e.unique_id, self.draft["id"])
+        ]
+        choices = {e.entity_id: e.name or e.original_name or e.entity_id for e in entities}
+        errors = {}
+        if user_input is not None:
+            selected = set(user_input.get("technical_entities", []))
+            if not selected <= choices.keys():
+                errors["base"] = "invalid_configuration"
+            else:
+                for entity in entities:
+                    if entity.entity_id in selected and entity.disabled_by is not None:
+                        registry.async_update_entity(entity.entity_id, disabled_by=None)
+                    elif entity.entity_id not in selected and entity.disabled_by is None:
+                        registry.async_update_entity(
+                            entity.entity_id, disabled_by=er.RegistryEntryDisabler.USER
+                        )
+                return await self.async_step_setup_review()
+        return self.async_show_form(
+            step_id="diagnostic_entities",
+            errors=errors,
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        "technical_entities",
+                        default=[e.entity_id for e in entities if e.disabled_by is None],
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[
+                                {"value": key, "label": label} for key, label in choices.items()
+                            ],
+                            multiple=True,
+                            mode="list",
+                        )
+                    )
+                }
+            ),
+        )
 
     async def async_step_setup_dso(self, user_input=None):
         return await self.async_step_setup_grid()

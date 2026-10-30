@@ -81,10 +81,10 @@ async def test_missing_component_never_hides_valid_source(hass, freezer, missing
     assert (
         hass.states.get(
             er.async_get(hass).async_get_entity_id(
-                "sensor", "ha_energy_price_engine", "home_raw_spot_0"
+                "sensor", "ha_energy_price_engine", "home_display_raw_current_ore"
             )
         ).state
-        == "-0.1"
+        == "-10.0"
     )
     assert await hass.config_entries.async_unload(entry.entry_id)
 

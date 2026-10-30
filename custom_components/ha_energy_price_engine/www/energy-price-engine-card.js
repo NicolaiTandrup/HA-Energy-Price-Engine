@@ -4,6 +4,8 @@
  */
 const WORDS = {
   en: {
+    activation: "Verified prices start at {time}. The current quarter began before pricing was activated. The next quarter is Ready.",
+    historyGap: "Full-day statistics require complete verified day coverage. Missing earlier quarters do not block a complete verified future window.",
     title: "Electricity prices", today: "Today", tomorrow: "Tomorrow", now: "Now",
     raw: "Nord Pool spot", final: "Final electricity price", ex: "Excluding VAT & charges",
     incl: "Including all variable charges & VAT", grid: "Today's network tariffs",
@@ -25,6 +27,8 @@ const WORDS = {
     config: "Set entity to an entity belonging to your Energy Price Engine site.",
   },
   da: {
+    activation: "Verificerede priser starter {time}. Det aktuelle kvarter begyndte før prisberegningen blev aktiveret. Næste kvarter er Klar.",
+    historyGap: "Heldagsstatistik kræver komplet verificeret dækning. Manglende tidligere kvarterer blokerer ikke et komplet verificeret fremtidigt interval.",
     title: "Elpriser", today: "I dag", tomorrow: "I morgen", now: "Nu",
     raw: "Nord Pool spot", final: "Samlet elpris", ex: "Uden moms og tillæg",
     incl: "Med alle variable tillæg og moms", grid: "Dagens nettariffer",
@@ -213,6 +217,8 @@ export class EnergyPriceEngineCard extends HTMLElement {
     const scrolls = [...this.shadowRoot.querySelectorAll(".scroll")].map(e => [e.scrollLeft,e.scrollTop]);
     const t = this._words(), d = this._data;
     const body = d ? `<header><div><div class="eyebrow">Energy Price Engine · ${esc(d.site.area)}</div><h1>${esc(d.site.name)}</h1><div class="muted">${esc(d.site.timezone)} · øre/kWh</div></div><button data-refresh aria-label="${t.retry}">${t.retry}</button></header><div class="body"><div class="health">${[[t.current,d.current],[t.next,d.next],[t.history,d.days[0]],[t.publication,d.days[1]]].map(([name,f]) => `<div><p>${name}</p>${this._status(f.status)}<p class="muted" style="margin-top:6px">${f.stored_slots}/${f.expected_slots}</p></div>`).join("")}</div>
+      ${d.availability?.current.code === "waiting_first_quarter" ? `<p class="notice activation">${esc(t.activation.replace("{time}", this._local(d.availability.current.prices_start_at)))}</p>` : ""}
+      ${d.availability?.history.code === "historical_gap" ? `<p class="notice historical-gap">${t.historyGap}</p>` : ""}
       ${this._error ? `<p role="alert" class="notice error">${esc(this._error)}</p>` : ""}
       ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || t.noRecord)}</p>${i === 1 && day.status === "INCOMPLETE" && day.failure_stage === "source" && day.raw_ready_slots === 0 ? `<p>${t.wait}</p>` : ""}<p>${t.update}: ${esc(this._local(d.next_scheduled_update))}</p>${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
       <div class="charts">${this._chart("spot")}${this._chart("final")}</div><p class="muted">${t.gaps} ${t.rawOnly}</p>${this._inspector()}${this._tariffs()}${this._schedule()}<footer class="footer">${t.update}: ${esc(this._local(d.next_scheduled_update))}<br>${t.generated}: ${esc(this._local(d.generated_at))} · ${t.revision} ${d.revision}</footer></div>` : `<header><h1>${t.title}</h1></header><div class="body"><p role="status">${esc(this._error || t.loading)}</p><button data-refresh>${t.retry}</button></div>`;

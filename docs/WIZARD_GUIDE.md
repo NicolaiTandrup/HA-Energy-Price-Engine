@@ -1,8 +1,8 @@
 # Configure and understand charging prices
 
-Install **v0.1.0-beta.8** through HACS, restart HA and reload the browser/app.
+Install **v0.1.0-beta.9** through HACS, restart HA and reload the browser/app.
 Existing users choose **Configure** on their existing site. Device info must show
-manifest version **0.1.0-beta.8**. Site identities, entities, source mappings, dated
+manifest version **0.1.0-beta.9**. Site identities, entities, source mappings, dated
 rules, SQLite history and original revisions remain.
 
 ## Three setup stages
@@ -21,7 +21,9 @@ rules, SQLite history and original revisions remain.
    is mandatory. Contract input units are explicitly labelled, independent of display.
 
 Each accepted page saves immediately. Close/reopen resumes. Review requires no final
-save; tap a component to edit. **Check prices** forces source verification. Native
+save. **Done – return to integration** explicitly finishes the native Options flow;
+the initial installation flow uses HA’s settings-saved completion notice. No extra
+verification or second save is required. Tap a component to edit. **Check prices** forces source verification. Native
 forms cannot save typing that was never submitted and have no per-page Back button.
 New current terms begin next complete quarter, until changed. Settled prices,
 historical terms and scheduled future date/hour overrides survive ordinary edits.
@@ -44,12 +46,47 @@ final total; calculations and charging costs always use the unrounded stored val
 
 Canonical technical sensors retain **DKK/kWh**, stable IDs, complete numeric values
 and measurement/statistics units. They are labelled technical and grouped as
-diagnostics. Their supported presentation precision is four, while their recorded
+diagnostics. New installations default the canonical duplicates off. Existing enabled
+choices remain enabled on upgrade. Use **Configure → Technical diagnostics** to
+choose which technical rows to keep; disabling stops future sensor/Recorder samples
+for those rows, while retaining IDs and prior history. It does not disable the price
+engine or CM API. No previously enabled entity is silently disabled. Their supported presentation precision is four, while their recorded
 values and API retain full precision. Preferred display entities have fixed unit
 identities and no statistics state class. Switching units leaves the previous unit's
 presentation entities unavailable, preserving history; use the currently selected
 unit's entities. Explicit HA entity/card precision overrides can supersede integration
 suggestions: reset those to Default, or choose 2/4, to use the standard presentation.
+
+## Device price breakdown and expected Unknown
+
+Device Diagnostics contains eight **Price breakdown** numerical sensors, always
+**øre/kWh, 2 decimals** irrespective of the main display preference. Spot, grid,
+Energinet network/system, supplier and tax are **excluding VAT**; **Applied VAT
+amount** is the actual recorded per-component VAT sum, not the VAT percentage.
+**Verified final marginal price** includes VAT once. Fixed subscriptions are excluded.
+Rounded component rows can differ by 0.01 from the rounded total.
+
+Read **Price breakdown — period** first. Normally it says Current verified quarter.
+If current pricing is unavailable but the next quarter is verified, it explicitly
+says **Next quarter — current quarter unavailable**. Each numerical entity’s details
+include exact UTC/local start/end, verification, applied source/effective metadata
+and record revision. Missing components are unavailable, never reconstructed or
+substituted with zero. The price dashboard remains available for all other quarters.
+
+**Prices now — availability** explains a current quarter before activation; **Verified
+prices begin** shows the precise first-pricing timestamp. For example, at19:07 with
+activation19:15, Final now remains Unknown, next is Ready and the component breakdown
+is labelled Next quarter. At19:15 the current value and breakdown update to that
+stored quarter. Today statistics remain unavailable if earlier quarters are absent;
+**Today statistics — availability** explains complete-day coverage. This does not
+invalidate a fully verified future CM window. No backfill occurs.
+
+**Tomorrow prices — availability** distinguishes awaiting Nord Pool publication from
+missing tariffs/contracts, stale verification and real verification/storage errors.
+Keep **Pricing problem — corrective action** and the raw/coverage diagnostics when
+troubleshooting. Detailed period, missing component, action and next-check facts are
+available by opening the relevant diagnostic entity. Numeric measurement states stay
+Unknown/unavailable rather than becoming explanatory text or fabricated free prices.
 
 ## Readiness is a range, not a promise about missing history
 

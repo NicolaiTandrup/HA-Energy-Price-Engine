@@ -592,7 +592,8 @@
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
           "session_estimate": "Anslået ladepris",
-          "horizon": "Kontrollér fremtidigt tidsrum"
+          "horizon": "Kontrollér fremtidigt tidsrum",
+          "diagnostic_entities": "Tekniske diagnoser"
         }
       },
       "setup_diagnostics": {
@@ -980,6 +981,16 @@
           "end": "Slut (ikke med)"
         },
         "submit": "Kontrollér tidsrum"
+      },
+      "diagnostic_entities": {
+        "title": "Tekniske diagnoser",
+        "description": "Vælg de kanoniske tekniske entiteter, der skal være aktiveret. Nye installationer starter uden disse dubletter. Opgraderinger bevarer eksisterende valg. Fravælg kun entiteter, du ikke bruger i automatiseringer eller Recorder. ID’er og eksisterende historik bevares; skjulte entiteter vises stadig på HA-enhedssiden, mens deaktiverede entiteter ikke gør. De almindelige øre/kWh-priser, komponenter og CM API ændres ikke.",
+        "data": {
+          "technical_entities": "Aktiverede tekniske entiteter"
+        },
+        "data_description": {
+          "technical_entities": "Bevar de entiteter, du bruger. Et tomt valg deaktiverer kun de tekniske dubletter."
+        }
       }
     },
     "error": {
@@ -1713,7 +1724,8 @@
           "setup_tax_details": "Energinet, elafgift og moms",
           "select_quarter": "Vælg et andet kvarter",
           "session_estimate": "Anslået ladepris",
-          "horizon": "Kontrollér fremtidigt tidsrum"
+          "horizon": "Kontrollér fremtidigt tidsrum",
+          "diagnostic_entities": "Tekniske diagnoser"
         }
       },
       "setup_diagnostics": {
@@ -2041,6 +2053,16 @@
           "end": "Slut (ikke med)"
         },
         "submit": "Kontrollér tidsrum"
+      },
+      "diagnostic_entities": {
+        "title": "Tekniske diagnoser",
+        "description": "Vælg de kanoniske tekniske entiteter, der skal være aktiveret. Nye installationer starter uden disse dubletter. Opgraderinger bevarer eksisterende valg. Fravælg kun entiteter, du ikke bruger i automatiseringer eller Recorder. ID’er og eksisterende historik bevares; skjulte entiteter vises stadig på HA-enhedssiden, mens deaktiverede entiteter ikke gør. De almindelige øre/kWh-priser, komponenter og CM API ændres ikke.",
+        "data": {
+          "technical_entities": "Aktiverede tekniske entiteter"
+        },
+        "data_description": {
+          "technical_entities": "Bevar de entiteter, du bruger. Et tomt valg deaktiverer kun de tekniske dubletter."
+        }
       }
     },
     "error": {
@@ -2235,6 +2257,86 @@
           "stale": "Forældet",
           "error": "Fejl"
         }
+      },
+      "component_spot": {
+        "name": "Prisopdeling — Nord Pool spot (ekskl. moms)"
+      },
+      "component_dso": {
+        "name": "Prisopdeling — Radius / nettarif (ekskl. moms)"
+      },
+      "component_energinet_net": {
+        "name": "Prisopdeling — Energinet net (ekskl. moms)"
+      },
+      "component_energinet_system": {
+        "name": "Prisopdeling — Energinet system (ekskl. moms)"
+      },
+      "component_supplier": {
+        "name": "Prisopdeling — Leverandørtillæg (ekskl. moms)"
+      },
+      "component_electricity_tax": {
+        "name": "Prisopdeling — Elafgift (ekskl. moms)"
+      },
+      "component_vat": {
+        "name": "Prisopdeling — Anvendt momsbeløb"
+      },
+      "component_final": {
+        "name": "Prisopdeling — Verificeret marginalpris (inkl. moms)"
+      },
+      "breakdown_period": {
+        "name": "Prisopdeling — periode",
+        "state": {
+          "current_quarter": "Aktuelt verificerede kvarter",
+          "next_quarter": "Næste kvarter — aktuelt kvarter er utilgængeligt",
+          "unavailable": "Ingen verificeret opdeling tilgængelig"
+        }
+      },
+      "availability_current": {
+        "name": "Priser nu — tilgængelighed",
+        "state": {
+          "ready": "Klar",
+          "loading": "Henter priser",
+          "waiting_first_quarter": "Aktuelt kvarter er før aktivering; næste kvarter er Klar",
+          "waiting_publication": "Venter på Nord Pools offentliggørelse",
+          "missing_components": "Manglende tarif eller aftale",
+          "historical_gap": "Heldagsstatistik kræver komplet verificeret dækning",
+          "verification_error": "Fejl — kildeverifikation mislykkedes",
+          "storage_error": "Fejl — lagring eller gendannelse mislykkedes",
+          "stale": "Forældet",
+          "missing_prices": "Ufuldstændig — verificerede kvarterer mangler"
+        }
+      },
+      "availability_tomorrow": {
+        "name": "Priser i morgen — tilgængelighed",
+        "state": {
+          "ready": "Klar",
+          "loading": "Henter priser",
+          "waiting_first_quarter": "Aktuelt kvarter er før aktivering; næste kvarter er Klar",
+          "waiting_publication": "Venter på Nord Pools offentliggørelse",
+          "missing_components": "Manglende tarif eller aftale",
+          "historical_gap": "Heldagsstatistik kræver komplet verificeret dækning",
+          "verification_error": "Fejl — kildeverifikation mislykkedes",
+          "storage_error": "Fejl — lagring eller gendannelse mislykkedes",
+          "stale": "Forældet",
+          "missing_prices": "Ufuldstændig — verificerede kvarterer mangler"
+        }
+      },
+      "availability_history": {
+        "name": "Dagens statistik — tilgængelighed",
+        "state": {
+          "ready": "Klar",
+          "loading": "Henter priser",
+          "waiting_first_quarter": "Aktuelt kvarter er før aktivering; næste kvarter er Klar",
+          "waiting_publication": "Venter på Nord Pools offentliggørelse",
+          "missing_components": "Manglende tarif eller aftale",
+          "historical_gap": "Heldagsstatistik kræver komplet verificeret dækning",
+          "verification_error": "Fejl — kildeverifikation mislykkedes",
+          "storage_error": "Fejl — lagring eller gendannelse mislykkedes",
+          "stale": "Forældet",
+          "missing_prices": "Ufuldstændig — verificerede kvarterer mangler"
+        }
+      },
+      "prices_start_at": {
+        "name": "Verificerede priser begynder"
       }
     },
     "update": {
@@ -2396,14 +2498,25 @@
         "readiness_ready": "Klar",
         "readiness_incomplete": "Ufuldstændig",
         "readiness_stale": "Forældet",
-        "readiness_error": "Verifikation fejlede",
+        "readiness_error": "Fejl",
         "readiness_not_loaded": "Integration ikke indlæst",
         "activation_history": "Tidligere kvarterer før opsætningen mangler med vilje. Det blokerer ikke et fremtidigt tidsrum, hvor alle priser er verificerede.",
         "horizon_label": "Kontrollér fremtidigt tidsrum",
         "horizon_unavailable": "Kun et komplet tidsrum med verificerede priser er klar. Kontrollér komponentdiagnostik og kildens tilgængelighed; manglende priser er aldrig nul.",
         "subtotal": "Sum ekskl. moms",
         "rounding_note": "Kun visningen afrundes. Totaler og ladeomkostninger bruger de uafrundede gemte priser.",
-        "finish": "Færdig – tilbage til integrationen"
+        "finish": "Færdig – tilbage til integrationen",
+        "availability_ready": "Klar — verificerede priser er tilgængelige for denne periode.",
+        "availability_loading": "Henter priser. Der findes endnu ingen afsluttet kildeverifikation.",
+        "availability_waiting_first_quarter": "Verificerede priser starter {time}. Det aktuelle kvarter begyndte før prisberegningen blev aktiveret. Næste kvarter er Klar.",
+        "availability_waiting_publication": "Venter på Nord Pools offentliggørelse for i morgen. Se næste planlagte opdatering; manglende priser er aldrig gratis.",
+        "availability_missing_components": "Manglende tarif eller aftale for {period}: {components}. Rediger den berørte priskomponent, og kontroller priserne.",
+        "availability_historical_gap": "Statistik for hele dagen kræver komplet verificeret dækning. Tidligere eller manglende kvarterer er utilgængelige; et komplet fremtidigt interval kan stadig være Klar.",
+        "availability_verification_error": "Fejl — kilde- eller tarifverifikation mislykkedes for {period}. Se Prisproblem — afhjælpning og den berørte kilde.",
+        "availability_storage_error": "Fejl — prislagring eller gendannelse mislykkedes. Kontroller ledig diskplads og PE-lagringsdiagnostik før nyt forsøg.",
+        "availability_stale": "Forældet — tidligere verifikation bekræfter ikke denne periode. Kontroller kildeadgang, og kontroller priserne igen.",
+        "availability_missing_prices": "Ufuldstændig — verificerede priser mangler for {period}. Se kildedækning og Prisproblem — afhjælpning.",
+        "diagnostic_entities": "Tekniske diagnoser"
       }
     },
     "contract_mode": {

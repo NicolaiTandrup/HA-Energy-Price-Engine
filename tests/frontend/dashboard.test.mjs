@@ -94,3 +94,17 @@ for(const [language,format,decimal] of [['en','language','.'],['en-GB','language
   assert.deepEqual(errors,[]);await page.close();
  });
 }
+for (const language of ['en', 'da']) {
+ test(`activation boundary ${language}: explained unknown becomes Ready without inventing history`, async()=>{
+  const {page,card,errors}=await open('activation',390,language);
+  const text=await card.locator('.activation').innerText();
+  assert.ok(/19[:.]15/.test(text) && text.includes(language==='da'?'Næste kvarter er Klar':'next quarter is Ready'));
+  assert.ok(await card.locator('.historical-gap').isVisible());
+  assert.ok((await card.locator('.health').innerText()).includes(language==='da'?'Ufuldstændig':'Incomplete'));
+  await page.evaluate(language=>window.load('activated',language),language);
+  await page.waitForFunction(()=>!document.querySelector('energy-price-engine-card').shadowRoot.querySelector('.activation'));
+  assert.ok(await card.locator('.historical-gap').isVisible());
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),390);
+  assert.deepEqual(errors,[]);await page.close();
+ });
+}

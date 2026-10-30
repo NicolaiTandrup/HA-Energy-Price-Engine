@@ -592,7 +592,8 @@
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
           "session_estimate": "Charging cost estimate",
-          "horizon": "Check future window"
+          "horizon": "Check future window",
+          "diagnostic_entities": "Technical diagnostics"
         }
       },
       "setup_diagnostics": {
@@ -980,6 +981,16 @@
           "end": "End (excluded)"
         },
         "submit": "Check window"
+      },
+      "diagnostic_entities": {
+        "title": "Technical diagnostics",
+        "description": "Select the canonical technical entities to keep enabled. New installations start without these duplicates. Upgrades preserve existing choices. Deselect only entities you do not use in automations or Recorder. IDs and existing history are retained; HA still lists hidden entities on its device page, whereas disabled entities are omitted. Ordinary øre/kWh prices, components and CM API are unchanged.",
+        "data": {
+          "technical_entities": "Enabled technical entities"
+        },
+        "data_description": {
+          "technical_entities": "Keep entities you use. An empty selection disables only technical duplicates."
+        }
       }
     },
     "error": {
@@ -1713,7 +1724,8 @@
           "setup_tax_details": "Energinet, electricity tax and VAT",
           "select_quarter": "Choose another quarter",
           "session_estimate": "Charging cost estimate",
-          "horizon": "Check future window"
+          "horizon": "Check future window",
+          "diagnostic_entities": "Technical diagnostics"
         }
       },
       "setup_diagnostics": {
@@ -2041,6 +2053,16 @@
           "end": "End (excluded)"
         },
         "submit": "Check window"
+      },
+      "diagnostic_entities": {
+        "title": "Technical diagnostics",
+        "description": "Select the canonical technical entities to keep enabled. New installations start without these duplicates. Upgrades preserve existing choices. Deselect only entities you do not use in automations or Recorder. IDs and existing history are retained; HA still lists hidden entities on its device page, whereas disabled entities are omitted. Ordinary øre/kWh prices, components and CM API are unchanged.",
+        "data": {
+          "technical_entities": "Enabled technical entities"
+        },
+        "data_description": {
+          "technical_entities": "Keep entities you use. An empty selection disables only technical duplicates."
+        }
       }
     },
     "error": {
@@ -2235,6 +2257,86 @@
           "stale": "Stale",
           "error": "Error"
         }
+      },
+      "component_spot": {
+        "name": "Price breakdown — Nord Pool spot (excl. VAT)"
+      },
+      "component_dso": {
+        "name": "Price breakdown — Radius / DSO tariff (excl. VAT)"
+      },
+      "component_energinet_net": {
+        "name": "Price breakdown — Energinet network (excl. VAT)"
+      },
+      "component_energinet_system": {
+        "name": "Price breakdown — Energinet system (excl. VAT)"
+      },
+      "component_supplier": {
+        "name": "Price breakdown — Supplier markup (excl. VAT)"
+      },
+      "component_electricity_tax": {
+        "name": "Price breakdown — Electricity tax (excl. VAT)"
+      },
+      "component_vat": {
+        "name": "Price breakdown — Applied VAT amount"
+      },
+      "component_final": {
+        "name": "Price breakdown — Verified final marginal price (incl. VAT)"
+      },
+      "breakdown_period": {
+        "name": "Price breakdown — period",
+        "state": {
+          "current_quarter": "Current verified quarter",
+          "next_quarter": "Next quarter — current quarter unavailable",
+          "unavailable": "No verified breakdown available"
+        }
+      },
+      "availability_current": {
+        "name": "Prices now — availability",
+        "state": {
+          "ready": "Ready",
+          "loading": "Fetching prices",
+          "waiting_first_quarter": "Current quarter predates activation; next quarter is Ready",
+          "waiting_publication": "Waiting for Nord Pool publication",
+          "missing_components": "Missing tariff or contract",
+          "historical_gap": "Full-day statistics need complete verified coverage",
+          "verification_error": "Error — source verification failed",
+          "storage_error": "Error — storage or recovery failed",
+          "stale": "Stale",
+          "missing_prices": "Incomplete — verified quarters missing"
+        }
+      },
+      "availability_tomorrow": {
+        "name": "Tomorrow prices — availability",
+        "state": {
+          "ready": "Ready",
+          "loading": "Fetching prices",
+          "waiting_first_quarter": "Current quarter predates activation; next quarter is Ready",
+          "waiting_publication": "Waiting for Nord Pool publication",
+          "missing_components": "Missing tariff or contract",
+          "historical_gap": "Full-day statistics need complete verified coverage",
+          "verification_error": "Error — source verification failed",
+          "storage_error": "Error — storage or recovery failed",
+          "stale": "Stale",
+          "missing_prices": "Incomplete — verified quarters missing"
+        }
+      },
+      "availability_history": {
+        "name": "Today statistics — availability",
+        "state": {
+          "ready": "Ready",
+          "loading": "Fetching prices",
+          "waiting_first_quarter": "Current quarter predates activation; next quarter is Ready",
+          "waiting_publication": "Waiting for Nord Pool publication",
+          "missing_components": "Missing tariff or contract",
+          "historical_gap": "Full-day statistics need complete verified coverage",
+          "verification_error": "Error — source verification failed",
+          "storage_error": "Error — storage or recovery failed",
+          "stale": "Stale",
+          "missing_prices": "Incomplete — verified quarters missing"
+        }
+      },
+      "prices_start_at": {
+        "name": "Verified prices begin"
       }
     },
     "update": {
@@ -2396,14 +2498,25 @@
         "readiness_ready": "Ready",
         "readiness_incomplete": "Incomplete",
         "readiness_stale": "Stale",
-        "readiness_error": "Verification failed",
+        "readiness_error": "Error",
         "readiness_not_loaded": "Integration not loaded",
         "activation_history": "Earlier quarters before setup are intentionally unavailable. This does not block a future window whose prices are all verified.",
         "horizon_label": "Check future window",
         "horizon_unavailable": "Only a complete window of verified prices is ready. Check component diagnostics and source availability; missing prices are never zero.",
         "subtotal": "Subtotal",
         "rounding_note": "Rounded for display only. Totals and charging costs use the unrounded stored prices.",
-        "finish": "Done – return to integration"
+        "finish": "Done – return to integration",
+        "availability_ready": "Ready — verified prices are available for this period.",
+        "availability_loading": "Fetching prices. No completed source verification is available yet.",
+        "availability_waiting_first_quarter": "Verified prices start at {time}. The current quarter began before pricing was activated. The next quarter is Ready.",
+        "availability_waiting_publication": "Waiting for tomorrow’s Nord Pool publication. Check the next scheduled update; unavailable intervals are never free.",
+        "availability_missing_components": "Missing tariff or contract for {period}: {components}. Edit the affected price component and Check prices.",
+        "availability_historical_gap": "Full-day statistics require complete verified day coverage. Earlier or missing quarters remain unavailable; a complete future window can still be Ready.",
+        "availability_verification_error": "Error — source or tariff verification failed for {period}. Inspect Pricing problem — corrective action and the affected source.",
+        "availability_storage_error": "Error — price storage or recovery failed. Check free disk space and PE storage diagnostics before retrying.",
+        "availability_stale": "Stale — previous verification does not certify this period. Check source availability and recheck prices.",
+        "availability_missing_prices": "Incomplete — verified prices are missing for {period}. Inspect source coverage and Pricing problem — corrective action.",
+        "diagnostic_entities": "Technical diagnostics"
       }
     },
     "contract_mode": {

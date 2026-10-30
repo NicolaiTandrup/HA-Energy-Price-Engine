@@ -13,6 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
+from .device_diagnostics import COMPONENTS, availability, explanation, stored_breakdown
 from .presentation import display_precision, display_value
 from .status import day_result, quarter_result, source_status
 
@@ -23,6 +24,9 @@ def optional_estimate(unique_id):
 
 async def async_setup_entry(hass, entry, async_add_entities):
     c = entry.runtime_data
+    from .localization import review_labels
+
+    labels = await review_labels(hass)
     # HA's device page lists hidden entities too. Apply a one-time disabled default
     # for unused estimates, preserving registry/history and subsequent user opt-in.
     registry = er.async_get(hass)
@@ -95,6 +99,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
             *[DayStatisticSensor(c, kind) for kind in ("minimum", "maximum", "average")],
             TomorrowSensor(c),
             TomorrowReadinessSensor(c),
+            AvailabilitySensor(c, "current", labels),
+            AvailabilitySensor(c, "tomorrow", labels),
+            AvailabilitySensor(c, "history", labels),
+            ActivationSensor(c),
+            BreakdownPeriodSensor(c),
+            *[ComponentSensor(c, key) for key in COMPONENTS],
             *[
                 DisplaySensor(c, kind)
                 for kind in (
@@ -142,6 +152,7 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
 
 
 class PriceSensor(BaseSensor):
+    _attr_entity_registry_enabled_default = False
     _attr_translation_key = "current_price"
     _attr_native_unit_of_measurement = "DKK/kWh"
     _attr_state_class = SensorStateClass.MEASUREMENT
@@ -174,6 +185,7 @@ class PriceSensor(BaseSensor):
 
 
 class ReadinessSensor(BaseSensor):
+    _attr_entity_registry_enabled_default = False
     _attr_device_class = "enum"
     _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
     _attr_translation_key = "readiness"
@@ -205,6 +217,7 @@ class NextPriceSensor(PriceSensor):
 
 
 class DayStatisticSensor(BaseSensor):
+    _attr_entity_registry_enabled_default = False
     _attr_native_unit_of_measurement = "DKK/kWh"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 4
@@ -228,6 +241,7 @@ class DayStatisticSensor(BaseSensor):
 
 
 class TomorrowSensor(BaseSensor):
+    _attr_entity_registry_enabled_default = False
     _attr_device_class = "enum"
     _attr_options = ["READY", "INCOMPLETE", "STALE", "ERROR"]
     _attr_translation_key = "tomorrow_status"
@@ -310,6 +324,7 @@ class DisplaySensor(BaseSensor):
     def extra_state_attributes(self):
         return {
             "site_id": self.site["id"],
+            **({"api_version": 1} if self.kind == "current" else {}),
             "stored_and_api_unit": "DKK/kWh",
             "vat_included": self.site.get("price_basis") == "spot_incl_vat"
             if self.kind.startswith("raw_")
@@ -328,6 +343,7 @@ class RawSpotSensor(BaseSensor):
     """Verified spot source, independent of final composition and ledger success."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
 
     _attr_native_unit_of_measurement = "DKK/kWh"
     _attr_suggested_display_precision = 4
@@ -483,6 +499,7 @@ class FinalStatusSensor(ReadinessSensor):
     _attr_options = ["ready", "incomplete", "stale", "error"]
     _attr_translation_key = "final_status"
     _attr_entity_registry_visible_default = True
+    _attr_entity_registry_enabled_default = True
     _readiness_scope = "current_quarter"
 
     def __init__(self, coordinator):
@@ -586,6 +603,7 @@ class TomorrowReadinessSensor(TomorrowSensor):
     _attr_options = ["ready", "incomplete", "stale", "error"]
     _attr_translation_key = "tomorrow_readiness"
     _attr_entity_registry_visible_default = True
+    _attr_entity_registry_enabled_default = True
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -594,3 +612,111 @@ class TomorrowReadinessSensor(TomorrowSensor):
     @property
     def native_value(self):
         return super().native_value.lower()
+
+
+class ComponentSensor(BaseSensor):
+    """Fixed ore presentation of the actual stored ex-VAT component/VAT/final."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_native_unit_of_measurement = "øre/kWh"
+    _attr_suggested_display_precision = 2
+
+    def __init__(self, coordinator, component):
+        super().__init__(coordinator)
+        self.component = component
+        self._attr_unique_id = f"{self.site['id']}_component_{component}_ore"
+        self._attr_translation_key = f"component_{component}"
+
+    @property
+    def native_value(self):
+        return stored_breakdown(self.coordinator)["components"][self.component]
+
+    @property
+    def extra_state_attributes(self):
+        data = stored_breakdown(self.coordinator)
+        metadata = data["component_metadata"].get(self.component, {})
+        return {
+            **{k: v for k, v in data.items() if k not in {"components", "component_metadata"}},
+            "verification": data["verification"]
+            if data["components"][self.component] is not None
+            else "missing",
+            "applied_component": metadata,
+            "vat_basis": "incl_vat"
+            if self.component == "final"
+            else "applied_vat_amount"
+            if self.component == "vat"
+            else "ex_vat",
+            "subscriptions_included": False,
+            "presentation_only": True,
+            "canonical_unit": "DKK/kWh",
+        }
+
+
+class BreakdownPeriodSensor(BaseSensor):
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = "enum"
+    _attr_options = ["current_quarter", "next_quarter", "unavailable"]
+    _attr_translation_key = "breakdown_period"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_breakdown_period"
+
+    @property
+    def native_value(self):
+        return stored_breakdown(self.coordinator)["period"]
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            k: v
+            for k, v in stored_breakdown(self.coordinator).items()
+            if k not in {"components", "component_metadata", "source"}
+        }
+
+
+class AvailabilitySensor(BaseSensor):
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = "enum"
+    _attr_options = [
+        "ready",
+        "loading",
+        "waiting_first_quarter",
+        "waiting_publication",
+        "missing_components",
+        "historical_gap",
+        "verification_error",
+        "storage_error",
+        "stale",
+        "missing_prices",
+    ]
+
+    def __init__(self, coordinator, scope, labels):
+        super().__init__(coordinator)
+        self.scope, self.labels = scope, labels
+        self._attr_unique_id = f"{self.site['id']}_{scope}_availability"
+        self._attr_translation_key = f"availability_{scope}"
+
+    @property
+    def native_value(self):
+        return availability(self.coordinator, self.scope)["code"]
+
+    @property
+    def extra_state_attributes(self):
+        facts = availability(self.coordinator, self.scope)
+        return {**facts, "explanation": explanation(facts, self.labels)}
+
+
+class ActivationSensor(BaseSensor):
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = "timestamp"
+    _attr_translation_key = "prices_start_at"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{self.site['id']}_prices_start_at"
+        self._attr_entity_registry_enabled_default = bool(self.site.get("pricing_start"))
+
+    @property
+    def native_value(self):
+        return dt_util.parse_datetime(self.site.get("pricing_start", ""))

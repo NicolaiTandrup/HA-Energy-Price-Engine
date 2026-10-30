@@ -5,18 +5,44 @@ the latest owner mission, superseding the historical beta.8 STOP below. Resume
 branch `feat/beta5-simple-onboarding` from checkpoint `9bd7694231ddb92b18ef49495f2394586aa0ddd9`;
 existing draft PR14 and all prior release history remain intact. Main unchanged.
 
-Milestone `Add native explicit setup completion for beta.9` adds a visible Done
-menu action while retaining Check prices and row-level edits. Options completion
-returns CURRENT durable options; initial ConfigFlow completion uses the supported
-settings-saved termination, never creates a second entry. No engine/API changes.
-Local: `.venv/bin/pytest tests/test_simple_setup.py tests/test_guided_wizard.py
--W error::ResourceWarning` **18 passed**. Remote CI pending for this new checkpoint.
-Next: stored-only eight-component device diagnostics, precise activation/loading/
-publication/history/error explanation, clean NEW-install technical defaults and
-explicit native technical-entity preferences preserving all upgraded enabled IDs;
-full core/CM/native desktop-mobile/migration/HACS/package/release integrity gates.
-Only tested beta.9 prerelease publication is authorized; no stable/main/production
-HA/Node-RED/physical controls. No owner HA acceptance is claimed.
+Milestone `Expose stored component diagnostics and precise price availability` builds on
+completion checkpoint **b8d4a6c776000a6e09a1fa376e3f0168a650483d**. Its13 remote
+checks (push/PR/draft updater) all passed; see `/tmp/pe9-first-ci.json`. New milestone
+CI is pending, never inferred from earlier checks.
+
+- Eight fixed ore/kWh2 device component diagnostics read actual verified stored
+  records, applied VAT sum and source/effective/revision metadata. Current quarter
+  first; explicitly labelled next-quarter fallback. Missing stays unknown, no source
+  fetch/SQL/recomposition. Scope and first-pricing timestamp are native companions.
+- Native current/tomorrow/statistics availability distinguishes activation, loading,
+  publication, missing configuration, history gap and verification/storage/stale errors.
+  Review and existing dashboard explain activation while numeric states remain unknown.
+  Ordinary enums localize to Title Case; canonical uppercase contracts are untouched.
+- NEW canonical duplicates default disabled. Upgrades retain every enabled entity,
+  user name/hide/disable and Recorder identity. Native Technical diagnostics selection
+  explicitly enables/disables only those nine duplicates; no forced cleanup of user
+  choices. Unconfigured provisional defaults and explicit opt-in remain intact.
+- Local full suites: **333 passed/core HA2026.10.3/current2026.10.4,89% coverage,
+  zero skips**, two unchanged pinned upstream HACS warnings. Current stable.4 rechecked
+  PyPI30October. **17 locked browser regressions** pass, including EN/DA activation
+  transition. Ruff and official hassfest1valid/0invalid pass. Tests execute immutable
+  released beta8 migration in addition to beta1–7. All9 engine/API/persistence/math/
+  source/scheduler files are byte-identical published beta8.
+- Native disposable HA.4 baseline8→9: all6 old configs/168 original entity IDs and
+  all4 logical ledgers unchanged. Added a synthetic seventh first-activation site.
+  Actual native Done closes Options to integration; desktop/mobile screenshots show
+  currentIncomplete0/1,nextReady1/1,tomorrowReady96/96 and exact19:45 activation.
+  Native quarter-boundary/device/cleanup/locale/restart acceptance is IN PROGRESS,
+  not yet claimed complete. Synthetic recorded public Radius/private spot fixture,
+  no owner HA access/acceptance. `/tmp/pe9-*` contains temporary evidence/harnesses.
+
+Next: finish native device UI/restart/boundary evidence, unchanged CM matrices,
+independent packages and HACS beta8→9 verification; commit evidence and exact-source
+CI. Freeze only after all mandatory gates, then publish authorized immutable beta9
+prerelease and independently verify public tag/assets/prior releases. No beta9 has
+been published yet. Only beta9 prerelease is authorized; no stable/main/production
+HA/Node-RED/physical controls. Preserve original SQLite improvement; cloud benchmarks
+cannot establish Raspberry Pi performance.
 
 ## Historical completed beta.8 checkpoint
 

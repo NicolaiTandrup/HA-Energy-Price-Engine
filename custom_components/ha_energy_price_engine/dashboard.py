@@ -21,6 +21,7 @@ from homeassistant.util import dt as dt_util
 
 from .api import ConsumerAPI
 from .const import DOMAIN
+from .device_diagnostics import availability
 from .price_engine import day_bounds
 
 CARD_URL = "/ha_energy_price_engine/energy-price-engine-card.js"
@@ -226,6 +227,10 @@ def price_schedule(coordinator, *, now=None):
         "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
         "current": _summary(lookup(current, current + timedelta(minutes=15))),
         "next": _summary(lookup(current + timedelta(minutes=15), current + timedelta(minutes=30))),
+        "availability": {
+            scope: availability(coordinator, scope, now=now)
+            for scope in ("current", "history", "tomorrow")
+        },
         "days": days,
         "dso_today": tariffs,
         "provenance": provenance,
