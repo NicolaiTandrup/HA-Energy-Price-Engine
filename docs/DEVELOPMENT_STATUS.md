@@ -130,6 +130,15 @@ Tag gate follow-up (**ci: inspect and retry immutable beta.8 dependency preparat
   gate bypassed. Next: read diagnostic evidence + require all19 latest source checks
   green, then use already-prepared publisher template (ZIP hashes09c259/d181c4).
 
+
+CI inspection transport correction (checkpoint **ci: resolve actual job ID before reading failed-run logs**):
+- Initial inspection stopped before replay/retry because the public Actions URL
+  uses a check-run identifier, not necessarily the Jobs API database identifier.
+  Resolve the authenticated original run/jobs record by exact failing target/name;
+  verify the same sole failed dependency-preparation step; fetch that actual job's
+  log if available. Log access is diagnostic only; clean pinned replay and all full
+  original source CI remain mandatory before release. Source/tag remain immutable.
+
 ## Completed beta.7 checkpoint (historical)
 
 Updated 2026-10-27 (Europe/Copenhagen). **Beta.7 published and independently verified.

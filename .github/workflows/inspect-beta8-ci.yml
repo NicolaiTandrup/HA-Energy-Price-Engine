@@ -22,20 +22,24 @@ jobs:
       - name: Inspect the failed job before any retry
         run: |
           set -euo pipefail
-          gh api "repos/$GITHUB_REPOSITORY/actions/jobs/123965561777" > "$RUNNER_TEMP/failed-job.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/jobs/123965561777/logs" > "$RUNNER_TEMP/failed-job.log"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/41026439801/jobs?filter=all" > "$RUNNER_TEMP/original-jobs.json"
           python - <<'PY'
-          import json,os,re
+          import json,os,re,subprocess
           from pathlib import Path
-          root=Path(os.environ['RUNNER_TEMP']);job=json.loads((root/'failed-job.json').read_text())
+          root=Path(os.environ['RUNNER_TEMP'])
+          jobs=json.loads((root/'original-jobs.json').read_text())['jobs']
+          job=next(j for j in jobs if j['name']=='tests (fixture-supported-ha-2026.10.3)' and j['conclusion']=='failure')
+          (root/'failed-job.json').write_text(json.dumps(job))
           assert job['run_id']==41026439801 and job['conclusion']=='failure'
           failed=[s for s in job['steps'] if s['conclusion']=='failure']
           assert len(failed)==1 and failed[0]['name']=='Prepare immutable consumer test dependencies'
-          text=(root/'failed-job.log').read_text(errors='replace')
+          result=subprocess.run(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/actions/jobs/{job["id"]}/logs'],capture_output=True)
+          text=result.stdout.decode(errors='replace') if result.returncode==0 else 'Original job log API unavailable; identified dependency failure from authenticated original job metadata. Clean reproduction below is still required.'
+          (root/'failed-job.log').write_text(text)
           text=re.sub(r'(?:ghs_|github_pat_)[A-Za-z0-9_]+','[REDACTED]',text)
           text=re.sub(r'Bearer [A-Za-z0-9._-]+','Bearer [REDACTED]',text)
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
-              f.write('## Original beta.8 tag job failed before tests\n\nFailure step: pinned consumer dependency preparation. No test or verification gate is disabled.\n\n```text\n'+ '\n'.join(text.splitlines()[-55:])+'\n```\n')
+              f.write('## Original beta.8 tag job failed before tests\n\nFailure step: pinned consumer dependency preparation. Job ID resolved from run/jobs (public check-run URL IDs are different). No test or verification gate is disabled.\n\n```text\n'+ '\n'.join(text.splitlines()[-55:])+'\n```\n')
           PY
       - name: Reproduce exact immutable preparation with verified dependencies
         run: |
