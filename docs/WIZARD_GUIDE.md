@@ -59,14 +59,14 @@ suggestions: reset those to Default, or choose 2/4, to use the standard presenta
 
 ## Device price breakdown and expected Unknown
 
-Device Diagnostics contains eight **Price breakdown** numerical sensors, always
+Device Diagnostics contains eight component diagnostic numerical sensors, always
 **øre/kWh, 2 decimals** irrespective of the main display preference. Spot, grid,
 Energinet network/system, supplier and tax are **excluding VAT**; **Applied VAT
 amount** is the actual recorded per-component VAT sum, not the VAT percentage.
 **Verified final marginal price** includes VAT once. Fixed subscriptions are excluded.
 Rounded component rows can differ by 0.01 from the rounded total.
 
-Read **Price breakdown — period** first. Normally it says Current verified quarter.
+Read **Component period** first. Normally it says Current verified quarter.
 If current pricing is unavailable but the next quarter is verified, it explicitly
 says **Next quarter — current quarter unavailable**. Each numerical entity’s details
 include exact UTC/local start/end, verification, applied source/effective metadata

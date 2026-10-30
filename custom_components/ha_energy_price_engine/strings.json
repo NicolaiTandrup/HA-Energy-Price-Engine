@@ -2259,31 +2259,31 @@
         }
       },
       "component_spot": {
-        "name": "Price breakdown — Nord Pool spot (excl. VAT)"
+        "name": "Nord Pool spot (ex VAT)"
       },
       "component_dso": {
-        "name": "Price breakdown — Radius / DSO tariff (excl. VAT)"
+        "name": "Radius / DSO tariff"
       },
       "component_energinet_net": {
-        "name": "Price breakdown — Energinet network (excl. VAT)"
+        "name": "Energinet network"
       },
       "component_energinet_system": {
-        "name": "Price breakdown — Energinet system (excl. VAT)"
+        "name": "Energinet system"
       },
       "component_supplier": {
-        "name": "Price breakdown — Supplier markup (excl. VAT)"
+        "name": "Supplier markup"
       },
       "component_electricity_tax": {
-        "name": "Price breakdown — Electricity tax (excl. VAT)"
+        "name": "Electricity tax"
       },
       "component_vat": {
-        "name": "Price breakdown — Applied VAT amount"
+        "name": "Applied VAT amount"
       },
       "component_final": {
-        "name": "Price breakdown — Verified final marginal price (incl. VAT)"
+        "name": "Verified final price"
       },
       "breakdown_period": {
-        "name": "Price breakdown — period",
+        "name": "Component period",
         "state": {
           "current_quarter": "Current verified quarter",
           "next_quarter": "Next quarter — current quarter unavailable",

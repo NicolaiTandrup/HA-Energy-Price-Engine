@@ -101,7 +101,17 @@ def verify(output, expected_commit):
             assert actual == manifest["runtime_files"], "Published ZIP differs from source payload"
     main_source = output / "public-main-source.zip"
     download(f"https://codeload.github.com/{REPOSITORY}/zip/{main_commit}", main_source)
+    prior = api(f"repos/{REPOSITORY}/releases/tags/v0.1.0-beta.8")
+    prior_asset = next(a for a in prior["assets"] if a["name"] == f"{DOMAIN}.zip")
+    prior_path = output / "previous-beta8.zip"
+    download(prior_asset["browser_download_url"], prior_path, prior_asset["id"])
+    prior_receipt = json.loads((ROOT / "docs/receipts/v0.1.0-beta.8.json").read_text())
+    expected_prior = prior_receipt.get("archive_hashes", prior_receipt.get("archive_sha256"))[
+        f"{DOMAIN}.zip"
+    ]
+    assert hashlib.sha256(prior_path.read_bytes()).hexdigest() == expected_prior
     receipt = {
+        "previous_hacs_asset": str(prior_path.resolve()),
         "main_archive": str(main_source.resolve()),
         "verified_at": datetime.now(UTC).isoformat(),
         "repository": repository,

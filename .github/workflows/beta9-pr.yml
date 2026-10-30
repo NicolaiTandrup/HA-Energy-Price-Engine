@@ -25,6 +25,8 @@ jobs:
 
           Local333 producer tests/core HA2026.10.3/current.4,89% coverage,zero skips;17 locked browser regressions;Ruff and official hassfest1valid/0invalid. Actual released beta8 migration added.9 core engine/source/SQLite/API files byte-identical beta8. First completion checkpoint passed all13 CI checks; this implementation CI pending. Native HA.4 beta8 upgrade preserves6configs/168IDs/4logical ledgers; actual Done desktop/mobile works, activation screenshot currentIncomplete0/1,nextReady1/1,tomorrowReady96/96. Remaining native device/boundary/restart and full consumer/package/public release gates are in progress. No beta9 published yet and no owner real-HA acceptance claimed.
 
+          Native follow-up shortens component labels so network/system remain distinguishable, shows exact activation time rather than HA relative time, and tests actual beta8 runtime-byte HACS update with real SQLite preservation. Native Recorder confirms the automatic19:45 boundary; final driver/locale/preferences/restart evidence and release gates are still pending. Both CM matrices passed153/176/227/228 plus2coupled/ref/core, and both clean package layouts independently installed on both cores.
+
           See docs/DEVELOPMENT_STATUS.md for exact checkpoints, commands/evidence and remaining gates. Owner authorizes beta9 prerelease only after mandatory validation; no main merge/stable/production HA/Node-RED/CM or charging changes.
           BODY
           test "$(gh pr view 14 --json isDraft --jq .isDraft)" = true

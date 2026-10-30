@@ -2259,31 +2259,31 @@
         }
       },
       "component_spot": {
-        "name": "Prisopdeling — Nord Pool spot (ekskl. moms)"
+        "name": "Nord Pool spot (ekskl. moms)"
       },
       "component_dso": {
-        "name": "Prisopdeling — Radius / nettarif (ekskl. moms)"
+        "name": "Radius / nettarif"
       },
       "component_energinet_net": {
-        "name": "Prisopdeling — Energinet net (ekskl. moms)"
+        "name": "Energinet net"
       },
       "component_energinet_system": {
-        "name": "Prisopdeling — Energinet system (ekskl. moms)"
+        "name": "Energinet system"
       },
       "component_supplier": {
-        "name": "Prisopdeling — Leverandørtillæg (ekskl. moms)"
+        "name": "Leverandørtillæg"
       },
       "component_electricity_tax": {
-        "name": "Prisopdeling — Elafgift (ekskl. moms)"
+        "name": "Elafgift"
       },
       "component_vat": {
-        "name": "Prisopdeling — Anvendt momsbeløb"
+        "name": "Anvendt momsbeløb"
       },
       "component_final": {
-        "name": "Prisopdeling — Verificeret marginalpris (inkl. moms)"
+        "name": "Verificeret slutpris"
       },
       "breakdown_period": {
-        "name": "Prisopdeling — periode",
+        "name": "Komponentperiode",
         "state": {
           "current_quarter": "Aktuelt verificerede kvarter",
           "next_quarter": "Næste kvarter — aktuelt kvarter er utilgængeligt",

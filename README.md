@@ -63,9 +63,8 @@ Earlier unknown prices remain absent.
 If Final now is Unknown while the next quarter is Ready, **Prices now — availability**
 explains activation and **Verified prices begin** shows when pricing starts. Today
 statistics need complete verified day coverage. Device Diagnostics shows eight
-**Price breakdown** amounts in øre/kWh with two decimals: spot, grid, Energinet
-network/system, supplier, tax, applied VAT and final. Check **Price breakdown —
-period**: it explicitly says Next quarter when the current quarter is unavailable.
+component diagnostic amounts in øre/kWh with two decimals: spot, grid, Energinet
+network/system, supplier, tax, applied VAT and final. Check **Component period**: it explicitly says Next quarter when the current quarter is unavailable.
 Tap a component for its actual stored source, period and revision.
 
 Technical duplicates default off on new installs. Upgrades preserve enabled entity

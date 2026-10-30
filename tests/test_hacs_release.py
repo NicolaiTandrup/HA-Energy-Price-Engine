@@ -9,7 +9,9 @@ import importlib
 import io
 import json
 import os
+import subprocess
 import zipfile
+from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
 from pathlib import Path
 from types import SimpleNamespace
@@ -229,8 +231,57 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
         repo.data.selected_tag = TAG
         assert repo.version_to_download() == TAG
         installed = tmp_path / "custom_components" / DOMAIN
+        # Exercise a real beta.8 -> beta.9 filesystem update, not only a clean
+        # installation pretending to have an older installed_version field.
+        if previous_asset := receipt.get("previous_hacs_asset"):
+            previous_bytes = Path(previous_asset).read_bytes()
+            prefix = ""
+        else:
+            previous_bytes = await hass.async_add_executor_job(
+                lambda: subprocess.check_output(
+                    [
+                        "git",
+                        "archive",
+                        "--format=zip",
+                        "cbad4e7595e7eba4080aca295bfca521f9b0409a",
+                        f"custom_components/{DOMAIN}",
+                    ],
+                    cwd=ROOT,
+                )
+            )
+            prefix = f"custom_components/{DOMAIN}/"
+        installed.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(io.BytesIO(previous_bytes)) as previous:
+            assert json.loads(previous.read(prefix + "manifest.json"))["version"] == "0.1.0-beta.8"
+            for name in previous.namelist():
+                if name.startswith(prefix) and not name.endswith("/"):
+                    target = installed / name.removeprefix(prefix)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(previous.read(name))
+        repo.data.installed_version = "v0.1.0-beta.8"
+        assert native_update.installed_version == "v0.1.0-beta.8"
+        assert native_update.latest_version == TAG
+        from custom_components.ha_energy_price_engine.configuration import tariff_for, validate_site
+        from custom_components.ha_energy_price_engine.models import PriceSlot
+        from custom_components.ha_energy_price_engine.price_engine import PriceEngine
+
+        from .test_integration import model
+
+        history_engine = PriceEngine(hass, "hacs-beta8-upgrade")
+        start = datetime(2026, 10, 29, 12, tzinfo=UTC)
+        await history_engine.async_update(
+            "hacs_history",
+            [PriceSlot(start, start + timedelta(minutes=15), -0.1)],
+            tariff_for(validate_site(model("hacs_history"))),
+            {"kind": "recorded_test", "verified_at": start.isoformat()},
+            start,
+        )
+        history = history_engine.database.path
+        assert not history.is_relative_to(installed)
+        history_before = history.read_bytes()
         for _ in range(2):
             await repo.async_download_repository(ref=TAG)
+            assert history.read_bytes() == history_before
             assert repo.data.installed and repo.data.installed_version == TAG
             expected = {
                 str(Path(p).relative_to(f"custom_components/{DOMAIN}")): body
@@ -247,6 +298,8 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
             ] == TAG.removeprefix("v")
         await repo.uninstall()
         assert not installed.exists()
+        assert history.read_bytes() == history_before
         await repo.async_download_repository(ref=TAG)
+        assert history.read_bytes() == history_before
         assert (installed / "config_flow.py").is_file()
         assert calls.count(f"https://github.com/{repository}/archive/refs/tags/{TAG}.zip") == 3

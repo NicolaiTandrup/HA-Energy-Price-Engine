@@ -36,13 +36,39 @@ CI is pending, never inferred from earlier checks.
   not yet claimed complete. Synthetic recorded public Radius/private spot fixture,
   no owner HA access/acceptance. `/tmp/pe9-*` contains temporary evidence/harnesses.
 
-Next: finish native device UI/restart/boundary evidence, unchanged CM matrices,
-independent packages and HACS beta8→9 verification; commit evidence and exact-source
-CI. Freeze only after all mandatory gates, then publish authorized immutable beta9
-prerelease and independently verify public tag/assets/prior releases. No beta9 has
-been published yet. Only beta9 prerelease is authorized; no stable/main/production
-HA/Node-RED/physical controls. Preserve original SQLite improvement; cloud benchmarks
-cannot establish Raspberry Pi performance.
+Native readability follow-up `Keep component names and exact activation time readable`:
+component names no longer share a prefix that truncates Energinet network/system
+into indistinguishable labels. Activation is a plain diagnostic local ISO timestamp
+rather than HA’s relative timestamp rendering (e.g. In6minutes). Numeric pricing
+entities retain their types/units. Actual native screenshot now shows all8 distinct
+amounts and the exact boundary. Existing unique IDs remain stable.
+
+Actual19:45 local boundary occurred automatically: HA Recorder shows current unknown
+→207.752 ore/kWh at18:45:00.201UTC; prior next-quarter value207.752, availability
+waiting_first_quarter→ready at18:45:00.194, component period next→current at
+18:45:00.094. Native subscribed observer captured waiting at18:44:56 and observed
+Ready; its arbitrary hardcoded expected-number assertion was wrong, so that driver
+run is NOT counted as a clean pass. Correct expected value is the prior next state;
+Recorder/API consistency verification and final native acceptance remain in progress.
+No engine change/backfill was made for this test harness issue.
+
+HACS regression now seeds ACTUAL released beta8 runtime bytes before real pinned HACS
+update to9, and creates a real PE SQLite history file preserved byte-for-byte through
+update/uninstall/reinstall. Public verifier will independently download beta8 asset,
+verify its original hash, then use those bytes for the same test. Focused local
+`.venv/bin/pytest tests/test_hacs_release.py tests/test_beta9_diagnostics.py -W
+error::ResourceWarning`:10passed,2unchanged HACS warnings. Both clean beta9 ZIP layouts
+installed/imported outside source on both HA cores. Unchanged four CM suites passed
+153/176/227/228/core plus2 coupled runtime cases/reference/core. New readability/HACS
+checkpoint CI and final native/evidence/release freeze gates remain pending.
+
+Next: finish native device/explicit preferences/DA/mobile/restart and Recorder/API
+boundary proof; rerun full suites with final readability changes, record source CI,
+commit evidence. Freeze only after all mandatory gates, then publish authorized
+immutable beta9 prerelease and independently verify public tag/assets/prior releases.
+No beta9 published yet. Only beta9 prerelease is authorized; no stable/main/production
+HA/Node-RED/physical controls. Preserve SQLite improvement; cloud benchmarks do not
+establish Raspberry Pi performance.
 
 ## Historical completed beta.8 checkpoint
 

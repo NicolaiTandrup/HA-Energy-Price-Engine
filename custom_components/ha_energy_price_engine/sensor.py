@@ -709,7 +709,6 @@ class AvailabilitySensor(BaseSensor):
 
 class ActivationSensor(BaseSensor):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_device_class = "timestamp"
     _attr_translation_key = "prices_start_at"
 
     def __init__(self, coordinator):
@@ -719,4 +718,18 @@ class ActivationSensor(BaseSensor):
 
     @property
     def native_value(self):
-        return dt_util.parse_datetime(self.site.get("pricing_start", ""))
+        # HA renders timestamp sensors as e.g. "In 6 minutes" on the device
+        # card. This diagnostic must show the exact activation boundary there.
+        stamp = dt_util.parse_datetime(self.site.get("pricing_start", ""))
+        return (
+            stamp.astimezone(ZoneInfo(self.site["timezone"])).isoformat(timespec="minutes")
+            if stamp
+            else None
+        )
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            "prices_start_at": self.site.get("pricing_start"),
+            "timezone": self.site["timezone"],
+        }

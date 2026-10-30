@@ -55,6 +55,9 @@ async def test_activation_boundary_native_states_restart_history_and_api(hass, f
     assert "19:15" in text and "current quarter began before" in text
     assert "next quarter is Ready" in text and "Full-day statistics require" in text
     assert hass.states.get(entity_id(hass, "display_current_ore")).state == "unknown"
+    activation_state = hass.states.get(entity_id(hass, "prices_start_at"))
+    assert activation_state.state == "2026-10-30T19:15+01:00"
+    assert "state_class" not in activation_state.attributes
     before = tuple(c.price_engine.records["home"])
     freezer.move_to("2026-10-30T18:15:00Z")
     async_fire_time_changed(hass, dt_util.utcnow())
