@@ -98,12 +98,12 @@ Review and diagnostics distinguish:
 - **Today's historical full day**: all 92/96/100 quarters, including earlier history.
 - **Tomorrow's full day**: complete published and verified coverage, when available.
 
-A site activated at 22:15 CET can correctly show **7/96 history INCOMPLETE**, current
-and next **READY**, tomorrow **96/96 READY**, and a requested 22:15–00:30 window
-**9/9 READY**. Earlier unknown quarters are intentionally not backfilled. Historical
+A site activated at 22:15 CET can correctly show **7/96 history Incomplete**, current
+and next **Ready**, tomorrow **96/96 Ready**, and a requested 22:15–00:30 window
+**9/9 Ready**. Earlier unknown quarters are intentionally not backfilled. Historical
 incompleteness does not invalidate a fully priced future window. Missing future
 quarters, failed sources/components, stale verification and provisional estimates
-still prevent READY. No future price is assumed zero.
+still prevent Ready. No future price is assumed zero.
 
 Use **Check future window**, directly from Review or Final prices. Select start and
 end; the end boundary is excluded. The picker shows the next 48 actual hours,

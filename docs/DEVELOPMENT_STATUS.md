@@ -1,74 +1,106 @@
 # Development handoff
 
-Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 active**, explicitly authorized by
-the latest owner mission, superseding the historical beta.8 STOP below. Resume
-branch `feat/beta5-simple-onboarding` from checkpoint `9bd7694231ddb92b18ef49495f2394586aa0ddd9`;
-existing draft PR14 and all prior release history remain intact. Main unchanged.
+Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 candidate complete; publication
+pending exact-source CI/tag gates.** The latest owner mission authorizes tested
+beta9 prerelease publication and supersedes the historical beta8 STOP below.
+Branch `feat/beta5-simple-onboarding`, existing draft PR14 unmerged, main unchanged
+`56cdb3c10993179371483812cbc36f651ba3ad8e`. No stable, main merge, production HA,
+Node-RED, CM source/control, Tesla/Easee or charging actions authorized.
 
-Milestone `Expose stored component diagnostics and precise price availability` builds on
-completion checkpoint **b8d4a6c776000a6e09a1fa376e3f0168a650483d**. Its13 remote
-checks (push/PR/draft updater) all passed; see `/tmp/pe9-first-ci.json`. New milestone
-CI is pending, never inferred from earlier checks.
+## Beta.9 completed implementation and validation
 
-- Eight fixed ore/kWh2 device component diagnostics read actual verified stored
-  records, applied VAT sum and source/effective/revision metadata. Current quarter
-  first; explicitly labelled next-quarter fallback. Missing stays unknown, no source
-  fetch/SQL/recomposition. Scope and first-pricing timestamp are native companions.
-- Native current/tomorrow/statistics availability distinguishes activation, loading,
-  publication, missing configuration, history gap and verification/storage/stale errors.
-  Review and existing dashboard explain activation while numeric states remain unknown.
-  Ordinary enums localize to Title Case; canonical uppercase contracts are untouched.
-- NEW canonical duplicates default disabled. Upgrades retain every enabled entity,
-  user name/hide/disable and Recorder identity. Native Technical diagnostics selection
-  explicitly enables/disables only those nine duplicates; no forced cleanup of user
-  choices. Unconfigured provisional defaults and explicit opt-in remain intact.
-- Local full suites: **333 passed/core HA2026.10.3/current2026.10.4,89% coverage,
-  zero skips**, two unchanged pinned upstream HACS warnings. Current stable.4 rechecked
-  PyPI30October. **17 locked browser regressions** pass, including EN/DA activation
-  transition. Ruff and official hassfest1valid/0invalid pass. Tests execute immutable
-  released beta8 migration in addition to beta1–7. All9 engine/API/persistence/math/
-  source/scheduler files are byte-identical published beta8.
-- Native disposable HA.4 baseline8→9: all6 old configs/168 original entity IDs and
-  all4 logical ledgers unchanged. Added a synthetic seventh first-activation site.
-  Actual native Done closes Options to integration; desktop/mobile screenshots show
-  currentIncomplete0/1,nextReady1/1,tomorrowReady96/96 and exact19:45 activation.
-  Native quarter-boundary/device/cleanup/locale/restart acceptance is IN PROGRESS,
-  not yet claimed complete. Synthetic recorded public Radius/private spot fixture,
-  no owner HA access/acceptance. `/tmp/pe9-*` contains temporary evidence/harnesses.
+- Continued published beta8, preserving its history. Native Done checkpoint
+  **b8d4a6c776000a6e09a1fa376e3f0168a650483d**, stored diagnostics
+  **8cc287d4f94e310f63e38915da4ce1c1684e8295**, native readability/actual HACS upgrade
+  **ec33fb480a5612d2047ae668702a9240733521a5**. All13 checks on each implementation
+  checkpoint passed (push/PR/draft updater); newest receipt `/tmp/pe9-readable-ci-retry.json`.
+- Visible native **Done – return to integration**, settings already saved, no extra
+  save/verification. Options closes directly to integration with CURRENT options;
+  first installation uses supported settings-saved completion, without duplicate site.
+  Row edits, Check prices and close/resume retained; unsubmitted native form typing
+  cannot be preserved without submission, as documented.
+- Eight distinct device diagnostic amounts always **ore/kWh2**: stored spot/grid/
+  Energinet network/system/supplier/tax exVAT, applied per-component VAT sum, final
+  inclVAT. Actual stored records only; current first, explicit **Component period**
+  next-quarter fallback. Full source/effective/revision attributes, no fetch/SQL/
+  tariff recomposition on reads. Short names distinguish network/system in native UI.
+- Current/tomorrow/statistics availability distinguishes activation, loading,
+  publication, missing tariff/contract, history, verification/storage/stale failures.
+  Exact local activation timestamp stays visible instead of HA relative time.
+  Numeric unknown remains unknown. Useful corrective action/raw/history retained.
+- Ordinary enums localize Title Case. Canonical API/machine states remain uppercase.
+  NEW canonical duplicates default disabled; migrated enabled choices, names/hides/
+  disables, IDs and Recorder metadata remain. **Technical diagnostics** is an explicit
+  native checkbox choice, never force-disables upgraded user-enabled entities.
+  Unused provisional defaults/explicit opt-ins retained, never authoritative.
+- All9 engine/API/coordinator/SQLite/schedule/updater/source/component-math files
+  byte-identical released beta8. Original CM11/12 attribution, full DKK precision,
+  dated tariffs/contracts/VAT, revisions and13:05/13:20/13:40/23:59/00:01 retained.
+  No future EWII inference; historical0.030DKKexVAT only June–September2026.
+- **333 producer tests/core HA2026.10.3/current2026.10.4,89% coverage,zero skips**;
+  two unchanged pinned upstream HACS warnings. Current stable.4 rechecked PyPI30Oct.
+  **17 locked browser regressions** including EN/DA activation; Ruff and official
+  hassfest1valid/0invalid. Actual released beta1–8 SQLite/config migrations execute.
+- Four unchanged CM suites **153/176/227/228 per core**, plus2 coupled runtime cases/
+  reference/core. Both native ZIP layouts install/import outside source on both cores.
+  Actual pinned HACS2.0.5/upstream tests now seed real released beta8 runtime files
+  before update to9 and preserve a real PE SQLite file through update/uninstall/reinstall.
+  Public verification will independently download/hash original beta8 asset first.
+- Native disposable HA.4/frontend20260930.5, EN/en-GB/DA, desktop1440x1000/mobile390x844:
+  Done/close/reopen, all8 distinct amounts/VAT/source, next/current period, exact time,
+  diagnostic preferences, unused provisional defaults, Title Case all passed; no
+  browser errors/warnings. Provider counters unchanged on reads. Existing dashboard
+  still has both192-point graphs/all192 rows/four DSO ranges, live revisions, source/
+  future inspection, unpublished/missing/partial/gap/provisional cases.
+- Clean fresh first-activation native run observed **20:00CET on the actual unpatched
+  HA clock**: current unknown/Incomplete0/1,nextReady1/1,tomorrowReady96/96, explicit
+  next components; at20:00 current equals exact prior next, availabilityReady and
+  current components, historical day remainsIncomplete. SQL first row19:00UTC;
+ 112rows, no backfill. Earlier19:45 automatic transition also verified from Recorder.
+  One earlier observer guessed an incorrect expected literal; fresh20:00 test uses
+  actual prior-next data and passed cleanly. No test waived or engine changed.
+- Native beta8 upgrade preserves **6configs/168original IDs/4logical ledgers**.
+  Subsequent restart preserves **7existing configs/287IDs/5logical ledgers** while
+  adding an eighth synthetic boundary site (328IDs/6ledgers). All **14 original
+  Recorder statistic/unit identities** preserved. Native8 component values/source/
+  revision match exact compressed SQLite records, including actual VAT amount.
+- **27 actual native screenshots** + hashes, data, core-file identities and checkpoint
+  CI in `docs/receipts/v0.1.0-beta.9-simulation.json`. Copies outside source at
+  `/workspace/pe9-evidence`; harness/proofs `/tmp/pe9-*`. Browser plugin unavailable;
+  locked Playwright/system Chromium used. All provider/private rates in QA are
+  recorded/synthetic, not owner contracts or real-HA acceptance. Cloud benchmarks
+  do not establish Raspberry Pi performance; SQLite improvement unchanged.
 
-Native readability follow-up `Keep component names and exact activation time readable`:
-component names no longer share a prefix that truncates Energinet network/system
-into indistinguishable labels. Activation is a plain diagnostic local ISO timestamp
-rather than HA’s relative timestamp rendering (e.g. In6minutes). Numeric pricing
-entities retain their types/units. Actual native screenshot now shows all8 distinct
-amounts and the exact boundary. Existing unique IDs remain stable.
+Exact current commands (substitute `.venv-ha-current` for other core):
 
-Actual19:45 local boundary occurred automatically: HA Recorder shows current unknown
-→207.752 ore/kWh at18:45:00.201UTC; prior next-quarter value207.752, availability
-waiting_first_quarter→ready at18:45:00.194, component period next→current at
-18:45:00.094. Native subscribed observer captured waiting at18:44:56 and observed
-Ready; its arbitrary hardcoded expected-number assertion was wrong, so that driver
-run is NOT counted as a clean pass. Correct expected value is the prior next state;
-Recorder/API consistency verification and final native acceptance remain in progress.
-No engine change/backfill was made for this test harness issue.
+```sh
+.venv/bin/pytest --cov=custom_components.ha_energy_price_engine --cov-report=term-missing -W error::ResourceWarning
+.venv/bin/ruff check custom_components tests tools
+.venv/bin/ruff format --check custom_components tests tools
+.venv/bin/python tools/test_two_runtime.py --consumer pr15
+.venv/bin/python tools/run_consumer_suite.py --consumer pr15
+# Repeat both for pr16,pr25,pr26 on BOTH cores.
+PE_FRONTEND_FIXTURES=/tmp/pe9-front-data .venv/bin/pytest tests/test_beta8_dashboard.py tests/test_beta9_diagnostics.py -W error::ResourceWarning
+PE_FRONTEND_FIXTURES=/tmp/pe9-front-data PE_PLAYWRIGHT_MODULE=/tmp/pe8-npm/_npx/e41f203b7505f1fb/node_modules/playwright/index.mjs PE_CHROMIUM=/usr/bin/chromium node --test tests/frontend/dashboard.test.mjs
+env -u DOCKER_HOST -u DOCKER_CONTEXT -u DOCKER_TLS -u DOCKER_TLS_VERIFY -u DOCKER_CERT_PATH docker --host=unix:///var/run/docker.sock run --rm -v /workspace/HA-Energy-Price-Engine:/github/workspace ghcr.io/home-assistant/hassfest:latest
+.venv/bin/python tools/build_beta.py
+.venv/bin/python tools/smoke_install_package.py dist/ha_energy_price_engine.zip
+.venv/bin/python tools/smoke_install_package.py dist/ha_energy_price_engine-manual.zip
+```
 
-HACS regression now seeds ACTUAL released beta8 runtime bytes before real pinned HACS
-update to9, and creates a real PE SQLite history file preserved byte-for-byte through
-update/uninstall/reinstall. Public verifier will independently download beta8 asset,
-verify its original hash, then use those bytes for the same test. Focused local
-`.venv/bin/pytest tests/test_hacs_release.py tests/test_beta9_diagnostics.py -W
-error::ResourceWarning`:10passed,2unchanged HACS warnings. Both clean beta9 ZIP layouts
-installed/imported outside source on both HA cores. Unchanged four CM suites passed
-153/176/227/228/core plus2 coupled runtime cases/reference/core. New readability/HACS
-checkpoint CI and final native/evidence/release freeze gates remain pending.
+## Next action: exact-source release integrity
 
-Next: finish native device/explicit preferences/DA/mobile/restart and Recorder/API
-boundary proof; rerun full suites with final readability changes, record source CI,
-commit evidence. Freeze only after all mandatory gates, then publish authorized
-immutable beta9 prerelease and independently verify public tag/assets/prior releases.
-No beta9 published yet. Only beta9 prerelease is authorized; no stable/main/production
-HA/Node-RED/physical controls. Preserve SQLite improvement; cloud benchmarks do not
-establish Raspberry Pi performance.
+Checkpoint subject **Freeze validated beta.9 candidate and native acceptance evidence**
+identifies the clean source to pin. Build/check both layouts again at that exact SHA;
+wait for all13 push/PR/draft checks. Create new annotated immutable beta9 tag only,
+wait for all19 exact-source checks including tag CI, then execute pinned authorized
+publisher. Do not move/overwrite any tag or asset. Independently verify public
+metadata/tag/main/assets, actual beta8→9 HACS2.0.5/upstream and both native layouts on
+both cores, semantic beta8→9/current9/stable channels and all prior releases1–8.
+Commit verification receipt, update PR14 and this handoff, stop after verified9.
+No beta9 release published yet. Public GitHub checks HTML briefly returned502;
+normal retry succeeded, no proxy/TLS/policy bypass. API domain is blocked locally;
+use authorized GitHub Actions as in previous releases. No owner acceptance claimed.
 
 ## Historical completed beta.8 checkpoint
 

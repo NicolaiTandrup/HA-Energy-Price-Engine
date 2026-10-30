@@ -1,4 +1,4 @@
-# Price dashboard (beta.8)
+# Price dashboard (beta.9)
 
 The bundled Energy Price Engine card shows both complete local days as 15-minute
 series: **Nord Pool spot excluding VAT/charges** and **verified final electricity
@@ -121,7 +121,7 @@ No HA/HACS/frontend monkeypatch, external JS/CDN or extra database is used.
 ## Troubleshooting
 
 - **Custom element doesn't exist:** check the module URL/type in Resources, confirm
-  beta.8 is installed, then reload/clear the app frontend cache. Do not add the
+  beta.9 is installed, then reload/clear the app frontend cache. Do not add the
   integration repository as a HACS frontend repository.
 - **Select an entity of a loaded site:** copy an actual PE sensor ID, load/repair
   that integration entry and verify the logged-in user can read the sensor.

@@ -41,6 +41,22 @@ The smaller HACS-layout ZIP contains the integration files at its root; extract 
 inside `custom_components/ha_energy_price_engine`, not over the configuration root.
 Verify downloaded assets against SHA256SUMS before manual installation.
 
+## Existing sites and beta.9 diagnostics
+
+Keep your existing entries. Beta.8 source references, site IDs, dated rules/manual
+rates, SQLite revisions and existing entities are retained. **Configure → Done –
+return to integration** closes the saved review. On the device, inspect **Component
+period**, eight individual numerical components, availability and the exact first
+verified timestamp. New technical/unused estimate entities default off.
+
+Previously enabled canonical entities remain enabled to preserve your choices.
+For a cleaner existing device, open **Configure → Technical diagnostics**, keep
+anything used by your automations/Recorder, deselect unused technical duplicates
+and submit. This explicit selection does not stop the engine or CM API. Old IDs
+and recorded history remain available; disabled rows stop recording new samples.
+The ordinary status entities display localized Ready/Incomplete/Stale/Error;
+advanced canonical machine enums retain their original uppercase states.
+
 ## Why a HACS card could show a commit hash
 
 In HACS 2.0.5/current pinned upstream, an installed beta does not itself enable

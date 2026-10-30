@@ -8,17 +8,17 @@ CI, package hashes and simulation screenshots are in the release receipt and
 
 ## Software release gates
 
-Beta.9-specific evidence is pending final validation; retained checks below also
-cover the preserved beta.8 capabilities. The permanent handoff identifies each
-completed run exactly.
+Beta.9 evidence is recorded in the native simulation receipt and permanent handoff.
+Software evidence uses disposable HA with synthetic/recorded sources; owner
+acceptance remains separate. Publication verification is recorded after publishing.
 
-- [ ] Native Done action, saved settings on close/reopen, no second Save/check.
-- [ ] Real native desktop/mobile activation wait, first-quarter transition, and
+- [x] Native Done action, saved settings on close/reopen, no second Save/check.
+- [x] Real native desktop/mobile activation wait, first-quarter transition, and
   today-incomplete/tomorrow-Ready without backfill.
-- [ ] Eight stored component diagnostic amounts, mixed VAT correctness, explicit
+- [x] Eight stored component diagnostic amounts, mixed VAT correctness, explicit
   next-quarter period, source/revision details and ordinary localized statuses.
-- [ ] Beta.8 upgrade/restart preserves config, all old IDs, user choices and ledgers.
-- [ ] New technical/unused provisional defaults off; explicit native opt-in/out.
+- [x] Beta.8 upgrade/restart preserves config, all old IDs, user choices and ledgers.
+- [x] New technical/unused provisional defaults off; explicit native opt-in/out.
 
 - [x] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
 - [x] Unchanged consumer API suites and both actual runtime startup orders.
@@ -39,7 +39,7 @@ completed run exactly.
 - [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
   and independent post-publication installation verification.
 
-Publication software receipt: [beta.8 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.9.json).
+Publication software receipt: [beta.9 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.9.json).
 All software gates passed, including19 exact-source checks and fresh independent
 public verification on both cores. All16 verification/orchestration jobs passed.
 Published assets were not replaced during verification.
@@ -68,6 +68,13 @@ All owner acceptance items below remain unchecked.
   simultaneously running a legacy broker. Compare recorded legacy data offline.
 - [ ] Confirm your real grid class, VAT and current supplier contract from a bill.
   Do not reuse historical household EWII terms for current or other sites.
+- [ ] Use **Done – return to integration** to finish. Reopen without losing submitted
+  settings. Confirm the eight component amounts, source details and **Component
+  period** on your device. During activation, Final now remains Unknown, availability
+  explains why, and **Verified prices begin** shows the exact timestamp. Verify
+  current becomes Ready at that timestamp while earlier history stays Incomplete.
+- [ ] On existing sites, use **Technical diagnostics** only to disable canonical
+  duplicates you do not use in automations or Recorder. Retain intentional opt-ins.
 - [ ] Complete the three-stage setup unaided in your chosen EN/DA interface language.
   Confirm each accepted step is Saved, close/reopen resumes, and numerical Review
   needs no final commit. Enter a fractional markup such as 0.25/0.50/0.75/3.125 øre with a point/comma,

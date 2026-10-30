@@ -1,0 +1,866 @@
+{
+  "schema": 1,
+  "target": "v0.1.0-beta.9",
+  "verified_at": "2026-10-30T19:02:22.775480+00:00",
+  "synthetic": true,
+  "owner_acceptance": false,
+  "native_ha": "2026.10.4",
+  "frontend": "20260930.5",
+  "browser": "Playwright1.64.1 with system Chromium; Browser plugin unavailable",
+  "viewports": {
+    "desktop": [
+      1440,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ]
+  },
+  "locales": [
+    "en",
+    "en-GB",
+    "da"
+  ],
+  "setup_finish": {
+    "explicit": true,
+    "closes_to_integration": true,
+    "close_reopen_saved": true
+  },
+  "new_site_boundary": {
+    "before": {
+      "sensor.qa_boundary_prices_now_availability": "waiting_first_quarter",
+      "sensor.qa_boundary_component_period": "next_quarter",
+      "sensor.qa_boundary_final_now_incl_vat": "unknown",
+      "sensor.qa_boundary_final_next_quarter_incl_vat": "179.5625"
+    },
+    "after": {
+      "sensor.qa_boundary_todays_full_day_history": "incomplete",
+      "sensor.qa_boundary_tomorrows_full_day_coverage": "ready",
+      "sensor.qa_boundary_prices_now_availability": "ready",
+      "sensor.qa_boundary_component_period": "current_quarter",
+      "sensor.qa_boundary_final_now_incl_vat": "179.5625",
+      "sensor.qa_boundary_final_next_quarter_incl_vat": "160.105125"
+    },
+    "transition": {
+      "automatic": true,
+      "observed_at": "2026-10-30T19:00:00.798Z",
+      "current": {
+        "entity_id": "sensor.qa_boundary_final_now_incl_vat",
+        "state": "179.5625",
+        "attributes": {
+          "site_id": "qa_boundary",
+          "api_version": 1,
+          "stored_and_api_unit": "DKK/kWh",
+          "vat_included": true,
+          "verification": "verified_only",
+          "eligible_for_control": false,
+          "presentation_only": true,
+          "unit_of_measurement": "øre/kWh",
+          "friendly_name": "QA Boundary Final now (incl. VAT)"
+        },
+        "last_changed": "2026-10-30T19:00:00.185850+00:00",
+        "last_reported": "2026-10-30T19:00:00.185850+00:00",
+        "last_updated": "2026-10-30T19:00:00.185850+00:00",
+        "context": {
+          "id": "01M672XS1S6R08EXGV5D9ME8SA",
+          "parent_id": null,
+          "user_id": null
+        }
+      },
+      "period": {
+        "entity_id": "sensor.qa_boundary_component_period",
+        "state": "current_quarter",
+        "attributes": {
+          "options": [
+            "current_quarter",
+            "next_quarter",
+            "unavailable"
+          ],
+          "period": "current_quarter",
+          "verification": "verified",
+          "current_quarter_status": "READY",
+          "next_quarter_status": "READY",
+          "start": "2026-10-30T19:00:00+00:00",
+          "end": "2026-10-30T19:15:00+00:00",
+          "local_start": "2026-10-30T20:00+01:00",
+          "local_end": "2026-10-30T20:15+01:00",
+          "revision": 1,
+          "calculated_at": "2026-10-30T18:56:04.325563+00:00",
+          "device_class": "enum",
+          "friendly_name": "QA Boundary Component period"
+        },
+        "last_changed": "2026-10-30T19:00:00.156884+00:00",
+        "last_reported": "2026-10-30T19:00:00.156884+00:00",
+        "last_updated": "2026-10-30T19:00:00.156884+00:00",
+        "context": {
+          "id": "01M672XS0WKHMKFWV75ACF9GHC",
+          "parent_id": null,
+          "user_id": null
+        }
+      },
+      "history_remains_incomplete": true,
+      "tomorrow_ready": true
+    },
+    "first_stored_interval": "2026-10-30T19:00:00+00:00",
+    "stored_rows": 112,
+    "no_backfill": true,
+    "current_equals_exact_prior_next": true
+  },
+  "earlier_automatic_recorder_boundary": {
+    "synthetic": true,
+    "owner_acceptance": false,
+    "actual_unpatched_HA_clock": true,
+    "local_boundary": "2026-10-30T19:45:00+01:00",
+    "before": {
+      "current": {
+        "state": "unknown",
+        "at": "2026-10-30T18:42:07.758887+00:00"
+      },
+      "next": {
+        "state": "207.752",
+        "at": "2026-10-30T18:42:07.940301+00:00"
+      },
+      "availability": {
+        "state": "waiting_first_quarter",
+        "at": "2026-10-30T18:42:07.937502+00:00"
+      },
+      "period": {
+        "state": "next_quarter",
+        "at": "2026-10-30T18:42:07.938117+00:00"
+      },
+      "history": {
+        "state": "incomplete",
+        "at": "2026-10-30T18:42:07.936969+00:00"
+      },
+      "tomorrow": {
+        "state": "ready",
+        "at": "2026-10-30T18:42:07.937163+00:00"
+      }
+    },
+    "after": {
+      "current": {
+        "state": "207.752",
+        "at": "2026-10-30T18:45:00.201406+00:00"
+      },
+      "next": {
+        "state": "179.5625",
+        "at": "2026-10-30T18:45:00.293318+00:00"
+      },
+      "availability": {
+        "state": "ready",
+        "at": "2026-10-30T18:45:00.194855+00:00"
+      },
+      "period": {
+        "state": "current_quarter",
+        "at": "2026-10-30T18:45:00.093733+00:00"
+      },
+      "history": {
+        "state": "incomplete",
+        "at": "2026-10-30T18:45:00.442120+00:00"
+      },
+      "tomorrow": {
+        "state": "ready",
+        "at": "2026-10-30T18:42:07.937163+00:00"
+      }
+    },
+    "comparison": "Current equals the exact prior next value, not a guessed literal",
+    "engine_unchanged": true
+  },
+  "components_compared_to_actual_sqlite": [
+    {
+      "component": "spot",
+      "value_ore_per_kwh": 35.2927,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "ex_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {
+        "id": "spot"
+      },
+      "revision": 1
+    },
+    {
+      "component": "dso",
+      "value_ore_per_kwh": 95.5573,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "ex_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {
+        "id": "dso"
+      },
+      "revision": 1
+    },
+    {
+      "component": "energinet_net",
+      "value_ore_per_kwh": 4.3,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "ex_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {
+        "eligibility": "all",
+        "hours": [],
+        "id": "energinet_net",
+        "locked": false,
+        "source": "Rate specified by owner: Manager issue #8",
+        "unit": "DKK/kWh",
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-01-01",
+        "verified_on": "2026-10-23"
+      },
+      "revision": 1
+    },
+    {
+      "component": "energinet_system",
+      "value_ore_per_kwh": 7.2,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "ex_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {
+        "eligibility": "all",
+        "hours": [],
+        "id": "energinet_system",
+        "locked": false,
+        "source": "Rate specified by owner: Manager issue #8",
+        "unit": "DKK/kWh",
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-01-01",
+        "verified_on": "2026-10-23"
+      },
+      "revision": 1
+    },
+    {
+      "component": "supplier",
+      "value_ore_per_kwh": 0.5,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "ex_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {
+        "eligibility": "all",
+        "hours": [],
+        "id": "supplier",
+        "locked": true,
+        "source": "Fictional QA supplier only",
+        "unit": "DKK/kWh",
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-01-01",
+        "verified_on": "2026-10-30"
+      },
+      "revision": 1
+    },
+    {
+      "component": "electricity_tax",
+      "value_ore_per_kwh": 0.8,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "ex_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {
+        "eligibility": "all",
+        "hours": [],
+        "id": "electricity_tax",
+        "locked": false,
+        "source": "Rate specified by owner: Manager issue #8",
+        "unit": "DKK/kWh",
+        "valid_from": "2026-01-01",
+        "valid_to": "2028-01-01",
+        "verified_on": "2026-10-23"
+      },
+      "revision": 1
+    },
+    {
+      "component": "vat",
+      "value_ore_per_kwh": 35.9125,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "applied_vat_amount",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {},
+      "revision": 1
+    },
+    {
+      "component": "final",
+      "value_ore_per_kwh": 179.5625,
+      "scope": "next_quarter",
+      "start": "2026-10-30T19:00:00+00:00",
+      "end": "2026-10-30T19:15:00+00:00",
+      "verification": "verified",
+      "vat_basis": "incl_vat",
+      "source": {
+        "area": "DK2",
+        "config_entry": "qa-np-boundary",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-30T18:56:04.325563+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-30T18:56:04.325563+00:00"
+      },
+      "applied_component": {},
+      "revision": 1
+    }
+  ],
+  "component_vat_arithmetic": true,
+  "technical_preferences": {
+    "new_defaults_off": true,
+    "upgraded_enabled_preserved": true,
+    "explicit_native_checkbox_selection": true,
+    "original_entity_ids_preserved": true
+  },
+  "upgrade_beta8": {
+    "original_sites": 6,
+    "original_entity_ids": 168,
+    "original_logical_ledgers": 4,
+    "configs_entities_ledgers_preserved": true
+  },
+  "restart": {
+    "existing_configs_preserved": true,
+    "existing_entity_ids_preserved": true,
+    "existing_logical_ledgers_preserved": true,
+    "before_counts": [
+      7,
+      287,
+      5
+    ],
+    "after_counts": [
+      8,
+      328,
+      6
+    ]
+  },
+  "recorder_unit_identities_preserved": 14,
+  "provider_counters_before_reads": {
+    "spot": 16,
+    "grid": 15,
+    "delta": 400
+  },
+  "provider_counters_after_reads": {
+    "spot": 16,
+    "grid": 15,
+    "delta": 400
+  },
+  "frontend_errors": [],
+  "frontend_warnings": [],
+  "dashboard_regression": {
+    "scenarios": [
+      "home",
+      "qa_unpublished",
+      "qa_missing",
+      "qa_partial",
+      "qa_gap",
+      "qa_provisional"
+    ],
+    "graphs_and_table_rows": 192,
+    "today_dso_ranges": 4,
+    "source_read_counters_unchanged": true,
+    "automatic_source_revision": {
+      "before": 5,
+      "after": 6,
+      "today_preserved": true,
+      "automatic_state_update": true
+    },
+    "errors": [],
+    "warnings": []
+  },
+  "local_validation": {
+    "producer_per_core": 333,
+    "cores": [
+      "2026.10.3",
+      "2026.10.4"
+    ],
+    "coverage_percent": 89,
+    "skips": 0,
+    "upstream_hacs_warnings": 2,
+    "browser_regressions": 17,
+    "consumer_per_core": {
+      "pr15": 153,
+      "pr16": 176,
+      "pr25": 227,
+      "pr26": 228
+    },
+    "coupled_runtime_per_reference_per_core": 2,
+    "hassfest_invalid": 0,
+    "both_native_zip_layouts_outside_source": true,
+    "hacs_actual_beta8_runtime_update_and_sqlite_preservation": true
+  },
+  "runtime_identical_to_released_beta8": {
+    "custom_components/ha_energy_price_engine/api.py": "01a16de472155d1dbe13af2b01ebd0a2b1c34ba5cdc7a8b9f0a5381643b0d425",
+    "custom_components/ha_energy_price_engine/coordinator.py": "71153be367ebafd23cfcbf53b639e8fc269acbb20103363f94de186e632b9028",
+    "custom_components/ha_energy_price_engine/ledger.py": "3fb161f450aa0e329e386c99e8498c7624f502415a0673edaaee98d76bf8acf4",
+    "custom_components/ha_energy_price_engine/price_engine.py": "3842c6d21f579b5dd25141ac66649b5f4d7ee19a5220cde57722171e5bb87ff2",
+    "custom_components/ha_energy_price_engine/price_schedule.py": "d924fa4e6cfa67813220443b8b4e8d928148319116a38096981e86029c456918",
+    "custom_components/ha_energy_price_engine/price_update.py": "ceb3955c0b96f743cc22a90d76ce6cd0868d4c53836afb2755a2fcbd9ec3610d",
+    "custom_components/ha_energy_price_engine/tariff_source.py": "dfdf30b8da837403da51998f2dc61c2cd8c940702404672af29254054fba73e5",
+    "custom_components/ha_energy_price_engine/prices.py": "fe5fdc82bc47d7d6404727a1d9ba53cf9c1a03b58f031019a467c6888fe1a21d",
+    "custom_components/ha_energy_price_engine/price_components.py": "d87fe36b36162f4d37af3da5c311879d03ef44c994071932e9854988c4ab31b9"
+  },
+  "runtime_checkpoint": "ec33fb480a5612d2047ae668702a9240733521a5",
+  "checkpoint_ci": {
+    "source": "ec33fb480a5612d2047ae668702a9240733521a5",
+    "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/commit/ec33fb480a5612d2047ae668702a9240733521a5/checks",
+    "jobs": [
+      {
+        "name": "tests (fixture-supported-ha-2026.10.3)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109872766/job/124249210801"
+      },
+      {
+        "name": "tests (current-ha-2026.10.4)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109872766/job/124249211326"
+      },
+      {
+        "name": "dashboard browser desktop and mobile",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109872766/job/124249211166"
+      },
+      {
+        "name": "hassfest",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109872461/job/124249209592"
+      },
+      {
+        "name": "hacs",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109872461/job/124249210007"
+      },
+      {
+        "name": "independent beta install",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109872462/job/124249209704"
+      },
+      {
+        "name": "hassfest",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864934/job/124249185360"
+      },
+      {
+        "name": "hacs",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864934/job/124249185471"
+      },
+      {
+        "name": "draft",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864816/job/124249184755"
+      },
+      {
+        "name": "independent beta install",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864625/job/124249184403"
+      },
+      {
+        "name": "tests (fixture-supported-ha-2026.10.3)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864508/job/124249184577"
+      },
+      {
+        "name": "tests (current-ha-2026.10.4)",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864508/job/124249184626"
+      },
+      {
+        "name": "dashboard browser desktop and mobile",
+        "status": "This job succeeded",
+        "url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41109864508/job/124249184369"
+      }
+    ]
+  },
+  "screenshots": [
+    {
+      "name": "pe9-boundary-setup-done-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-setup-done-desktop.png",
+      "sha256": "5c8924093896f6d427144e8700eed9221c188cf5ccafc217fab12a757911da71",
+      "bytes": 137153
+    },
+    {
+      "name": "pe9-boundary-setup-done-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-setup-done-mobile.png",
+      "sha256": "f3fc9212f8241efc4f3ff655cf49165fb5c9c0e99d4282a650cac1052ebfc504",
+      "bytes": 66479
+    },
+    {
+      "name": "pe9-boundary-diagnostics-next-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-next-desktop.png",
+      "sha256": "61921021a3119fb28bde95bdf83435a2291ec9d3081d6390d885f1be08e26caf",
+      "bytes": 111302
+    },
+    {
+      "name": "pe9-boundary-diagnostics-next-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-next-mobile.png",
+      "sha256": "ba7b5e0c2bad83f7248aba06e8ed703a2f11c52bd23a8e077d17df3dfe5e9a8c",
+      "bytes": 47800
+    },
+    {
+      "name": "pe9-boundary-diagnostics-next-bottom-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-next-bottom-mobile.png",
+      "sha256": "1e1d0249235887e34a6803ae1fbd111410fd4697f00098a960618454708728b1",
+      "bytes": 53611
+    },
+    {
+      "name": "pe9-boundary-vat-details-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-vat-details-mobile.png",
+      "sha256": "1138ae5b5c541ff0bd41815e7995f96edc4658356fc80e2227d4995db88f657a",
+      "bytes": 23709
+    },
+    {
+      "name": "pe9-boundary-diagnostics-next-da-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-next-da-mobile.png",
+      "sha256": "581ebd2651fb72b04ac4b070e0c529cc862f3fb7899b4b46791be6062312537e",
+      "bytes": 48957
+    },
+    {
+      "name": "pe9-boundary-diagnostics-next-da-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-next-da-desktop.png",
+      "sha256": "df3bd1b80d65c5cccb12ca0c707117e31cdbe7e9341f25bba92bc33faa0ac891",
+      "bytes": 113821
+    },
+    {
+      "name": "pe9-boundary-technical-form-initial.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-technical-form-initial.png",
+      "sha256": "f2889965f1348e52a061bb16694ee4edef98338217463537e364ad8301287d91",
+      "bytes": 134591
+    },
+    {
+      "name": "pe9-boundary-native-technical-preferences.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-native-technical-preferences.png",
+      "sha256": "f2889965f1348e52a061bb16694ee4edef98338217463537e364ad8301287d91",
+      "bytes": 134591
+    },
+    {
+      "name": "pe9-boundary-diagnostics-current-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-current-mobile.png",
+      "sha256": "65262bdf04308b2c443e49fa9e5d14ca714344b14a0b6f0d04aad50a0bfb44be",
+      "bytes": 48363
+    },
+    {
+      "name": "pe9-boundary-diagnostics-current-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-boundary-diagnostics-current-desktop.png",
+      "sha256": "5cc5d9544b524b2565d4783add6a3742c583e15fed8c154bc23cbbb09ee418aa",
+      "bytes": 110612
+    },
+    {
+      "name": "pe9-regression-graphs-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-graphs-desktop.png",
+      "sha256": "a6d256e34b8d8b3ea3c9f68c49a00520cee6fdb457f113090e8084466977352b",
+      "bytes": 105521
+    },
+    {
+      "name": "pe9-regression-tariffs-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-tariffs-desktop.png",
+      "sha256": "eab473340eab06e72628c086039277ae0d497e96874523f8ddcc344ffaeae825",
+      "bytes": 39889
+    },
+    {
+      "name": "pe9-regression-quarters-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-quarters-desktop.png",
+      "sha256": "853b5456429c1bbe542dfd9f4e69583b001be99ca96a26d93a4f0d6749de9a7b",
+      "bytes": 73238
+    },
+    {
+      "name": "pe9-regression-components-future-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-components-future-desktop.png",
+      "sha256": "a08326aff8ca65ae1d1ec1c19e97c65105a11d70f91b544c9f699fdbe83e8e0a",
+      "bytes": 90711
+    },
+    {
+      "name": "pe9-regression-raw-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-raw-mobile.png",
+      "sha256": "67c2f238fe0360689ac022f42d8797ad3cf22e9d57c906c53d2a89a27444f806",
+      "bytes": 13338
+    },
+    {
+      "name": "pe9-regression-final-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-final-mobile.png",
+      "sha256": "83961715bbd382c14c1d2ef6769b2e203fc6f2d33302ed6fd09665d6cf121cdd",
+      "bytes": 13814
+    },
+    {
+      "name": "pe9-regression-tariffs-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-tariffs-mobile.png",
+      "sha256": "11f9e8659ab8f11061215fd419dd6489a1bfa99a2575ff9a8131480b52669217",
+      "bytes": 20432
+    },
+    {
+      "name": "pe9-regression-quarters-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-quarters-mobile.png",
+      "sha256": "5cd614c77ab05420528723194850e996987c1f637d7c1bd440e1acdcc1d496fa",
+      "bytes": 42784
+    },
+    {
+      "name": "pe9-regression-unpublished-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-unpublished-mobile.png",
+      "sha256": "d7aa70fd7eb30f40758885783f5aa32a9112ae7ce90f065757adf8475e9ccd15",
+      "bytes": 47130
+    },
+    {
+      "name": "pe9-regression-missing-components-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-missing-components-mobile.png",
+      "sha256": "2b56698d3e85d31b596f741e78c262323f9a7c36c4217b3aca2a9429b04f3df6",
+      "bytes": 59177
+    },
+    {
+      "name": "pe9-regression-graphs-da-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-graphs-da-mobile.png",
+      "sha256": "329d0fbc898284e66886dc5e4e23a9cb8ac9d13fe2a82ddb72fd07b9e3eb388f",
+      "bytes": 37657
+    },
+    {
+      "name": "pe9-regression-graphs-da-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-graphs-da-desktop.png",
+      "sha256": "accd99c42675e78e1cdab7858a7a29679e5419c16d730fa91f782a0243be7645",
+      "bytes": 100980
+    },
+    {
+      "name": "pe9-regression-device-da-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-device-da-desktop.png",
+      "sha256": "1bf62d1821f1a69dc39e0719b0dd4c480e0475ff647acba4e3bf348ff6079479",
+      "bytes": 121379
+    },
+    {
+      "name": "pe9-regression-device-da-mobile.png",
+      "local_path": "/workspace/pe9-evidence/pe9-regression-device-da-mobile.png",
+      "sha256": "701166ec0119da674efee9e5060a661a15989324f8a4b95d741ac275ca229fc9",
+      "bytes": 51017
+    },
+    {
+      "name": "pe9-diagnostics-next-desktop.png",
+      "local_path": "/workspace/pe9-evidence/pe9-diagnostics-next-desktop.png",
+      "sha256": "2695202a80a4bf85bc34140e8836dbfc21b01f7689e6a579bb58b10c3cdba0fa",
+      "bytes": 83025
+    }
+  ],
+  "limits": [
+    "Disposable recorded/synthetic software evidence is not owner real-HA acceptance.",
+    "Current-quarter unavailable values are numeric unknown; provisional never authoritative.",
+    "Existing enabled canonical machine diagnostics are preserved; cleanup is an explicit user selection.",
+    "Device components are ex VAT except applied VAT amount and final incl VAT; all-in sources cannot reveal unknown splits.",
+    "Cloud benchmarks do not establish Raspberry Pi performance."
+  ],
+  "production_controls_touched": false
+}
