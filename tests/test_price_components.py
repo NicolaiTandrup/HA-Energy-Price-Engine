@@ -1,104 +1,104 @@
-"""Dated public rates, contract markup, per-component VAT and eligibility."""
+"""One marginal formula: bounded public rates, manual overrides and VAT exactly once."""
 
 from copy import deepcopy
 from datetime import UTC, datetime, timedelta
 
 import pytest
 
+from custom_components.ha_energy_price_engine.configuration import (
+    current_rate,
+    tariff_for,
+    validate_site,
+)
 from custom_components.ha_energy_price_engine.models import PriceSlot
 from custom_components.ha_energy_price_engine.price_components import (
     compose_dated,
     danish_public_components,
 )
 
-
-def rule(name, amount, **changes):
-    return {
-        "id": name,
-        "amount": amount,
-        "unit": "ore/kWh",
-        "vat_included": False,
-        "vat_rate": 0.25,
-        "valid_from": "2026-01-01",
-        "valid_to": "2027-01-01",
-        "source": "Verified test contract",
-        "verified_on": "2026-10-23",
-        **changes,
-    }
-
-
-def tariff():
-    return {
-        "mode": "spot_ex_vat",
-        "vat": 0.25,
-        "grid": 0,
-        "components": danish_public_components() + [rule("supplier", 3.75, vat_included=True)],
-    }
+from .helpers import model, rule, tariff
 
 
 def slot(year=2026, price=1):
-    start = datetime(year, 10, 24, 12, tzinfo=UTC)
-    return PriceSlot(start, start + timedelta(minutes=15), price)
+    first = datetime(year, 10, 24, 12, tzinfo=UTC)
+    return PriceSlot(first, first + timedelta(minutes=15), price)
 
 
-@pytest.mark.parametrize("price,included", [(1, False), (1.25, True), (-0.5, False)])
-def test_component_vat_exactly_once_and_negative_spot(price, included):
+@pytest.mark.parametrize("price", [1, -0.5, -5, 0])
+@pytest.mark.parametrize("included", [False, True])
+def test_vat_once_and_negative_spot(price, included):
     config = tariff()
-    config["mode"] = "spot_incl_vat" if included else "spot_ex_vat"
+    config["components"][0] = rule("supplier", 3.75 if included else 3, vat_included=included)
     total, parts = compose_dated(slot(price=price), config)
-    expected_spot = price if included else price * 1.25
-    assert total == pytest.approx(expected_spot + 0.05375 + 0.09 + 0.01 + 0.0375)
-    assert parts["components"]["supplier"]["incl_vat"] == 0.0375
+    assert total == pytest.approx(price * 1.25 + 0.25 + 0.0375 + 0.05375 + 0.09 + 0.01)
+    assert parts["components"]["supplier"]["incl_vat"] == pytest.approx(0.0375)
 
 
-def test_contract_is_required_and_post2026_network_rates_not_invented():
-    config = tariff()
-    with pytest.raises(ValueError, match="Missing verified"):
-        compose_dated(slot(2027), config)
-    config["components"] = danish_public_components()
-    with pytest.raises(ValueError, match="Missing verified"):
+@pytest.mark.parametrize(
+    "year,missing",
+    [
+        (2026, {"supplier"}),
+        (2027, {"supplier", "energinet_net", "energinet_system"}),
+        (2028, {"supplier", "energinet_net", "energinet_system", "electricity_tax"}),
+    ],
+)
+def test_public_validity_not_extrapolated(year, missing):
+    config = tariff(components=danish_public_components() + [rule("dso", 20)])
+    with pytest.raises(ValueError) as err:
+        compose_dated(slot(year), config)
+    assert set(err.value.components) == missing
+
+
+def test_locked_override_and_conflicts():
+    config = tariff_for(model())
+    base, _ = compose_dated(slot(), config)
+    config["components"].append(rule("energinet_net", 8, locked=True))
+    total, parts = compose_dated(slot(), config)
+    assert total == pytest.approx(base - 0.05375 + 0.1)
+    assert parts["components"]["energinet_net"]["locked"]
+    config["components"].append(deepcopy(config["components"][-1]))
+    with pytest.raises(ValueError, match="Overlapping"):
         compose_dated(slot(), config)
 
 
 @pytest.mark.parametrize(
-    "year,usage,registered",
-    [(2026, 3999, False), (2026, 4001, True), (2027, 4000, True), (2027, 4001, True)],
+    "key,value",
+    [
+        ("supplier_subscription", 4),
+        ("source_type", "entity"),
+        ("price_basis", "all_in"),
+        ("display_unit", "DKK/kWh"),
+    ],
 )
-def test_universal_2026_2027_tax_not_an_invented_heating_discount(year, usage, registered):
-    config = tariff()
-    config.update(annual_usage_kwh=usage, usage_year=year, heating_registered=registered)
-    if year == 2027:
-        # Explicitly supplied future network/contract rates, not auto-extrapolation.
-        config["components"] = [r for r in config["components"] if r["id"] == "electricity_tax"] + [
-            rule("energinet_net", 4.3, valid_from="2027-01-01", valid_to="2028-01-01"),
-            rule("energinet_system", 7.2, valid_from="2027-01-01", valid_to="2028-01-01"),
-            rule(
-                "supplier", 3.75, vat_included=True, valid_from="2027-01-01", valid_to="2028-01-01"
-            ),
-        ]
-    _, parts = compose_dated(slot(year), config)
-    assert parts["components"]["electricity_tax"]["incl_vat"] == 0.01
+def test_retired_site_fields_fail_explicitly(key, value):
+    with pytest.raises(ValueError, match="Retired"):
+        validate_site({**model(), key: value})
 
 
-def test_locked_rate_and_subscription_not_amortized():
-    config = tariff()
-    base, _ = compose_dated(slot(), config)
-    config["components"] += [
-        rule("energinet_net", 8, locked=True),
-        rule("subscription", 50, unit="DKK/month", vat_included=True),
-    ]
-    total, parts = compose_dated(slot(), config)
-    assert total == pytest.approx(base - 0.05375 + 0.1)
-    assert parts["fixed_subscriptions_excluded"][0]["incl_vat"] == 50
-    assert parts["components"]["energinet_net"]["locked"]
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"unit": "DKK/month"},
+        {"eligibility": "heating"},
+        {"vat_included": "yes"},
+        {"amount": True},
+        {"hours": [24]},
+        {"source": ""},
+    ],
+)
+def test_invalid_rules_fail_closed(changes):
+    site = model(dated_components=[{**rule("supplier", 3), **changes}])
+    with pytest.raises((ValueError, TypeError)):
+        validate_site(site)
 
 
-def test_conflicting_versions_and_unknown_units_fail():
-    config = tariff()
-    config["components"].append(deepcopy(config["components"][0]))
-    with pytest.raises(ValueError, match="Overlapping"):
-        compose_dated(slot(), config)
-    config = tariff()
-    config["components"][-1]["unit"] = "unknown"
-    with pytest.raises(ValueError, match="unit"):
-        compose_dated(slot(), config)
+def test_from_now_and_explicit_whole_day_are_distinct():
+    now = datetime(2026, 10, 24, 12, 7, tzinfo=UTC)
+    for whole, expected in [
+        (False, "2026-10-24T12:15:00+00:00"),
+        (True, "2026-10-23T22:00:00+00:00"),
+    ]:
+        value = current_rate(
+            model(dated_components=[]), "supplier", "3.75", False, now, whole_day=whole
+        )
+        assert value["dated_components"][0]["effective_after"] == expected

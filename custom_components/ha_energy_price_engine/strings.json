@@ -2,226 +2,257 @@
   "title": "Energy Price Engine",
   "config": {
     "step": {
-      "user": {
-        "title": "Add an independent price site",
-        "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates.",
+      "site": {
+        "title": "1 · Site and Nord Pool",
+        "description": "Select the official Home Assistant Nord Pool integration, configured for DKK. PE automatically reads DKK/MWh excluding VAT and displays øre/kWh. DK1/DK2 use Europe/Copenhagen. Install the official source first; no legacy Nordpool integration is needed. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
-          "id": "Stable site ID (lowercase letters, digits and underscores)",
           "name": "Site name",
-          "nordpool_entry": "Official Nord Pool integration",
-          "area": "Price area (for example DK2)",
-          "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
-          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
-          "price_entity": "Timestamped provider entity (entity source only)",
-          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
-          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
-          "price_attribute": "Timestamped interval attribute (entity source only)",
-          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
+          "nordpool_entry": "Official Nord Pool source",
+          "area": "Price area"
         }
       },
-      "reconfigure": {
-        "title": "Site and official spot source",
+      "grid": {
+        "title": "2 · Grid tariff",
+        "description": "Choose Radius C only if your connection uses that product. The verified Datahub time-of-use rates are automatic. Other grid products require your confirmed marginal rate. National Energinet charges, electricity tax and 25% VAT are added only within verified effective dates. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
-          "name": "Site name",
-          "nordpool_entry": "Official Nord Pool integration",
-          "area": "Price area (for example DK2)",
-          "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
-          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
-          "price_entity": "Timestamped provider entity (entity source only)",
-          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
-          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
-          "price_attribute": "Timestamped interval attribute (entity source only)",
-          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
-        },
-        "description": "Create one independent pricing site. A single suitable official Nord Pool entry is suggested for confirmation; ambiguous sources require a choice. No contract or rates are copied from another site. Official Nord Pool uses ex-VAT DKK/MWh. An entity source must expose slots, currency, unit_of_measurement, vat_included and provider verified_at; unknown conventions fail closed. After adding the site, open Options to configure dated rates."
+          "grid": "Grid product"
+        }
+      },
+      "grid_rate": {
+        "title": "2 · Manual grid rate",
+        "description": "Enter the actual variable rate from your contract, with decimal point or comma. Zero is accepted only when you explicitly enter it. Without the confirmation below, the rate starts at the next complete quarter and statistics cover the remaining day. No historical or future private contract is guessed. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
+        "data": {
+          "amount": "Rate (øre/kWh)",
+          "vat_included": "The entered rate includes VAT",
+          "whole_day": "I confirm this rate also applied earlier today"
+        }
+      },
+      "supplier": {
+        "title": "3 · Supplier markup",
+        "description": "Enter your supplier markup, including any variable trading fee. PE does not reconstruct household bills or allocate subscriptions. EWII is not a default; confirm your actual contract. Enter the actual variable rate from your contract, with decimal point or comma. Zero is accepted only when you explicitly enter it. Without the confirmation below, the rate starts at the next complete quarter and statistics cover the remaining day. No historical or future private contract is guessed. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
+        "data": {
+          "amount": "Rate (øre/kWh)",
+          "vat_included": "The entered rate includes VAT",
+          "whole_day": "I confirm this rate also applied earlier today"
+        }
+      },
+      "review": {
+        "title": "Saved setup",
+        "description": "Site: **{name}**. Completed steps are saved. Check prices retries verification. Nine sensors and the bundled card show coverage, components and the corrective action for missing prices. Advanced is only for confirmed dated rates.",
+        "menu_options": {
+          "done": "Done — close setup",
+          "check": "Check prices now",
+          "site": "Edit site or source",
+          "grid": "Edit grid tariff",
+          "supplier": "Edit supplier markup",
+          "advanced": "Advanced dated rates",
+          "reset": "Reset this development site"
+        }
+      },
+      "advanced": {
+        "title": "Advanced · Dated marginal rates",
+        "description": "Effective dates are local, with an exclusive end date. Optional hours are local 0–23; both repeated DST hours use the same rate. Manual rules override public defaults. Remove an overlapping manual rule before adding its replacement.",
+        "menu_options": {
+          "add_rate": "Add confirmed dated rate",
+          "remove_rate": "Remove a manual rate",
+          "review": "Back to saved setup"
+        }
+      },
+      "add_rate": {
+        "title": "Add a confirmed rate",
+        "description": "Only enter a rate you can verify for the entire chosen period. Unknown future rates remain unavailable. Removing a private rule never makes it zero. Existing past calculated prices remain immutable. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
+        "data": {
+          "component": "Component",
+          "amount": "Rate (øre/kWh)",
+          "vat_included": "The entered rate includes VAT",
+          "vat_rate": "VAT fraction (0.25 = 25%)",
+          "valid_from": "Valid from (inclusive)",
+          "valid_to": "Valid until (exclusive)",
+          "hours": "Local hours (empty = all)",
+          "source": "Verification source",
+          "confirm": "I verified this rate for the entire effective period"
+        }
+      },
+      "remove_rate": {
+        "title": "Remove a manual rate",
+        "description": "Only the selected rule is removed. Future affected prices become unavailable until verified again. Past recorded prices are preserved.",
+        "data": {
+          "rate": "Rate to remove"
+        }
+      },
+      "reset": {
+        "title": "Reset this site",
+        "description": "Site: **{name}**. Breaking beta.10 requires recreating older beta sites. Back up first. This action stops and removes this site, its PE SQLite history, revisions and PE files. It does not delete other sites, Recorder or unrelated HA data. Type the exact site name and confirm. Normal HA Delete retains PE history files.",
+        "data": {
+          "name": "Type the exact site name",
+          "confirm": "Permanently delete only this site and its PE history"
+        }
       }
     },
     "error": {
-      "invalid_configuration": "Check site ID, official Nord Pool entry, timezone, units, dates and rate overlap."
+      "invalid_source": "Select a configured official DK1/DK2 Nord Pool source and enter a site name.",
+      "source_missing": "Add the official Home Assistant Nord Pool integration first. Configure DK1/DK2 and DKK.",
+      "invalid_amount": "Enter a finite non-negative decimal rate, such as 3.75 or 3,75. Check conflicting dated periods under Advanced.",
+      "invalid_rate": "Confirm the entire period, use an end date after the start, and remove overlapping manual rules.",
+      "confirm_reset": "Type the exact site name and tick the permanent deletion confirmation.",
+      "reset_failed": "Reset could not safely finish. No other site is affected. Check file permissions and retry this reset."
     },
     "abort": {
-      "already_configured": "This site ID is already configured.",
-      "reconfigure_successful": "Site source updated. Stable site identity and dated business settings were preserved."
+      "settings_saved": "Completed steps are saved.",
+      "saved_reload_failed": "The step was saved, but the site could not reload. Check storage and integration logs, then reopen Configure.",
+      "site_reset": "This site and its PE history were removed. Add a new Energy Price Engine site to start again.",
+      "already_configured": "This site is already configured."
     }
   },
   "options": {
     "step": {
-      "init": {
-        "title": "Pricing, tariffs, supplier and taxes",
-        "description": "{pricing_summary}\n\nAdd or edit dated rates. Save applies this draft; closing without Save discards edits. Unknown rates are never zero.",
-        "menu_options": {
-          "site": "Site and spot VAT",
-          "add_rate": "Add dated rate or subscription",
-          "edit_rate": "Edit dated rate",
-          "remove_rate": "Remove dated rate",
-          "dso": "Grid tariff source and fallback",
-          "taxes": "Dated national baselines and tax eligibility",
-          "save": "Save changes",
-          "supplier": "Supplier and contract guidance",
-          "storage": "Storage and verified backup",
-          "breakdown": "Inspect a stored quarter-hour price"
-        }
-      },
       "site": {
-        "title": "Site and official spot source",
+        "title": "1 · Site and Nord Pool",
+        "description": "Select the official Home Assistant Nord Pool integration, configured for DKK. PE automatically reads DKK/MWh excluding VAT and displays øre/kWh. DK1/DK2 use Europe/Copenhagen. Install the official source first; no legacy Nordpool integration is needed. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
           "name": "Site name",
-          "nordpool_entry": "Official Nord Pool integration",
-          "area": "Price area (for example DK2)",
-          "timezone": "IANA timezone (for example Europe/Copenhagen)",
-          "vat": "Spot and automatic DSO VAT fraction (0.25 = 25%)",
-          "source_type": "Spot source type (official Nord Pool or explicit entity contract)",
-          "price_entity": "Timestamped provider entity (entity source only)",
-          "price_unit": "Confirmed input money unit (official Nord Pool: DKK/MWh)",
-          "price_basis": "Confirmed input VAT/price basis (official Nord Pool: spot excluding VAT)",
-          "price_attribute": "Timestamped interval attribute (entity source only)",
-          "stale_minutes": "Maximum provider verification age (minutes; entity source only)"
+          "nordpool_entry": "Official Nord Pool source",
+          "area": "Price area"
         }
       },
-      "dso": {
-        "title": "Grid tariff source",
-        "description": "Automatic Radius C verifies GLN 5790000705689, D03/DT_C_01 and coverage. Manual uses dated DSO rates. Fallback uses explicit dated manual DSO periods when the verified cache cannot cover the request. Expired or unavailable rates never become zero.",
+      "grid": {
+        "title": "2 · Grid tariff",
+        "description": "Choose Radius C only if your connection uses that product. The verified Datahub time-of-use rates are automatic. Other grid products require your confirmed marginal rate. National Energinet charges, electricity tax and 25% VAT are added only within verified effective dates. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
-          "dso_mode": "DSO source (manual or verified Radius C)",
-          "dso_manual_fallback": "Allow explicit dated manual DSO fallback",
-          "dso_stale_days": "Maximum age of last verified DSO cache (days)",
-          "dso_tariff_class": "Tariff class (automatic Radius supports verified C only; other classes require manual dated rates)"
+          "grid": "Grid product"
         }
       },
-      "add_rate": {
-        "title": "Add dated price component",
-        "description": "Use a verified per-site rate and exclusive end date. EWII household example is 0.030 DKK/kWh ex VAT from 2026-06-01 until 2026-10-01 only; do not apply it to later dates or another site. Subscriptions use DKK/month and are excluded from slot totals.",
+      "grid_rate": {
+        "title": "2 · Manual grid rate",
+        "description": "Enter the actual variable rate from your contract, with decimal point or comma. Zero is accepted only when you explicitly enter it. Without the confirmation below, the rate starts at the next complete quarter and statistics cover the remaining day. No historical or future private contract is guessed. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
-          "id": "Component",
-          "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = \u00f8re)",
-          "vat_included": "Amount already includes VAT",
-          "vat_rate": "Component VAT fraction (0.25 = 25%)",
-          "valid_from": "Effective from (inclusive local date)",
-          "valid_to": "Effective until (exclusive local date)",
-          "source": "Source or contract reference (no customer identifiers)",
-          "verified_on": "Verified on",
-          "locked": "Manual lock (automatic rates cannot override)",
-          "eligibility": "Eligibility (heating requires verified registration and usage)",
-          "hours": "Local hours (blank = all day; use separate dated rates for manual time-of-use bands)"
-        }
-      },
-      "rate": {
-        "title": "Edit dated price component",
-        "description": "Change effective dates or amount; overlaps are rejected. Settled prices stay unchanged. Only affected future intervals are recalculated after Save.",
-        "data": {
-          "id": "Component",
-          "amount": "Amount (in selected unit)",
-          "unit": "Money unit (ore = \u00f8re)",
-          "vat_included": "Amount already includes VAT",
-          "vat_rate": "Component VAT fraction (0.25 = 25%)",
-          "valid_from": "Effective from (inclusive local date)",
-          "valid_to": "Effective until (exclusive local date)",
-          "source": "Source or contract reference (no customer identifiers)",
-          "verified_on": "Verified on",
-          "locked": "Manual lock (automatic rates cannot override)",
-          "eligibility": "Eligibility (heating requires verified registration and usage)",
-          "hours": "Local hours (blank = all day; use separate dated rates for manual time-of-use bands)"
-        }
-      },
-      "edit_rate": {
-        "title": "Choose a dated rate to edit",
-        "data": {
-          "rate": "Component and effective period"
-        }
-      },
-      "remove_rate": {
-        "title": "Choose a dated rate to remove",
-        "description": "Removal can leave future coverage incomplete. Existing settled history is retained.",
-        "data": {
-          "rate": "Component and effective period"
-        }
-      },
-      "save": {
-        "title": "Save pricing configuration"
-      },
-      "taxes": {
-        "title": "Dated public baselines and tax eligibility",
-        "description": "Optional documented baseline: 2026 Energinet net 0.043 and system 0.072 DKK/kWh ex VAT; uniform electricity tax 0.008 for 2026\u20132027. No 2028 rule or future TSO term is inferred. Household supplier contracts always require explicit per-site dated rates. Heating registration/annual usage are only used with an explicit verified heating rule, never an invented discount.",
-        "data": {
-          "danish_public_rates": "Use documented dated national baseline (not live legislative verification)",
-          "heating_registered": "Electrically heated residence registration verified",
-          "annual_usage_kwh": "Verified annual consumption (kWh)",
-          "usage_year": "Year of verified annual consumption"
+          "amount": "Rate (øre/kWh)",
+          "vat_included": "The entered rate includes VAT",
+          "whole_day": "I confirm this rate also applied earlier today"
         }
       },
       "supplier": {
-        "title": "Supplier contract",
-        "description": "Selecting EWII is a label, not a rate preset. Add your own verified dated supplier markup. The documented household historical example is 0.030 DKK/kWh excluding VAT for June\u2013September 2026 only. No later or other-site terms are inferred. Other suppliers use Custom with the same dated rate editor.",
+        "title": "3 · Supplier markup",
+        "description": "Enter your supplier markup, including any variable trading fee. PE does not reconstruct household bills or allocate subscriptions. EWII is not a default; confirm your actual contract. Enter the actual variable rate from your contract, with decimal point or comma. Zero is accepted only when you explicitly enter it. Without the confirmation below, the rate starts at the next complete quarter and statistics cover the remaining day. No historical or future private contract is guessed. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
-          "supplier": "Supplier label (no automatic contract inheritance)"
+          "amount": "Rate (øre/kWh)",
+          "vat_included": "The entered rate includes VAT",
+          "whole_day": "I confirm this rate also applied earlier today"
         }
       },
-      "storage": {
-        "title": "Create a verified local ledger backup",
-        "description": "{backup_result}\\n\\nSubmit to create a new verified SQLite snapshot. No prices, source configuration or controls change. Existing backups are never overwritten. Restore is deliberately offline-only: stop HA, compare backup revisions with recorded costs, preserve current files, then follow the beta recovery guide."
+      "review": {
+        "title": "Saved setup",
+        "description": "Site: **{name}**. Completed steps are saved. Check prices retries verification. Nine sensors and the bundled card show coverage, components and the corrective action for missing prices. Advanced is only for confirmed dated rates.",
+        "menu_options": {
+          "done": "Done — close setup",
+          "check": "Check prices now",
+          "site": "Edit site or source",
+          "grid": "Edit grid tariff",
+          "supplier": "Edit supplier markup",
+          "advanced": "Advanced dated rates",
+          "reset": "Reset this development site"
+        }
       },
-      "breakdown": {
-        "title": "Stored price breakdown",
-        "description": "{slot_breakdown}",
+      "advanced": {
+        "title": "Advanced · Dated marginal rates",
+        "description": "Effective dates are local, with an exclusive end date. Optional hours are local 0–23; both repeated DST hours use the same rate. Manual rules override public defaults. Remove an overlapping manual rule before adding its replacement.",
+        "menu_options": {
+          "add_rate": "Add confirmed dated rate",
+          "remove_rate": "Remove a manual rate",
+          "review": "Back to saved setup"
+        }
+      },
+      "add_rate": {
+        "title": "Add a confirmed rate",
+        "description": "Only enter a rate you can verify for the entire chosen period. Unknown future rates remain unavailable. Removing a private rule never makes it zero. Existing past calculated prices remain immutable. Submitting a step saves it immediately. Closing keeps completed steps; unsent fields are not saved.",
         "data": {
-          "slot": "Quarter (local date/time and UTC offset)"
+          "component": "Component",
+          "amount": "Rate (øre/kWh)",
+          "vat_included": "The entered rate includes VAT",
+          "vat_rate": "VAT fraction (0.25 = 25%)",
+          "valid_from": "Valid from (inclusive)",
+          "valid_to": "Valid until (exclusive)",
+          "hours": "Local hours (empty = all)",
+          "source": "Verification source",
+          "confirm": "I verified this rate for the entire effective period"
+        }
+      },
+      "remove_rate": {
+        "title": "Remove a manual rate",
+        "description": "Only the selected rule is removed. Future affected prices become unavailable until verified again. Past recorded prices are preserved.",
+        "data": {
+          "rate": "Rate to remove"
+        }
+      },
+      "reset": {
+        "title": "Reset this site",
+        "description": "Site: **{name}**. Breaking beta.10 requires recreating older beta sites. Back up first. This action stops and removes this site, its PE SQLite history, revisions and PE files. It does not delete other sites, Recorder or unrelated HA data. Type the exact site name and confirm. Normal HA Delete retains PE history files.",
+        "data": {
+          "name": "Type the exact site name",
+          "confirm": "Permanently delete only this site and its PE history"
         }
       }
     },
     "error": {
-      "invalid_configuration": "Invalid configuration. Check non-empty source, units/VAT, dates, overlapping periods and the official Nord Pool entry.",
-      "site_not_loaded": "Load this pricing site before creating a backup.",
-      "backup_failed": "Backup failed or the ledger did not pass verification. Preserve all files and check storage diagnostics."
+      "invalid_source": "Select a configured official DK1/DK2 Nord Pool source and enter a site name.",
+      "source_missing": "Add the official Home Assistant Nord Pool integration first. Configure DK1/DK2 and DKK.",
+      "invalid_amount": "Enter a finite non-negative decimal rate, such as 3.75 or 3,75. Check conflicting dated periods under Advanced.",
+      "invalid_rate": "Confirm the entire period, use an end date after the start, and remove overlapping manual rules.",
+      "confirm_reset": "Type the exact site name and tick the permanent deletion confirmation.",
+      "reset_failed": "Reset could not safely finish. No other site is affected. Check file permissions and retry this reset."
     },
     "abort": {
-      "no_rates": "There are no configured dated rates. Reopen Options and choose Add dated rate.",
-      "site_not_loaded": "Load this site to inspect stored prices."
+      "settings_saved": "Completed steps are saved.",
+      "saved_reload_failed": "The step was saved, but the site could not reload. Check storage and integration logs, then reopen Configure.",
+      "site_reset": "This site and its PE history were removed. Add a new Energy Price Engine site to start again.",
+      "already_configured": "This site is already configured."
+    }
+  },
+  "selector": {
+    "grid": {
+      "options": {
+        "radius_c": "Radius C — verified automatic time-of-use tariff",
+        "manual": "Other grid product — enter verified rate"
+      }
+    },
+    "component": {
+      "options": {
+        "supplier": "Supplier markup",
+        "dso": "Grid tariff",
+        "energinet_net": "Energinet network",
+        "energinet_system": "Energinet system",
+        "electricity_tax": "Electricity tax"
+      }
     }
   },
   "entity": {
     "sensor": {
-      "current_price": {
-        "name": "Current final electricity price"
+      "current_spot": {
+        "name": "Current spot price"
       },
-      "readiness": {
-        "name": "Price readiness"
+      "current_final": {
+        "name": "Current final price"
       },
-      "next_price": {
-        "name": "Next quarter final electricity price"
+      "next_spot": {
+        "name": "Next-quarter spot price"
       },
-      "today_minimum": {
-        "name": "Today minimum final price"
+      "next_final": {
+        "name": "Next-quarter final price"
       },
-      "today_maximum": {
-        "name": "Today maximum final price"
+      "average": {
+        "name": "Today's average price"
       },
-      "today_average": {
-        "name": "Today average final price"
+      "minimum": {
+        "name": "Today's minimum price"
       },
-      "tomorrow_status": {
-        "name": "Tomorrow price readiness"
-      }
-    }
-  },
-  "issues": {
-    "pricing_not_ready": {
-      "title": "Electricity pricing needs attention",
-      "fix_flow": {
-        "step": {
-          "confirm": {
-            "title": "Verify this pricing site again",
-            "description": "Review this site\u2019s Options and fix missing or expired supplier/grid/TSO/tax periods or its spot source. Submit to recheck sources. The warning only clears after complete verified current-day prices are READY; no charging controls are involved."
-          }
-        },
-        "error": {
-          "pricing_not_ready": "Prices are still incomplete, stale or unavailable. Check site Options and diagnostics, then retry."
-        },
-        "abort": {
-          "site_not_loaded": "This pricing site is not loaded. Check its integration entry."
-        }
+      "maximum": {
+        "name": "Today's maximum price"
+      },
+      "dso": {
+        "name": "Current DSO tariff"
+      },
+      "availability": {
+        "name": "Price availability"
       }
     }
   }

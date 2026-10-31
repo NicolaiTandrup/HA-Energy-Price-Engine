@@ -1,183 +1,170 @@
-"""Native UI edits, invalid input, period selection and durable options/repricing."""
+"""Native flow manager saves accepted steps and never infers private money."""
 
-from copy import deepcopy
-from datetime import UTC, date, datetime
-from unittest.mock import patch
+from datetime import UTC, datetime, timedelta
 
 import pytest
-from homeassistant import config_entries
-from homeassistant.data_entry_flow import FlowResultType
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.ha_energy_price_engine.configuration import (
-    household_historical_example,
-    validate_site,
-)
-from custom_components.ha_energy_price_engine.const import DOMAIN, PRICE_REVISION_EVENT
-from custom_components.ha_energy_price_engine.price_engine import PriceEngine, day_bounds
-
-from .test_integration import model, price_service, setup  # noqa: F401
+from custom_components.ha_energy_price_engine.api import Status, get_api
+from custom_components.ha_energy_price_engine.configuration import settings
+from custom_components.ha_energy_price_engine.const import DOMAIN
+from custom_components.ha_energy_price_engine.status import statistics
 
 
-@pytest.mark.usefixtures("price_service")
-async def test_config_flow_site_unique_source_and_invalid_timezone(hass):
-    source = MockConfigEntry(
-        domain="nordpool", entry_id="np", data={}, state=config_entries.ConfigEntryState.LOADED
+async def begin(hass):
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    assert result["step_id"] == "site"
+    assert {str(k) for k in result["data_schema"].schema} == {"name", "nordpool_entry"}
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"name": "Example site", "nordpool_entry": "np"}
     )
-    source.add_to_hass(hass)
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    assert result["step_id"] == "grid"
+    return result, hass.config_entries.async_entries(DOMAIN)[0]
+
+
+async def test_interruption_wrong_decimal_saved_steps_and_from_now_stats(
+    hass, freezer, price_service
+):
+    freezer.move_to("2026-10-24T12:07:00Z")
+    result, entry = await begin(hass)
+    sid = entry.data["id"]
+    hass.config_entries.flow.async_abort(result["flow_id"])
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["step_id"] == "grid"
+    fid = result["flow_id"]
+    result = await hass.config_entries.options.async_configure(fid, {"grid": "manual"})
+    assert result["step_id"] == "grid_rate" and settings(entry)["setup_step"] == "grid_rate"
+    result = await hass.config_entries.options.async_configure(
+        fid, {"amount": "20", "vat_included": False}
     )
-    assert result["type"] == FlowResultType.FORM
-    user = {
-        k: v
-        for k, v in model().items()
-        if k in {"id", "name", "area", "timezone", "vat", "nordpool_entry"}
+    assert result["step_id"] == "supplier"
+    result = await hass.config_entries.options.async_configure(
+        fid, {"amount": "11..1", "vat_included": False}
+    )
+    assert result["errors"]["amount"] == "invalid_amount"
+    assert all(r["id"] != "supplier" for r in settings(entry)["dated_components"])
+    result = await hass.config_entries.options.async_configure(
+        fid, {"amount": "3,75", "vat_included": True}
+    )
+    assert result["step_id"] == "review"
+    assert set(result["menu_options"]) == {
+        "done",
+        "check",
+        "site",
+        "grid",
+        "supplier",
+        "advanced",
+        "reset",
     }
-    invalid = {**user, "timezone": "invalid/timezone"}
-    result = await hass.config_entries.flow.async_configure(result["flow_id"], invalid)
-    assert result["errors"] == {"base": "invalid_configuration"}
-    with patch("custom_components.ha_energy_price_engine.async_setup_entry", return_value=True):
-        result = await hass.config_entries.flow.async_configure(result["flow_id"], user)
-        await hass.async_block_till_done()
-    assert result["type"] == FlowResultType.CREATE_ENTRY
-    assert result["data"]["dated_components"] == []
-    duplicate = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}, data=user
+    start = datetime(2026, 10, 24, 12, 15, tzinfo=UTC)
+    assert get_api(hass).lookup(sid, start, start + timedelta(minutes=15)).status == Status.READY
+    facts = statistics(entry.runtime_data)
+    assert (
+        facts["scope"] == "remaining_day" and facts["used_slots"] == 39 and facts["day_slots"] == 96
     )
-    assert duplicate["type"] == FlowResultType.ABORT
-    assert duplicate["reason"] == "already_configured"
-
-
-@pytest.mark.usefixtures("price_service")
-async def test_options_edit_future_rate_reprice_once_and_survive_restart(hass, freezer):
-    freezer.move_to("2026-10-23T12:00:00Z")
-    source = MockConfigEntry(
-        domain="nordpool", entry_id="np", data={}, state=config_entries.ConfigEntryState.LOADED
-    )
-    source.add_to_hass(hass)
-    entry = await setup(hass)
-    c = entry.runtime_data
-    before = c.price_engine.records["home"]
-    events = []
-    hass.bus.async_listen(PRICE_REVISION_EVENT, lambda event: events.append(event.data))
-    options = await hass.config_entries.options.async_init(entry.entry_id)
-    assert options["type"] == FlowResultType.MENU
-    assert "Current final price" in options["description_placeholders"]["pricing_summary"]
-    result = await hass.config_entries.options.async_configure(
-        options["flow_id"], {"next_step_id": "edit_rate"}
-    )
-    assert result["type"] == FlowResultType.FORM
-    result = await hass.config_entries.options.async_configure(result["flow_id"], {"rate": "0"})
-    changed = {**model()["dated_components"][0], "amount": 33, "valid_from": "2026-10-24"}
-    result = await hass.config_entries.options.async_configure(result["flow_id"], changed)
-    assert result["type"] == FlowResultType.MENU
-    # Staging changes does not mutate runtime or durable options.
-    assert c.site["dated_components"][0]["amount"] == 11
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"next_step_id": "save"}
-    )
-    assert result["type"] == FlowResultType.CREATE_ENTRY
-    await hass.async_block_till_done()
-    c = entry.runtime_data
-    assert entry.options["dated_components"][0]["amount"] == 33
-    tomorrow = c.price_engine.lookup("home", *day_bounds(date(2026, 10, 24)))
-    assert tomorrow[0].final_price_incl_vat == pytest.approx(
-        before[-1].final_price_incl_vat + 0.22 * 1.25
-    )
-    assert all(
-        c.price_engine.lookup("home", r.start, r.end)[0] == r
-        for r in before
-        if r.start < datetime(2026, 10, 23, 12, tzinfo=UTC)
-    )
-    # Reconfigure emits one future revision, identical verified source sync no second event.
-    assert len(events) == 1 and len(events[0]["affected_slots"]) == 96
-    restored = PriceEngine(hass, entry.entry_id)
-    await restored.async_load(["home"])
-    assert restored.lookup("home", *day_bounds(date(2026, 10, 24))) == tomorrow
-    assert restored.audit["home"]  # Durable old/new row versions.
+    assert facts["average"] == pytest.approx(0.31625)
+    hass.config_entries.options.async_abort(fid)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["step_id"] == "review" and settings(entry)["id"] == sid
+    await hass.config_entries.options.async_configure(result["flow_id"], {"next_step_id": "done"})
     assert await hass.config_entries.async_unload(entry.entry_id)
 
 
-@pytest.mark.parametrize(
-    "change",
-    [
-        {"amount": -1},
-        {"amount": float("nan")},
-        {"vat_rate": 1.1},
-        {"unit": "unknown"},
-        {"vat_included": "false"},
-        {"source": ""},
-        {"valid_to": "2025-01-01"},
-        {"valid_from": "not-a-date"},
-        {"id": "unknown"},
-        {"unit": "DKK/month"},
-        {"eligibility": "unverified"},
-    ],
-)
-def test_invalid_business_inputs_rejected(change):
-    site = model()
-    site["dated_components"][0].update(change)
-    with pytest.raises((ValueError, TypeError)):
-        validate_site(site)
-
-
-def test_overlap_and_bounded_ewii_example():
-    site = model()
-    site["dated_components"].append(deepcopy(site["dated_components"][0]))
-    with pytest.raises(ValueError, match="Overlapping"):
-        validate_site(site)
-    rate = household_historical_example()
-    assert rate["amount"] == 0.030 and rate["vat_included"] is False
-    assert (rate["valid_from"], rate["valid_to"]) == ("2026-06-01", "2026-10-01")
-    assert not any(r["amount"] == 0.030 for r in model("summer_house")["dated_components"])
-
-
-@pytest.mark.usefixtures("price_service")
-async def test_options_add_overlap_remove_dso_tax_and_discard(hass, freezer):
-    freezer.move_to("2026-10-23T12:00:00Z")
-    source = MockConfigEntry(
-        domain="nordpool", entry_id="np", data={}, state=config_entries.ConfigEntryState.LOADED
+async def test_explicit_whole_day_confirmation_yields_immediate_full_day(
+    hass, freezer, price_service
+):
+    freezer.move_to("2026-10-24T12:07:00Z")
+    result, entry = await begin(hass)
+    fid = result["flow_id"]
+    await hass.config_entries.flow.async_configure(fid, {"grid": "manual"})
+    await hass.config_entries.flow.async_configure(
+        fid, {"amount": "20", "vat_included": False, "whole_day": True}
     )
-    source.add_to_hass(hass)
-    entry = await setup(hass)
-    original = deepcopy(dict(entry.data))
+    result = await hass.config_entries.flow.async_configure(
+        fid, {"amount": "3", "vat_included": False, "whole_day": True}
+    )
+    assert result["step_id"] == "review"
+    facts = statistics(entry.runtime_data)
+    assert facts["scope"] == "full_day" and facts["used_slots"] == 96
+    assert facts["minimum"] == facts["maximum"] == facts["average"] == pytest.approx(0.31625)
+    await hass.config_entries.flow.async_configure(fid, {"next_step_id": "done"})
+    assert await hass.config_entries.async_unload(entry.entry_id)
+
+
+async def test_reset_requires_exact_name_and_explicit_confirm(hass, freezer, price_service):
+    freezer.move_to("2026-10-24T12:07:00Z")
+    result, entry = await begin(hass)
+    hass.config_entries.flow.async_abort(result["flow_id"])
+    hass.config_entries.async_update_entry(
+        entry, options={**settings(entry), "setup_step": "review"}
+    )
+    await hass.async_block_till_done()
     result = await hass.config_entries.options.async_init(entry.entry_id)
     fid = result["flow_id"]
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "add_rate"})
-    # The form itself validates invalid overlaps, not only the pure helper.
-    result = await hass.config_entries.options.async_configure(fid, original["dated_components"][0])
-    assert result["errors"]["base"] == "invalid_configuration"
-    subscription = {
-        **original["dated_components"][0],
-        "id": "subscription",
-        "unit": "DKK/month",
-        "amount": 50,
-    }
-    result = await hass.config_entries.options.async_configure(fid, subscription)
-    assert result["type"] == FlowResultType.MENU
-    result = await hass.config_entries.options.async_configure(fid, {"next_step_id": "dso"})
-    assert result["type"] == FlowResultType.FORM
+    result = await hass.config_entries.options.async_configure(fid, {"next_step_id": "reset"})
     result = await hass.config_entries.options.async_configure(
-        fid, {"dso_mode": "manual", "dso_manual_fallback": True, "dso_stale_days": 3}
+        fid, {"name": "wrong", "confirm": True}
     )
-    assert result["type"] == FlowResultType.MENU
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "taxes"})
+    assert result["errors"]["base"] == "confirm_reset"
+    defaults = {str(k): k.default() for k in result["data_schema"].schema}
+    assert defaults == {"name": "wrong", "confirm": True}
+    assert hass.config_entries.async_get_entry(entry.entry_id)
     result = await hass.config_entries.options.async_configure(
-        fid,
-        {
-            "danish_public_rates": True,
-            "heating_registered": True,
-            "annual_usage_kwh": 4500,
-            "usage_year": 2026,
-        },
+        fid, {"name": "Example site", "confirm": True}
     )
-    assert result["type"] == FlowResultType.MENU
-    await hass.config_entries.options.async_configure(fid, {"next_step_id": "remove_rate"})
-    result = await hass.config_entries.options.async_configure(fid, {"rate": "2"})
-    assert result["type"] == FlowResultType.MENU
-    # Abort before Save: no runtime or durable mutation from any staged form.
+    assert result["reason"] == "site_reset"
+
+
+async def test_advanced_rates_and_saved_grid_choice_resume(hass, freezer, price_service):
+    from .helpers import model
+    from .test_integration import setup
+
+    freezer.move_to("2026-10-24T12:07:00Z")
+    entry = await setup(hass, model(dated_components=[]))
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    fid = result["flow_id"]
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "grid"})
+    result = await hass.config_entries.options.async_configure(fid, {"grid": "manual"})
+    assert result["step_id"] == "grid_rate" and settings(entry)["setup_step"] == "grid_rate"
     hass.config_entries.options.async_abort(fid)
-    assert not entry.options and entry.data == original
-    assert entry.runtime_data.site == original
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["step_id"] == "grid_rate"
+    fid = result["flow_id"]
+    await hass.config_entries.options.async_configure(
+        fid, {"amount": "20", "vat_included": False, "whole_day": True}
+    )
+    result = await hass.config_entries.options.async_configure(
+        fid, {"amount": "3", "vat_included": False, "whole_day": True}
+    )
+    # A resumed edit can complete supplier or return straight to the saved review.
+    if result["step_id"] == "supplier":
+        result = await hass.config_entries.options.async_configure(
+            fid, {"amount": "3", "vat_included": False, "whole_day": True}
+        )
+    assert result["step_id"] == "review"
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "advanced"})
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "add_rate"})
+    fields = {
+        "component": "energinet_net",
+        "amount": "8",
+        "vat_included": False,
+        "vat_rate": 0.25,
+        "valid_from": "2026-10-24",
+        "valid_to": "2027-01-01",
+        "hours": ["17", "18"],
+        "source": "Explicit fictional owner confirmation",
+        "confirm": False,
+    }
+    result = await hass.config_entries.options.async_configure(fid, fields)
+    assert result["errors"]["base"] == "invalid_rate"
+    result = await hass.config_entries.options.async_configure(fid, {**fields, "confirm": True})
+    assert result["step_id"] == "review"
+    assert settings(entry)["dated_components"][-1]["id"] == "energinet_net"
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "advanced"})
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "remove_rate"})
+    result = await hass.config_entries.options.async_configure(
+        fid, {"rate": str(len(settings(entry)["dated_components"]) - 1)}
+    )
+    assert result["step_id"] == "review"
+    assert all(r["id"] != "energinet_net" for r in settings(entry)["dated_components"])
+    hass.config_entries.options.async_abort(fid)
     assert await hass.config_entries.async_unload(entry.entry_id)

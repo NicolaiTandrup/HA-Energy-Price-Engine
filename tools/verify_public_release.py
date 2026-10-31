@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = "NicolaiTandrup/HA-Energy-Price-Engine"
-TAG = "v0.1.0-beta.1"
+TAG = "v0.1.0-beta.10"
 DOMAIN = "ha_energy_price_engine"
 
 
@@ -57,9 +57,7 @@ def verify(output, expected_commit):
     assert source_commit == expected_commit, "Public tag differs from validated source"
     repository = api(f"repos/{REPOSITORY}")
     assert repository["default_branch"] == "main"
-    assert api(f"repos/{REPOSITORY}/commits/main")["sha"] == expected_commit, (
-        "Main advanced since release validation"
-    )
+    main_commit = api(f"repos/{REPOSITORY}/commits/main")["sha"]
     main_tree = api(f"repos/{REPOSITORY}/git/trees/main?recursive=1")
     assert f"custom_components/{DOMAIN}/manifest.json" in {p["path"] for p in main_tree["tree"]}
     asset_map = {a["name"]: a for a in release["assets"]}
@@ -101,10 +99,24 @@ def verify(output, expected_commit):
                 for p in archive.namelist()
             }
             assert actual == manifest["runtime_files"], "Published ZIP differs from source payload"
+    main_source = output / "public-main-source.zip"
+    download(f"https://codeload.github.com/{REPOSITORY}/zip/{main_commit}", main_source)
+    prior = api(f"repos/{REPOSITORY}/releases/tags/v0.1.0-beta.9")
+    prior_asset = next(a for a in prior["assets"] if a["name"] == f"{DOMAIN}.zip")
+    prior_path = output / "previous-beta9.zip"
+    download(prior_asset["browser_download_url"], prior_path, prior_asset["id"])
+    prior_receipt = json.loads((ROOT / "docs/receipts/v0.1.0-beta.9.json").read_text())
+    expected_prior = prior_receipt.get("archive_hashes", prior_receipt.get("archive_sha256"))[
+        f"{DOMAIN}.zip"
+    ]
+    assert hashlib.sha256(prior_path.read_bytes()).hexdigest() == expected_prior
     receipt = {
+        "previous_hacs_asset": str(prior_path.resolve()),
+        "main_archive": str(main_source.resolve()),
         "verified_at": datetime.now(UTC).isoformat(),
         "repository": repository,
         "release": release,
+        "main_commit": main_commit,
         "source_commit": source_commit,
         "source_archive": str(source.resolve()),
         "source_archive_url": source_url,

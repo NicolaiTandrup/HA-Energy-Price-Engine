@@ -1,119 +1,35 @@
-# PE + CM beta acceptance, source migration and rollback
+# Beta.10 acceptance checklist
 
-Target: **v0.1.0-beta.1 read-only PE prerelease**. On 2026-10-26 the owner explicitly
-authorized merging PE PR #7 and publishing this prerelease. This does not authorize
-a stable release, CM publication or production/control cutover.
+Breaking development beta for PAHA02-DEV. Software evidence uses isolated HA and
+recorded/synthetic prices, not owner hardware or live contract acceptance.
 
-## Software distribution acceptance
+- [ ] Back up code/config/Recorder/.storage; record each actual contract/grid and dated override.
+- [ ] HACS Show beta versions persists; explicitly download v0.1.0-beta.10 and restart.
+- [ ] Device info shows0.1.0-beta.10; old beta sites fail safely until explicitly reset/recreated.
+- [ ] Reset only the intended named site after backup; another site's data and Recorder survive.
+- [ ] Official Nord Pool DK1/DK2 is selected; legacy domain shadowing is absent. No parallel broker required.
+- [ ] Site/source, grid and supplier steps save; close/reopen resumes. Unsubmitted fields are clearly unsaved.
+- [ ] Confirm actual Radius C or actual manual DSO. Enter real supplier markup in øre/kWh and correct VAT basis.
+- [ ] Nine enabled sensors per new site; full precision internally, ordinary øre/kWh, two decimals.
+- [ ] Current/next raw and final match verified source/component arithmetic, including negative spot.
+- [ ] Full-day stats include all 92/96/100 quarters immediately when genuinely covered.
+- [ ] New from-now private rate yields labeled remaining-day coverage, with no invented past prices.
+- [ ] Middle gaps/expired components/source errors never create READY ranges or zero-filled prices.
+- [ ] Bundled resource registered; minimal YAML discovers one site, named selector handles several.
+- [ ] Two graphs, DSO intervals, all quarter rows and selected component/VAT/source details work desktop/mobile EN/DA.
+- [ ] Native Options Done closes; restart/reload preserves the new site ID, stored quotes and revision references.
+- [ ] Unreleased CM upgraded to API2 and tested separately before coupling. Unchanged API1 CM is unsupported.
+- [ ] Public national effective dates and private contracts remain valid; no future EWII/heating inference.
+- [ ] Development hardware storage/RAM/latency acceptable; cloud measurements are not Pi evidence.
 
-- [x] Existing validated native implementation and immutable SQLite history preserved.
-- [x] Both-core unit/integration, source selection, DST, recovery and consumer API tests.
-- [x] Actual HACS prerelease discovery/tag download/update/reinstall regression tests.
-- [x] Independently placed ZIPs configure/reload/remove/recreate outside source.
-- [x] Explicit owner approval for PE PR #7 merge and PE beta.1 prerelease.
-- [ ] Exact merged/tagged commit CI and independent public-release receipt recorded
-  on the release and PR #7. The live receipt, not this source checklist, establishes
-  completion of merge/publication/download verification.
-- [ ] Owner records actual PAHA02-DEV HACS installation/configuration and hardware
-  observations. Isolated tests do not check this box for the owner.
+Automated release gates: complete unit/native-flow/source/Radius/math/DST/statistics/
+SQLite fault/revision/reset/read-only API/cost tests on HA 2026.10.3 and2026.10.4;
+locked desktop/mobile Chromium tests; actual pinned HACS install/update/reinstall;
+official hassfest/HACS CI; both independently installed ZIP layouts; reproducible
+clean archive hashes; native HA screenshots and restart; immutable prior releases/
+main; exact-source CI before beta10-only guarded publication; fresh public source/
+asset/download verification on both cores. Current results and remaining work are
+recorded in [the permanent handoff](DEVELOPMENT_STATUS.md), not inferred from this list.
 
-Follow [HACS_DISTRIBUTION.md](HACS_DISTRIBUTION.md) for exact PE installation and
-public verification. CM remains a separate unpublished development project; its
-merge/publication is not a prerequisite to read-only PE installation.
-
-## Before touching the owner's installation
-
-- [ ] Record HA/PE/CM versions, exact commits, hardware/storage, explicit site IDs,
-  provider integration entries and the selected controller for every charger/vehicle.
-- [ ] Take a full known-good HA configuration/storage backup and export the exact
-  Node-RED **Brain**, **Energy Price Broker** and **Charger Optimizer** flows,
-  dependencies and current enable states. Verify the backup can be restored.
-- [ ] Capture representative **recorded** legacy prices, legacy Nordpool inputs and
-  known-good optimizer plans (including UTC timestamps, units and VAT convention).
-  Compare offline against PE/billing fixtures. No simultaneous live brokers required.
-- [ ] Obtain actual current per-site supplier terms and coverage. June–September
-  2026 household EWII markup cannot establish October or summer-house terms.
-- [ ] Review real CM command-executor capability/acknowledgment/session/guest/stale/
-  plug-unplug/rate-limit safeguards separately. The tested consumer is not evidence
-  of an authorized real charger transport. Keep commands disabled unless that gate
-  and explicit owner authorization are independently satisfied.
-
-## Offline comparison without parallel brokers
-
-Normalize recorded exports to explicit site/currency/unit/VAT and timestamped final
-amounts; never infer missing metadata from entity names or insert zero prices.
-`docs/contracts/price-api-v1.examples.json` is synthetic format/conformance evidence,
-not a household export. A verified ledger backup can be exported locally:
-
-```sh
-.venv/bin/python tools/ledger_backup.py export /path/to/verified-backup.sqlite3 \
-  --site house --start 2026-09-01T00:00:00+00:00 --end 2026-09-02T00:00:00+00:00 \
-  > /tmp/pe-recorded.json
-.venv/bin/python tools/compare_recorded_prices.py /path/to/legacy-recorded.json \
-  /tmp/pe-recorded.json --legacy-site legacy-house --candidate-site house \
-  --start 2026-09-01T00:00:00+00:00 --end 2026-09-02T00:00:00+00:00
-```
-
-The comparison range and site mapping are explicit. Both inputs require `currency`
-DKK, `unit` DKK/kWh, `vat_included: true`, `site_id`, and `slots` with aware `start`,
-`end`, `final_price_incl_vat`. Known zero and negative prices are valid. Missing,
-nonfinite, duplicate or wrong-unit inputs fail; gaps cannot become free quarters.
-Exit 0 means complete match within the chosen tolerance; 1 means differences/gaps;
-2 means invalid input. Default tolerance is 0.000001 DKK/kWh. Choose and justify
-any invoice-rounding tolerance explicitly. Backup exports assert recorded amounts,
-not current live READY/freshness. Keep private exports out of Git/CI artifacts.
-
-## Owner-approved atomic source switchover
-
-1. Obtain the owner's go-ahead for the scheduled installation, with rollback owner
-   and abort thresholds agreed. Source migration and command permission are separate.
-2. Stop/disable competing legacy paths only within that approved window, preserving
-   their exact configuration and dependencies. Never leave two live controllers.
-3. Migrate the legacy HACS Nordpool dependency to the official HA Nord Pool source
-   as planned. Do not assume the legacy broker works when its old dependency is absent.
-4. Install the reviewed PE/CM packages and explicit per-site mappings. Configure
-   actual verified current contracts/DSO/TSO/tax/VAT; confirm current/next-day complete
-   final prices and source verification. Unknown components must stay unavailable.
-5. Verify 13:05 / 13:20 / 13:40 / 23:59 behavior, 00:01/startup/reconnection,
-   restart persistence and measured/read-only optimization against recorded outputs.
-   Current source validation can happen in the safe test setup or this window.
-6. Keep CM read-only until its independent control gates and owner authorization
-   pass. Activate only one controller per charger/vehicle if subsequently authorized.
-
-Abort on wrong site/source, stale/incomplete/error prices, VAT/unit mismatch, failed
-storage recovery, unsafe command ownership, unknown sessions/guest state, unacknowledged
-commands or unacceptable resource behavior. A missing price is never a zero-cost plan.
-
-## Rollback and history recovery
-
-- Disable CM command paths first if they were explicitly commissioned. Preserve
-  observations, price revisions and measured-cost records for diagnosis.
-- Restore the full known-good HA/config/storage backup and **legacy Nordpool
-  dependency** before relying on its broker. Restore the three exact saved Node-RED
-  flows/dependencies/enable states only under the approved single-controller plan.
-- Verify legacy sources, current prices, session ownership and known-good plans;
-  then let the owner authorize resuming the one chosen controller.
-- For isolated PE ledger recovery, prefer a coherent full HA backup. Stop the test
-  HA before an explicit offline SQLite restore; compare backup revisions with CM
-  recorded costs. A snapshot cannot recreate updates recorded after it.
-
-Optional local administration (never run on an unapproved live HA):
-
-```sh
-.venv/bin/python tools/ledger_backup.py inspect /path/to/verified-backup.sqlite3
-.venv/bin/python tools/ledger_backup.py restore /path/to/verified-backup.sqlite3 \
-  /path/to/stopped-ha/.storage/ha_energy_price_engine.ENTRY.ledger.sqlite3 --confirm-offline
-```
-
-Restore verifies checksums/integrity and preserves previous destination bytes in a
-separate file. Preserve original preview JSON files too. Do not downgrade only the
-Python code while retaining a newer configuration/database schema. Never silently
-rewrite settled CM costs or substitute a newer price revision for an applied one.
-
-## Evidence still required from the owner
-
-Recorded household/summer-house legacy/billing exports; actual current contract
-terms; approved HA OS/Raspberry Pi resource/source validation; independent real
-command-executor acceptance if control is desired; and explicit publication/cutover
-authorization. These are distinct from the automated software checks. No permanent
-ban on an eventual controlled replacement is implied; no actual switch occurred.
+Owner boxes above are intentionally unchecked. No production HA, Node-RED or physical
+charging controls may be changed by this acceptance run. No stable release/main merge.

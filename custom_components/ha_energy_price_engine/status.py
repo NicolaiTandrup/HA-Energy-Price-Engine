@@ -1,4 +1,4 @@
-"""Read-only operational views of the authoritative ledger; never fetch or compose."""
+"""Shared, compact read-only views of the precomputed quarter-hour schedule."""
 
 import json
 from datetime import timedelta
@@ -6,93 +6,154 @@ from zoneinfo import ZoneInfo
 
 from homeassistant.util import dt as dt_util
 
-from .api import ConsumerAPI
+from .api import PriceAPI, Status
 from .price_engine import day_bounds
 
 
-def interval_result(coordinator, start, end, now):
-    return ConsumerAPI(coordinator.hass).lookup(
-        coordinator.site["id"],
-        start,
-        end,
-        now=now,
-        producer_entry_id=coordinator.entry.entry_id,
+def quarter(now, offset=0):
+    first = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(
+        minutes=15 * offset
     )
+    return first, first + timedelta(minutes=15)
 
 
-def day_result(coordinator, offset=0, now=None):
+def report(c, day):
+    return c.schedule.days.get(c.site["id"], {}).get(str(day), {})
+
+
+def price(c, offset=0, now=None):
+    return PriceAPI(c.hass).lookup(c.site["id"], *quarter(now or dt_util.utcnow(), offset), now=now)
+
+
+def statistics(c, now=None):
+    """No Recorder samples or invented past rates; average exact schedule slots."""
     now = now or dt_util.utcnow()
-    site = coordinator.site
-    day = now.astimezone(ZoneInfo(site["timezone"])).date() + timedelta(days=offset)
-    return interval_result(coordinator, *day_bounds(day, site["timezone"]), now)
-
-
-def source_status(coordinator, now=None):
-    now = now or dt_util.utcnow()
-    site = coordinator.site
-    result = day_result(coordinator, now=now)
-    source = coordinator.hass.config_entries.async_get_entry(site.get("nordpool_entry", ""))
-    reports = coordinator.schedule.days.get(site["id"], {})
-    today = str(now.astimezone(ZoneInfo(site["timezone"])).date())
-    report = reports.get(today, {})
-    return {
-        "requested_date": today,
-        "site_id": site["id"],
-        "site_name": site["name"],
-        "source": source.title if source else site.get("price_entity", "Source unavailable"),
-        "area": site["area"],
-        "currency": "DKK",
-        "resolution_minutes": 15,
-        "health": str(result.status),
-        "last_success": result.last_success,
-        "last_attempt": report.get("last_attempt"),
-        "last_error": result.reason,
-        "valid_slots": result.valid_slots,
-        "expected_slots": result.expected_slots,
-        "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
-        "dso_mode": site.get("dso_mode", "manual"),
+    first, last = day_bounds(
+        now.astimezone(ZoneInfo(c.site["timezone"])).date(), c.site["timezone"]
+    )
+    api = PriceAPI(c.hass)
+    full = api.lookup(c.site["id"], first, last, now=now)
+    selected, scope = full, "full_day"
+    if full.status != Status.READY:
+        candidates = [
+            r.start
+            for r in c.price_engine.lookup(c.site["id"], quarter(now)[0], last)
+            if r.start >= quarter(now)[0]
+        ]
+        selected = None
+        if candidates:
+            remaining = api.lookup(c.site["id"], candidates[0], last, now=now)
+            if remaining.status == Status.READY:
+                selected, scope = remaining, "remaining_day"
+    facts = {
+        "scope": scope if selected and selected.status == Status.READY else "unavailable",
+        "used_slots": 0,
+        "day_slots": full.expected_slots,
+        "reason": full.reason,
+        "start": None,
+        "end": last.isoformat(),
     }
+    if selected and selected.status == Status.READY:
+        values = [q.price for q in selected.slots]
+        facts.update(
+            used_slots=len(values),
+            start=selected.slots[0].start.isoformat(),
+            average=sum(values) / len(values),
+            minimum=min(values),
+            maximum=max(values),
+            reason=None,
+        )
+    return facts
 
 
-def slot_breakdown(coordinator, start, now=None):
-    """Explain one stored UTC quarter, retaining degraded status and original revision."""
+def breakdown(c, now=None):
     now = now or dt_util.utcnow()
-    result = interval_result(coordinator, start, start + timedelta(minutes=15), now)
-    if not result.records:
-        return f"{start.isoformat()}: {result.status}. No stored price. Missing is not zero."
-    row = result.records[0]
-    payload = json.loads(row.components_json)
-    source = json.loads(row.source_json)
-    lines = [
-        f"{row.start.isoformat()} – {row.end.isoformat()} (UTC)",
-        f"Status: {result.status}; revision: {row.revision}; verified: {result.last_success or 'unverified'}",
-        f"Stored final: {row.final_price_incl_vat:.6f} DKK/kWh including VAT",
-    ]
-    lines.append(
-        f"Stored source: {source.get('kind', 'recorded provider')}; "
-        f"input unit: {source.get('input_unit', 'provider contract')}; "
-        f"input VAT: {source.get('input_vat', 'provider contract')}; "
-        f"original verification: {source.get('verified_at', 'see diagnostics')}"
+    for offset, label in ((0, "current_quarter"), (1, "next_quarter")):
+        window = price(c, offset, now)
+        if window.status != Status.READY:
+            continue
+        row = c.price_engine.lookup(c.site["id"], *quarter(now, offset))[0]
+        parts = json.loads(row.components_json)["components"]
+        return {
+            "period": label,
+            "start": row.start.isoformat(),
+            "end": row.end.isoformat(),
+            "unit": "øre/kWh",
+            "revision": row.revision,
+            "source": json.loads(row.source_json),
+            "components": {k: {**p, "value_ore": p["ex_vat"] * 100} for k, p in parts.items()},
+            "vat_amount_ore": sum(p["vat"] for p in parts.values()) * 100,
+            "final_ore": row.final_price_incl_vat * 100,
+        }
+    return {"period": "unavailable", "components": {}}
+
+
+def source_value(c, kind, now=None):
+    now = now or dt_util.utcnow()
+    first, last = quarter(now, int(kind == "next_spot"))
+    day = first.astimezone(ZoneInfo(c.site["timezone"])).date()
+    raw = report(c, day).get("raw", {})
+    try:
+        stamp = dt_util.parse_datetime(raw.get("verified_at", ""))
+        fresh = stamp and 0 <= (now - stamp).total_seconds() <= 86400
+    except TypeError, ValueError:
+        fresh = False
+    if kind in {"current_spot", "next_spot"}:
+        if not fresh or raw.get("status") not in {"READY", "INCOMPLETE"}:
+            return None
+        return next(
+            (
+                s.price
+                for s in c.price_updater.raw_slots.get(str(day), ())
+                if s.start == first and s.end == last
+            ),
+            None,
+        )
+    if report(c, day).get("failure_stage") in {"source", "grid"}:
+        return None
+    part = c.price_updater.grid_slots.get(str(day), {}).get(first)
+    return part["ex_vat"] if part else None
+
+
+def availability(c, now=None):
+    now = now or dt_util.utcnow()
+    day = now.astimezone(ZoneInfo(c.site["timezone"])).date()
+    current, following = price(c, 0, now), price(c, 1, now)
+    tomorrow = PriceAPI(c.hass).lookup(
+        c.site["id"], *day_bounds(day + timedelta(days=1), c.site["timezone"]), now=now
     )
-    if source.get("dso"):
-        dso = source["dso"]
-        lines.append(
-            f"Grid source: {dso.get('provider')}; product: {dso.get('product')}; "
-            f"verified: {dso.get('fetched_at')}; effective ranges: {dso.get('effective_ranges')}"
-        )
-    for name, part in payload.get("components", {}).items():
-        lines.append(
-            f"{name}: {part['ex_vat']:.6f} ex VAT + {part['vat']:.6f} VAT = "
-            f"{part['incl_vat']:.6f} DKK/kWh; verified {part.get('verified_on', 'see source')}; "
-            f"period {part.get('valid_from', 'source interval')} – {part.get('valid_to', 'source interval')}; "
-            f"locked {part.get('locked', False)}; source: {part.get('source', 'see input/grid source')}"
-        )
-    if "external_all_in" in payload:
-        lines.append("Provider final all-in price; no additional tariff or VAT applied.")
-    if payload.get("fixed_subscriptions_excluded"):
-        lines.append("Fixed subscriptions excluded from this marginal price (DKK/month):")
-        for part in payload["fixed_subscriptions_excluded"]:
-            lines.append(f"{part['id']}: {part['incl_vat']:.6f} including VAT")
-    if result.reason:
-        lines.append(f"Verification issue: {result.reason}")
-    return "\n".join(lines)
+    r = report(c, day)
+    code = (
+        "ready"
+        if current.status == Status.READY
+        else "error"
+        if current.status == Status.ERROR
+        else "stale"
+        if current.status == Status.STALE
+        else "waiting"
+        if following.status == Status.READY
+        else "missing"
+    )
+    facts = {
+        "code": code,
+        "current_status": str(current.status),
+        "next_status": str(following.status),
+        "tomorrow_status": str(tomorrow.status),
+        "current_slots": current.available_slots,
+        "next_slots": following.available_slots,
+        "tomorrow_slots": tomorrow.available_slots,
+        "tomorrow_expected": tomorrow.expected_slots,
+        "available_from": following.slots[0]
+        .start.astimezone(ZoneInfo(c.site["timezone"]))
+        .isoformat(timespec="minutes")
+        if following.status == Status.READY
+        else None,
+        "reason": current.reason or r.get("reason"),
+        "action": r.get("required_action"),
+        "affected_period": r.get("affected_period"),
+        "missing_components": r.get("missing_components", []),
+        "statistics": statistics(c, now),
+        "breakdown": breakdown(c, now),
+        "next_check": c.schedule.next_update(now).isoformat(),
+    }
+    return facts

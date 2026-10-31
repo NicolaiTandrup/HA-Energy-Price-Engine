@@ -1,6 +1,7 @@
-"""Persistent prices are calculated on updates and immutable across lookups."""
+"""Precomputed prices, immutable snapshots, DST, atomicity and no-op verification."""
 
-from datetime import UTC, date, datetime, timedelta
+from asyncio import gather
+from datetime import date, timedelta
 from unittest.mock import patch
 
 import pytest
@@ -8,90 +9,78 @@ import pytest
 from custom_components.ha_energy_price_engine.models import PriceSlot
 from custom_components.ha_energy_price_engine.price_engine import PriceEngine, day_bounds
 
-NOW = datetime(2026, 10, 23, tzinfo=UTC)
-
-
-def rows(day=date(2026, 10, 24)):
-    start, end = day_bounds(day)
-    result = []
-    while start < end:
-        result.append(PriceSlot(start, start + timedelta(minutes=15), -0.1))
-        start += timedelta(minutes=15)
-    return result
+from .helpers import NOW, rows, tariff
 
 
 @pytest.mark.parametrize(
-    "day,count", [(date(2026, 3, 29), 92), (date(2026, 10, 25), 100), (date(2026, 10, 24), 96)]
+    "day,count", [(date(2026, 3, 29), 92), (date(2026, 10, 24), 96), (date(2026, 10, 25), 100)]
 )
-async def test_day_shape_dst_and_restart(hass, day, count):
+async def test_dst_persist_restart_and_no_read_arithmetic(hass, day, count):
     engine = PriceEngine(hass, "test")
     data = rows(day)
-    assert len(data) == count
     await engine.async_update(
-        "home",
-        data,
-        {"mode": "spot_ex_vat", "grid": 0.2, "vat": 0.25},
-        {"provider": "test"},
-        NOW - timedelta(days=365),
+        "home", data, tariff(), {"verified_at": NOW.isoformat()}, NOW - timedelta(days=365)
     )
     restored = PriceEngine(hass, "test")
     await restored.async_load(["home"])
     assert restored.complete_day("home", day)
     with patch(
         "custom_components.ha_energy_price_engine.price_engine.calculate",
-        side_effect=AssertionError("read recalculation"),
+        side_effect=AssertionError("read calculation"),
     ):
         result = restored.lookup("home", *day_bounds(day))
-        assert len(result) == count and result[0].final_price_incl_vat == pytest.approx(0.125)
+        assert len(result) == count
+        assert result[0].final_price_incl_vat == pytest.approx(0.31625)
 
 
-async def test_unchanged_no_calculation_or_write_and_past_preserved(hass):
+async def test_unchanged_no_composition_or_sql_and_future_only_revisions(hass):
     engine = PriceEngine(hass, "test")
     data = rows()
-    tariff = {"mode": "all_in"}
-    await engine.async_update("home", data, tariff, {}, NOW)
-    with patch(
-        "custom_components.ha_energy_price_engine.price_engine.calculate",
-        side_effect=AssertionError("unchanged recalculation"),
+    first = await engine.async_update("home", data, tariff(), {"verified_at": NOW.isoformat()}, NOW)
+    assert first.changed and len(first.verified_starts) == 96
+    with (
+        patch(
+            "custom_components.ha_energy_price_engine.price_engine.calculate",
+            side_effect=AssertionError("recalculation"),
+        ),
+        patch.object(engine.database, "async_commit", side_effect=AssertionError("SQL write")),
     ):
-        assert not await engine.async_update("home", data, tariff, {}, NOW)
+        assert not (
+            await engine.async_update(
+                "home", data, tariff(), {"verified_at": (NOW + timedelta(hours=1)).isoformat()}, NOW
+            )
+        ).changed
     later = data[2].start
-    corrected = [PriceSlot(s.start, s.end, 3) for s in data]
-    await engine.async_update("home", corrected, tariff, {"version": "correction"}, later)
+    changed = [PriceSlot(s.start, s.end, 3) for s in data]
+    await engine.async_update(
+        "home",
+        changed,
+        tariff(),
+        {"version": "correction", "verified_at": later.isoformat()},
+        later,
+    )
     result = engine.lookup("home", data[0].start, data[-1].end)
-    assert result[0].final_price_incl_vat == -0.1
-    assert result[2].final_price_incl_vat == 3
     assert result[0].revision == 1 and result[2].revision == 2
+    assert result[0].final_price_incl_vat == pytest.approx(0.31625)
+    assert result[2].final_price_incl_vat == pytest.approx(4.19125)
+    assert len(engine.audit["home"]) == 94
 
 
 async def test_invalid_atomic_batch_and_separate_sites(hass):
     engine = PriceEngine(hass, "test")
     data = rows()
-    await engine.async_update("home", data, {"mode": "all_in"}, {}, NOW)
+    await engine.async_update("home", data, tariff(), {}, NOW)
     with pytest.raises(ValueError):
-        await engine.async_update("home", data + data[:1], {"mode": "all_in"}, {}, NOW)
-    assert engine.complete_day("home", date(2026, 10, 24))
-    assert not engine.complete_day("away", date(2026, 10, 24))
-    with patch(
-        "custom_components.ha_energy_price_engine.ledger.LedgerDatabase.async_commit",
-        side_effect=OSError("disk full"),
-    ):
+        await engine.async_update("home", data + data[:1], tariff(), {}, NOW)
+    with patch.object(engine.database, "async_commit", side_effect=OSError("disk full")):
         with pytest.raises(OSError):
-            await engine.async_update("away", data, {"mode": "all_in"}, {}, NOW)
-    assert engine.lookup("away", *day_bounds(date(2026, 10, 24))) == ()
+            await engine.async_update("away", data, tariff(), {}, NOW)
+    assert not engine.lookup("away", *day_bounds(date(2026, 10, 24)))
+    assert engine.complete_day("home", date(2026, 10, 24))
 
 
-async def test_concurrent_updates_and_verification_only_changes_are_noops(hass):
-    from asyncio import gather
-
+async def test_concurrent_updates_one_commit(hass):
     engine = PriceEngine(hass, "concurrent")
-    data = rows()
-    args = ("home", data, {"mode": "all_in"}, {"provider": "test", "verified_at": "first"}, NOW)
-    assert await gather(engine.async_update(*args), engine.async_update(*args)) == [True, False]
-    with patch(
-        "custom_components.ha_energy_price_engine.price_engine.calculate",
-        side_effect=AssertionError("verification-only calculation"),
-    ):
-        assert not await engine.async_update(
-            "home", data, {"mode": "all_in"}, {"provider": "test", "verified_at": "later"}, NOW
-        )
+    args = ("home", rows(), tariff(), {}, NOW)
+    results = await gather(engine.async_update(*args), engine.async_update(*args))
+    assert [r.changed for r in results] == [True, False]

@@ -1,0 +1,10 @@
+title: Energy prices
+views:
+  - title: Electricity prices
+    path: electricity-prices
+    icon: mdi:chart-timeline-variant
+    type: panel
+    cards:
+      - type: custom:energy-price-engine-card
+        # One site is automatic; several sites show a named selector.
+        # Optional: site_id: paste_the_chosen_site_id

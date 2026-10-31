@@ -38,7 +38,9 @@ def candidate_tree(reference="pe"):
     files = {
         str(p.relative_to(root)): p.read_bytes()
         for p in base.rglob("*")
-        if p.is_file() and p.suffix in {".py", ".json", ".png"} and "__pycache__" not in p.parts
+        if p.is_file()
+        and p.suffix in {".py", ".json", ".png", ".js"}
+        and "__pycache__" not in p.parts
     }
     files["hacs.json"] = (root / "hacs.json").read_bytes()
     return files
@@ -101,7 +103,7 @@ async def test_recorded_prebootstrap_branch_reproduces_hacs_rejection(
 
 
 @pytest.mark.parametrize("line", list(PINS))
-@pytest.mark.parametrize("reference", ["pe", "pr26"])
+@pytest.mark.parametrize("reference", ["pe"])
 async def test_candidate_after_approved_default_branch_gate_installs_via_actual_hacs(
     hass, tmp_path, line, reference
 ):

@@ -27,7 +27,6 @@ def fictional_tariff():
     return {
         "mode": "spot_ex_vat",
         "vat": 0.25,
-        "grid": 0.2,
         "timezone": "Europe/Copenhagen",
         "components": [
             {
@@ -44,6 +43,7 @@ def fictional_tariff():
             }
             for name, amount in [
                 ("supplier", 0.1),
+                ("dso", 0.2),
                 ("energinet_net", 0.04),
                 ("energinet_system", 0.07),
                 ("electricity_tax", 0.008),

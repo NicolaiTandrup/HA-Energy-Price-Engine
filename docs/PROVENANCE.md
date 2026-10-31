@@ -15,6 +15,20 @@ verified Radius Datahub fixture. No vehicle, optimizer, control or Node-RED code
 The original integration-dependent optimizer tests are replaced by producer
 lifecycle/consumer contract tests here; price-only regressions are retained.
 
-Changes from the source are recorded in Git and ADR-001: independent storage
+Changes from the source are recorded in Git and the cleanup inventory: independent storage
 namespace/lifecycle, versioned consumer API, native site/rate configuration, durable
 history/audit, stricter source verification and targeted options recalculation.
+
+Beta.10 retains the proven dated calculation, source normalization, scheduler and
+Radius adapter while removing obsolete invoice/provisional/entity-source branches.
+The strict official normalization from adapters.py now lives in prices.py. SQLite
+compression/recovery remains intact. Historical release receipts and tags preserve
+earlier tested implementations; removal does not erase their attribution.
+
+National 2026 charges: Energinet net 4.3 øre/kWh, system 7.2øre/kWh exVAT through
+2026-12-31; electricity tax0.8 øre/kWh exVAT for 2026–2027. These bounded owner-verified
+policy rates came from issue #8, verified2026-10-23; they are not a legislation scraper.
+VAT 25% is applied once. Unknown later rates fail closed until explicitly verified.
+The documented EWII household3 øre/kWh exVAT is June–September 2026 only. Beta.10
+does not extrapolate it, use it as an onboarding default or scrape a different
+public product as the owner's contract. Supplier amounts come from explicit input.

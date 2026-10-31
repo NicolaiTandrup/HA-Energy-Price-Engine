@@ -1,0 +1,955 @@
+{
+  "schema": 1,
+  "synthetic": true,
+  "owner_acceptance": false,
+  "homeassistant": "2026.10.4",
+  "frontend": "20260930.5",
+  "browser": "system Chromium via locked Playwright1.64.1; no browser connector available",
+  "viewports": [
+    [
+      1440,
+      1000
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "languages": [
+    "en",
+    "da"
+  ],
+  "native_setup": {
+    "first_site_saved": true,
+    "closed_grid_resumed": true,
+    "wrong_input_retained": true,
+    "accepted_supplier_survives_close": true
+  },
+  "native_entity_count": 9,
+  "installed_version": "0.1.0-beta.10",
+  "initial_site": {
+    "site_id": "149aaaf961cb44e78813e4bc74c76ded",
+    "name": "QA Home",
+    "entity_id": "sensor.qa_home_price_availability"
+  },
+  "full_day_schedule": {
+    "site": {
+      "id": "149aaaf961cb44e78813e4bc74c76ded",
+      "name": "QA Home",
+      "timezone": "Europe/Copenhagen",
+      "area": "DK2",
+      "dso_mode": "radius_c"
+    },
+    "generated_at": "2026-10-31T08:53:36.529836+00:00",
+    "statistics": {
+      "scope": "full_day",
+      "used_slots": 96,
+      "day_slots": 96,
+      "reason": null,
+      "start": "2026-10-30T23:00:00+00:00",
+      "end": "2026-10-31T23:00:00+00:00",
+      "average": 1.2241766796875,
+      "minimum": 0.059997499999999995,
+      "maximum": 2.4633025
+    },
+    "current": {
+      "status": "READY",
+      "expected_slots": 1,
+      "stored_slots": 1,
+      "reason": null,
+      "last_success": "2026-10-31T08:53:34.676376+00:00"
+    },
+    "next": {
+      "status": "READY",
+      "expected_slots": 1,
+      "stored_slots": 1,
+      "reason": null,
+      "last_success": "2026-10-31T08:53:34.676376+00:00"
+    },
+    "revision": 4,
+    "days": [
+      {
+        "date": "2026-10-31",
+        "start": "2026-10-30T23:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "local_start": "2026-10-31T00:00+01:00",
+        "local_end": "2026-11-01T00:00+01:00",
+        "status": "READY",
+        "expected_slots": 96,
+        "stored_slots": 96,
+        "reason": null,
+        "last_success": "2026-10-31T08:53:34.676376+00:00",
+        "ready_slots": 96,
+        "raw_ready_slots": 96,
+        "raw_report": {
+          "status": "READY",
+          "verified_at": "2026-10-31T08:53:34.676376+00:00",
+          "valid_slots": 96,
+          "expected_slots": 96
+        },
+        "missing_components": [],
+        "required_action": null,
+        "failure_stage": null,
+        "slots_sha256": "5e1fe28668d170c9ee8d6447149aae77857a012ff299bd6361a7db3ba5f531f9",
+        "first_quarter": {
+          "start": "2026-10-30T23:00:00+00:00",
+          "end": "2026-10-30T23:15:00+00:00",
+          "local_start": "2026-10-31T00:00+01:00",
+          "local_end": "2026-10-31T00:15+01:00",
+          "spot": -8.1259,
+          "dso": 10.6175,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 3,
+          "electricity_tax": 0.8,
+          "vat": 4.4479,
+          "final": 22.2395,
+          "stored_final": 22.2395,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T08:53:34.676376+00:00",
+          "revision": 1,
+          "provenance": "1"
+        },
+        "last_quarter": {
+          "start": "2026-10-31T22:45:00+00:00",
+          "end": "2026-10-31T23:00:00+00:00",
+          "local_start": "2026-10-31T23:45+01:00",
+          "local_end": "2026-11-01T00:00+01:00",
+          "spot": -15.3005,
+          "dso": 31.852399999999996,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 3.75,
+          "electricity_tax": 0.8,
+          "vat": 8.150474999999998,
+          "final": 40.752374999999994,
+          "stored_final": 40.752374999999994,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T08:53:34.676376+00:00",
+          "revision": 3,
+          "provenance": "2"
+        }
+      },
+      {
+        "date": "2026-11-01",
+        "start": "2026-10-31T23:00:00+00:00",
+        "end": "2026-11-01T23:00:00+00:00",
+        "local_start": "2026-11-01T00:00+01:00",
+        "local_end": "2026-11-02T00:00+01:00",
+        "status": "READY",
+        "expected_slots": 96,
+        "stored_slots": 96,
+        "reason": null,
+        "last_success": "2026-10-31T08:53:34.676376+00:00",
+        "ready_slots": 96,
+        "raw_ready_slots": 96,
+        "raw_report": {
+          "status": "READY",
+          "verified_at": "2026-10-31T08:53:34.676376+00:00",
+          "valid_slots": 96,
+          "expected_slots": 96
+        },
+        "missing_components": [],
+        "required_action": null,
+        "failure_stage": null,
+        "slots_sha256": "c652720a8515523a19ae7bb6f21b6b96372f4c2af87243decf9ce8f9151c3318",
+        "first_quarter": {
+          "start": "2026-10-31T23:00:00+00:00",
+          "end": "2026-10-31T23:15:00+00:00",
+          "local_start": "2026-11-01T00:00+01:00",
+          "local_end": "2026-11-01T00:15+01:00",
+          "spot": -8.1259,
+          "dso": 10.6175,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 3.75,
+          "electricity_tax": 0.8,
+          "vat": 4.6354,
+          "final": 23.177,
+          "stored_final": 23.177,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T08:53:34.676376+00:00",
+          "revision": 4,
+          "provenance": "2"
+        },
+        "last_quarter": {
+          "start": "2026-11-01T22:45:00+00:00",
+          "end": "2026-11-01T23:00:00+00:00",
+          "local_start": "2026-11-01T23:45+01:00",
+          "local_end": "2026-11-02T00:00+01:00",
+          "spot": -15.3005,
+          "dso": 31.852399999999996,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 3.75,
+          "electricity_tax": 0.8,
+          "vat": 8.150474999999998,
+          "final": 40.752374999999994,
+          "stored_final": 40.752374999999994,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T08:53:34.676376+00:00",
+          "revision": 4,
+          "provenance": "2"
+        }
+      }
+    ],
+    "dso_today": [
+      {
+        "start": "2026-10-30T23:00:00+00:00",
+        "end": "2026-10-31T05:00:00+00:00",
+        "local_start": "2026-10-31T00:00+01:00",
+        "local_end": "2026-10-31T06:00+01:00",
+        "value": 10.6175,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T08:53:34.676376+00:00",
+        "valid_from": null,
+        "valid_to": null
+      },
+      {
+        "start": "2026-10-31T05:00:00+00:00",
+        "end": "2026-10-31T16:00:00+00:00",
+        "local_start": "2026-10-31T06:00+01:00",
+        "local_end": "2026-10-31T17:00+01:00",
+        "value": 31.852399999999996,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T08:53:34.676376+00:00",
+        "valid_from": null,
+        "valid_to": null
+      },
+      {
+        "start": "2026-10-31T16:00:00+00:00",
+        "end": "2026-10-31T20:00:00+00:00",
+        "local_start": "2026-10-31T17:00+01:00",
+        "local_end": "2026-10-31T21:00+01:00",
+        "value": 95.5573,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T08:53:34.676376+00:00",
+        "valid_from": null,
+        "valid_to": null
+      },
+      {
+        "start": "2026-10-31T20:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "local_start": "2026-10-31T21:00+01:00",
+        "local_end": "2026-11-01T00:00+01:00",
+        "value": 31.852399999999996,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T08:53:34.676376+00:00",
+        "valid_from": null,
+        "valid_to": null
+      }
+    ],
+    "current_component_snapshot": {
+      "period": "current_quarter",
+      "start": "2026-10-31T08:45:00+00:00",
+      "end": "2026-10-31T09:00:00+00:00",
+      "unit": "øre/kWh",
+      "revision": 1,
+      "source": {
+        "area": "DK2",
+        "config_entry": "01QAPE1000000000000000000NP",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-31T08:48:41.125499+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-31T08:45:08.974512+00:00"
+      },
+      "components": {
+        "dso": {
+          "ex_vat": 0.318524,
+          "id": "dso",
+          "incl_vat": 0.398155,
+          "source": "Verified Radius C Datahub tariff",
+          "vat": 0.079631,
+          "value_ore": 31.852399999999996
+        },
+        "electricity_tax": {
+          "ex_vat": 0.008,
+          "hours": [],
+          "id": "electricity_tax",
+          "incl_vat": 0.01,
+          "locked": false,
+          "source": "Rate specified by owner: Manager issue #8",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-01-01",
+          "valid_to": "2028-01-01",
+          "vat": 0.002,
+          "verified_on": "2026-10-23",
+          "value_ore": 0.8
+        },
+        "energinet_net": {
+          "ex_vat": 0.043,
+          "hours": [],
+          "id": "energinet_net",
+          "incl_vat": 0.05374999999999999,
+          "locked": false,
+          "source": "Rate specified by owner: Manager issue #8",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-01-01",
+          "vat": 0.010749999999999996,
+          "verified_on": "2026-10-23",
+          "value_ore": 4.3
+        },
+        "energinet_system": {
+          "ex_vat": 0.072,
+          "hours": [],
+          "id": "energinet_system",
+          "incl_vat": 0.09,
+          "locked": false,
+          "source": "Rate specified by owner: Manager issue #8",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-01-01",
+          "vat": 0.018000000000000002,
+          "verified_on": "2026-10-23",
+          "value_ore": 7.199999999999999
+        },
+        "spot": {
+          "ex_vat": 0.72202,
+          "id": "spot",
+          "incl_vat": 0.902525,
+          "vat": 0.180505,
+          "value_ore": 72.202
+        },
+        "supplier": {
+          "effective_after": "2026-10-30T23:00:00+00:00",
+          "ex_vat": 0.03,
+          "hours": [],
+          "id": "supplier",
+          "incl_vat": 0.0375,
+          "locked": true,
+          "source": "User-confirmed marginal rate",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-10-31",
+          "valid_to": "9999-12-31",
+          "vat": 0.0075,
+          "verified_on": "2026-10-31",
+          "value_ore": 3
+        }
+      },
+      "vat_amount_ore": 29.8386,
+      "final_ore": 149.19299999999998
+    }
+  },
+  "remaining_day_schedule": {
+    "site": {
+      "id": "e0bf343cedf84ce89a8809cd914687cf",
+      "name": "QA Partial",
+      "timezone": "Europe/Copenhagen",
+      "area": "DK2",
+      "dso_mode": "radius_c"
+    },
+    "generated_at": "2026-10-31T09:01:24.593893+00:00",
+    "statistics": {
+      "scope": "remaining_day",
+      "used_slots": 56,
+      "day_slots": 96,
+      "reason": null,
+      "start": "2026-10-31T09:00:00+00:00",
+      "end": "2026-10-31T23:00:00+00:00",
+      "average": 1.6103913169642858,
+      "minimum": 0.41064874999999995,
+      "maximum": 2.4664275
+    },
+    "current": {
+      "status": "READY",
+      "expected_slots": 1,
+      "stored_slots": 1,
+      "reason": null,
+      "last_success": "2026-10-31T09:01:22.086244+00:00"
+    },
+    "next": {
+      "status": "READY",
+      "expected_slots": 1,
+      "stored_slots": 1,
+      "reason": null,
+      "last_success": "2026-10-31T09:01:22.086244+00:00"
+    },
+    "revision": 2,
+    "days": [
+      {
+        "date": "2026-10-31",
+        "start": "2026-10-30T23:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "local_start": "2026-10-31T00:00+01:00",
+        "local_end": "2026-11-01T00:00+01:00",
+        "status": "INCOMPLETE",
+        "expected_slots": 96,
+        "stored_slots": 56,
+        "reason": "Verified quarters are missing from the requested range",
+        "last_success": "2026-10-31T09:01:22.086244+00:00",
+        "ready_slots": 56,
+        "raw_ready_slots": 96,
+        "raw_report": {
+          "status": "READY",
+          "verified_at": "2026-10-31T09:01:22.086244+00:00",
+          "valid_slots": 96,
+          "expected_slots": 96
+        },
+        "missing_components": [
+          "supplier"
+        ],
+        "required_action": "Configure the affected component and its actual effective period; earlier unknown rates are never assumed",
+        "failure_stage": "configuration",
+        "affected_period": "2026-10-30T23:00:00+00:00",
+        "slots_sha256": "602d1af60549b443b08a7bf3567e7c89f83a81337e6eb66cf5d4d2cd6ddc2302",
+        "first_quarter": {
+          "start": "2026-10-30T23:00:00+00:00",
+          "end": "2026-10-30T23:15:00+00:00",
+          "local_start": "2026-10-31T00:00+01:00",
+          "local_end": "2026-10-31T00:15+01:00",
+          "spot": -8.1259,
+          "dso": null,
+          "energinet_net": null,
+          "energinet_system": null,
+          "supplier": null,
+          "electricity_tax": null,
+          "vat": null,
+          "final": null,
+          "stored_final": null,
+          "status": "INCOMPLETE",
+          "reason": "Verified quarters are missing from the requested range",
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T09:01:22.086244+00:00",
+          "revision": null,
+          "provenance": null
+        },
+        "last_quarter": {
+          "start": "2026-10-31T22:45:00+00:00",
+          "end": "2026-10-31T23:00:00+00:00",
+          "local_start": "2026-10-31T23:45+01:00",
+          "local_end": "2026-11-01T00:00+01:00",
+          "spot": -15.3005,
+          "dso": 31.852399999999996,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 4,
+          "electricity_tax": 0.8,
+          "vat": 8.212974999999998,
+          "final": 41.064874999999994,
+          "stored_final": 41.064874999999994,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T09:01:22.086244+00:00",
+          "revision": 1,
+          "provenance": "1"
+        }
+      },
+      {
+        "date": "2026-11-01",
+        "start": "2026-10-31T23:00:00+00:00",
+        "end": "2026-11-01T23:00:00+00:00",
+        "local_start": "2026-11-01T00:00+01:00",
+        "local_end": "2026-11-02T00:00+01:00",
+        "status": "READY",
+        "expected_slots": 96,
+        "stored_slots": 96,
+        "reason": null,
+        "last_success": "2026-10-31T09:01:22.086244+00:00",
+        "ready_slots": 96,
+        "raw_ready_slots": 96,
+        "raw_report": {
+          "status": "READY",
+          "verified_at": "2026-10-31T09:01:22.086244+00:00",
+          "valid_slots": 96,
+          "expected_slots": 96
+        },
+        "missing_components": [],
+        "required_action": null,
+        "failure_stage": null,
+        "affected_period": null,
+        "slots_sha256": "1a87765c50567431a5ae7459b81fa09d2cab9c0031cd42011f42b42293e79f16",
+        "first_quarter": {
+          "start": "2026-10-31T23:00:00+00:00",
+          "end": "2026-10-31T23:15:00+00:00",
+          "local_start": "2026-11-01T00:00+01:00",
+          "local_end": "2026-11-01T00:15+01:00",
+          "spot": -8.1259,
+          "dso": 10.6175,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 4,
+          "electricity_tax": 0.8,
+          "vat": 4.6979,
+          "final": 23.4895,
+          "stored_final": 23.4895,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T09:01:22.086244+00:00",
+          "revision": 2,
+          "provenance": "1"
+        },
+        "last_quarter": {
+          "start": "2026-11-01T22:45:00+00:00",
+          "end": "2026-11-01T23:00:00+00:00",
+          "local_start": "2026-11-01T23:45+01:00",
+          "local_end": "2026-11-02T00:00+01:00",
+          "spot": -15.3005,
+          "dso": 31.852399999999996,
+          "energinet_net": 4.3,
+          "energinet_system": 7.199999999999999,
+          "supplier": 4,
+          "electricity_tax": 0.8,
+          "vat": 8.212974999999998,
+          "final": 41.064874999999994,
+          "stored_final": 41.064874999999994,
+          "status": "READY",
+          "reason": null,
+          "raw_status": "READY",
+          "raw_verified_at": "2026-10-31T09:01:22.086244+00:00",
+          "revision": 2,
+          "provenance": "1"
+        }
+      }
+    ],
+    "dso_today": [
+      {
+        "start": "2026-10-30T23:00:00+00:00",
+        "end": "2026-10-31T05:00:00+00:00",
+        "local_start": "2026-10-31T00:00+01:00",
+        "local_end": "2026-10-31T06:00+01:00",
+        "value": 10.6175,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T09:01:22.086244+00:00",
+        "valid_from": null,
+        "valid_to": null
+      },
+      {
+        "start": "2026-10-31T05:00:00+00:00",
+        "end": "2026-10-31T16:00:00+00:00",
+        "local_start": "2026-10-31T06:00+01:00",
+        "local_end": "2026-10-31T17:00+01:00",
+        "value": 31.852399999999996,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T09:01:22.086244+00:00",
+        "valid_from": null,
+        "valid_to": null
+      },
+      {
+        "start": "2026-10-31T16:00:00+00:00",
+        "end": "2026-10-31T20:00:00+00:00",
+        "local_start": "2026-10-31T17:00+01:00",
+        "local_end": "2026-10-31T21:00+01:00",
+        "value": 95.5573,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T09:01:22.086244+00:00",
+        "valid_from": null,
+        "valid_to": null
+      },
+      {
+        "start": "2026-10-31T20:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "local_start": "2026-10-31T21:00+01:00",
+        "local_end": "2026-11-01T00:00+01:00",
+        "value": 31.852399999999996,
+        "status": "READY",
+        "source": "Verified Radius C Datahub tariff",
+        "verified_on": null,
+        "verified_at": "2026-10-31T09:01:22.086244+00:00",
+        "valid_from": null,
+        "valid_to": null
+      }
+    ],
+    "current_component_snapshot": {
+      "period": "current_quarter",
+      "start": "2026-10-31T09:00:00+00:00",
+      "end": "2026-10-31T09:15:00+00:00",
+      "unit": "øre/kWh",
+      "revision": 1,
+      "source": {
+        "area": "DK2",
+        "config_entry": "01QAPE1000000000000000000NP",
+        "dso": {
+          "charge_type": "D03",
+          "effective_ranges": [
+            {
+              "from": "2026-10-01T00:00:00+02:00",
+              "to": "2027-04-01T00:00:00+02:00"
+            }
+          ],
+          "effective_versions": [
+            "2026-10-01T00:00:00+02:00"
+          ],
+          "fetched_at": "2026-10-31T08:57:30.930286+00:00",
+          "gln": "5790000705689",
+          "product": "DT_C_01",
+          "provider": "DatahubPricelist",
+          "unit": "DKK/kWh",
+          "url": "https://api.energidataservice.dk/dataset/DatahubPricelist",
+          "vat_included": false,
+          "version": "acdb122231038ae8a68bfa77ec17f4534c3e0e45d28bce1e8a3268d11dc51230"
+        },
+        "input_unit": "DKK/MWh",
+        "input_vat": "excluded",
+        "kind": "nordpool",
+        "verified_at": "2026-10-31T08:57:28.658284+00:00"
+      },
+      "components": {
+        "dso": {
+          "ex_vat": 0.318524,
+          "id": "dso",
+          "incl_vat": 0.398155,
+          "source": "Verified Radius C Datahub tariff",
+          "vat": 0.079631,
+          "value_ore": 31.852399999999996
+        },
+        "electricity_tax": {
+          "ex_vat": 0.008,
+          "hours": [],
+          "id": "electricity_tax",
+          "incl_vat": 0.01,
+          "locked": false,
+          "source": "Rate specified by owner: Manager issue #8",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-01-01",
+          "valid_to": "2028-01-01",
+          "vat": 0.002,
+          "verified_on": "2026-10-23",
+          "value_ore": 0.8
+        },
+        "energinet_net": {
+          "ex_vat": 0.043,
+          "hours": [],
+          "id": "energinet_net",
+          "incl_vat": 0.05374999999999999,
+          "locked": false,
+          "source": "Rate specified by owner: Manager issue #8",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-01-01",
+          "vat": 0.010749999999999996,
+          "verified_on": "2026-10-23",
+          "value_ore": 4.3
+        },
+        "energinet_system": {
+          "ex_vat": 0.072,
+          "hours": [],
+          "id": "energinet_system",
+          "incl_vat": 0.09,
+          "locked": false,
+          "source": "Rate specified by owner: Manager issue #8",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-01-01",
+          "vat": 0.018000000000000002,
+          "verified_on": "2026-10-23",
+          "value_ore": 7.199999999999999
+        },
+        "spot": {
+          "ex_vat": 0.71096,
+          "id": "spot",
+          "incl_vat": 0.8887,
+          "vat": 0.17774,
+          "value_ore": 71.096
+        },
+        "supplier": {
+          "effective_after": "2026-10-31T09:00:00+00:00",
+          "ex_vat": 0.04,
+          "hours": [],
+          "id": "supplier",
+          "incl_vat": 0.05,
+          "locked": true,
+          "source": "User-confirmed marginal rate",
+          "unit": "DKK/kWh",
+          "valid_from": "2026-10-31",
+          "valid_to": "9999-12-31",
+          "vat": 0.010000000000000002,
+          "verified_on": "2026-10-31",
+          "value_ore": 4
+        }
+      },
+      "vat_amount_ore": 29.8121,
+      "final_ore": 149.0605
+    }
+  },
+  "remaining_day_sensor_states": [
+    {
+      "entity_id": "sensor.qa_partial_today_s_average_price",
+      "state": "161.039131696429",
+      "attributes": {
+        "scope": "remaining_day",
+        "used_slots": 56,
+        "day_slots": 96,
+        "reason": null,
+        "start": "2026-10-31T09:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "average": 1.6103913169642858,
+        "minimum": 0.41064874999999995,
+        "maximum": 2.4664275,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Partial Remaining-day average"
+      },
+      "last_changed": "2026-10-31T09:01:21.985936+00:00",
+      "last_reported": "2026-10-31T09:01:22.103971+00:00",
+      "last_updated": "2026-10-31T09:01:21.985936+00:00",
+      "context": {
+        "id": "01M68K2BP1P03WQRHSM6V7AHTS",
+        "parent_id": null,
+        "user_id": null
+      }
+    },
+    {
+      "entity_id": "sensor.qa_partial_today_s_minimum_price",
+      "state": "41.064875",
+      "attributes": {
+        "scope": "remaining_day",
+        "used_slots": 56,
+        "day_slots": 96,
+        "reason": null,
+        "start": "2026-10-31T09:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "average": 1.6103913169642858,
+        "minimum": 0.41064874999999995,
+        "maximum": 2.4664275,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Partial Remaining-day minimum"
+      },
+      "last_changed": "2026-10-31T09:01:21.990875+00:00",
+      "last_reported": "2026-10-31T09:01:22.106568+00:00",
+      "last_updated": "2026-10-31T09:01:21.990875+00:00",
+      "context": {
+        "id": "01M68K2BP6Z1HPTR9Z6HC5W1GA",
+        "parent_id": null,
+        "user_id": null
+      }
+    },
+    {
+      "entity_id": "sensor.qa_partial_today_s_maximum_price",
+      "state": "246.64275",
+      "attributes": {
+        "scope": "remaining_day",
+        "used_slots": 56,
+        "day_slots": 96,
+        "reason": null,
+        "start": "2026-10-31T09:00:00+00:00",
+        "end": "2026-10-31T23:00:00+00:00",
+        "average": 1.6103913169642858,
+        "minimum": 0.41064874999999995,
+        "maximum": 2.4664275,
+        "unit_of_measurement": "øre/kWh",
+        "friendly_name": "QA Partial Remaining-day maximum"
+      },
+      "last_changed": "2026-10-31T09:01:21.995206+00:00",
+      "last_reported": "2026-10-31T09:01:22.109329+00:00",
+      "last_updated": "2026-10-31T09:01:21.995206+00:00",
+      "context": {
+        "id": "01M68K2BPBNGFB075M9580CDPE",
+        "parent_id": null,
+        "user_id": null
+      }
+    }
+  ],
+  "multisite": {
+    "named_selector": true,
+    "unambiguous_selection_required": true,
+    "independent_schedules": true
+  },
+  "reset": {
+    "explicit_typed_name": true,
+    "wrong_name_rejected": true,
+    "only_selected_history_deleted": true,
+    "other_site_ledger_bytes_unchanged": true
+  },
+  "provider_counts_before_reads": {
+    "spot": 2,
+    "grid": 2,
+    "delta": 0
+  },
+  "provider_counts_after_reads": {
+    "spot": 2,
+    "grid": 2,
+    "delta": 0
+  },
+  "restart": {
+    "two_configurations_loaded_after_disposable_fixture_bootstrap_order_fix": true,
+    "both_ledgers_byte_identical": true,
+    "note": "The QA fixture initially registered read mocks too late for stored entries. Bootstrap now registers the same recorded/synthetic read sources before entry load. No producer workaround was added."
+  },
+  "screenshots": {
+    "docs/images/beta10/dashboard-da-desktop.png": "76f1b9dc30fd4df7fb75499cba9a5dc8b0bed8868e438f6d4f0b372fb9e94d3f",
+    "docs/images/beta10/dashboard-da-mobile.png": "418ae2779ee4313532d2b45c73c8711b96ff520345656ce01f52100dc6ffba4c",
+    "docs/images/beta10/dashboard-desktop.png": "73895ea605980cb7b9baa65609b5cb62933c755f01efe4ef68aeb1d1a12b3b15",
+    "docs/images/beta10/dashboard-grid-mobile.png": "96214ce55c04c559471fe8b634a48858ba4f7eedeb45c5d1fa0f85a10d050c0a",
+    "docs/images/beta10/dashboard-inspector-mobile.png": "4289e587b41a59c3a2ce1703e1121cf72b2296db241f0359d9a34de01bd6ea78",
+    "docs/images/beta10/dashboard-mobile.png": "7dcba6348254adcc89ba612bfbcdde574aab68655a75819a326fdef2641ae296",
+    "docs/images/beta10/dashboard-quarters-desktop.png": "d21e45f2e4a95145f0d982a7235f8f8923fb2df8c6a70418d72614e3666ddacb",
+    "docs/images/beta10/dashboard-remaining-mobile.png": "5aed22be55a9079a16e2206b889dc4b95d1d7634e055d50a4e888bb6617582bc",
+    "docs/images/beta10/device-desktop.png": "d1f3cfe98ef89282959141c333cb1b7ad86c13c348bdb5480642b5111286c6fa",
+    "docs/images/beta10/device-mobile.png": "addcd379b90c841ea230832ef01532e76b4970710a7916ad40407f4a1e4c319a",
+    "docs/images/beta10/reset-complete-mobile.png": "03d196685dd50747dd05852ca3ccd8af40db9b44b3a211b58041537fc13b4a77",
+    "docs/images/beta10/reset-rejected-mobile.png": "38263d2c6a829f61e1aeedf5b8d0dc6de2ec9216d03f7324f2d0b82521e90132",
+    "docs/images/beta10/setup-grid-desktop.png": "4467267c7681b72b02dd1d09020d515d57554c8de695967e54123bae997ee2f4",
+    "docs/images/beta10/setup-saved-da-mobile.png": "f372dc86c08d7884bacade7983e235d7d3b6aadc0fabeb5220fff050da089441",
+    "docs/images/beta10/setup-saved-desktop.png": "ff87b315e2e974b27d982bebde8df895c042a9acb027cecf2260e6edbffc69b4",
+    "docs/images/beta10/setup-saved-mobile.png": "c36544e022548836a1025e66bd78c9182d4b76172d349b26a019bb9752e1bdeb",
+    "docs/images/beta10/setup-source-desktop.png": "47dfa3a186e1a04c7a127023e8b5d2bede05b9d48466f426e4a35914d6cdd5d1",
+    "docs/images/beta10/setup-supplier-da-mobile.png": "32bd25168d475203b84a1eb5c714ec56b9f8a77eb82b27f531fd18d2cbc3f1b8",
+    "docs/images/beta10/setup-supplier-desktop.png": "51cbb879b257016de89b5a84de137c8e4401cabf4c9c58d80edc0066eba8ef9e",
+    "docs/images/beta10/setup-supplier-mobile.png": "b49b17c85eb8526c23a1f9e874d5f69b4194e1507bf371f1240c33c4c5927b6d",
+    "docs/images/beta10/setup-wrong-rate-mobile.png": "41c22855ef349966a03e3d67334fb935c1b3da16a59a4281e4bf34794cde6f27"
+  },
+  "errors": [],
+  "warnings": [],
+  "baseline_cleanup": {
+    "baseline_source": "6c588323786cc5f8f696d553e02213ef8b169286",
+    "before": {
+      "python_modules": 37,
+      "python_lines": 7214,
+      "runtime_bytes": 876821,
+      "translation_bytes": 546588,
+      "registered_entities_per_site": 41
+    },
+    "after": {
+      "python_modules": 22,
+      "python_lines": 3226,
+      "runtime_bytes": 204343,
+      "translation_bytes": 44807,
+      "registered_entities_per_site": 9
+    },
+    "sensors": [
+      {
+        "kind": "current_spot",
+        "unique_id": "<site_id>_current_spot",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": true
+      },
+      {
+        "kind": "current_final",
+        "unique_id": "<site_id>_current_final",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": true
+      },
+      {
+        "kind": "next_spot",
+        "unique_id": "<site_id>_next_spot",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": false
+      },
+      {
+        "kind": "next_final",
+        "unique_id": "<site_id>_next_final",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": false
+      },
+      {
+        "kind": "average",
+        "unique_id": "<site_id>_average",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": false
+      },
+      {
+        "kind": "minimum",
+        "unique_id": "<site_id>_minimum",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": false
+      },
+      {
+        "kind": "maximum",
+        "unique_id": "<site_id>_maximum",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": false
+      },
+      {
+        "kind": "dso",
+        "unique_id": "<site_id>_dso",
+        "unit": "øre/kWh",
+        "display_precision": 2,
+        "enabled": true,
+        "measurement": true
+      },
+      {
+        "kind": "availability",
+        "unique_id": "<site_id>_availability",
+        "unit": null,
+        "display_precision": null,
+        "enabled": true,
+        "measurement": false
+      }
+    ]
+  },
+  "validation": {
+    "producer_tests_per_core": 112,
+    "coverage_percent": 90,
+    "browser_regressions": 18,
+    "skips": 0,
+    "hassfest": "1 valid,0 invalid",
+    "isolated_zip_layouts": [
+      "HACS",
+      "manual"
+    ],
+    "pr14_head_ci_0b1a0d4": "13 successful jobs; latest UI reset-input retention change requires final source CI",
+    "final_shipped_card_native_recheck": {
+      "passed": true,
+      "final_shipped_module_byte_identical": true,
+      "rows": 192,
+      "tariff_ranges": 4,
+      "no_read_requests": true,
+      "errors": []
+    }
+  },
+  "limitations": [
+    "Software fixtures only; no owner hardware/live contract validation",
+    "CM API1 consumer is incompatible; adapter handoff supplied, CM source unchanged",
+    "Cloud scale benchmarks are not Raspberry Pi results",
+    "Old beta sites require explicit backup/reset/recreation",
+    "All history remains indexed in memory; large sites need hardware acceptance"
+  ]
+}

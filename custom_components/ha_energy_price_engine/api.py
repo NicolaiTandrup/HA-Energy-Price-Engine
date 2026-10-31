@@ -1,13 +1,15 @@
-"""Versioned read-only consumer contract. No network or composition on reads."""
+"""API v2: immutable verified final price ranges, with no I/O or calculation."""
 
 import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import StrEnum
+from zoneinfo import ZoneInfo
+
+from homeassistant.util import dt as dt_util
 
 from .const import API_VERSION, DOMAIN
 from .models import utc
-from .price_engine import PriceRecord
 
 
 class Status(StrEnum):
@@ -15,221 +17,197 @@ class Status(StrEnum):
     INCOMPLETE = "INCOMPLETE"
     STALE = "STALE"
     ERROR = "ERROR"
-    NOT_LOADED = "NOT_LOADED"
 
 
 class EngineNotReady(LookupError):
-    """Engine is not loaded; consumer must back off without treating this as free."""
+    """No producer is loaded; the consumer must wait, never substitute a price."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Site:
     site_id: str
     name: str
     timezone: str
     area: str
-    producer_entry_id: str | None = None
 
 
-@dataclass(frozen=True)
-class PriceResult:
-    api_version: int
+@dataclass(frozen=True, slots=True)
+class Quote:
+    start: datetime
+    end: datetime
+    price: float
+    revision: int
+    verified_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class PriceWindow:
     site_id: str
     status: Status
-    records: tuple[PriceRecord, ...]
+    slots: tuple[Quote, ...]
     expected_slots: int
-    valid_slots: int
-    last_success: str | None
-    reason: str | None
+    available_slots: int
     revision: int
-    producer_entry_id: str | None = None
+    verified_at: datetime | None
+    reason: str | None
+    currency: str = "DKK"
+    unit: str = "DKK/kWh"
+    vat_included: bool = True
 
 
-class ConsumerAPI:
-    """An immutable snapshot per call; caller cannot mutate producer state."""
+def _quote(record):
+    verified = utc(datetime.fromisoformat(json.loads(record.source_json)["verified_at"]))
+    return Quote(record.start, record.end, record.final_price_incl_vat, record.revision, verified)
+
+
+class PriceAPI:
+    """Consumers receive slots only when the ENTIRE requested range is ready."""
 
     version = API_VERSION
 
     def __init__(self, hass):
-        self._hass = hass
+        self.hass = hass
 
-    def sites(self) -> tuple[Site, ...]:
+    def sites(self):
         return tuple(
-            Site(c.site["id"], c.site["name"], c.site["timezone"], c.site["area"], entry_id)
-            for entry_id, c in self._hass.data.get(DOMAIN, {}).items()
+            Site(c.site["id"], c.site["name"], c.site["timezone"], c.site["area"])
+            for c in self.hass.data.get(DOMAIN, {}).values()
         )
 
-    def lookup(
-        self, site_id: str, start: datetime, end: datetime, *, now=None, producer_entry_id=None
-    ) -> PriceResult:
-        """Half-open UTC range on quarter boundaries; historical reads are supported."""
-        from homeassistant.util import dt as dt_util
+    def _site(self, site_id):
+        return next(
+            (c for c in self.hass.data.get(DOMAIN, {}).values() if c.site["id"] == site_id), None
+        )
 
-        start, end = utc(start), utc(end)
-        now = utc(now or dt_util.utcnow())
+    def lookup(self, site_id, start, end, *, now=None):
+        """Half-open aligned UTC range. Historical quotes are for cost estimates.
+
+        Current/future slots additionally require recent provider verification and
+        the latest successful configuration's per-interval verification mask.
+        Consumers must plan only future slots and accept only READY windows.
+        """
+        start, end, now = utc(start), utc(end), utc(now or dt_util.utcnow())
         if end <= start or start.timestamp() % 900 or end.timestamp() % 900:
-            raise ValueError("Expected positive, quarter-aligned aware range")
-        match = next(
-            (
-                (entry_id, coordinator)
-                for entry_id, coordinator in self._hass.data.get(DOMAIN, {}).items()
-                if coordinator.site["id"] == site_id
-                and (producer_entry_id is None or producer_entry_id == entry_id)
-            ),
-            None,
-        )
-        entry_id, c = match if match else (None, None)
-        expected = int((end - start).total_seconds() / 900)
+            raise ValueError("Expected positive aware quarter-aligned range")
+        c = self._site(site_id)
         if c is None:
-            return PriceResult(
-                1,
-                site_id,
-                Status.NOT_LOADED,
-                (),
-                expected,
-                0,
-                None,
-                "Site integration is not loaded",
-                0,
-            )
+            raise EngineNotReady("Selected price site is not loaded")
         rows = c.price_engine.lookup(site_id, start, end)
+        expected = int((end - start).total_seconds() / 900)
         complete = (
             len(rows) == expected
             and rows[0].start == start
             and rows[-1].end == end
             and all(a.end == b.start for a, b in zip(rows, rows[1:]))
         )
-        status = Status.READY if complete else Status.INCOMPLETE
-        reports = []
-        from zoneinfo import ZoneInfo
-
-        zone = ZoneInfo(c.site["timezone"])
-        first, last = (
-            start.astimezone(zone).date(),
-            (end - timedelta(microseconds=1)).astimezone(zone).date(),
-        )
-        day = first
-        while day <= last:
-            report = c.schedule.days.get(site_id, {}).get(str(day), {})
-            reports.append(report)
-            day += timedelta(days=1)
-        reason = None
-        successes = [r["last_success"] for r in reports if r.get("last_success")]
-        invalid_verification = False
-        valid_successes = []
-        for stamp in successes:
-            try:
-                parsed = utc(datetime.fromisoformat(stamp))
-                if parsed > now:
-                    invalid_verification = True
-                else:
-                    valid_successes.append(parsed)
-            except ValueError, TypeError:
-                invalid_verification = True
-        # Operational errors matter for current/future reads; historical settlement
-        # remains authoritative even if today's upstream is offline.
-        if end > now:
-            states = {r.get("status") for r in reports}
-            if invalid_verification:
-                status, reason = Status.ERROR, "Invalid or future source verification time"
-            elif "ERROR" in states:
-                status = Status.ERROR
-            elif "STALE" in states:
-                status = Status.STALE
-            elif "INCOMPLETE" in states:
-                status = Status.INCOMPLETE
-            elif not reports or any(not r.get("last_success") for r in reports):
-                status = Status.STALE if complete else Status.INCOMPLETE
-            elif any(
-                (now - datetime.fromisoformat(r["last_success"])).total_seconds() > 86400
-                for r in reports
-            ):
-                status = Status.STALE
-            reason = reason or next((r.get("reason") for r in reports if r.get("reason")), None)
+        state = Status.READY if complete else Status.INCOMPLETE
+        reason = None if complete else "Verified quarters are missing from the requested range"
+        verified = []
+        usable = {r.start for r in rows}
         if site_id in c.price_engine.load_errors:
-            status, reason = Status.ERROR, c.price_engine.load_errors[site_id]
-        return PriceResult(
-            1,
+            state, reason = Status.ERROR, c.price_engine.load_errors[site_id]
+        elif end > now:
+            if not c.settings_current:
+                state, reason = Status.STALE, "Settings changed; waiting for verification"
+                usable = {r.start for r in rows if r.end <= now}
+            first = max(start, now).astimezone(ZoneInfo(c.site["timezone"])).date()
+            last = (end - timedelta(microseconds=1)).astimezone(ZoneInfo(c.site["timezone"])).date()
+            day = first
+            while day <= last:
+                report = c.schedule.days.get(site_id, {}).get(str(day), {})
+                fresh = True
+                try:
+                    stamp = utc(datetime.fromisoformat(report["last_success"]))
+                    if not 0 <= (now - stamp).total_seconds() <= 86400:
+                        raise ValueError("Expired or future source verification")
+                    verified.append(stamp)
+                except ValueError, TypeError, KeyError:
+                    fresh = False
+                    if report.get("status") == "ERROR":
+                        state, reason = Status.ERROR, report.get("reason")
+                    elif state != Status.ERROR:
+                        state, reason = (
+                            Status.STALE if rows else Status.INCOMPLETE,
+                            report.get("reason") or "Source verification is unavailable",
+                        )
+                if report.get("status") in {"ERROR", "STALE"}:
+                    if report["status"] == "ERROR" or state != Status.ERROR:
+                        state = Status.ERROR if report["status"] == "ERROR" else Status.STALE
+                        reason = report.get("reason")
+                allowed = set(report.get("verified_starts", []))
+                for r in rows:
+                    if (
+                        r.end > now
+                        and r.start.astimezone(ZoneInfo(c.site["timezone"])).date() == day
+                        and (
+                            not fresh
+                            or r.start.isoformat() not in allowed
+                            or report.get("status") in {"ERROR", "STALE"}
+                        )
+                    ):
+                        usable.discard(r.start)
+                if any(
+                    r.end > now
+                    and r.start.astimezone(ZoneInfo(c.site["timezone"])).date() == day
+                    and r.start.isoformat() not in allowed
+                    for r in rows
+                ):
+                    if state == Status.READY:
+                        state, reason = (
+                            Status.INCOMPLETE,
+                            "A requested interval lacks verification under the current settings",
+                        )
+                day += timedelta(days=1)
+        slots = ()
+        if state == Status.READY:
+            try:
+                slots = tuple(_quote(r) for r in rows)
+                if any(q.verified_at > now for q in slots):
+                    raise ValueError("Stored source verification is in the future")
+            except ValueError, TypeError, KeyError:
+                state, reason = Status.ERROR, "Stored source verification is invalid"
+                slots = ()
+        return PriceWindow(
             site_id,
-            status,
-            rows,
+            state,
+            slots,
             expected,
-            len(rows),
-            min(valid_successes).isoformat() if valid_successes else None,
-            reason,
+            len(usable) if state != Status.ERROR else 0,
             c.price_engine.revisions.get(site_id, 0),
-            entry_id,
+            min(verified) if verified else min((q.verified_at for q in slots), default=None),
+            reason,
         )
 
-    def lookup_revision(self, site_id, start, revision, *, producer_entry_id=None):
-        """Recover the exact immutable amount/provenance used before a correction.
-
-        Missing/unloaded versions return None; consumer accounting never substitutes
-        a different revision or a zero amount. This is read-only, including history.
-        """
-        if type(revision) is not int or revision < 1:
-            raise ValueError("Expected a positive integer price revision")
+    def revision(self, site_id, start, revision):
+        """Exact immutable quote used by a consumer; never substitute a newer price."""
         start = utc(start)
-        if start.timestamp() % 900:
-            raise ValueError("Expected a quarter-aligned aware instant")
-        for entry_id, coordinator in self._hass.data.get(DOMAIN, {}).items():
-            if coordinator.site["id"] != site_id or (
-                producer_entry_id is not None and producer_entry_id != entry_id
-            ):
-                continue
-            rows = coordinator.price_engine.lookup(site_id, start, start + timedelta(minutes=15))
-            if rows and rows[0].revision == revision:
-                return rows[0]
-            for item in reversed(coordinator.price_engine.audit.get(site_id, ())):
-                for version in ("old", "new"):
-                    row = item[version]
-                    if (
-                        row["revision"] == revision
-                        and datetime.fromisoformat(row["start"]) == start
-                    ):
-                        values = {**row}
-                        for key in ("start", "end", "calculated_at"):
-                            values[key] = datetime.fromisoformat(values[key])
-                        return PriceRecord(**values)
+        if type(revision) is not int or revision < 1 or start.timestamp() % 900:
+            raise ValueError("Expected aligned start and positive revision")
+        c = self._site(site_id)
+        if c is None:
+            raise EngineNotReady("Selected price site is not loaded")
+        rows = c.price_engine.lookup(site_id, start, start + timedelta(minutes=15))
+        if site_id in c.price_engine.load_errors:
+            raise EngineNotReady("Selected price history requires recovery")
+        if rows and rows[0].revision == revision:
+            return _quote(rows[0])
+        for item in reversed(c.price_engine.audit.get(site_id, ())):
+            for key in ("old", "new"):
+                row = item[key]
+                if row["revision"] == revision and datetime.fromisoformat(row["start"]) == start:
+                    return Quote(
+                        start,
+                        datetime.fromisoformat(row["end"]),
+                        row["final_price_incl_vat"],
+                        revision,
+                        utc(datetime.fromisoformat(json.loads(row["source_json"])["verified_at"])),
+                    )
         return None
 
 
-def get_api(hass, version=1) -> ConsumerAPI:
-    """Discover after integration setup; never auto-load or fetch on consumer reads."""
+def get_api(hass, version=2):
     if type(version) is not int or version != API_VERSION:
-        raise ValueError(f"Unsupported Price Engine API version: {version}")
+        raise ValueError("This breaking MVP supports Price Engine API v2 only")
     if not hass.data.get(DOMAIN):
         raise EngineNotReady("Energy Price Engine is not loaded")
-    return ConsumerAPI(hass)
-
-
-def serialize_result(result: PriceResult) -> dict:
-    """Machine-readable v1 fixture/export representation; no new service transport.
-
-    This is an additive view of the Python API, not the superseded PR #6 service.
-    Source verification time is never replaced by serialization/lookup time.
-    """
-    return {
-        "api_version": result.api_version,
-        "producer_entry_id": result.producer_entry_id,
-        "site_id": result.site_id,
-        "currency": "DKK",
-        "unit": "DKK/kWh",
-        "vat_included": True,
-        "revision": result.revision,
-        "status": str(result.status),
-        "verified_at": result.last_success,
-        "expected_slots": result.expected_slots,
-        "valid_slots": result.valid_slots,
-        "reason": result.reason,
-        "slots": [
-            {
-                "start": r.start.isoformat(),
-                "end": r.end.isoformat(),
-                "final_price_incl_vat": r.final_price_incl_vat,
-                "revision": r.revision,
-                "verified_at": json.loads(r.source_json).get("verified_at"),
-            }
-            for r in result.records
-        ],
-    }
+    return PriceAPI(hass)

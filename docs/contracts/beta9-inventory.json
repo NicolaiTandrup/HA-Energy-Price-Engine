@@ -1,0 +1,992 @@
+{
+  "baseline": "6c588323786cc5f8f696d553e02213ef8b169286",
+  "sensors": [
+    {
+      "class": "PriceSensor",
+      "unique_id": "site_current_price",
+      "unit": "DKK/kWh",
+      "state_class": "measurement",
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "current_price",
+      "category": "diagnostic"
+    },
+    {
+      "class": "EstimatedPriceSensor",
+      "unique_id": "site_estimated_price_0",
+      "unit": "DKK/kWh",
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "estimated_current",
+      "category": "diagnostic"
+    },
+    {
+      "class": "EstimatedPriceSensor",
+      "unique_id": "site_estimated_price_1",
+      "unit": "DKK/kWh",
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "estimated_next",
+      "category": "diagnostic"
+    },
+    {
+      "class": "RawSpotSensor",
+      "unique_id": "site_raw_spot_0",
+      "unit": "DKK/kWh",
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "raw_current",
+      "category": "diagnostic"
+    },
+    {
+      "class": "RawSpotSensor",
+      "unique_id": "site_raw_spot_1",
+      "unit": "DKK/kWh",
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "raw_next",
+      "category": "diagnostic"
+    },
+    {
+      "class": "RawReadinessSensor",
+      "unique_id": "site_raw_readiness_0",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "raw_today",
+      "category": "diagnostic"
+    },
+    {
+      "class": "RawReadinessSensor",
+      "unique_id": "site_raw_readiness_1",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "raw_tomorrow",
+      "category": "diagnostic"
+    },
+    {
+      "class": "FinalStatusSensor",
+      "unique_id": "site_final_status",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "final_status",
+      "category": "diagnostic"
+    },
+    {
+      "class": "NextReadinessSensor",
+      "unique_id": "site_next_quarter_status",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "next_quarter_status",
+      "category": "diagnostic"
+    },
+    {
+      "class": "HistoricalCoverageSensor",
+      "unique_id": "site_historical_day_status",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "historical_day_status",
+      "category": "diagnostic"
+    },
+    {
+      "class": "PricingProblemSensor",
+      "unique_id": "site_pricing_problem",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "pricing_problem",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ReadinessSensor",
+      "unique_id": "site_readiness",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": false,
+      "translation_key": "readiness",
+      "category": "diagnostic"
+    },
+    {
+      "class": "NextPriceSensor",
+      "unique_id": "site_next_price",
+      "unit": "DKK/kWh",
+      "state_class": "measurement",
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "next_price",
+      "category": "diagnostic"
+    },
+    {
+      "class": "DayStatisticSensor",
+      "unique_id": "site_today_minimum",
+      "unit": "DKK/kWh",
+      "state_class": "measurement",
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "today_minimum",
+      "category": "diagnostic"
+    },
+    {
+      "class": "DayStatisticSensor",
+      "unique_id": "site_today_maximum",
+      "unit": "DKK/kWh",
+      "state_class": "measurement",
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "today_maximum",
+      "category": "diagnostic"
+    },
+    {
+      "class": "DayStatisticSensor",
+      "unique_id": "site_today_average",
+      "unit": "DKK/kWh",
+      "state_class": "measurement",
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "today_average",
+      "category": "diagnostic"
+    },
+    {
+      "class": "TomorrowSensor",
+      "unique_id": "site_tomorrow_status",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": false,
+      "translation_key": "tomorrow_status",
+      "category": "diagnostic"
+    },
+    {
+      "class": "TomorrowReadinessSensor",
+      "unique_id": "site_tomorrow_readiness",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "tomorrow_readiness",
+      "category": "diagnostic"
+    },
+    {
+      "class": "AvailabilitySensor",
+      "unique_id": "site_current_availability",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "availability_current",
+      "category": "diagnostic"
+    },
+    {
+      "class": "AvailabilitySensor",
+      "unique_id": "site_tomorrow_availability",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "availability_tomorrow",
+      "category": "diagnostic"
+    },
+    {
+      "class": "AvailabilitySensor",
+      "unique_id": "site_history_availability",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "availability_history",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ActivationSensor",
+      "unique_id": "site_prices_start_at",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "prices_start_at",
+      "category": "diagnostic"
+    },
+    {
+      "class": "BreakdownPeriodSensor",
+      "unique_id": "site_breakdown_period",
+      "unit": null,
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "breakdown_period",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_spot_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_spot",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_dso_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_dso",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_energinet_net_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_energinet_net",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_energinet_system_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_energinet_system",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_supplier_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_supplier",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_electricity_tax_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_electricity_tax",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_vat_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_vat",
+      "category": "diagnostic"
+    },
+    {
+      "class": "ComponentSensor",
+      "unique_id": "site_component_final_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "component_final",
+      "category": "diagnostic"
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_current_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_current",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_next_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_next",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_minimum_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_minimum",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_maximum_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_maximum",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_average_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_average",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_raw_current_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_raw_current_ex_vat",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_raw_next_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": true,
+      "visible_default": true,
+      "translation_key": "display_raw_next_ex_vat",
+      "category": null
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_estimated_current_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "display_estimated_current",
+      "category": "diagnostic"
+    },
+    {
+      "class": "DisplaySensor",
+      "unique_id": "site_display_estimated_next_ore",
+      "unit": "\u00f8re/kWh",
+      "state_class": null,
+      "enabled_default": false,
+      "visible_default": true,
+      "translation_key": "display_estimated_next",
+      "category": "diagnostic"
+    }
+  ],
+  "sensor_count": 40,
+  "per_site_update_entities": 1,
+  "modules": [
+    {
+      "name": "__init__.py",
+      "lines": 131,
+      "bytes": 5018,
+      "imports": [
+        "configuration",
+        "const",
+        "coordinator",
+        "dashboard",
+        "site_lifecycle"
+      ],
+      "definitions": [
+        "async_setup",
+        "async_migrate_entry",
+        "async_setup_entry",
+        "async_update_options",
+        "apply_settings",
+        "async_unload_entry",
+        "async_remove_entry"
+      ]
+    },
+    {
+      "name": "adapters.py",
+      "lines": 36,
+      "bytes": 1711,
+      "imports": [
+        "models"
+      ],
+      "definitions": [
+        "parse_prices"
+      ]
+    },
+    {
+      "name": "api.py",
+      "lines": 241,
+      "bytes": 9190,
+      "imports": [
+        "const",
+        "models",
+        "price_engine"
+      ],
+      "definitions": [
+        "Status",
+        "EngineNotReady",
+        "Site",
+        "PriceResult",
+        "ConsumerAPI",
+        "get_api",
+        "serialize_result"
+      ]
+    },
+    {
+      "name": "charging_cost.py",
+      "lines": 71,
+      "bytes": 2887,
+      "imports": [
+        "models",
+        "money"
+      ],
+      "definitions": [
+        "estimate_charging_cost"
+      ]
+    },
+    {
+      "name": "charging_diagnostics.py",
+      "lines": 163,
+      "bytes": 6565,
+      "imports": [
+        "component_status",
+        "configuration",
+        "const",
+        "device_diagnostics",
+        "localization",
+        "presentation",
+        "status"
+      ],
+      "definitions": [
+        "quarter_choices",
+        "charging_breakdown",
+        "charging_readiness",
+        "horizon_choices"
+      ]
+    },
+    {
+      "name": "component_status.py",
+      "lines": 384,
+      "bytes": 14800,
+      "imports": [
+        "api",
+        "charging_diagnostics",
+        "configuration",
+        "const",
+        "localization",
+        "models",
+        "presentation",
+        "price_components"
+      ],
+      "definitions": [
+        "safe",
+        "component_snapshot",
+        "review"
+      ]
+    },
+    {
+      "name": "config_flow.py",
+      "lines": 482,
+      "bytes": 21102,
+      "imports": [
+        "configuration",
+        "const",
+        "localization",
+        "presentation",
+        "price_engine",
+        "simple_setup",
+        "sources",
+        "status"
+      ],
+      "definitions": [
+        "select",
+        "site_schema",
+        "rule_schema",
+        "LegacyEnergyPriceConfigFlow",
+        "LegacyEnergyPriceOptionsFlow",
+        "EnergyPriceConfigFlow",
+        "EnergyPriceOptionsFlow"
+      ]
+    },
+    {
+      "name": "configuration.py",
+      "lines": 171,
+      "bytes": 7163,
+      "imports": [
+        "const",
+        "models",
+        "price_components",
+        "sources"
+      ],
+      "definitions": [
+        "settings",
+        "validate_site",
+        "tariff_for",
+        "household_historical_example"
+      ]
+    },
+    {
+      "name": "const.py",
+      "lines": 15,
+      "bytes": 336,
+      "imports": [],
+      "definitions": []
+    },
+    {
+      "name": "contracts.py",
+      "lines": 91,
+      "bytes": 3228,
+      "imports": [
+        "configuration",
+        "price_components"
+      ],
+      "definitions": [
+        "current_contract",
+        "replace_current_rules"
+      ]
+    },
+    {
+      "name": "coordinator.py",
+      "lines": 254,
+      "bytes": 10690,
+      "imports": [
+        "configuration",
+        "const",
+        "price_components",
+        "price_engine",
+        "price_schedule",
+        "price_update",
+        "tariff_source"
+      ],
+      "definitions": [
+        "PriceCoordinator"
+      ]
+    },
+    {
+      "name": "dashboard.py",
+      "lines": 265,
+      "bytes": 11230,
+      "imports": [
+        "api",
+        "const",
+        "device_diagnostics",
+        "price_engine"
+      ],
+      "definitions": [
+        "async_setup_dashboard",
+        "_instant",
+        "_summary",
+        "price_schedule",
+        "websocket_schedule"
+      ]
+    },
+    {
+      "name": "device_diagnostics.py",
+      "lines": 161,
+      "bytes": 5911,
+      "imports": [
+        "status"
+      ],
+      "definitions": [
+        "stored_breakdown",
+        "availability",
+        "explanation",
+        "technical_entity"
+      ]
+    },
+    {
+      "name": "diagnostics.py",
+      "lines": 128,
+      "bytes": 5087,
+      "imports": [
+        "component_status",
+        "localization",
+        "presentation",
+        "status"
+      ],
+      "definitions": [
+        "async_get_config_entry_diagnostics"
+      ]
+    },
+    {
+      "name": "estimates.py",
+      "lines": 38,
+      "bytes": 1357,
+      "imports": [
+        "models",
+        "price_engine"
+      ],
+      "definitions": [
+        "estimate",
+        "estimate_records"
+      ]
+    },
+    {
+      "name": "flow_tools.py",
+      "lines": 125,
+      "bytes": 5212,
+      "imports": [
+        "hacs_channel",
+        "site_lifecycle"
+      ],
+      "definitions": [
+        "choice",
+        "number",
+        "money_input",
+        "FlowTools"
+      ]
+    },
+    {
+      "name": "hacs_channel.py",
+      "lines": 80,
+      "bytes": 4281,
+      "imports": [],
+      "definitions": [
+        "enable_beta_channel"
+      ]
+    },
+    {
+      "name": "ledger.py",
+      "lines": 372,
+      "bytes": 16101,
+      "imports": [],
+      "definitions": [
+        "LedgerCorruptError",
+        "LedgerDatabase",
+        "inspect_ledger",
+        "restore_ledger",
+        "backup_ledger",
+        "export_recorded_range"
+      ]
+    },
+    {
+      "name": "localization.py",
+      "lines": 74,
+      "bytes": 2889,
+      "imports": [
+        "const"
+      ],
+      "definitions": [
+        "user_language",
+        "flow_labels",
+        "review_labels",
+        "_system_decimal_separator"
+      ]
+    },
+    {
+      "name": "models.py",
+      "lines": 36,
+      "bytes": 1075,
+      "imports": [],
+      "definitions": [
+        "utc",
+        "PriceSlot",
+        "validate_slots"
+      ]
+    },
+    {
+      "name": "money.py",
+      "lines": 26,
+      "bytes": 1033,
+      "imports": [],
+      "definitions": [
+        "decimal_amount",
+        "per_kwh"
+      ]
+    },
+    {
+      "name": "presentation.py",
+      "lines": 27,
+      "bytes": 906,
+      "imports": [],
+      "definitions": [
+        "display_precision",
+        "display_value",
+        "format_price"
+      ]
+    },
+    {
+      "name": "price_components.py",
+      "lines": 203,
+      "bytes": 8312,
+      "imports": [
+        "money"
+      ],
+      "definitions": [
+        "MissingPriceComponents",
+        "danish_public_components",
+        "active_hours",
+        "normalize_component",
+        "validate_rules",
+        "eligible",
+        "compose_dated",
+        "resolved_rules"
+      ]
+    },
+    {
+      "name": "price_engine.py",
+      "lines": 371,
+      "bytes": 14679,
+      "imports": [
+        "ledger",
+        "models",
+        "price_components",
+        "prices"
+      ],
+      "definitions": [
+        "source_identity",
+        "day_bounds",
+        "PriceRecord",
+        "calculate",
+        "validate_records",
+        "PriceEngine"
+      ]
+    },
+    {
+      "name": "price_schedule.py",
+      "lines": 171,
+      "bytes": 6669,
+      "imports": [
+        "price_engine"
+      ],
+      "definitions": [
+        "PriceSchedule"
+      ]
+    },
+    {
+      "name": "price_update.py",
+      "lines": 359,
+      "bytes": 18102,
+      "imports": [
+        "adapters",
+        "configuration",
+        "estimates",
+        "models",
+        "price_components",
+        "price_engine",
+        "prices",
+        "sources",
+        "tariff_source"
+      ],
+      "definitions": [
+        "PriceUpdater"
+      ]
+    },
+    {
+      "name": "prices.py",
+      "lines": 117,
+      "bytes": 5088,
+      "imports": [
+        "adapters",
+        "sources"
+      ],
+      "definitions": [
+        "all_in",
+        "OfficialPrices"
+      ]
+    },
+    {
+      "name": "repairs.py",
+      "lines": 36,
+      "bytes": 1304,
+      "imports": [
+        "const"
+      ],
+      "definitions": [
+        "PricingRepairFlow",
+        "async_create_fix_flow"
+      ]
+    },
+    {
+      "name": "sensor.py",
+      "lines": 735,
+      "bytes": 26510,
+      "imports": [
+        "const",
+        "device_diagnostics",
+        "localization",
+        "presentation",
+        "status"
+      ],
+      "definitions": [
+        "optional_estimate",
+        "async_setup_entry",
+        "BaseSensor",
+        "PriceSensor",
+        "ReadinessSensor",
+        "NextPriceSensor",
+        "DayStatisticSensor",
+        "TomorrowSensor",
+        "DisplaySensor",
+        "RawSpotSensor",
+        "RawReadinessSensor",
+        "PricingProblemSensor",
+        "FinalStatusSensor",
+        "EstimatedPriceSensor",
+        "NextReadinessSensor",
+        "HistoricalCoverageSensor",
+        "TomorrowReadinessSensor",
+        "ComponentSensor",
+        "BreakdownPeriodSensor",
+        "AvailabilitySensor",
+        "ActivationSensor"
+      ]
+    },
+    {
+      "name": "simple_setup.py",
+      "lines": 1012,
+      "bytes": 43612,
+      "imports": [
+        "api",
+        "charging_cost",
+        "charging_diagnostics",
+        "component_status",
+        "config_flow",
+        "configuration",
+        "const",
+        "contracts",
+        "device_diagnostics",
+        "flow_tools",
+        "localization",
+        "money",
+        "sources",
+        "supplier_offers"
+      ],
+      "definitions": [
+        "SimpleSetup"
+      ]
+    },
+    {
+      "name": "site_lifecycle.py",
+      "lines": 120,
+      "bytes": 4526,
+      "imports": [
+        "configuration",
+        "const"
+      ],
+      "definitions": [
+        "_safe",
+        "owned_files",
+        "clear_drafts",
+        "removed",
+        "permanently_remove"
+      ]
+    },
+    {
+      "name": "sources.py",
+      "lines": 60,
+      "bytes": 2495,
+      "imports": [
+        "models"
+      ],
+      "definitions": [
+        "source_defaults",
+        "validate_entity_source",
+        "ensure_official_nordpool",
+        "async_source_defaults"
+      ]
+    },
+    {
+      "name": "status.py",
+      "lines": 146,
+      "bytes": 6065,
+      "imports": [
+        "api",
+        "configuration",
+        "presentation",
+        "price_engine"
+      ],
+      "definitions": [
+        "interval_result",
+        "quarter_result",
+        "readiness_snapshot",
+        "day_result",
+        "source_status",
+        "slot_breakdown"
+      ]
+    },
+    {
+      "name": "supplier_offers.py",
+      "lines": 150,
+      "bytes": 5598,
+      "imports": [],
+      "definitions": [
+        "PublicText",
+        "text",
+        "parse_offer",
+        "_fetch",
+        "get_offers"
+      ]
+    },
+    {
+      "name": "tariff_source.py",
+      "lines": 168,
+      "bytes": 7138,
+      "imports": [
+        "models",
+        "price_engine"
+      ],
+      "definitions": [
+        "normalize_tariffs",
+        "TariffSource"
+      ]
+    },
+    {
+      "name": "update.py",
+      "lines": 112,
+      "bytes": 4229,
+      "imports": [
+        "const"
+      ],
+      "definitions": [
+        "release_for",
+        "fetch_releases",
+        "async_setup_entry",
+        "PublishedRelease"
+      ]
+    },
+    {
+      "name": "verification.py",
+      "lines": 83,
+      "bytes": 3130,
+      "imports": [
+        "price_components",
+        "price_engine",
+        "price_update"
+      ],
+      "definitions": [
+        "PreviewEngine",
+        "component_coverage",
+        "verify_site"
+      ]
+    }
+  ],
+  "python_lines": 7214,
+  "python_modules": 37,
+  "runtime_bytes": 876821,
+  "translations_bytes": 546588
+}

@@ -1,6 +1,5 @@
 """Dated native manual time bands, DST coverage and separate subscriptions."""
 
-from copy import deepcopy
 from datetime import date
 from zoneinfo import ZoneInfo
 
@@ -9,8 +8,7 @@ import pytest
 from custom_components.ha_energy_price_engine.configuration import tariff_for, validate_site
 from custom_components.ha_energy_price_engine.price_components import compose_dated
 
-from .test_integration import model
-from .test_price_engine import rows
+from .helpers import model, rows
 
 
 def timeband_site():
@@ -52,14 +50,10 @@ def test_overlapping_hours_and_unknown_missing_band_fail_closed():
         compose_dated(rows()[0], tariff_for(validate_site(site)))
 
 
-def test_supplier_and_grid_fixed_subscriptions_never_enter_slot_ranking():
+def test_retired_monthly_component_rejected():
     site = timeband_site()
-    slot = rows()[0]
-    original, _ = compose_dated(slot, tariff_for(site))
-    for name in ("supplier_subscription", "grid_subscription"):
-        site["dated_components"].append(
-            {**deepcopy(site["dated_components"][0]), "id": name, "unit": "DKK/month", "amount": 50}
-        )
-    validate_site(site)
-    value, parts = compose_dated(slot, tariff_for(site))
-    assert value == original and len(parts["fixed_subscriptions_excluded"]) == 2
+    site["dated_components"].append(
+        {**site["dated_components"][0], "id": "subscription", "unit": "DKK/month"}
+    )
+    with pytest.raises(ValueError, match="Unsupported"):
+        validate_site(site)

@@ -1,0 +1,450 @@
+{
+  "schema": 1,
+  "synthetic": true,
+  "owner_acceptance": false,
+  "verified_at": "2026-10-30T08:16:52.095993+00:00",
+  "ha_core": "2026.10.4",
+  "frontend": "20260930.5",
+  "provider_boundaries": "Disposable local HA: synthetic varying official-service-format Nord Pool, recorded Radius C Datahub response, fictional0.5ore exVAT supplier, unchanged bounded national baselines. No owner credentials/system/controls.",
+  "browser": {
+    "tool": "Playwright/system Chromium",
+    "reason": "Browser plugin not available",
+    "native_url": "http://127.0.0.1:8127/lovelace/electricity-prices",
+    "page_title": "Overview – Home Assistant",
+    "viewports": [
+      [
+        1440,
+        1000
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "mobile_document_width": 390,
+    "console_errors": [],
+    "console_warnings": [],
+    "supported_persisted_user_locale": {
+      "language": "da",
+      "number_format": "language",
+      "time_format": "language",
+      "date_format": "language",
+      "time_zone": "local",
+      "first_weekday": "language"
+    },
+    "copy_paste_yaml": "Actual native YAML-mode HA dashboard uses docs/dashboard.yaml, one actual entity substitution; bundled local module registered in lovelace.resources. Same supported resource interface as storage dashboard Resources UI."
+  },
+  "native_scenarios": {
+    "home": {
+      "site_id": "qa_home",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        }
+      ],
+      "tariff_ranges_today": 4,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_unpublished": {
+      "site_id": "qa_unpublished",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 0,
+          "status": "INCOMPLETE"
+        }
+      ],
+      "tariff_ranges_today": 4,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_missing": {
+      "site_id": "qa_missing",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        }
+      ],
+      "tariff_ranges_today": 1,
+      "current": "INCOMPLETE",
+      "next": "INCOMPLETE"
+    },
+    "qa_partial": {
+      "site_id": "qa_partial",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 61,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        }
+      ],
+      "tariff_ranges_today": 4,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_gap": {
+      "site_id": "qa_gap",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 95,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 96,
+          "raw_ready": 96,
+          "status": "READY"
+        }
+      ],
+      "tariff_ranges_today": 6,
+      "current": "READY",
+      "next": "READY"
+    },
+    "qa_provisional": {
+      "site_id": "qa_provisional",
+      "days": [
+        {
+          "date": "2026-10-30",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        },
+        {
+          "date": "2026-10-31",
+          "quarters": 96,
+          "ready": 0,
+          "raw_ready": 96,
+          "status": "INCOMPLETE"
+        }
+      ],
+      "tariff_ranges_today": 1,
+      "current": "INCOMPLETE",
+      "next": "INCOMPLETE"
+    }
+  },
+  "provider_calls": {
+    "before_reads": {
+      "spot": 12,
+      "grid": 11,
+      "delta": 200
+    },
+    "after_reads": {
+      "spot": 12,
+      "grid": 11,
+      "delta": 200
+    },
+    "unchanged": true,
+    "after_explicit_QA_source_revision": {
+      "spot": 13,
+      "grid": 12,
+      "delta": 300
+    }
+  },
+  "revision": {
+    "before": 4,
+    "after": 5,
+    "today_preserved": true,
+    "automatic_state_update": true
+  },
+  "upgrade": {
+    "from": "v0.1.0-beta.7",
+    "configs_preserved": 6,
+    "original_entity_ids_preserved": 162,
+    "logical_ledgers_preserved": 4,
+    "new_presentation_status_per_site": 1,
+    "optional_registry_cleanup": [
+      {
+        "entity_id": "sensor.qa_home_canonical_technical_estimated_unverified_current_price_dkk_kwh",
+        "unique_id": "qa_home_estimated_price_0",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_canonical_technical_estimated_unverified_next_quarter_price_dkk_kwh",
+        "unique_id": "qa_home_estimated_price_1",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_current_quarter_readiness",
+        "unique_id": "qa_home_readiness",
+        "hidden_by": "integration",
+        "disabled_by": null
+      },
+      {
+        "entity_id": "sensor.qa_home_tomorrows_full_day_coverage",
+        "unique_id": "qa_home_tomorrow_status",
+        "hidden_by": "integration",
+        "disabled_by": null
+      },
+      {
+        "entity_id": "sensor.qa_home_provisional_current_price_preferred_display",
+        "unique_id": "qa_home_display_estimated_current_ore",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_provisional_next_quarter_preferred_display",
+        "unique_id": "qa_home_display_estimated_next_ore",
+        "hidden_by": "integration",
+        "disabled_by": "integration"
+      },
+      {
+        "entity_id": "sensor.qa_home_tomorrows_full_day_coverage_2",
+        "unique_id": "qa_home_tomorrow_readiness",
+        "hidden_by": null,
+        "disabled_by": null
+      }
+    ]
+  },
+  "sqlite_parity": {
+    "compared_browser_rows_against_exact_current_or_historical_revision": 636,
+    "current_persisted_rows": 637,
+    "audit_rows": 672,
+    "integrity": [
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000002.ledger.sqlite3",
+        "rows": 96,
+        "quick_check": "ok"
+      },
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000004.ledger.sqlite3",
+        "rows": 157,
+        "quick_check": "ok"
+      },
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000001.ledger.sqlite3",
+        "rows": 192,
+        "quick_check": "ok"
+      },
+      {
+        "ledger": "ha_energy_price_engine.01QAPE8000000000000000000005.ledger.sqlite3",
+        "rows": 192,
+        "quick_check": "ok"
+      }
+    ],
+    "component_values_VAT_and_final_exact": true,
+    "source_snapshots_exact": true
+  },
+  "sample_radius_transition": [
+    {
+      "start": "2026-10-30T15:45:00+00:00",
+      "end": "2026-10-30T16:00:00+00:00",
+      "local_start": "2026-10-30T16:45+01:00",
+      "local_end": "2026-10-30T17:00+01:00",
+      "status": "READY",
+      "reason": null,
+      "revision": 1,
+      "provenance": "1",
+      "spot": 75.67809999999999,
+      "dso": 31.852399999999996,
+      "energinet_net": 4.3,
+      "energinet_system": 7.199999999999999,
+      "supplier": 0.5,
+      "electricity_tax": 0.8,
+      "vat": 30.082624999999997,
+      "final": 150.41312499999998,
+      "stored_final": 150.41312499999998,
+      "raw_status": "READY",
+      "raw_verified_at": "2026-10-30T08:15:49.667774+00:00",
+      "calculated_at": "2026-10-30T07:46:25.487346+00:00"
+    },
+    {
+      "start": "2026-10-30T16:00:00+00:00",
+      "end": "2026-10-30T16:15:00+00:00",
+      "local_start": "2026-10-30T17:00+01:00",
+      "local_end": "2026-10-30T17:15+01:00",
+      "status": "READY",
+      "reason": null,
+      "revision": 1,
+      "provenance": "1",
+      "spot": 60.987199999999994,
+      "dso": 95.5573,
+      "energinet_net": 4.3,
+      "energinet_system": 7.199999999999999,
+      "supplier": 0.5,
+      "electricity_tax": 0.8,
+      "vat": 42.336124999999996,
+      "final": 211.68062500000002,
+      "stored_final": 211.68062500000002,
+      "raw_status": "READY",
+      "raw_verified_at": "2026-10-30T08:15:49.667774+00:00",
+      "calculated_at": "2026-10-30T07:46:25.487346+00:00"
+    }
+  ],
+  "preserved_runtime_sha256_from_beta7": {
+    "api.py": "01a16de472155d1dbe13af2b01ebd0a2b1c34ba5cdc7a8b9f0a5381643b0d425",
+    "coordinator.py": "71153be367ebafd23cfcbf53b639e8fc269acbb20103363f94de186e632b9028",
+    "ledger.py": "3fb161f450aa0e329e386c99e8498c7624f502415a0673edaaee98d76bf8acf4",
+    "price_engine.py": "3842c6d21f579b5dd25141ac66649b5f4d7ee19a5220cde57722171e5bb87ff2",
+    "price_schedule.py": "d924fa4e6cfa67813220443b8b4e8d928148319116a38096981e86029c456918",
+    "price_update.py": "ceb3955c0b96f743cc22a90d76ce6cd0868d4c53836afb2755a2fcbd9ec3610d",
+    "tariff_source.py": "dfdf30b8da837403da51998f2dc61c2cd8c940702404672af29254054fba73e5",
+    "prices.py": "fe5fdc82bc47d7d6404727a1d9ba53cf9c1a03b58f031019a467c6888fe1a21d",
+    "price_components.py": "d87fe36b36162f4d37af3da5c311879d03ef44c994071932e9854988c4ab31b9"
+  },
+  "browser_regressions": {
+    "cases": 15,
+    "passed": 15,
+    "skipped": 0,
+    "data": "Generated by real producer tests, not hand-authored price arithmetic",
+    "scenarios": "92/96/100 slot days including96+100=196 two-day calendar, negative/zero, missing/unpublished/gap, revisions, EN/en-GB/DA/explicit/browser locale, XSS, keyboard/touch-size layout, two series/tables/all intervals"
+  },
+  "screenshots": [
+    {
+      "filename": "pe8-graphs-desktop.png",
+      "sha256": "1077c2006842bae5d9e10e929638b450f9f3cd0d1a0edf1903592c48c9f37d6a",
+      "width": 1440,
+      "height": 1000,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-tariffs-desktop.png",
+      "sha256": "eab473340eab06e72628c086039277ae0d497e96874523f8ddcc344ffaeae825",
+      "width": 1136,
+      "height": 361,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-quarters-desktop.png",
+      "sha256": "853b5456429c1bbe542dfd9f4e69583b001be99ca96a26d93a4f0d6749de9a7b",
+      "width": 1136,
+      "height": 745,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-components-future-desktop.png",
+      "sha256": "d9923bb1b577b8b8284a18a12359e869486202d54686ef7f0b554f1c3bc3ea75",
+      "width": 1136,
+      "height": 736,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-raw-mobile.png",
+      "sha256": "2c36b83c50e245eaf39b086dca9b44593e55d26380999730ec81b86ae229ef27",
+      "width": 362,
+      "height": 286,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-final-mobile.png",
+      "sha256": "d73d1d2b4dfc29b70513e5a60fc49008a8f1d190c06d6010b8744541c88bd547",
+      "width": 362,
+      "height": 286,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-tariffs-mobile.png",
+      "sha256": "11f9e8659ab8f11061215fd419dd6489a1bfa99a2575ff9a8131480b52669217",
+      "width": 362,
+      "height": 441,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-quarters-mobile.png",
+      "sha256": "5cd614c77ab05420528723194850e996987c1f637d7c1bd440e1acdcc1d496fa",
+      "width": 362,
+      "height": 763,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-unpublished-mobile.png",
+      "sha256": "dc0fb20881d9acb87f69db106e9a4778e54e3bec2e00fd0673291d468988b1a6",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-missing-components-mobile.png",
+      "sha256": "5a94baf64b4680368d3011ceac08612edfad4c6f7bfeeba81d2f59752a9e85ae",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-graphs-da-mobile.png",
+      "sha256": "947b0c3b83fc413410dbfdb02c8933c18ce774b9d836d84a32cb68681ce80f75",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-graphs-da-desktop.png",
+      "sha256": "36d0257190d4678bc36cc3ed0147466ae3e0f567252314fb5f837e61751ea061",
+      "width": 1440,
+      "height": 1000,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-device-da-desktop.png",
+      "sha256": "5a859472f9d3fdfe2e976c94f53e6b5e4e2d609dee70bd92d8480848eef76481",
+      "width": 1440,
+      "height": 1000,
+      "location": "temporary workspace/chat evidence, outside source"
+    },
+    {
+      "filename": "pe8-device-da-mobile.png",
+      "sha256": "edc15cd351d8adaff01f4e01574e3e5eed66b284083d975015b80cc96964ce52",
+      "width": 390,
+      "height": 844,
+      "location": "temporary workspace/chat evidence, outside source"
+    }
+  ],
+  "restart": {
+    "passed": true,
+    "configs_preserved": 6,
+    "entity_ids_preserved": 168,
+    "logical_ledgers_preserved": 4,
+    "ledger_rows": 637,
+    "recorder_statistics_unit_identities_preserved": 14,
+    "same_verified_provider_inputs_keep_all_rows_and_revisions": true
+  },
+  "production_controls_touched": false,
+  "fixture_correction": "An initial QA global synthetic source delta changed two other sites on restart; isolated per-source fixture deltas, then verified all logical ledgers unchanged. Engine was not modified."
+}

@@ -9,7 +9,9 @@ import importlib
 import io
 import json
 import os
+import subprocess
 import zipfile
+from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
 from pathlib import Path
 from types import SimpleNamespace
@@ -24,7 +26,7 @@ from tools.prepare_hacs_reference import PINS
 from .test_hacs_workflow import candidate_tree, upstream
 
 ROOT = Path(__file__).parents[1]
-TAG = "v0.1.0-beta.1"
+TAG = "v0.1.0-beta.10"
 DOMAIN = "ha_energy_price_engine"
 
 
@@ -61,8 +63,18 @@ def release_inputs():
 
 
 @pytest.mark.parametrize("line", list(PINS))
-async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_path, line):
+async def test_hacs_add_discover_beta_download_update_and_reinstall(
+    hass, tmp_path, line, hass_client, hass_access_token
+):
     receipt, files, archive = release_inputs()
+    main_files = files
+    if main_archive := receipt.get("main_archive"):
+        with zipfile.ZipFile(main_archive) as source:
+            main_files = {
+                "/".join(p.split("/")[1:]): source.read(p)
+                for p in source.namelist()
+                if not p.endswith("/")
+            }
     assert receipt["release"]["prerelease"] and not receipt["release"]["draft"]
     assert receipt["release"]["tag_name"] == TAG
     alias = upstream(line)
@@ -84,22 +96,31 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         last_commit=receipt["source_commit"],
         set_last_commit=AsyncMock(),
     )
-    directories = {str(p) for name in files for p in Path(name).parents if str(p) != "."}
-    tree = [
-        SimpleNamespace(
-            path=p,
-            full_path=p,
-            filename=Path(p).name,
-            is_directory=p in directories,
-            type="tree" if p in directories else "blob",
-            url="https://api.github.com/recorded-public-tree",
-        )
-        for p in sorted(set(files) | directories)
-    ]
+
+    def tree_for(payload):
+        directories = {str(p) for name in payload for p in Path(name).parents if str(p) != "."}
+        return [
+            SimpleNamespace(
+                path=p,
+                full_path=p,
+                filename=Path(p).name,
+                is_directory=p in directories,
+                type="tree" if p in directories else "blob",
+                url="https://api.github.com/recorded-public-tree",
+            )
+            for p in sorted(set(payload) | directories)
+        ]
+
+    async def get_tree(self, ref):
+        return tree_for(files if ref == TAG else main_files)
+
     calls = []
 
     async def contents(*, path, **kwargs):
-        return SimpleNamespace(data=SimpleNamespace(content=base64.b64encode(files[path]).decode()))
+        payload = files if kwargs.get("params", {}).get("ref") == TAG else main_files
+        return SimpleNamespace(
+            data=SimpleNamespace(content=base64.b64encode(payload[path]).decode())
+        )
 
     async def download(url, **kwargs):
         calls.append(url)
@@ -133,7 +154,7 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
             "get_releases",
             AsyncMock(return_value=[GitHubReleaseModel(receipt["release"])]),
         ),
-        patch.object(repo_base.HacsRepository, "get_tree", AsyncMock(return_value=tree)),
+        patch.object(repo_base.HacsRepository, "get_tree", get_tree),
         patch.object(repo_base.HacsRepository, "async_set_last_commits", last_commits, create=True),
         patch.object(repo_base, "Backup", side_effect=isolated_backup),
     ):
@@ -143,14 +164,122 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
         assert repo and repo.data.domain == DOMAIN and repo.data.config_flow
         assert repo.data.manifest_name == "Energy Price Engine"
         assert repo.data.prerelease == TAG and TAG not in repo.data.published_tags
-        repo.data.show_beta = True  # Same state set by HACS's Show beta versions action.
-        await repo.update_repository(force=True)
+        # Reproduce the owner's HACS card: no stable release + beta visibility
+        # disabled falls back to main's short SHA, even after a beta install.
+        hacs.coordinators[enums.HacsCategory.INTEGRATION] = Mock()
+        update_module = importlib.import_module(alias + ".update")
+        native_update = update_module.HacsRepositoryUpdateEntity(hacs=hacs, repository=repo)
+        repo.data.installed = True
+        repo.data.installed_version = TAG
+        repo.data.last_commit = "56cdb3c"
+        assert native_update.latest_version == "56cdb3c"
+        # Exercise the supported native HACS commands through authenticated local
+        # HTTP -> WebSocket, including its require_admin checks and durable write.
+        import sys
+
+        from homeassistant.components import websocket_api
+
+        hacs.data = importlib.import_module(alias + ".utils.data").HacsData(hacs)
+        hacs.common.categories = [enums.HacsCategory.INTEGRATION]
+        hass.data["hacs"] = hacs
+        with patch.dict(
+            sys.modules, {"custom_components.hacs.utils": importlib.import_module(alias + ".utils")}
+        ):
+            commands = importlib.import_module(alias + ".websocket.repository")
+            lists = importlib.import_module(alias + ".websocket.repositories")
+
+        from homeassistant.setup import async_setup_component
+
+        assert await async_setup_component(hass, "websocket_api", {})
+        for command in (
+            commands.hacs_repository_info,
+            commands.hacs_repository_beta,
+            lists.hacs_repositories_list,
+        ):
+            websocket_api.async_register_command(hass, command)
+        client = await hass_client()
+        ws = await client.ws_connect("/api/websocket")
+        await ws.receive_json()
+        await ws.send_json({"type": "auth", "access_token": hass_access_token})
+        assert (await ws.receive_json())["type"] == "auth_ok"
+        await ws.send_json(
+            {
+                "id": 1,
+                "type": "hacs/repository/beta",
+                "repository": str(repo.data.id),
+                "show_beta": True,
+            }
+        )
+        result = await ws.receive_json()
+        assert result.get("success"), result
+        await ws.close()
+        saved_hacs = await importlib.import_module(alias + ".utils.store").async_load_from_store(
+            hass, "repositories"
+        )
+        assert saved_hacs[str(repo.data.id)]["show_beta"] is True
+        repo.data.show_beta = False
+        assert native_update.latest_version == repo.data.last_commit
+        hacs.data.async_restore_repository(str(repo.data.id), saved_hacs[str(repo.data.id)])
+        assert native_update.latest_version == TAG
+        assert repo.data.show_beta is True
+
         assert TAG in repo.data.published_tags
+        assert native_update.latest_version == TAG
+        assert native_update.installed_version == TAG
         repo.data.selected_tag = TAG
         assert repo.version_to_download() == TAG
         installed = tmp_path / "custom_components" / DOMAIN
+        # Exercise a real beta.8 -> beta.9 filesystem update, not only a clean
+        # installation pretending to have an older installed_version field.
+        if previous_asset := receipt.get("previous_hacs_asset"):
+            previous_bytes = Path(previous_asset).read_bytes()
+            prefix = ""
+        else:
+            previous_bytes = await hass.async_add_executor_job(
+                lambda: subprocess.check_output(
+                    [
+                        "git",
+                        "archive",
+                        "--format=zip",
+                        "6c588323786cc5f8f696d553e02213ef8b169286",
+                        f"custom_components/{DOMAIN}",
+                    ],
+                    cwd=ROOT,
+                )
+            )
+            prefix = f"custom_components/{DOMAIN}/"
+        installed.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(io.BytesIO(previous_bytes)) as previous:
+            assert json.loads(previous.read(prefix + "manifest.json"))["version"] == "0.1.0-beta.9"
+            for name in previous.namelist():
+                if name.startswith(prefix) and not name.endswith("/"):
+                    target = installed / name.removeprefix(prefix)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(previous.read(name))
+        repo.data.installed_version = "v0.1.0-beta.9"
+        assert native_update.installed_version == "v0.1.0-beta.9"
+        assert native_update.latest_version == TAG
+        from custom_components.ha_energy_price_engine.configuration import tariff_for, validate_site
+        from custom_components.ha_energy_price_engine.models import PriceSlot
+        from custom_components.ha_energy_price_engine.price_engine import PriceEngine
+
+        from .helpers import model
+
+        history_engine = PriceEngine(hass, "hacs-beta8-upgrade")
+        start = datetime(2026, 10, 29, 12, tzinfo=UTC)
+        await history_engine.async_update(
+            "hacs_history",
+            [PriceSlot(start, start + timedelta(minutes=15), -0.1)],
+            tariff_for(validate_site(model(id="hacs_history"))),
+            {"kind": "recorded_test", "verified_at": start.isoformat()},
+            start,
+        )
+        history = history_engine.database.path
+        assert not history.is_relative_to(installed)
+        history_before = history.read_bytes()
         for _ in range(2):
             await repo.async_download_repository(ref=TAG)
+            assert history.read_bytes() == history_before
             assert repo.data.installed and repo.data.installed_version == TAG
             expected = {
                 str(Path(p).relative_to(f"custom_components/{DOMAIN}")): body
@@ -167,6 +296,8 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(hass, tmp_pa
             ] == TAG.removeprefix("v")
         await repo.uninstall()
         assert not installed.exists()
+        assert history.read_bytes() == history_before
         await repo.async_download_repository(ref=TAG)
+        assert history.read_bytes() == history_before
         assert (installed / "config_flow.py").is_file()
         assert calls.count(f"https://github.com/{repository}/archive/refs/tags/{TAG}.zip") == 3

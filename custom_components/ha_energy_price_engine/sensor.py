@@ -1,163 +1,127 @@
-"""Stored current price and source readiness; state publication does not fetch."""
-
-from datetime import timedelta
+"""Nine native MVP sensors per site, with full precision and compact diagnostics."""
 
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.core import callback
+from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.event import async_track_utc_time_change
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.util import dt as dt_util
 
-from .api import ConsumerAPI
 from .const import DOMAIN
-from .status import day_result, source_status
+from .status import availability, price, source_value, statistics
+
+KINDS = (
+    "current_spot",
+    "current_final",
+    "next_spot",
+    "next_final",
+    "average",
+    "minimum",
+    "maximum",
+    "dso",
+    "availability",
+)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    c = entry.runtime_data
-    async_add_entities(
-        [
-            PriceSensor(c),
-            ReadinessSensor(c),
-            NextPriceSensor(c),
-            *[DayStatisticSensor(c, kind) for kind in ("minimum", "maximum", "average")],
-            TomorrowSensor(c),
-        ]
-    )
+    async_add_entities([PriceSensor(entry.runtime_data, kind) for kind in KINDS])
 
 
-class BaseSensor(CoordinatorEntity, SensorEntity):
+class PriceSensor(CoordinatorEntity, SensorEntity):
     _attr_has_entity_name = True
 
-    def __init__(self, coordinator):
+    def __init__(self, coordinator, kind):
         super().__init__(coordinator)
-        self.site = coordinator.site
+        self.kind = kind
+        self._attr_unique_id = f"{coordinator.site['id']}_{kind}"
+        self._attr_translation_key = kind
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, self.site["id"])},
-            name=self.site["name"],
+            identifiers={(DOMAIN, coordinator.site["id"])},
+            name=coordinator.site["name"],
             manufacturer="Energy Price Engine",
+            model="Electricity pricing",
+            entry_type=DeviceEntryType.SERVICE,
+            sw_version=coordinator.integration_version,
         )
+        if kind == "availability":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        else:
+            self._attr_native_unit_of_measurement = "øre/kWh"
+            self._attr_suggested_display_precision = 2
+            if kind in {"current_spot", "current_final", "dso"}:
+                self._attr_state_class = SensorStateClass.MEASUREMENT
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
 
         @callback
-        def publish(_):
+        def tick(_):
             self.async_write_ha_state()
 
-        self.async_on_remove(async_track_utc_time_change(self.hass, publish, minute="*", second=0))
+        self.async_on_remove(async_track_utc_time_change(self.hass, tick, minute="*", second=0))
 
-    def current_result(self, offset=0):
-        now = dt_util.utcnow()
-        start = now.replace(minute=(now.minute // 15) * 15, second=0, microsecond=0) + timedelta(
-            minutes=15 * offset
-        )
-        return ConsumerAPI(self.coordinator.hass).lookup(
-            self.site["id"],
-            start,
-            start + timedelta(minutes=15),
-            now=now,
-            producer_entry_id=self.coordinator.entry.entry_id,
-        )
-
-
-class PriceSensor(BaseSensor):
-    _attr_translation_key = "current_price"
-    _attr_native_unit_of_measurement = "DKK/kWh"
-    _attr_state_class = SensorStateClass.MEASUREMENT
-
-    def __init__(self, coordinator):
-        super().__init__(coordinator)
-        self._attr_unique_id = f"{self.site['id']}_current_price"
+    @property
+    def name(self):
+        if (
+            self.kind in {"average", "minimum", "maximum"}
+            and statistics(self.coordinator)["scope"] == "remaining_day"
+        ):
+            da = self.coordinator.hass.config.language.startswith("da")
+            return (
+                {
+                    "average": "Gennemsnit resten af dagen",
+                    "minimum": "Minimum resten af dagen",
+                    "maximum": "Maksimum resten af dagen",
+                }
+                if da
+                else {
+                    "average": "Remaining-day average",
+                    "minimum": "Remaining-day minimum",
+                    "maximum": "Remaining-day maximum",
+                }
+            )[self.kind]
+        return super().name
 
     @property
     def native_value(self):
-        result = self.current_result()
-        return (
-            result.records[0].final_price_incl_vat
-            if str(result.status) == "READY" and result.records
-            else None
-        )
+        if self.kind == "availability":
+            facts = availability(self.coordinator)
+            da = self.coordinator.hass.config.language.startswith("da")
+            words = (
+                {
+                    "ready": "Klar",
+                    "error": "Fejl — se årsag og afhjælpning",
+                    "stale": "Forældet — kontroller kilden",
+                    "waiting": "Priser fra {time}",
+                    "missing": "Manglende priser — se kilde/tarif",
+                }
+                if da
+                else {
+                    "ready": "Ready",
+                    "error": "Error — see reason and action",
+                    "stale": "Stale — recheck source",
+                    "waiting": "Prices available from {time}",
+                    "missing": "Missing prices — inspect source/tariff",
+                }
+            )
+            return words[facts["code"]].format(time=facts["available_from"] or "—")
+        if self.kind in {"average", "minimum", "maximum"}:
+            value = statistics(self.coordinator).get(self.kind)
+        elif self.kind in {"current_final", "next_final"}:
+            result = price(self.coordinator, int(self.kind == "next_final"))
+            value = result.slots[0].price if result.slots else None
+        else:
+            value = source_value(self.coordinator, self.kind)
+        return value * 100 if value is not None else None
 
     @property
     def extra_state_attributes(self):
+        if self.kind == "availability":
+            return {"site_id": self.coordinator.site["id"], **availability(self.coordinator)}
+        if self.kind in {"average", "minimum", "maximum"}:
+            return statistics(self.coordinator)
         return {
-            "api_version": 1,
-            "site_id": self.site["id"],
-            "readiness": str(self.current_result().status),
-            "revision": self.coordinator.price_engine.revisions.get(self.site["id"], 0),
-            "vat_included": True,
-        }
-
-
-class ReadinessSensor(BaseSensor):
-    _attr_translation_key = "readiness"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator):
-        super().__init__(coordinator)
-        self._attr_unique_id = f"{self.site['id']}_readiness"
-
-    @property
-    def native_value(self):
-        return str(self.current_result().status)
-
-    @property
-    def extra_state_attributes(self):
-        return source_status(self.coordinator)
-
-
-class NextPriceSensor(PriceSensor):
-    _attr_translation_key = "next_price"
-
-    def __init__(self, coordinator):
-        super().__init__(coordinator)
-        self._attr_unique_id = f"{self.site['id']}_next_price"
-
-    def current_result(self, offset=1):
-        return super().current_result(offset)
-
-
-class DayStatisticSensor(BaseSensor):
-    _attr_native_unit_of_measurement = "DKK/kWh"
-    _attr_state_class = SensorStateClass.MEASUREMENT
-
-    def __init__(self, coordinator, kind):
-        super().__init__(coordinator)
-        self.kind = kind
-        self._attr_translation_key = f"today_{kind}"
-        self._attr_unique_id = f"{self.site['id']}_today_{kind}"
-
-    @property
-    def native_value(self):
-        result = day_result(self.coordinator)
-        if str(result.status) != "READY" or not result.records:
-            return None
-        values = [r.final_price_incl_vat for r in result.records]
-        return {"minimum": min, "maximum": max, "average": lambda v: sum(v) / len(v)}[self.kind](
-            values
-        )
-
-
-class TomorrowSensor(BaseSensor):
-    _attr_translation_key = "tomorrow_status"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator):
-        super().__init__(coordinator)
-        self._attr_unique_id = f"{self.site['id']}_tomorrow_status"
-
-    @property
-    def native_value(self):
-        return str(day_result(self.coordinator, 1).status)
-
-    @property
-    def extra_state_attributes(self):
-        result = day_result(self.coordinator, 1)
-        return {
-            "valid_slots": result.valid_slots,
-            "expected_slots": result.expected_slots,
-            "last_success": result.last_success,
-            "reason": result.reason,
+            "site_id": self.coordinator.site["id"],
+            "vat_included": self.kind.endswith("final"),
+            "canonical_unit": "DKK/kWh",
         }

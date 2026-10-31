@@ -1,0 +1,91 @@
+{
+  "baseline_source": "6c588323786cc5f8f696d553e02213ef8b169286",
+  "before": {
+    "python_modules": 37,
+    "python_lines": 7214,
+    "runtime_bytes": 876821,
+    "translation_bytes": 546588,
+    "registered_entities_per_site": 41
+  },
+  "after": {
+    "python_modules": 22,
+    "python_lines": 3226,
+    "runtime_bytes": 204343,
+    "translation_bytes": 44807,
+    "registered_entities_per_site": 9
+  },
+  "sensors": [
+    {
+      "kind": "current_spot",
+      "unique_id": "<site_id>_current_spot",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": true
+    },
+    {
+      "kind": "current_final",
+      "unique_id": "<site_id>_current_final",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": true
+    },
+    {
+      "kind": "next_spot",
+      "unique_id": "<site_id>_next_spot",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": false
+    },
+    {
+      "kind": "next_final",
+      "unique_id": "<site_id>_next_final",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": false
+    },
+    {
+      "kind": "average",
+      "unique_id": "<site_id>_average",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": false
+    },
+    {
+      "kind": "minimum",
+      "unique_id": "<site_id>_minimum",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": false
+    },
+    {
+      "kind": "maximum",
+      "unique_id": "<site_id>_maximum",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": false
+    },
+    {
+      "kind": "dso",
+      "unique_id": "<site_id>_dso",
+      "unit": "\u00f8re/kWh",
+      "display_precision": 2,
+      "enabled": true,
+      "measurement": true
+    },
+    {
+      "kind": "availability",
+      "unique_id": "<site_id>_availability",
+      "unit": null,
+      "display_precision": null,
+      "enabled": true,
+      "measurement": false
+    }
+  ]
+}

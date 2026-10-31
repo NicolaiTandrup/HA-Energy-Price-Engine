@@ -26,7 +26,8 @@ def validate_slots(slots: list[PriceSlot]) -> list[PriceSlot]:
     )
     for i, slot in enumerate(result):
         if (
-            not isfinite(slot.price)
+            isinstance(slot.price, bool)
+            or not isfinite(slot.price)
             or slot.end - slot.start != QUARTER
             or slot.start.timestamp() % 900
         ):

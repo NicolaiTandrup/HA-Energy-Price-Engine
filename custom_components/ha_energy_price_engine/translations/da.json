@@ -1,0 +1,259 @@
+{
+  "title": "Energy Price Engine",
+  "config": {
+    "step": {
+      "site": {
+        "title": "1 · Sted og Nord Pool",
+        "description": "Vælg den officielle Home Assistant Nord Pool-integration, konfigureret til DKK. PE læser automatisk DKK/MWh uden moms og viser øre/kWh. DK1/DK2 bruger Europe/Copenhagen. Installer først den officielle kilde; en ældre Nordpool-integration er ikke nødvendig. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-kilde",
+          "area": "Prisområde"
+        }
+      },
+      "grid": {
+        "title": "2 · Nettarif",
+        "description": "Vælg kun Radius C, hvis din tilslutning bruger dette produkt. De verificerede Datahub-tidstariffer hentes automatisk. Andre netprodukter kræver din bekræftede variable tarif. Nationale Energinet-betalinger, elafgift og 25 % moms tilføjes kun inden for verificerede gyldighedsdatoer. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "grid": "Netprodukt"
+        }
+      },
+      "grid_rate": {
+        "title": "2 · Manuel nettarif",
+        "description": "Indtast den faktiske variable sats fra din aftale med punktum eller komma. Nul accepteres kun, når du selv indtaster det. Uden bekræftelsen nedenfor starter satsen ved næste hele kvarter, og statistikken dækker resten af dagen. Private historiske eller fremtidige aftalevilkår gættes aldrig. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "amount": "Sats (øre/kWh)",
+          "vat_included": "Den indtastede sats er inklusive moms",
+          "whole_day": "Jeg bekræfter, at satsen også gjaldt tidligere i dag"
+        }
+      },
+      "supplier": {
+        "title": "3 · Leverandørtillæg",
+        "description": "Indtast dit leverandørtillæg inklusive eventuelt variabelt handelstillæg. PE rekonstruerer ikke husstandens regninger og fordeler ikke abonnementer. EWII bruges ikke som standard; bekræft din faktiske aftale. Indtast den faktiske variable sats fra din aftale med punktum eller komma. Nul accepteres kun, når du selv indtaster det. Uden bekræftelsen nedenfor starter satsen ved næste hele kvarter, og statistikken dækker resten af dagen. Private historiske eller fremtidige aftalevilkår gættes aldrig. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "amount": "Sats (øre/kWh)",
+          "vat_included": "Den indtastede sats er inklusive moms",
+          "whole_day": "Jeg bekræfter, at satsen også gjaldt tidligere i dag"
+        }
+      },
+      "review": {
+        "title": "Gemt opsætning",
+        "description": "Sted: **{name}**. Gennemførte trin er gemt. Kontroller priser gentager verificeringen. Ni sensorer og det medfølgende kort viser dækning, komponenter og afhjælpning ved manglende priser. Avanceret bruges kun til bekræftede daterede satser.",
+        "menu_options": {
+          "done": "Færdig — luk opsætning",
+          "check": "Kontroller priser nu",
+          "site": "Rediger sted eller kilde",
+          "grid": "Rediger nettarif",
+          "supplier": "Rediger leverandørtillæg",
+          "advanced": "Avancerede daterede satser",
+          "reset": "Nulstil dette udviklingssted"
+        }
+      },
+      "advanced": {
+        "title": "Avanceret · Daterede variable satser",
+        "description": "Gyldighedsdatoer er lokale; slutdatoen er eksklusiv. Valgfrie timer er lokale 0–23; begge gentagne timer ved vintertid bruger samme sats. Manuelle regler erstatter offentlige standardsatser. Fjern en overlappende manuel regel, før erstatningen tilføjes.",
+        "menu_options": {
+          "add_rate": "Tilføj bekræftet dateret sats",
+          "remove_rate": "Fjern en manuel sats",
+          "review": "Tilbage til gemt opsætning"
+        }
+      },
+      "add_rate": {
+        "title": "Tilføj en bekræftet sats",
+        "description": "Indtast kun en sats, du kan verificere for hele den valgte periode. Ukendte fremtidige satser forbliver utilgængelige. En fjernet privat regel bliver aldrig til nul. Allerede beregnede historiske priser ændres ikke. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "component": "Komponent",
+          "amount": "Sats (øre/kWh)",
+          "vat_included": "Den indtastede sats er inklusive moms",
+          "vat_rate": "Momsandel (0,25 = 25 %)",
+          "valid_from": "Gyldig fra (inklusive)",
+          "valid_to": "Gyldig til (eksklusive)",
+          "hours": "Lokale timer (tom = alle)",
+          "source": "Verifikationskilde",
+          "confirm": "Jeg har verificeret satsen for hele gyldighedsperioden"
+        }
+      },
+      "remove_rate": {
+        "title": "Fjern en manuel sats",
+        "description": "Kun den valgte regel fjernes. Berørte fremtidige priser bliver utilgængelige, indtil de er verificeret igen. Registrerede historiske priser bevares.",
+        "data": {
+          "rate": "Sats, der skal fjernes"
+        }
+      },
+      "reset": {
+        "title": "Nulstil dette sted",
+        "description": "Sted: **{name}**. Den inkompatible beta.10 kræver, at ældre beta-steder oprettes på ny. Tag først backup. Handlingen stopper og fjerner dette sted, dets PE SQLite-historik, revisioner og PE-filer. Andre steder, Recorder og uvedkommende HA-data slettes ikke. Skriv stedets præcise navn, og bekræft. Almindelig Slet i HA bevarer PE-historikfiler.",
+        "data": {
+          "name": "Skriv stedets præcise navn",
+          "confirm": "Slet kun dette sted og dets PE-historik permanent"
+        }
+      }
+    },
+    "error": {
+      "invalid_source": "Vælg en konfigureret officiel DK1/DK2 Nord Pool-kilde, og indtast et stednavn.",
+      "source_missing": "Tilføj først den officielle Home Assistant Nord Pool-integration. Konfigurer DK1/DK2 og DKK.",
+      "invalid_amount": "Indtast en endelig, ikke-negativ decimalsats, f.eks. 3.75 eller 3,75. Kontroller overlappende daterede perioder under Avanceret.",
+      "invalid_rate": "Bekræft hele perioden, brug en slutdato efter startdatoen, og fjern overlappende manuelle regler.",
+      "confirm_reset": "Skriv stedets præcise navn, og marker bekræftelsen af permanent sletning.",
+      "reset_failed": "Nulstillingen kunne ikke afsluttes sikkert. Andre steder er ikke berørt. Kontroller filrettigheder, og gentag nulstillingen."
+    },
+    "abort": {
+      "settings_saved": "Gennemførte trin er gemt.",
+      "saved_reload_failed": "Trinnet er gemt, men stedet kunne ikke genindlæses. Kontroller lager og integrationslog, og åbn Konfigurer igen.",
+      "site_reset": "Dette sted og dets PE-historik er fjernet. Tilføj et nyt Energy Price Engine-sted for at starte igen.",
+      "already_configured": "Dette sted er allerede konfigureret."
+    }
+  },
+  "options": {
+    "step": {
+      "site": {
+        "title": "1 · Sted og Nord Pool",
+        "description": "Vælg den officielle Home Assistant Nord Pool-integration, konfigureret til DKK. PE læser automatisk DKK/MWh uden moms og viser øre/kWh. DK1/DK2 bruger Europe/Copenhagen. Installer først den officielle kilde; en ældre Nordpool-integration er ikke nødvendig. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "name": "Stedets navn",
+          "nordpool_entry": "Officiel Nord Pool-kilde",
+          "area": "Prisområde"
+        }
+      },
+      "grid": {
+        "title": "2 · Nettarif",
+        "description": "Vælg kun Radius C, hvis din tilslutning bruger dette produkt. De verificerede Datahub-tidstariffer hentes automatisk. Andre netprodukter kræver din bekræftede variable tarif. Nationale Energinet-betalinger, elafgift og 25 % moms tilføjes kun inden for verificerede gyldighedsdatoer. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "grid": "Netprodukt"
+        }
+      },
+      "grid_rate": {
+        "title": "2 · Manuel nettarif",
+        "description": "Indtast den faktiske variable sats fra din aftale med punktum eller komma. Nul accepteres kun, når du selv indtaster det. Uden bekræftelsen nedenfor starter satsen ved næste hele kvarter, og statistikken dækker resten af dagen. Private historiske eller fremtidige aftalevilkår gættes aldrig. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "amount": "Sats (øre/kWh)",
+          "vat_included": "Den indtastede sats er inklusive moms",
+          "whole_day": "Jeg bekræfter, at satsen også gjaldt tidligere i dag"
+        }
+      },
+      "supplier": {
+        "title": "3 · Leverandørtillæg",
+        "description": "Indtast dit leverandørtillæg inklusive eventuelt variabelt handelstillæg. PE rekonstruerer ikke husstandens regninger og fordeler ikke abonnementer. EWII bruges ikke som standard; bekræft din faktiske aftale. Indtast den faktiske variable sats fra din aftale med punktum eller komma. Nul accepteres kun, når du selv indtaster det. Uden bekræftelsen nedenfor starter satsen ved næste hele kvarter, og statistikken dækker resten af dagen. Private historiske eller fremtidige aftalevilkår gættes aldrig. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "amount": "Sats (øre/kWh)",
+          "vat_included": "Den indtastede sats er inklusive moms",
+          "whole_day": "Jeg bekræfter, at satsen også gjaldt tidligere i dag"
+        }
+      },
+      "review": {
+        "title": "Gemt opsætning",
+        "description": "Sted: **{name}**. Gennemførte trin er gemt. Kontroller priser gentager verificeringen. Ni sensorer og det medfølgende kort viser dækning, komponenter og afhjælpning ved manglende priser. Avanceret bruges kun til bekræftede daterede satser.",
+        "menu_options": {
+          "done": "Færdig — luk opsætning",
+          "check": "Kontroller priser nu",
+          "site": "Rediger sted eller kilde",
+          "grid": "Rediger nettarif",
+          "supplier": "Rediger leverandørtillæg",
+          "advanced": "Avancerede daterede satser",
+          "reset": "Nulstil dette udviklingssted"
+        }
+      },
+      "advanced": {
+        "title": "Avanceret · Daterede variable satser",
+        "description": "Gyldighedsdatoer er lokale; slutdatoen er eksklusiv. Valgfrie timer er lokale 0–23; begge gentagne timer ved vintertid bruger samme sats. Manuelle regler erstatter offentlige standardsatser. Fjern en overlappende manuel regel, før erstatningen tilføjes.",
+        "menu_options": {
+          "add_rate": "Tilføj bekræftet dateret sats",
+          "remove_rate": "Fjern en manuel sats",
+          "review": "Tilbage til gemt opsætning"
+        }
+      },
+      "add_rate": {
+        "title": "Tilføj en bekræftet sats",
+        "description": "Indtast kun en sats, du kan verificere for hele den valgte periode. Ukendte fremtidige satser forbliver utilgængelige. En fjernet privat regel bliver aldrig til nul. Allerede beregnede historiske priser ændres ikke. Et indsendt trin gemmes straks. Lukning bevarer gennemførte trin; felter, der ikke er indsendt, gemmes ikke.",
+        "data": {
+          "component": "Komponent",
+          "amount": "Sats (øre/kWh)",
+          "vat_included": "Den indtastede sats er inklusive moms",
+          "vat_rate": "Momsandel (0,25 = 25 %)",
+          "valid_from": "Gyldig fra (inklusive)",
+          "valid_to": "Gyldig til (eksklusive)",
+          "hours": "Lokale timer (tom = alle)",
+          "source": "Verifikationskilde",
+          "confirm": "Jeg har verificeret satsen for hele gyldighedsperioden"
+        }
+      },
+      "remove_rate": {
+        "title": "Fjern en manuel sats",
+        "description": "Kun den valgte regel fjernes. Berørte fremtidige priser bliver utilgængelige, indtil de er verificeret igen. Registrerede historiske priser bevares.",
+        "data": {
+          "rate": "Sats, der skal fjernes"
+        }
+      },
+      "reset": {
+        "title": "Nulstil dette sted",
+        "description": "Sted: **{name}**. Den inkompatible beta.10 kræver, at ældre beta-steder oprettes på ny. Tag først backup. Handlingen stopper og fjerner dette sted, dets PE SQLite-historik, revisioner og PE-filer. Andre steder, Recorder og uvedkommende HA-data slettes ikke. Skriv stedets præcise navn, og bekræft. Almindelig Slet i HA bevarer PE-historikfiler.",
+        "data": {
+          "name": "Skriv stedets præcise navn",
+          "confirm": "Slet kun dette sted og dets PE-historik permanent"
+        }
+      }
+    },
+    "error": {
+      "invalid_source": "Vælg en konfigureret officiel DK1/DK2 Nord Pool-kilde, og indtast et stednavn.",
+      "source_missing": "Tilføj først den officielle Home Assistant Nord Pool-integration. Konfigurer DK1/DK2 og DKK.",
+      "invalid_amount": "Indtast en endelig, ikke-negativ decimalsats, f.eks. 3.75 eller 3,75. Kontroller overlappende daterede perioder under Avanceret.",
+      "invalid_rate": "Bekræft hele perioden, brug en slutdato efter startdatoen, og fjern overlappende manuelle regler.",
+      "confirm_reset": "Skriv stedets præcise navn, og marker bekræftelsen af permanent sletning.",
+      "reset_failed": "Nulstillingen kunne ikke afsluttes sikkert. Andre steder er ikke berørt. Kontroller filrettigheder, og gentag nulstillingen."
+    },
+    "abort": {
+      "settings_saved": "Gennemførte trin er gemt.",
+      "saved_reload_failed": "Trinnet er gemt, men stedet kunne ikke genindlæses. Kontroller lager og integrationslog, og åbn Konfigurer igen.",
+      "site_reset": "Dette sted og dets PE-historik er fjernet. Tilføj et nyt Energy Price Engine-sted for at starte igen.",
+      "already_configured": "Dette sted er allerede konfigureret."
+    }
+  },
+  "selector": {
+    "grid": {
+      "options": {
+        "radius_c": "Radius C — verificeret automatisk tidstarif",
+        "manual": "Andet netprodukt — indtast verificeret sats"
+      }
+    },
+    "component": {
+      "options": {
+        "supplier": "Leverandørtillæg",
+        "dso": "Nettarif",
+        "energinet_net": "Energinet net",
+        "energinet_system": "Energinet system",
+        "electricity_tax": "Elafgift"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_spot": {
+        "name": "Aktuel spotpris"
+      },
+      "current_final": {
+        "name": "Aktuel samlet pris"
+      },
+      "next_spot": {
+        "name": "Næste kvarters spotpris"
+      },
+      "next_final": {
+        "name": "Næste kvarters samlede pris"
+      },
+      "average": {
+        "name": "Dagens gennemsnitspris"
+      },
+      "minimum": {
+        "name": "Dagens minimumspris"
+      },
+      "maximum": {
+        "name": "Dagens maksimumspris"
+      },
+      "dso": {
+        "name": "Aktuel nettarif"
+      },
+      "availability": {
+        "name": "Pristilgængelighed"
+      }
+    }
+  }
+}

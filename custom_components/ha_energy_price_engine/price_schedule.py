@@ -1,6 +1,7 @@
 """Civil-time publication refresh, conditional retries and restart recovery."""
 
 import logging
+from asyncio import Lock
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
@@ -8,8 +9,6 @@ from homeassistant.core import callback
 from homeassistant.helpers.event import async_track_point_in_utc_time
 from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
-
-from .price_engine import day_bounds
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,6 +23,7 @@ class PriceSchedule:
         self.store = Store(
             self.hass, 1, f"ha_energy_price_engine.{coordinator.entry.entry_id}.price_schedule"
         )
+        self.work_lock = Lock()
         self.days = {}
         self.cancel = None
         self.active = False
@@ -47,36 +47,16 @@ class PriceSchedule:
         )
 
     async def refresh_day(self, site, day, now, *, force=True):
+        async with self.work_lock:
+            if getattr(self.coordinator, "stopped", False):
+                return False
+            return await self._refresh_day(site, day, now, force=force)
+
+    async def _refresh_day(self, site, day, now, *, force=True):
         key = site["id"]
-        changed = await self.coordinator.price_updater.refresh(site, now, force=force, dates=[day])
-        start, end = day_bounds(day, site["timezone"])
-        rows = self.coordinator.price_engine.lookup(key, start, end)
-        report = self.coordinator.price_updater.status[key]
-        complete = self.coordinator.price_engine.complete_day(key, day, site["timezone"])
-        state = (
-            "READY"
-            if complete and report["status"] == "READY"
-            else report["status"]
-            if report["status"] in {"ERROR", "STALE"}
-            else "INCOMPLETE"
-        )
-        previous = self.days.get(key, {}).get(str(day), {})
-        if day == now.astimezone(ZONE).date() and state != "READY":
-            LOGGER.warning("Current-day price table not verified: %s", state)
-        self.days.setdefault(key, {})[str(day)] = {
-            "status": state,
-            "requested_date": str(day),
-            "last_attempt": now.isoformat(),
-            "last_success": report.get("last_success")
-            if state == "READY"
-            else previous.get("last_success"),
-            "valid_slots": report["source_slots"]
-            if report.get("source_slots") is not None
-            else (len(rows) if report.get("status") not in {"ERROR", "STALE"} else 0),
-            "stored_slots": len(rows),
-            "expected_slots": int((end - start).total_seconds() / 900),
-            "reason": report.get("reason"),
-        }
+        report = await self.coordinator.price_updater.refresh(site, now, force=force, dates=[day])
+        changed = report.pop("changed", False)
+        self.days.setdefault(key, {})[str(day)] = dict(report)
         # Keep a bounded operational log; price history has independent retention.
         self.days[key] = {
             d: r for d, r in self.days[key].items() if d >= str(day - timedelta(days=7))
@@ -84,27 +64,23 @@ class PriceSchedule:
         await self.store.async_save(self.days)
         return changed
 
-    async def startup(self):
+    async def startup(self, *, force=True):
         self.days = await self.store.async_load() or {}
         now = dt_util.utcnow()
-        for optimizer in self.coordinator.sites.values():
-            site = optimizer.site
-            today = now.astimezone(ZoneInfo(site["timezone"])).date()
-            # Always verify current day; also reconcile known/missing next day.
-            for day in (today, today + timedelta(days=1)):
-                await self.refresh_day(site, day, now)
+        site = self.coordinator.site
+        today = now.astimezone(ZoneInfo(site["timezone"])).date()
+        for day in (today, today + timedelta(days=1)):
+            await self.refresh_day(site, day, now, force=force)
 
     async def run(self, now, hour, minute):
         changed = False
         attempted = False
-        for optimizer in self.coordinator.sites.values():
-            site = optimizer.site
-            today = now.astimezone(ZoneInfo(site["timezone"])).date()
-            day = today if (hour, minute) == (0, 1) else today + timedelta(days=1)
-            unconditional = (hour, minute) in {(0, 1), (13, 5)}
-            if unconditional or not self.complete(site, day, now):
-                attempted = True
-                changed = await self.refresh_day(site, day, now) or changed
+        site = self.coordinator.site
+        today = now.astimezone(ZONE).date()
+        day = today if (hour, minute) == (0, 1) else today + timedelta(days=1)
+        if (hour, minute) in {(0, 1), (13, 5)} or not self.complete(site, day, now):
+            attempted = True
+            changed = await self.refresh_day(site, day, now)
         if attempted:
             await self.coordinator.async_request_refresh()
         return changed
