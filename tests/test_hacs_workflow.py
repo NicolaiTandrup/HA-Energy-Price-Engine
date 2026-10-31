@@ -103,7 +103,7 @@ async def test_recorded_prebootstrap_branch_reproduces_hacs_rejection(
 
 
 @pytest.mark.parametrize("line", list(PINS))
-@pytest.mark.parametrize("reference", ["pe", "pr26"])
+@pytest.mark.parametrize("reference", ["pe"])
 async def test_candidate_after_approved_default_branch_gate_installs_via_actual_hacs(
     hass, tmp_path, line, reference
 ):

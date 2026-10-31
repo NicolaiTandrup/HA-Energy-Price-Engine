@@ -26,7 +26,7 @@ from tools.prepare_hacs_reference import PINS
 from .test_hacs_workflow import candidate_tree, upstream
 
 ROOT = Path(__file__).parents[1]
-TAG = "v0.1.0-beta.9"
+TAG = "v0.1.0-beta.10"
 DOMAIN = "ha_energy_price_engine"
 
 
@@ -64,7 +64,7 @@ def release_inputs():
 
 @pytest.mark.parametrize("line", list(PINS))
 async def test_hacs_add_discover_beta_download_update_and_reinstall(
-    hass, tmp_path, line, hass_client
+    hass, tmp_path, line, hass_client, hass_access_token
 ):
     receipt, files, archive = release_inputs()
     main_files = files
@@ -178,9 +178,6 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
         import sys
 
         from homeassistant.components import websocket_api
-        from homeassistant.components.http import HomeAssistantView
-
-        from custom_components.ha_energy_price_engine.hacs_channel import enable_beta_channel
 
         hacs.data = importlib.import_module(alias + ".utils.data").HacsData(hacs)
         hacs.common.categories = [enums.HacsCategory.INTEGRATION]
@@ -191,20 +188,9 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
             commands = importlib.import_module(alias + ".websocket.repository")
             lists = importlib.import_module(alias + ".websocket.repositories")
 
-        class RepairView(HomeAssistantView):
-            url = "/api/pe_qa_channel"
-            name = "api:pe_qa_channel"
-
-            async def post(self, request):
-                try:
-                    return self.json({"latest": await enable_beta_channel(hass)})
-                except ValueError as err:
-                    return self.json({"error": str(err)}, status_code=400)
-
         from homeassistant.setup import async_setup_component
 
         assert await async_setup_component(hass, "websocket_api", {})
-        hass.http.register_view(RepairView())
         for command in (
             commands.hacs_repository_info,
             commands.hacs_repository_beta,
@@ -212,9 +198,21 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
         ):
             websocket_api.async_register_command(hass, command)
         client = await hass_client()
-        response = await client.post("/api/pe_qa_channel")
-        assert response.status == 200, await response.json()
-        assert (await response.json())["latest"] == TAG
+        ws = await client.ws_connect("/api/websocket")
+        await ws.receive_json()
+        await ws.send_json({"type": "auth", "access_token": hass_access_token})
+        assert (await ws.receive_json())["type"] == "auth_ok"
+        await ws.send_json(
+            {
+                "id": 1,
+                "type": "hacs/repository/beta",
+                "repository": str(repo.data.id),
+                "show_beta": True,
+            }
+        )
+        result = await ws.receive_json()
+        assert result.get("success"), result
+        await ws.close()
         saved_hacs = await importlib.import_module(alias + ".utils.store").async_load_from_store(
             hass, "repositories"
         )
@@ -243,7 +241,7 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
                         "git",
                         "archive",
                         "--format=zip",
-                        "cbad4e7595e7eba4080aca295bfca521f9b0409a",
+                        "6c588323786cc5f8f696d553e02213ef8b169286",
                         f"custom_components/{DOMAIN}",
                     ],
                     cwd=ROOT,
@@ -252,27 +250,27 @@ async def test_hacs_add_discover_beta_download_update_and_reinstall(
             prefix = f"custom_components/{DOMAIN}/"
         installed.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(io.BytesIO(previous_bytes)) as previous:
-            assert json.loads(previous.read(prefix + "manifest.json"))["version"] == "0.1.0-beta.8"
+            assert json.loads(previous.read(prefix + "manifest.json"))["version"] == "0.1.0-beta.9"
             for name in previous.namelist():
                 if name.startswith(prefix) and not name.endswith("/"):
                     target = installed / name.removeprefix(prefix)
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_bytes(previous.read(name))
-        repo.data.installed_version = "v0.1.0-beta.8"
-        assert native_update.installed_version == "v0.1.0-beta.8"
+        repo.data.installed_version = "v0.1.0-beta.9"
+        assert native_update.installed_version == "v0.1.0-beta.9"
         assert native_update.latest_version == TAG
         from custom_components.ha_energy_price_engine.configuration import tariff_for, validate_site
         from custom_components.ha_energy_price_engine.models import PriceSlot
         from custom_components.ha_energy_price_engine.price_engine import PriceEngine
 
-        from .test_integration import model
+        from .helpers import model
 
         history_engine = PriceEngine(hass, "hacs-beta8-upgrade")
         start = datetime(2026, 10, 29, 12, tzinfo=UTC)
         await history_engine.async_update(
             "hacs_history",
             [PriceSlot(start, start + timedelta(minutes=15), -0.1)],
-            tariff_for(validate_site(model("hacs_history"))),
+            tariff_for(validate_site(model(id="hacs_history"))),
             {"kind": "recorded_test", "verified_at": start.isoformat()},
             start,
         )

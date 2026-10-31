@@ -1,3 +1,34 @@
+# Beta.10 core cleanup checkpoint — 31 October 2026 (active)
+
+Branch `feat/beta5-simple-onboarding`; previous committed inventory `dd4a855`.
+This checkpoint subject is **Replace beta scaffolding with minimal dated pricing and API v2**.
+No release/tag/main/production changes. PR #14 remains the development draft.
+
+Implemented: nine native sensors; schema4 saved source/grid/supplier setup with
+EN/DA text; one dated formula; explicit from-now vs verified whole-day rate scope;
+full/remaining-day schedule statistics; immutable fail-closed APIv2; compact read-only
+card schema2 with automatic single-site discovery; redacted diagnostics; entry-scoped
+explicit reset; retired 15 modules, subscriptions/provisional/entity-source/legacy
+presentation paths and obsolete consumer-v1 test tooling. Compressed SQLite unchanged.
+Inventory and precise module decisions: `docs/MVP_CLEANUP.md`.
+
+Validated locally: first full suite **99 passed, 86% coverage** on HA2026.10.3;
+**17 browser regressions passed** desktop/mobile EN/DA; extra5 statistics/cost tests
+passed; Ruff; official Docker hassfest **1 valid / 0 invalid**; pinned HACS2.0.5 and
+upstream actual add, beta visibility, beta9 file upgrade, reinstall/uninstall; HACS
+ZIP installed/configured/reloaded outside source. Three warnings in full run include
+upstream HACS deprecations; inspect final matrix before release. Current-core suite,
+manual ZIP and native frontend acceptance are running, not yet claimed passed.
+
+Next: finish native UI/screenshots and edge/reset/dated-flow tests; replace current
+user/developer docs with MVP setup/APIv2/CM handoff; practical ledger benchmarks;
+remote full CI/HACS; reproducible clean builds; guarded beta10-only prerelease and
+independent public verification. Existing beta1–9 receipts and main must be unchanged.
+No CM source updated: do not claim old CM/APIv1 interoperability. No owner real-HA
+acceptance or Raspberry Pi performance claimed. Stop after published beta10 verification.
+
+---
+
 # Development handoff
 
 Updated31October2026 (Europe/Copenhagen). **Beta.10 MVP cleanup ACTIVE**, authorized

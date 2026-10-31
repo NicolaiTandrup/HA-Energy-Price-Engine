@@ -11,34 +11,19 @@ from unittest.mock import patch
 import pytest
 
 from custom_components.ha_energy_price_engine.ledger import (
-    inspect_ledger,
     restore_ledger,
 )
 from custom_components.ha_energy_price_engine.price_engine import PriceEngine
 
-from .test_price_engine import rows
+from .helpers import rows, tariff
 
 NOW = datetime(2026, 10, 23, tzinfo=UTC)
 
 
 async def seed(hass, entry="disk"):
     engine = PriceEngine(hass, entry)
-    await engine.async_update("home", rows(), {"mode": "all_in"}, {"provider": "synthetic"}, NOW)
+    await engine.async_update("home", rows(), tariff(), {"provider": "synthetic"}, NOW)
     return engine
-
-
-async def test_legacy_migration_is_verified_idempotent_and_preserves_original(hass):
-    first = await seed(hass, "original")
-    records = [first._serialize(r) for r in first.records["home"]]
-    target = PriceEngine(hass, "migration")
-    legacy = {"records": records, "revision": 1, "signature": "legacy", "batch_signatures": {}}
-    await target.store("home").async_save(legacy)
-    await target.async_load(["home"])
-    assert len(target.records["home"]) == 96
-    assert await target.store("home").async_load() == legacy
-    await target.async_load(["home"])
-    report = await hass.async_add_executor_job(inspect_ledger, target.database.path)
-    assert report["sites"]["home"] == {"records": 96, "revision": 1}
 
 
 async def test_interrupted_sqlite_transaction_rolls_back_on_actual_reopen(hass):
@@ -62,13 +47,9 @@ async def test_stale_writer_cannot_overwrite_later_configuration(hass):
     first = await seed(hass)
     stale = PriceEngine(hass, "disk")
     await stale.async_load(["home"])
-    await first.async_update(
-        "home", rows(), {"mode": "spot_ex_vat", "vat": 0.25}, {"revision": "new"}, NOW
-    )
+    await first.async_update("home", rows(), tariff(vat=0.3), {"revision": "new"}, NOW)
     with pytest.raises(OSError, match="Stale ledger writer"):
-        await stale.async_update(
-            "home", rows(), {"mode": "spot_ex_vat", "vat": 0.5}, {"revision": "stale"}, NOW
-        )
+        await stale.async_update("home", rows(), tariff(vat=0.5), {"revision": "stale"}, NOW)
     restored = PriceEngine(hass, "disk")
     await restored.async_load(["home"])
     assert restored.records["home"] == first.records["home"]
@@ -95,7 +76,7 @@ async def test_corrupt_history_is_preserved_and_cannot_be_overwritten(hass, corr
     await restored.async_load(["home"])
     assert restored.load_errors["home"] and not restored.records["home"]
     with pytest.raises(OSError, match="requires recovery"):
-        await restored.async_update("home", rows(), {"mode": "all_in"}, {}, NOW)
+        await restored.async_update("home", rows(), tariff(), {}, NOW)
     assert await hass.async_add_executor_job(path.read_bytes) == before
 
 
@@ -135,7 +116,7 @@ async def test_actual_sql_error_rolls_back_revision_audit_and_amounts(hass):
 
     with patch.object(engine.database, "_blob", side_effect=fail_halfway):
         with pytest.raises(OSError, match="transaction failed"):
-            await engine.async_update("home", rows(), {"mode": "spot_ex_vat", "vat": 0.25}, {}, NOW)
+            await engine.async_update("home", rows(), tariff(vat=0.3), {}, NOW)
     assert engine.records["home"] == original
     restored = PriceEngine(hass, "disk")
     await restored.async_load(["home"])
@@ -188,9 +169,7 @@ async def test_year_scale_append_preserves_database_enforced_historical_freeze(h
         PriceSlot(start + timedelta(minutes=15 * i), start + timedelta(minutes=15 * (i + 1)), -0.1)
         for i in range(365 * 96)
     ]
-    await engine.async_update(
-        "home", data, {"mode": "all_in"}, {"provider": "synthetic-year-scale"}, NOW
-    )
+    await engine.async_update("home", data, tariff(), {"provider": "synthetic-year-scale"}, NOW)
 
     def freeze():
         with closing(sqlite3.connect(engine.database.path, isolation_level=None)) as c:
@@ -200,13 +179,13 @@ async def test_year_scale_append_preserves_database_enforced_historical_freeze(h
 
     await hass.async_add_executor_job(freeze)
     await engine.async_update(
-        "home", rows(), {"mode": "all_in"}, {"provider": "new-synthetic-publication"}, NOW
+        "home", rows(), tariff(), {"provider": "new-synthetic-publication"}, NOW
     )
     restored = PriceEngine(hass, "year-scale")
     await restored.async_load(["home"])
     assert len(restored.records["home"]) == 365 * 96 + 96
     assert restored.records["home"][0].start == start
-    assert restored.records["home"][0].final_price_incl_vat == -0.1
+    assert restored.records["home"][0].final_price_incl_vat == pytest.approx(0.31625)
     assert not restored.load_errors
     with patch(
         "custom_components.ha_energy_price_engine.price_engine.calculate",
@@ -232,9 +211,7 @@ async def test_concurrent_reads_see_old_snapshot_until_durable_commit(hass):
 
     with patch.object(engine.database, "_blob", side_effect=blocked_blob):
         update = asyncio.create_task(
-            engine.async_update(
-                "home", rows(), {"mode": "spot_ex_vat", "vat": 0.25}, {"provider": "new"}, NOW
-            )
+            engine.async_update("home", rows(), tariff(vat=0.3), {"provider": "new"}, NOW)
         )
         try:
             assert await hass.async_add_executor_job(entered.wait, 5)
@@ -246,7 +223,7 @@ async def test_concurrent_reads_see_old_snapshot_until_durable_commit(hass):
         assert await update
     assert engine.revisions["home"] == 2
     assert engine.records["home"][0].final_price_incl_vat == pytest.approx(
-        original[0].final_price_incl_vat * 1.25
+        original[0].final_price_incl_vat - 0.005
     )
     restored = PriceEngine(hass, "disk")
     await restored.async_load(["home"])
@@ -267,18 +244,14 @@ async def test_three_independent_year_ledgers_recover_without_cross_site_history
     engines = [PriceEngine(hass, f"multisite-{i}") for i in range(3)]
     await asyncio.gather(
         *[
-            e.async_update(
-                f"site_{i}", series, {"mode": "all_in"}, {"provider": f"synthetic-site-{i}"}, NOW
-            )
+            e.async_update(f"site_{i}", series, tariff(), {"provider": f"synthetic-site-{i}"}, NOW)
             for i, e in enumerate(engines)
         ]
     )
     for i, e in enumerate(engines):
         name = f"site_{i}"
         previous = e.records[name]
-        await e.async_update(
-            name, rows(), {"mode": "all_in"}, {"provider": "synthetic-next-day"}, NOW
-        )
+        await e.async_update(name, rows(), tariff(), {"provider": "synthetic-next-day"}, NOW)
         restored = PriceEngine(hass, f"multisite-{i}")
         await restored.async_load([name])
         assert len(restored.records[name]) == 365 * 96 + 96

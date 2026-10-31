@@ -1,5 +1,5 @@
 // Browser regression coverage complementary to the real native HA acceptance run.
-// Fixtures come from test_beta8_dashboard.py's actual HA/SQLite/source snapshots.
+// Fixtures come from test_dashboard.py's actual HA/SQLite/source snapshots.
 import {test, before, after} from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
@@ -9,7 +9,7 @@ const {chromium} = await import(process.env.PE_PLAYWRIGHT_MODULE || 'playwright'
 const dataRoot = process.env.PE_FRONTEND_FIXTURES;
 assert.ok(dataRoot, 'Set PE_FRONTEND_FIXTURES using real producer fixture exports');
 let server, browser, url;
-const HTML = `<!doctype html><html><head><meta charset="utf-8"><title>PE card regression</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#f7f8fa;font-family:Arial}energy-price-engine-card{display:block;max-width:1440px;margin:auto}ha-card{display:block;background:#fff}</style><script type="module" src="/card.js"></script></head><body><energy-price-engine-card></energy-price-engine-card><script>window.PE_XSS=false;window.wsCalls=0;window.load=async(name,language='en',number_format='language')=>{window.fixture=await (await fetch('/data/'+name+'.json')).json();const c=document.querySelector('energy-price-engine-card');await customElements.whenDefined('energy-price-engine-card');c.setConfig({entity:'sensor.qa_current'});c.hass={locale:{language,number_format},states:{'sensor.qa_current':{last_updated:String(Date.now())}},connection:{},callWS:async msg=>{window.wsCalls++;if(msg.type!=='ha_energy_price_engine/price_schedule'||msg.entity_id!=='sensor.qa_current')throw Error('Unexpected command');return structuredClone(window.fixture)}};};</script></body></html>`;
+const HTML = `<!doctype html><html><head><meta charset="utf-8"><title>PE card regression</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#f7f8fa;font-family:Arial}energy-price-engine-card{display:block;max-width:1440px;margin:auto}ha-card{display:block;background:#fff}</style><script type="module" src="/card.js"></script></head><body><energy-price-engine-card></energy-price-engine-card><script>window.PE_XSS=false;window.wsCalls=0;window.load=async(name,language='en',number_format='language')=>{window.fixture=await (await fetch('/data/'+name+'.json')).json();const c=document.querySelector('energy-price-engine-card');await customElements.whenDefined('energy-price-engine-card');c.setConfig({});c.hass={locale:{language,number_format},states:{'sensor.qa_current':{last_updated:String(Date.now())}},connection:{},callWS:async msg=>{window.wsCalls++;if(msg.type==='ha_energy_price_engine/sites')return [{site_id:window.fixture.site.id,name:window.fixture.site.name,entity_id:'sensor.qa_current'}];if(msg.type!=='ha_energy_price_engine/price_schedule'||msg.site_id!==window.fixture.site.id)throw Error('Unexpected command');return structuredClone(window.fixture)}};};</script></body></html>`;
 before(async()=>{
  server=createServer(async(req,res)=>{
   try {
@@ -61,12 +61,12 @@ for(const [name,count] of [['normal',196],['fall',196],['spring',188]]) for(cons
   assert.deepEqual(errors,[]);await page.close();
  });
 }
-for(const [name,raw,final] of [['missing',192,0],['unpublished',97,96],['gap',192,191]]){
+for(const [name,raw,final] of [['missing',196,0],['unpublished',96,96],['gap',196,195]]){
  test(`${name}: visible reasons, unavailable final gaps and independent raw`,async()=>{
   const {page,card,errors}=await open(name,390);
   assert.equal(await card.locator('[data-chart="spot"] rect.bar').count(),raw);
   assert.equal(await card.locator('[data-chart="final"] rect.bar').count(),final);
-  assert.ok((await card.locator('ha-card').textContent()).includes('Incomplete') || (await card.locator('ha-card').textContent()).includes('Error'));
+  assert.ok((await card.locator('ha-card').textContent()).includes('Incomplete') || (await card.locator('ha-card').textContent()).includes('Error') || (await card.locator('ha-card').textContent()).includes('Stale'));
   assert.ok(await card.locator('.notice').count());
   assert.deepEqual(errors,[]);await page.close();
  });
@@ -98,12 +98,12 @@ for (const language of ['en', 'da']) {
  test(`activation boundary ${language}: explained unknown becomes Ready without inventing history`, async()=>{
   const {page,card,errors}=await open('activation',390,language);
   const text=await card.locator('.activation').innerText();
-  assert.ok(/19[:.]15/.test(text) && text.includes(language==='da'?'Næste kvarter er Klar':'next quarter is Ready'));
-  assert.ok(await card.locator('.historical-gap').isVisible());
+  assert.ok(/14[:.]15/.test(text) && text.includes(language==='da'?'Næste kvarter er Klar':'next quarter is Ready'));
+  assert.ok((await card.locator('.statistics').innerText()).includes(language==='da'?'resten af dagen':'Remaining-day'));
   assert.ok((await card.locator('.health').innerText()).includes(language==='da'?'Ufuldstændig':'Incomplete'));
   await page.evaluate(language=>window.load('activated',language),language);
   await page.waitForFunction(()=>!document.querySelector('energy-price-engine-card').shadowRoot.querySelector('.activation'));
-  assert.ok(await card.locator('.historical-gap').isVisible());
+  assert.ok((await card.locator('.statistics').innerText()).includes(language==='da'?'resten af dagen':'Remaining-day'));
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),390);
   assert.deepEqual(errors,[]);await page.close();
  });

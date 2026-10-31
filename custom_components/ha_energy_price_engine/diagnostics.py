@@ -1,47 +1,12 @@
-"""Redacted operational diagnostics; no customer labels, identifiers or raw sources."""
+"""Redacted source, coverage and SQLite diagnostics without private contract labels."""
 
-import json
-from datetime import timedelta
-
-from homeassistant.util import dt as dt_util
+from .const import API_VERSION, DOMAIN
 
 
 async def async_get_config_entry_diagnostics(hass, entry):
-    c = getattr(entry, "runtime_data", None)
-    if c is None or entry.entry_id not in hass.data.get("ha_energy_price_engine", {}):
-        return {"api_version": 1, "loaded": False, "state": str(entry.state)}
-    now = dt_util.utcnow()
-    rows = c.price_engine.lookup(
-        c.site["id"],
-        now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0),
-        now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(minutes=15),
-    )
-    components = json.loads(rows[0].components_json).get("components", {}) if rows else {}
-    source = json.loads(rows[0].source_json) if rows else {}
-    # Whitelist public source metadata; omit the Nord Pool entry identifier and
-    # free-form user source labels. These values explain verification provenance.
-    public_source = {
-        k: source[k]
-        for k in ("kind", "area", "input_unit", "input_vat", "verified_at")
-        if k in source
-    }
-    if "dso" in source:
-        public_source["dso"] = {
-            k: v
-            for k, v in source["dso"].items()
-            if k
-            in {
-                "provider",
-                "gln",
-                "product",
-                "charge_type",
-                "unit",
-                "vat_included",
-                "version",
-                "effective_ranges",
-                "fetched_at",
-            }
-        }
+    c = hass.data.get(DOMAIN, {}).get(entry.entry_id)
+    if c is None:
+        return {"api_version": API_VERSION, "loaded": False, "state": str(entry.state)}
 
     def storage_usage():
         import shutil
@@ -50,7 +15,7 @@ async def async_get_config_entry_diagnostics(hass, entry):
         return {
             "bytes": path.stat().st_size if path.exists() else 0,
             "free_bytes": shutil.disk_usage(path.parent).free if path.parent.exists() else None,
-            "retention": "preserve_all_referenced_history_no_automatic_pruning",
+            "retention": "all_history",
             "memory_index": "all_history",
         }
 
@@ -58,71 +23,47 @@ async def async_get_config_entry_diagnostics(hass, entry):
         storage = await hass.async_add_executor_job(storage_usage)
     except OSError:
         storage = {"error": "Storage usage unavailable"}
-    from .component_status import component_snapshot
-
-    snapshot = component_snapshot(hass, entry)
-    from .localization import review_labels
-    from .presentation import display_value, format_price
-    from .status import readiness_snapshot
-
-    labels = await review_labels(hass)
-    unit = c.site.get("display_unit", "øre/kWh")
-    public_components = {}
-    for key, row in snapshot["components"].items():
-        source = row["source"]
-        if not source.startswith(
-            ("https://www.ewii.dk/", "Rate specified by owner")
-        ) and source not in {
-            "Nord Pool",
-            "Radius",
-            "Energi Data Service",
-            "calculated",
-            "confirmed_vat",
-        }:
-            source = "user_confirmed_or_unavailable"
-        public_components[key] = {**row, "source": source}
-        if key != "vat":
-            value = row["value"] / 100 if row["value"] is not None else None
-            shown = row["display_value"] / 100 if row["display_value"] is not None else None
-            public_components[key].update(
-                value=display_value(value, unit),
-                display_value=display_value(shown, unit),
-                unit=unit + (" incl VAT" if key == "final" else " ex VAT"),
-                formatted_value=format_price(value, unit, labels["decimal_separator"]),
-                canonical_value_dkk_per_kwh=value,
+    days = {}
+    for day, report in c.schedule.days.get(c.site["id"], {}).items():
+        days[day] = {
+            key: report.get(key)
+            for key in (
+                "status",
+                "expected_slots",
+                "valid_slots",
+                "last_success",
+                "last_attempt",
+                "missing_components",
+                "failure_stage",
+                "affected_period",
             )
+        }
+        grid = report.get("grid_source", {})
+        days[day]["grid_source"] = {
+            k: grid[k]
+            for k in (
+                "provider",
+                "gln",
+                "product",
+                "charge_type",
+                "unit",
+                "vat_included",
+                "version",
+                "fetched_at",
+            )
+            if k in grid
+        }
     return {
-        "component_breakdown": public_components,
-        "canonical_technical_unit": "DKK/kWh",
-        "price_display_unit": unit,
-        "readiness": readiness_snapshot(hass, entry),
-        "storage": storage,
-        "api_version": 1,
-        "raw_source_days": {
-            day: {k: v for k, v in report.items() if k != "reason"}
-            for day, report in c.price_updater.raw_reports.items()
-        },
-        "source_verification": public_source,
+        "api_version": API_VERSION,
+        "loaded": True,
+        "version": c.integration_version,
         "area": c.site["area"],
         "timezone": c.site["timezone"],
-        "dso_mode": c.site.get("dso_mode", "manual"),
-        "requested_days": {
-            day: {k: v for k, v in report.items() if k != "reason"}
-            for day, report in c.schedule.days.get(c.site["id"], {}).items()
-        },
+        "dso_mode": c.site["dso_mode"],
+        "days": days,
+        "storage": storage,
         "ledger_records": len(c.price_engine.records.get(c.site["id"], ())),
         "revision": c.price_engine.revisions.get(c.site["id"], 0),
         "corrections": len(c.price_engine.audit.get(c.site["id"], [])),
-        "current_components": {
-            key: {k: v for k, v in part.items() if k != "source"}
-            for key, part in components.items()
-        },
-        "configured_periods": [
-            {k: v for k, v in r.items() if k != "source"}
-            for r in c.site.get("dated_components", [])
-        ],
         "load_error": bool(c.price_engine.load_errors),
-        "has_source_error": any(
-            r.get("reason") for r in c.schedule.days.get(c.site["id"], {}).values()
-        ),
     }

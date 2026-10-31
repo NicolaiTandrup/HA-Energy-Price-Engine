@@ -1,8 +1,4 @@
-"""Bounded, authenticated dashboard reads of stored prices, never tariff arithmetic.
-
-This frontend transport is separate from the stable CM Python API v1. It creates
-no Recorder states, provider requests, SQL connections, or control/write actions.
-"""
+"""Authenticated bounded price-card reads of cached records; never price I/O."""
 
 import json
 from datetime import timedelta
@@ -14,26 +10,25 @@ from homeassistant.auth.permissions.const import POLICY_READ
 from homeassistant.components import websocket_api
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.core import callback
-from homeassistant.exceptions import Unauthorized
-from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 
-from .api import ConsumerAPI
+from .api import PriceAPI
 from .const import DOMAIN
-from .device_diagnostics import availability
 from .price_engine import day_bounds
+from .status import availability, quarter, statistics
 
 CARD_URL = "/ha_energy_price_engine/energy-price-engine-card.js"
 COMPONENTS = ("spot", "dso", "energinet_net", "energinet_system", "supplier", "electricity_tax")
 
 
 async def async_setup_dashboard(hass):
+    websocket_api.async_register_command(hass, websocket_sites)
     websocket_api.async_register_command(hass, websocket_schedule)
     await hass.http.async_register_static_paths(
         [
             StaticPathConfig(
-                CARD_URL, str(Path(__file__).parent / "www" / "energy-price-engine-card.js"), False
+                CARD_URL, str(Path(__file__).parent / "www/energy-price-engine-card.js"), False
             )
         ]
     )
@@ -48,218 +43,189 @@ def _instant(start, end, zone):
     }
 
 
-def _summary(result):
+def _summary(window):
     return {
-        "status": str(result.status),
-        "expected_slots": result.expected_slots,
-        "stored_slots": result.valid_slots,
-        "reason": result.reason,
-        "last_success": result.last_success,
+        "status": str(window.status),
+        "expected_slots": window.expected_slots,
+        "stored_slots": window.available_slots,
+        "reason": window.reason,
+        "last_success": window.verified_at.isoformat() if window.verified_at else None,
     }
 
 
-def price_schedule(coordinator, *, now=None):
-    """At most two local days (92/96/100 quarters each), missing quarters explicit.
-
-    Values are unrounded ore/kWh; monetary rounding belongs only to the card. All
-    charges and VAT are read from immutable applied component snapshots. A valid
-    raw source can be shown even when final composition failed. Retained stale
-    records are inspectable but never plotted as verified final prices.
-    """
+def price_schedule(c, now=None):
     now = now or dt_util.utcnow()
-    site = coordinator.site
+    site = c.site
     zone = ZoneInfo(site["timezone"])
     today = now.astimezone(zone).date()
-    api = ConsumerAPI(coordinator.hass)
-    provenance, references = {}, {}
+    api = PriceAPI(c.hass)
     days = []
-
-    def lookup(start, end):
-        return api.lookup(
-            site["id"], start, end, now=now, producer_entry_id=coordinator.entry.entry_id
-        )
-
-    def reference(record, parts, source):
-        # Different spot amounts must not duplicate an entire source/contract
-        # snapshot for every quarter. All numeric values already live in rows.
-        metadata = {
-            name: {k: v for k, v in part.items() if k not in {"ex_vat", "vat", "incl_vat"}}
-            for name, part in parts.items()
-        }
-        key = (json.dumps(metadata, sort_keys=True), record.source_json)
-        if key not in references:
-            name = str(len(references) + 1)
-            references[key] = name
-            provenance[name] = {"source": source, "components": metadata}
-        return references[key]
-
+    provenance = {}
+    references = {}
     for offset in (0, 1):
-        day = today + timedelta(days=offset)
-        first, last = day_bounds(day, site["timezone"])
-        result = lookup(first, last)
-        records = {r.start: r for r in result.records}
-        raw = {r.start: r for r in coordinator.price_updater.raw_slots.get(str(day), ())}
-        raw_report = coordinator.price_updater.raw_reports.get(str(day), {})
-        report = coordinator.schedule.days.get(site["id"], {}).get(str(day), {})
-        verified = dt_util.parse_datetime(raw_report.get("verified_at", ""))
-        raw_fresh = bool(
-            verified
-            and 0 <= (now - verified).total_seconds() < 7200
+        date = today + timedelta(days=offset)
+        first, last = day_bounds(date, site["timezone"])
+        window = api.lookup(site["id"], first, last, now=now)
+        records = {r.start: r for r in c.price_engine.lookup(site["id"], first, last)}
+        raw = {r.start: r for r in c.price_updater.raw_slots.get(str(date), ())}
+        report = c.schedule.days.get(site["id"], {}).get(str(date), {})
+        raw_report = report.get("raw", {})
+        stamp = dt_util.parse_datetime(raw_report.get("verified_at") or "")
+        fresh = (
+            stamp
+            and 0 <= (now - stamp).total_seconds() <= 86400
             and raw_report.get("status") in {"READY", "INCOMPLETE"}
-            and getattr(coordinator, "settings_current", True)
         )
-        slots = []
-        start = first
-        while start < last:
-            end = start + timedelta(minutes=15)
-            record = records.get(start)
-            state = lookup(start, end)
+        rows = []
+        cursor = first
+        while cursor < last:
+            end = cursor + timedelta(minutes=15)
+            result = api.lookup(site["id"], cursor, end, now=now)
+            record = records.get(cursor)
             row = {
-                **_instant(start, end, zone),
-                "status": str(state.status),
-                "reason": state.reason or (None if record else report.get("reason")),
-                "revision": record.revision if record else None,
-                "provenance": None,
-                **{key: None for key in (*COMPONENTS, "vat", "final", "stored_final")},
+                **_instant(cursor, end, zone),
+                **{k: None for k in (*COMPONENTS, "vat", "final", "stored_final")},
+                "status": str(result.status),
+                "reason": result.reason,
                 "raw_status": "INCOMPLETE",
                 "raw_verified_at": None,
-                "calculated_at": record.calculated_at.isoformat() if record else None,
+                "revision": None,
+                "provenance": None,
             }
             if record:
-                snapshot = json.loads(record.components_json)
+                parts = json.loads(record.components_json)["components"]
                 source = json.loads(record.source_json)
-                parts = snapshot.get("components", {})
-                row["provenance"] = reference(record, parts, source)
+                metadata = {
+                    k: {a: v for a, v in p.items() if a not in {"ex_vat", "vat", "incl_vat"}}
+                    for k, p in parts.items()
+                }
+                ref = (record.source_json, json.dumps(metadata, sort_keys=True))
+                if ref not in references:
+                    key = str(len(references) + 1)
+                    references[ref] = key
+                    provenance[key] = {"source": source, "components": metadata}
+                row.update(
+                    provenance=references[ref],
+                    revision=record.revision,
+                    stored_final=record.final_price_incl_vat * 100,
+                )
                 for key in COMPONENTS:
                     if key in parts:
                         row[key] = parts[key]["ex_vat"] * 100
-                if parts:
-                    row["vat"] = sum(p["vat"] for p in parts.values()) * 100
-                row["stored_final"] = record.final_price_incl_vat * 100
-                if str(state.status) == "READY":
+                row["vat"] = sum(p["vat"] for p in parts.values()) * 100
+                if result.slots:
                     row["final"] = row["stored_final"]
-                # Settled spot snapshots remain valid independently of live fetches.
-                if row["spot"] is not None:
-                    row["raw_status"] = (
-                        "READY"
-                        if end <= now
-                        else "STALE"
-                        if str(state.status) == "READY"
-                        else str(state.status)
-                    )
-                    row["raw_verified_at"] = source.get("verified_at")
-            # Final component failures must not hide independently verified spot.
-            if start in raw and raw_fresh and raw_report.get("price_basis") != "all_in":
-                basis = raw_report.get("price_basis")
-                raw_value = (
-                    raw[start].price * 100 / (1 + site["vat"] if basis == "spot_incl_vat" else 1)
-                )
+                if end <= now:
+                    row.update(raw_status="READY", raw_verified_at=source.get("verified_at"))
+            if fresh and cursor in raw:
                 if row["spot"] is None:
-                    row["spot"] = raw_value
-                # Preserve the spot actually used by an existing final record.
-                if row["spot"] == raw_value:
-                    row["raw_status"] = "READY"
-                    row["raw_verified_at"] = raw_report.get("verified_at")
-            elif start in raw and row["spot"] is None:
-                row["raw_status"] = "ERROR" if raw_report.get("status") == "ERROR" else "STALE"
-            slots.append(row)
-            start = end
+                    row["spot"] = raw[cursor].price * 100
+                if row["spot"] == raw[cursor].price * 100:
+                    row.update(raw_status="READY", raw_verified_at=raw_report["verified_at"])
+            rows.append(row)
+            cursor = end
         days.append(
             {
-                "date": str(day),
+                "date": str(date),
                 **_instant(first, last, zone),
-                **_summary(result),
-                "ready_slots": sum(s["status"] == "READY" for s in slots),
-                "raw_ready_slots": sum(
-                    s["raw_status"] == "READY" and s["spot"] is not None for s in slots
-                ),
-                "raw_report": dict(raw_report),
-                "required_action": report.get("required_action"),
+                **_summary(window),
+                "slots": rows,
+                "ready_slots": sum(r["final"] is not None for r in rows),
+                "raw_ready_slots": sum(r["raw_status"] == "READY" for r in rows),
+                "raw_report": raw_report,
                 "missing_components": report.get("missing_components", []),
+                "required_action": report.get("required_action"),
                 "failure_stage": report.get("failure_stage"),
-                "affected_period": report.get("affected_period"),
-                "slots": slots,
             }
         )
-
-    # Merge only exact equal applied values with equal status/provenance. In
-    # particular, displayed rounding must not merge two distinct verified rates.
-    tariffs, keys = [], []
-    for row in days[0]["slots"]:
-        origin = provenance.get(row["provenance"], {})
-        part = origin.get("components", {}).get("dso", {})
-        source = part.get("source") or origin.get("source", {}).get("dso", {}).get("provider")
+    tariffs = []
+    grid = c.price_updater.grid_slots.get(str(today), {})
+    report = c.schedule.days.get(site["id"], {}).get(str(today), {})
+    for slot in days[0]["slots"]:
+        part = (
+            grid.get(dt_util.parse_datetime(slot["start"]))
+            if report.get("failure_stage") not in {"source", "grid"}
+            else None
+        )
         evidence = {
-            "source": source,
-            "verified_on": part.get("verified_on"),
-            "verified_at": origin.get("source", {}).get("dso", {}).get("fetched_at"),
-            "valid_from": part.get("valid_from"),
-            "valid_to": part.get("valid_to"),
+            "value": part["ex_vat"] * 100 if part else None,
+            "status": "READY" if part else "INCOMPLETE",
+            "source": part.get("source") if part else None,
+            "verified_on": part.get("verified_on") if part else None,
+            "verified_at": report.get("grid_source", {}).get("fetched_at"),
+            "valid_from": part.get("valid_from") if part else None,
+            "valid_to": part.get("valid_to") if part else None,
         }
-        status = row["status"] if row["dso"] is not None else "INCOMPLETE"
-        key = (row["dso"], status, json.dumps(evidence, sort_keys=True))
-        if tariffs and keys[-1] == key and tariffs[-1]["end"] == row["start"]:
-            tariffs[-1].update(end=row["end"], local_end=row["local_end"])
+        previous = (
+            {
+                k: v
+                for k, v in tariffs[-1].items()
+                if k not in {"start", "end", "local_start", "local_end"}
+            }
+            if tariffs
+            else None
+        )
+        if tariffs and previous == evidence:
+            tariffs[-1].update(end=slot["end"], local_end=slot["local_end"])
         else:
-            keys.append(key)
             tariffs.append(
-                {
-                    **{k: row[k] for k in ("start", "end", "local_start", "local_end")},
-                    "value": row["dso"],
-                    "status": status,
-                    **evidence,
-                }
+                {**{k: slot[k] for k in ("start", "end", "local_start", "local_end")}, **evidence}
             )
-    current = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "unit": "øre/kWh",
         "component_basis": "ex_vat",
         "final_basis": "incl_vat",
-        "site": {
-            **{key: site[key] for key in ("id", "name", "timezone", "area")},
-            "source_type": site.get("source_type"),
-            "dso_mode": site.get("dso_mode"),
-        },
+        "site": {k: site[k] for k in ("id", "name", "timezone", "area", "dso_mode")},
         "generated_at": now.isoformat(),
-        "current_start": current.isoformat(),
-        "revision": coordinator.price_engine.revisions.get(site["id"], 0),
-        "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
-        "current": _summary(lookup(current, current + timedelta(minutes=15))),
-        "next": _summary(lookup(current + timedelta(minutes=15), current + timedelta(minutes=30))),
-        "availability": {
-            scope: availability(coordinator, scope, now=now)
-            for scope in ("current", "history", "tomorrow")
-        },
+        "current_start": quarter(now)[0].isoformat(),
+        "revision": c.price_engine.revisions.get(site["id"], 0),
+        "next_scheduled_update": c.schedule.next_update(now).isoformat(),
+        "current": _summary(api.lookup(site["id"], *quarter(now), now=now)),
+        "next": _summary(api.lookup(site["id"], *quarter(now, 1), now=now)),
+        "statistics": statistics(c, now),
+        "availability": availability(c, now),
         "days": days,
         "dso_today": tariffs,
         "provenance": provenance,
     }
 
 
+def _readable(hass, connection):
+    registry = er.async_get(hass)
+    result = []
+    for c in hass.data.get(DOMAIN, {}).values():
+        entity = registry.async_get_entity_id("sensor", DOMAIN, f"{c.site['id']}_availability")
+        if entity and connection.user.permissions.check_entity(entity, POLICY_READ):
+            result.append((c, entity))
+    return result
+
+
+@websocket_api.websocket_command({vol.Required("type"): "ha_energy_price_engine/sites"})
+@callback
+def websocket_sites(hass, connection, msg):
+    connection.send_result(
+        msg["id"],
+        [
+            {"site_id": c.site["id"], "name": c.site["name"], "entity_id": entity}
+            for c, entity in _readable(hass, connection)
+        ],
+    )
+
+
 @websocket_api.websocket_command(
-    {
-        vol.Required("type"): "ha_energy_price_engine/price_schedule",
-        vol.Required("entity_id"): cv.entity_id,
-    }
+    {vol.Required("type"): "ha_energy_price_engine/price_schedule", vol.Optional("site_id"): str}
 )
 @callback
 def websocket_schedule(hass, connection, msg):
-    """Read one authorized PE site's two-day view; no arbitrary SQL/date export."""
-    entity_id = msg["entity_id"]
-    if not connection.user.permissions.check_entity(entity_id, POLICY_READ):
-        raise Unauthorized(entity_id=entity_id)
-    entity = er.async_get(hass).async_get(entity_id)
-    coordinator = (
-        hass.data.get(DOMAIN, {}).get(entity.config_entry_id)
-        if entity and entity.platform == DOMAIN
-        else None
+    sites = _readable(hass, connection)
+    selected = msg.get("site_id")
+    matches = (
+        [c for c, _ in sites if c.site["id"] == selected] if selected else [c for c, _ in sites]
     )
-    if coordinator is None:
+    if len(matches) != 1:
         connection.send_error(
-            msg["id"],
-            websocket_api.ERR_NOT_FOUND,
-            "Select an entity of a loaded Energy Price Engine site",
+            msg["id"], "select_site", "Select one readable Energy Price Engine site"
         )
         return
-    connection.send_result(msg["id"], price_schedule(coordinator))
+    connection.send_result(msg["id"], price_schedule(matches[0]))

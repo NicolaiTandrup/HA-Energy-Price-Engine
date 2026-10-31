@@ -1,9 +1,11 @@
 """Date-aware, separately verified and VAT-normalized marginal components."""
 
-from datetime import date
+from datetime import date, datetime
 from math import isfinite
 from zoneinfo import ZoneInfo
 
+from .const import COMPONENTS
+from .models import utc
 from .money import per_kwh
 
 REQUIRED = {"energinet_net", "energinet_system", "electricity_tax", "supplier"}
@@ -44,7 +46,6 @@ def danish_public_components():
                 "valid_to": end,
                 "source": "Rate specified by owner: Manager issue #8",
                 "verified_on": "2026-10-23",
-                "eligibility": "all",
             }
         )
     return result
@@ -66,10 +67,7 @@ def normalize_component(rule):
     rate = float(rule["vat_rate"])
     if not isfinite(amount) or amount < 0 or not isfinite(rate) or not 0 <= rate <= 1:
         raise ValueError("Invalid component amount/VAT")
-    if (
-        rule["unit"] not in {"DKK/kWh", "ore/kWh", "DKK/month"}
-        or type(rule["vat_included"]) is not bool
-    ):
+    if rule["unit"] not in {"DKK/kWh", "ore/kWh"} or type(rule["vat_included"]) is not bool:
         raise ValueError("Explicit component unit and VAT inclusion required")
     if (
         not isinstance(rule.get("source"), str)
@@ -85,7 +83,7 @@ def normalize_component(rule):
     return {
         "id": rule["id"],
         "hours": sorted(hours) if rule.get("hours") else [],
-        "unit": "DKK/month" if rule["unit"] == "DKK/month" else "DKK/kWh",
+        "unit": "DKK/kWh",
         "ex_vat": ex,
         "vat": gross - ex,
         "incl_vat": gross,
@@ -94,7 +92,7 @@ def normalize_component(rule):
         "valid_to": rule["valid_to"],
         "verified_on": rule["verified_on"],
         "locked": rule.get("locked", False),
-        "eligibility": rule.get("eligibility", "all"),
+        **({"effective_after": rule["effective_after"]} if rule.get("effective_after") else {}),
     }
 
 
@@ -104,68 +102,53 @@ def validate_rules(rules):
     for rule in rules:
         if not isinstance(rule, dict):
             raise ValueError("Invalid dated rule")
+        allowed = {
+            "id",
+            "amount",
+            "unit",
+            "vat_included",
+            "vat_rate",
+            "valid_from",
+            "valid_to",
+            "source",
+            "verified_on",
+            "hours",
+            "effective_after",
+            "locked",
+        }
+        if set(rule) - allowed or rule.get("id") not in COMPONENTS:
+            raise ValueError("Unsupported marginal component or retired rule fields")
         normalize_component(rule)
+        if boundary := rule.get("effective_after"):
+            if utc(datetime.fromisoformat(boundary)).timestamp() % 900:
+                raise ValueError("Rate boundary must align to a quarter")
         if date.fromisoformat(rule["valid_to"]) <= date.fromisoformat(rule["valid_from"]):
             raise ValueError("Invalid component effective range")
 
 
-def eligible(rule, tariff, day):
-    """Shared dated eligibility predicate for composition and setup diagnostics."""
-    if rule.get("eligibility", "all") == "heating_above_4000":
-        if not isfinite(float(tariff.get("annual_usage_kwh", 0))):
-            raise ValueError("Invalid verified annual usage")
-        return bool(
-            tariff.get("heating_registered")
-            and tariff.get("usage_year") == day.year
-            and tariff.get("annual_usage_kwh", 0) > 4000
-        )
-    if rule.get("eligibility", "all") != "all":
-        raise ValueError("Unverified eligibility class")
-    return True
-
-
 def compose_dated(slot, tariff):
-    if tariff.get("mode") not in {"spot_ex_vat", "spot_incl_vat"}:
+    if tariff.get("mode") != "spot_ex_vat":
         raise ValueError("Dated components cannot be added to all-in input")
-    if any(tariff.get(key, 0) for key in ("tax", "supplier")):
-        raise ValueError("Dated and legacy tax/supplier fees would be duplicated")
-    active, fixed = resolved_rules(slot, tariff)
+    active = resolved_rules(slot, tariff)
     local = slot.start.astimezone(ZoneInfo(tariff.get("timezone", "Europe/Copenhagen")))
     if not REQUIRED <= active.keys():
         raise MissingPriceComponents(REQUIRED - active.keys(), local)
     vat = float(tariff["vat"])
     if not isfinite(vat) or not 0 <= vat <= 1:
         raise ValueError("Invalid spot/grid VAT")
-    spot_ex = slot.price / (1 + vat) if tariff["mode"] == "spot_incl_vat" else slot.price
-    manual_dso = active.get("dso")
-    if not manual_dso or (not manual_dso["locked"] and "grid_slots" in tariff):
-        if "grid" not in tariff and "grid_slots" not in tariff:
-            raise MissingPriceComponents({"dso"}, local)
-        grid = float(tariff.get("grid", 0))
-        if "grid_slots" in tariff:
-            matching = [
-                s for s in tariff["grid_slots"] if s.start <= slot.start and s.end >= slot.end
-            ]
-            if len(matching) != 1:
-                raise ValueError("Missing/overlapping grid tariff")
-            grid += matching[0].price
-        if not isfinite(grid) or grid < 0:
-            raise ValueError("Invalid grid component")
-        active["dso"] = {
-            "id": "dso",
-            "ex_vat": grid,
-            "vat": grid * vat,
-            "incl_vat": grid * (1 + vat),
-        }
+    spot_ex = slot.price
+    dso = resolved_dso(slot, tariff, active)
+    if dso is None:
+        raise MissingPriceComponents({"dso"}, local)
+    active["dso"] = dso
     active["spot"] = {
         "id": "spot",
         "ex_vat": spot_ex,
         "vat": spot_ex * vat,
-        "incl_vat": slot.price if tariff["mode"] == "spot_incl_vat" else slot.price * (1 + vat),
+        "incl_vat": slot.price * (1 + vat),
     }
     return sum(c["incl_vat"] for c in active.values()), {
         "components": active,
-        "fixed_subscriptions_excluded": fixed,
     }
 
 
@@ -177,27 +160,56 @@ def resolved_rules(slot, tariff):
     if not isinstance(rules, list):
         raise ValueError("Dated components must be a list")
     active = {}
-    fixed = []
     for rule in rules:
         start, end = date.fromisoformat(rule["valid_from"]), date.fromisoformat(rule["valid_to"])
         if end <= start:
             raise ValueError("Invalid component effective period")
         if not start <= day < end or local.hour not in active_hours(rule):
             continue
-        if not eligible(rule, tariff, day):
+        if rule.get("effective_after") and slot.start < utc(
+            datetime.fromisoformat(rule["effective_after"])
+        ):
             continue
         component = normalize_component(rule)
-        if rule["unit"] == "DKK/month":
-            fixed.append(component)
-            continue
         name = rule["id"]
         if name in active:
             previous = active[name]
-            score = (component["locked"], component["eligibility"] == "heating_above_4000")
-            old_score = (previous["locked"], previous["eligibility"] == "heating_above_4000")
+            score = component["locked"]
+            old_score = previous["locked"]
             if score == old_score:
                 raise ValueError("Overlapping component rate versions")
             if score < old_score:
                 continue
         active[name] = component
-    return active, fixed
+    return active
+
+
+def resolved_dso(slot, tariff, active=None):
+    """The same verified grid component for pricing and the update-time grid cache."""
+    active = (
+        active
+        if active is not None
+        else resolved_rules(
+            slot, {**tariff, "components": [r for r in tariff["components"] if r["id"] == "dso"]}
+        )
+    )
+    if "dso" in active:
+        return active["dso"]
+    matching = [
+        s for s in tariff.get("grid_slots", []) if s.start <= slot.start and s.end >= slot.end
+    ]
+    if "grid_slots" in tariff and len(matching) != 1:
+        raise ValueError("Missing/overlapping grid tariff")
+    if not matching:
+        return None
+    value = matching[0].price
+    if value < 0 or not isfinite(value):
+        raise ValueError("Invalid grid component")
+    vat = tariff["vat"]
+    return {
+        "id": "dso",
+        "ex_vat": value,
+        "vat": value * vat,
+        "incl_vat": value * (1 + vat),
+        "source": "Verified Radius C Datahub tariff",
+    }

@@ -19,12 +19,6 @@ from custom_components import ha_energy_price_engine as integration
 from custom_components.ha_energy_price_engine.api import get_api
 from custom_components.ha_energy_price_engine.price_engine import day_bounds
 
-@pytest.fixture(autouse=True)
-def release_metadata():
-    from unittest.mock import AsyncMock,patch
-    with (patch("custom_components.ha_energy_price_engine.update.fetch_releases",AsyncMock(return_value=[])),patch("custom_components.ha_energy_price_engine.supplier_offers._fetch",AsyncMock(side_effect=OSError("Offline source")))):
-        yield
-
 @pytest.fixture
 def hass_config_dir():
     return os.environ["PE_PACKAGE_ROOT"]
@@ -33,10 +27,7 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     root=Path(os.environ["PE_PACKAGE_ROOT"])
     assert Path(integration.__file__).resolve().is_relative_to(root)
     manifest=json.loads((Path(integration.__file__).parent/"manifest.json").read_text())
-    assert manifest["version"]=="0.1.0-beta.9"
-    from custom_components.ha_energy_price_engine.localization import _system_decimal_separator
-    assert await hass.async_add_executor_job(_system_decimal_separator,"da-DK",".")==","
-    assert await hass.async_add_executor_job(_system_decimal_separator,"en-US",",")=="."
+    assert manifest["version"]=="0.1.0-beta.10"
     freezer.move_to("2026-10-24T10:00:00Z")
     now=datetime(2026,10,24,10,tzinfo=UTC)
     from homeassistant.core import SupportsResponse
@@ -57,21 +48,21 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
         for page in [
             {"name":"Installed","nordpool_entry":source.entry_id},
             {"grid":"manual"},
-            {"amount":20,"vat_included":False,"confirm":True},
+            {"amount":"20","vat_included":False},
             {"amount":"11.1","vat_included":False},
         ]:
             form=await hass.config_entries.flow.async_configure(flow,page)
             assert form["type"] in ("form","menu"),form
-        assert form["step_id"]=="setup_review"
-        entry=next(e for e in hass.config_entries.async_entries("ha_energy_price_engine") if e.unique_id=="installed")
+        assert form["step_id"]=="review"
+        entry=hass.config_entries.async_entries("ha_energy_price_engine")[-1]
         hass.config_entries.flow.async_abort(flow)
         return entry
     entry=await complete_wizard(form)
     await hass.async_block_till_done()
     assert entry.state==ConfigEntryState.LOADED
-    result=get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now)
-    assert str(result.status)=="READY" and len(result.records)==100
-    assert all(abs(r.final_price_incl_vat-.23)<1e-9 for r in result.records)
+    result=get_api(hass).lookup(entry.unique_id,*day_bounds(date(2026,10,25)),now=now)
+    assert str(result.status)=="READY" and len(result.slots)==100
+    assert all(abs(r.price-.23)<1e-9 for r in result.slots)
     from custom_components.ha_energy_price_engine.dashboard import price_schedule,CARD_URL
     schedule=price_schedule(entry.runtime_data,now=now)
     assert len(schedule["days"][1]["slots"])==100
@@ -81,13 +72,13 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     assert response.status==200
     module=await response.text()
     assert module==(Path(integration.__file__).parent/"www/energy-price-engine-card.js").read_text()
-    before=result.records
+    before=tuple(entry.runtime_data.price_engine.records[entry.unique_id])
     assert entry.runtime_data.price_engine.database.path.is_file()
     assert await hass.config_entries.async_reload(entry.entry_id)
     await hass.async_block_till_done()
-    assert get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now).records==before
+    assert tuple(entry.runtime_data.price_engine.records[entry.unique_id])==before
     options=await hass.config_entries.options.async_init(entry.entry_id)
-    assert options["type"]=="menu" and options["step_id"]=="setup_review"
+    assert options["type"]=="menu" and options["step_id"]=="review"
     hass.config_entries.options.async_abort(options["flow_id"])
     old_id=entry.entry_id
     old_ledger=entry.runtime_data.price_engine.database.path
@@ -99,8 +90,11 @@ async def test_independent_installed_package(hass, freezer, enable_custom_integr
     await hass.async_block_till_done()
     assert replacement.entry_id != old_id and replacement.state==ConfigEntryState.LOADED
     assert replacement.runtime_data.price_engine.database.path != old_ledger
-    assert get_api(hass).lookup("installed",*day_bounds(date(2026,10,25)),now=now).records
-    assert await hass.config_entries.async_unload(replacement.entry_id)
+    assert get_api(hass).lookup(replacement.unique_id,*day_bounds(date(2026,10,25)),now=now).slots
+    from custom_components.ha_energy_price_engine.site_lifecycle import permanently_remove
+    replacement_ledger=replacement.runtime_data.price_engine.database.path
+    await permanently_remove(hass,replacement)
+    assert not replacement_ledger.exists() and old_ledger.exists()
     source.mock_state(hass,ConfigEntryState.NOT_LOADED)
     await hass.async_block_till_done()
 """

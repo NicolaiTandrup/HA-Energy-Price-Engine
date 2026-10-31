@@ -144,3 +144,35 @@ Replace v1 compatibility aliases/serializer with APIv2: discover sites; retrieve
 3. Replace native flow/sensors/status/statistics; remove retired modules/config/tests rather than hiding entities.
 4. Simplify/discover card, complete reset and consumer handoff, native EN/DA desktop/mobile/restart evidence and before/after measurements.
 5. Full relevant CI/hassfest/HACS/reproducible clean packages, guarded breaking beta10 prerelease and independent public verification. Main/stable/production/physical controls stay untouched.
+
+## Implemented core checkpoint — beta.10
+
+The inventory preceded changes (commit `dd4a855`). The runtime now has **22 Python
+modules / 3,221 lines**, **203,492 runtime bytes**, **44,671 strings/translation
+bytes** and **9 registered sensors, no PE update entity** per site. These are
+working-tree measurements before final UI corrections, not a final release receipt.
+Beta.9 had 37 / 7,214 lines, 876,821 bytes, 546,588 translation bytes and 40+1 entities.
+
+Retired modules: `adapters`, `sources` (official functions merged into `prices`),
+`charging_diagnostics`, `component_status`, `contracts`, `device_diagnostics`,
+`estimates`, `flow_tools`, `hacs_channel`, `presentation`, `simple_setup`,
+`supplier_offers`, `update`, `verification`, `repairs`. Removed monthly charges,
+heating eligibility, source-entity/all-in modes, provisional estimates, display
+unit aliases, old migration/preview paths and technical entity opt-out controls.
+The existing compressed SQLite ledger is retained. Historical release receipts
+remain immutable; earlier tagged source preserves retired code and tests.
+
+New site schema version 4 deliberately rejects versions 1–3 without deleting data.
+Reset is explicit and scoped to the selected entry. API v2 deliberately rejects
+API v1; unreleased CM requires the documented consumer update before coupling.
+Native accepted-step persistence reuses the official source cache on reload.
+From-now rates carry a UTC quarter boundary; a separate explicit confirmation
+allows the user to verify earlier quarters of today. Full/remaining/unavailable
+statistics come from the schedule, with coverage counts, not Recorder samples.
+
+Core checkpoint evidence: 99 tests on HA2026.10.3 (86% coverage), 17 locked Chromium
+card tests, official hassfest 1 valid / 0 invalid, actual pinned HACS stable/upstream
+add/beta visibility/upgrade from beta.9/reinstall/uninstall, and HACS-layout native
+installation outside the checkout. Additional cost/statistics cases pass separately.
+Current-core full run, manual package check, native UI screenshots, documentation,
+consumer handoff, remote CI and publication remain pending at this checkpoint.

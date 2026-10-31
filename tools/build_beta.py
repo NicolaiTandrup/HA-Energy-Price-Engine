@@ -12,17 +12,13 @@ DOMAIN = "ha_energy_price_engine"
 PACKAGE = PurePosixPath("custom_components") / DOMAIN
 REQUIRED = {
     "manifest.json",
-    "presentation.py",
-    "device_diagnostics.py",
     "dashboard.py",
     "www/energy-price-engine-card.js",
-    "data/decimal_symbols.json",
     "__init__.py",
     "api.py",
     "config_flow.py",
     "sensor.py",
     "ledger.py",
-    "repairs.py",
     "strings.json",
     "translations/en.json",
     "brand/icon.png",
@@ -50,6 +46,8 @@ def build(output, *, allow_dirty=False):
     payload = {}
     for name in filter(None, files):
         source = ROOT / name
+        if not source.exists():
+            continue  # Explicit tracked deletions during development builds.
         relative = PurePosixPath(name).relative_to(PACKAGE)
         if (
             source.is_symlink()

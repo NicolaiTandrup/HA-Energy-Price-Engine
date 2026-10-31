@@ -1,4 +1,4 @@
-"""Read-only operational views of the authoritative ledger; never fetch or compose."""
+"""Shared, compact read-only views of the precomputed quarter-hour schedule."""
 
 import json
 from datetime import timedelta
@@ -6,141 +6,153 @@ from zoneinfo import ZoneInfo
 
 from homeassistant.util import dt as dt_util
 
-from .api import ConsumerAPI
-from .configuration import settings
-from .presentation import format_price
+from .api import PriceAPI, Status
 from .price_engine import day_bounds
 
 
-def interval_result(coordinator, start, end, now):
-    return ConsumerAPI(coordinator.hass).lookup(
-        coordinator.site["id"],
-        start,
-        end,
-        now=now,
-        producer_entry_id=coordinator.entry.entry_id,
-    )
-
-
-def quarter_result(coordinator, offset=0, now=None):
-    now = now or dt_util.utcnow()
-    start = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(
+def quarter(now, offset=0):
+    first = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0) + timedelta(
         minutes=15 * offset
     )
-    return interval_result(coordinator, start, start + timedelta(minutes=15), now)
+    return first, first + timedelta(minutes=15)
 
 
-def readiness_snapshot(hass, entry, *, start=None, end=None, now=None):
+def report(c, day):
+    return c.schedule.days.get(c.site["id"], {}).get(str(day), {})
+
+
+def price(c, offset=0, now=None):
+    return PriceAPI(c.hass).lookup(c.site["id"], *quarter(now or dt_util.utcnow(), offset), now=now)
+
+
+def statistics(c, now=None):
+    """No Recorder samples or invented past rates; average exact schedule slots."""
     now = now or dt_util.utcnow()
-    site = settings(entry)
-    current = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
-    day = now.astimezone(ZoneInfo(site["timezone"])).date()
-    ranges = {
-        "current": (current, current + timedelta(minutes=15)),
-        "next": (current + timedelta(minutes=15), current + timedelta(minutes=30)),
-        "history_today": day_bounds(day, site["timezone"]),
-        "history_tomorrow": day_bounds(day + timedelta(days=1), site["timezone"]),
-    }
-    if start is not None or end is not None:
-        if start is None or end is None:
-            raise ValueError("Both requested horizon boundaries are required")
-        ranges["requested"] = (start, end)
-    api = ConsumerAPI(hass)
-    facts = {}
-    for key, (first, last) in ranges.items():
-        result = api.lookup(site["id"], first, last, now=now, producer_entry_id=entry.entry_id)
-        facts[key] = {
-            "start": first.isoformat(),
-            "end": last.isoformat(),
-            "status": str(result.status),
-            "valid_slots": result.valid_slots,
-            "expected_slots": result.expected_slots,
-            "last_success": result.last_success,
-        }
-    activation = dt_util.parse_datetime(site.get("pricing_start", ""))
-    facts["missing_before_activation"] = bool(
-        activation
-        and ranges["history_today"][0] < activation < ranges["history_today"][1]
-        and facts["history_today"]["status"] == "INCOMPLETE"
+    first, last = day_bounds(
+        now.astimezone(ZoneInfo(c.site["timezone"])).date(), c.site["timezone"]
     )
+    api = PriceAPI(c.hass)
+    full = api.lookup(c.site["id"], first, last, now=now)
+    selected, scope = full, "full_day"
+    if full.status != Status.READY:
+        candidates = [
+            r.start
+            for r in c.price_engine.lookup(c.site["id"], quarter(now)[0], last)
+            if r.start >= quarter(now)[0]
+        ]
+        selected = None
+        if candidates:
+            remaining = api.lookup(c.site["id"], candidates[0], last, now=now)
+            if remaining.status == Status.READY:
+                selected, scope = remaining, "remaining_day"
+    facts = {
+        "scope": scope if selected and selected.status == Status.READY else "unavailable",
+        "used_slots": 0,
+        "day_slots": full.expected_slots,
+        "reason": full.reason,
+        "start": None,
+        "end": last.isoformat(),
+    }
+    if selected and selected.status == Status.READY:
+        values = [q.price for q in selected.slots]
+        facts.update(
+            used_slots=len(values),
+            start=selected.slots[0].start.isoformat(),
+            average=sum(values) / len(values),
+            minimum=min(values),
+            maximum=max(values),
+            reason=None,
+        )
     return facts
 
 
-def day_result(coordinator, offset=0, now=None):
+def breakdown(c, now=None):
     now = now or dt_util.utcnow()
-    site = coordinator.site
-    day = now.astimezone(ZoneInfo(site["timezone"])).date() + timedelta(days=offset)
-    return interval_result(coordinator, *day_bounds(day, site["timezone"]), now)
+    for offset, label in ((0, "current_quarter"), (1, "next_quarter")):
+        window = price(c, offset, now)
+        if window.status != Status.READY:
+            continue
+        row = c.price_engine.lookup(c.site["id"], *quarter(now, offset))[0]
+        parts = json.loads(row.components_json)["components"]
+        return {
+            "period": label,
+            "start": row.start.isoformat(),
+            "end": row.end.isoformat(),
+            "unit": "øre/kWh",
+            "revision": row.revision,
+            "source": json.loads(row.source_json),
+            "components": {k: {**p, "value_ore": p["ex_vat"] * 100} for k, p in parts.items()},
+            "vat_amount_ore": sum(p["vat"] for p in parts.values()) * 100,
+            "final_ore": row.final_price_incl_vat * 100,
+        }
+    return {"period": "unavailable", "components": {}}
 
 
-def source_status(coordinator, now=None):
+def source_value(c, kind, now=None):
     now = now or dt_util.utcnow()
-    site = coordinator.site
-    result = day_result(coordinator, now=now)
-    current = quarter_result(coordinator, now=now)
-    following = quarter_result(coordinator, 1, now)
-    source = coordinator.hass.config_entries.async_get_entry(site.get("nordpool_entry", ""))
-    reports = coordinator.schedule.days.get(site["id"], {})
-    today = str(now.astimezone(ZoneInfo(site["timezone"])).date())
-    report = reports.get(today, {})
-    return {
-        "requested_date": today,
-        "site_id": site["id"],
-        "site_name": site["name"],
-        "source": source.title if source else site.get("price_entity", "Source unavailable"),
-        "area": site["area"],
-        "currency": "DKK",
-        "resolution_minutes": 15,
-        "health": str(current.status),
-        "health_scope": "current_quarter",
-        "current_quarter_status": str(current.status),
-        "next_quarter_status": str(following.status),
-        "historical_day_status": str(result.status),
-        "coverage_scope": "historical_full_day",
-        "last_success": result.last_success,
-        "last_attempt": report.get("last_attempt"),
-        "last_error": current.reason,
-        "historical_coverage_reason": result.reason,
-        "required_action": report.get("required_action"),
-        "missing_components": report.get("missing_components", []),
-        "affected_period": report.get("affected_period"),
-        "valid_slots": result.valid_slots,
-        "stored_slots": result.valid_slots,
-        "verified_final_slots": report.get("valid_slots", 0),
-        "raw_status": coordinator.price_updater.raw_reports.get(today, {}).get("status"),
-        "raw_valid_slots": coordinator.price_updater.raw_reports.get(today, {}).get(
-            "valid_slots", 0
-        ),
-        "raw_verified_at": coordinator.price_updater.raw_reports.get(today, {}).get("verified_at"),
-        "expected_slots": result.expected_slots,
-        "prices_start_at": site.get("pricing_start"),
-        "next_scheduled_update": coordinator.schedule.next_update(now).isoformat(),
-        "dso_mode": site.get("dso_mode", "manual"),
-    }
-
-
-def slot_breakdown(coordinator, start, now=None):
-    """Canonical technical facts; native UI resources supply all explanatory prose."""
-    now = now or dt_util.utcnow()
-    result = interval_result(coordinator, start, start + timedelta(minutes=15), now)
-    facts = {
-        "start": start.isoformat(),
-        "status": str(result.status),
-        "records": len(result.records),
-    }
-    if result.records:
-        row = result.records[0]
-        unit = coordinator.site.get("display_unit", "øre/kWh")
-        facts.update(
-            end=row.end.isoformat(),
-            revision=row.revision,
-            final_price_incl_vat=row.final_price_incl_vat,
-            canonical_unit="DKK/kWh",
-            display_value=row.final_price_incl_vat * (100 if unit == "øre/kWh" else 1),
-            display_unit=unit,
-            display_text=format_price(row.final_price_incl_vat, unit),
-            canonical_technical_values=True,
-            source=json.loads(row.source_json),
-            components=json.loads(row.components_json),
+    first, last = quarter(now, int(kind == "next_spot"))
+    day = first.astimezone(ZoneInfo(c.site["timezone"])).date()
+    raw = report(c, day).get("raw", {})
+    try:
+        stamp = dt_util.parse_datetime(raw.get("verified_at", ""))
+        fresh = stamp and 0 <= (now - stamp).total_seconds() <= 86400
+    except TypeError, ValueError:
+        fresh = False
+    if kind in {"current_spot", "next_spot"}:
+        if not fresh or raw.get("status") not in {"READY", "INCOMPLETE"}:
+            return None
+        return next(
+            (
+                s.price
+                for s in c.price_updater.raw_slots.get(str(day), ())
+                if s.start == first and s.end == last
+            ),
+            None,
         )
-    return "```json\n" + json.dumps(facts, indent=2, ensure_ascii=False) + "\n```"
+    if report(c, day).get("failure_stage") in {"source", "grid"}:
+        return None
+    part = c.price_updater.grid_slots.get(str(day), {}).get(first)
+    return part["ex_vat"] if part else None
+
+
+def availability(c, now=None):
+    now = now or dt_util.utcnow()
+    day = now.astimezone(ZoneInfo(c.site["timezone"])).date()
+    current, following = price(c, 0, now), price(c, 1, now)
+    tomorrow = PriceAPI(c.hass).lookup(
+        c.site["id"], *day_bounds(day + timedelta(days=1), c.site["timezone"]), now=now
+    )
+    r = report(c, day)
+    code = (
+        "ready"
+        if current.status == Status.READY
+        else "error"
+        if current.status == Status.ERROR
+        else "stale"
+        if current.status == Status.STALE
+        else "waiting"
+        if following.status == Status.READY
+        else "missing"
+    )
+    facts = {
+        "code": code,
+        "current_status": str(current.status),
+        "next_status": str(following.status),
+        "tomorrow_status": str(tomorrow.status),
+        "current_slots": current.available_slots,
+        "next_slots": following.available_slots,
+        "tomorrow_slots": tomorrow.available_slots,
+        "tomorrow_expected": tomorrow.expected_slots,
+        "available_from": following.slots[0]
+        .start.astimezone(ZoneInfo(c.site["timezone"]))
+        .isoformat(timespec="minutes")
+        if following.status == Status.READY
+        else None,
+        "reason": current.reason or r.get("reason"),
+        "action": r.get("required_action"),
+        "missing_components": r.get("missing_components", []),
+        "statistics": statistics(c, now),
+        "breakdown": breakdown(c, now),
+        "next_check": c.schedule.next_update(now).isoformat(),
+    }
+    return facts

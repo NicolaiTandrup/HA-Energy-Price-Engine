@@ -1,50 +1,54 @@
-"""Official Nord Pool read service plus explicit all-in tariff composition."""
+"""Official built-in Nord Pool discovery, normalization and cached read service."""
 
-from dataclasses import replace
-from datetime import timedelta
-from math import isfinite
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.exceptions import HomeAssistantError
 
-from .adapters import parse_prices
-from .sources import ensure_official_nordpool
+from .models import PriceSlot, validate_slots
 
 
-def all_in(slots, tariff):
-    """Tariff components are DKK/kWh ex VAT; pre-inclusive mode forbids additions."""
-    mode = tariff.get("mode", "all_in")
-    parts = [float(tariff.get(k, 0)) for k in ("grid", "tax", "supplier")]
-    vat = float(tariff.get("vat", 0))
-    if not all(isfinite(v) and v >= 0 for v in [*parts, vat]):
-        raise ValueError("Invalid tariff")
-    if mode == "all_in":
-        if any([*parts, vat]) or tariff.get("grid_slots"):
-            raise ValueError("All-in source cannot have duplicate tariff additions")
-        return slots
-    if mode not in {"spot_ex_vat", "spot_incl_vat"}:
-        raise ValueError("Explicit price basis required")
-    result = []
-    for slot in slots:
-        grid = 0.0
-        if "grid_slots" in tariff:
-            covering = [
-                g for g in tariff["grid_slots"] if g.start <= slot.start and g.end >= slot.end
-            ]
-            if len(covering) != 1:
-                raise ValueError("Grid tariff does not cover every price interval")
-            grid = covering[0].price
-            if grid < 0:
-                raise ValueError("Negative grid tariff")
-        result.append(
-            replace(
-                slot,
-                price=(slot.price / (1 + vat) if mode == "spot_incl_vat" else slot.price)
-                * (1 + vat)
-                + (sum(parts) + grid) * (1 + vat),
+def parse_prices(rows, *, multiplier=0.001):
+    if not isinstance(rows, list):
+        raise ValueError("Expected official Nord Pool quarter rows")
+    parsed = []
+    for row in rows:
+        if isinstance(row["price"], bool):
+            raise ValueError("Boolean prices are invalid")
+        parsed.append(
+            PriceSlot(
+                datetime.fromisoformat(row["start"]),
+                datetime.fromisoformat(row["end"]),
+                float(row["price"]) * multiplier,
             )
         )
+    return validate_slots(parsed)
+
+
+async def ensure_official_nordpool(hass):
+    from homeassistant.loader import async_get_integration
+
+    integration = await async_get_integration(hass, "nordpool")
+    if not integration.is_built_in:
+        raise ValueError(
+            "Official Home Assistant Nord Pool is required; a legacy custom component shadows this domain"
+        )
+
+
+async def async_source_defaults(hass):
+    try:
+        await ensure_official_nordpool(hass)
+    except ValueError:
+        return {}
+    entries = [e for e in hass.config_entries.async_entries("nordpool") if e.disabled_by is None]
+    if len(entries) != 1:
+        return {}
+    entry = entries[0]
+    result = {"nordpool_entry": entry.entry_id}
+    areas = entry.options.get("areas", entry.data.get("areas", []))
+    if len(areas) == 1 and areas[0] in {"DK1", "DK2"}:
+        result["area"] = areas[0]
     return result
 
 
@@ -55,10 +59,10 @@ class OfficialPrices:
         self.invalidated = set()
         self.errors = set()
 
-    async def get(self, site, now, *, compose=True, force=False, dates=None):
+    async def get(self, site, now, *, force=False, dates=None):
         await ensure_official_nordpool(self.hass)
         selected = self.hass.config_entries.async_get_entry(site["nordpool_entry"])
-        if selected is not None and selected.state != ConfigEntryState.LOADED:
+        if selected is None or selected.state != ConfigEntryState.LOADED:
             raise HomeAssistantError(
                 "Official Nord Pool entry is not loaded; waiting for provider recovery"
             )
@@ -90,7 +94,7 @@ class OfficialPrices:
                         return_response=True,
                     )
                     data = response[key[1]]
-                    parsed = parse_prices({"slots": data}, multiplier=0.001)
+                    parsed = parse_prices(data)
                     if len(parsed) != len(data):
                         raise ValueError(
                             "Official Nord Pool requires explicit 15-minute resolution"
@@ -113,5 +117,5 @@ class OfficialPrices:
         self.attempts = {
             k: v for k, v in self.attempts.items() if (now - v).total_seconds() < 172800
         }
-        slots = parse_prices({"slots": rows}, multiplier=0.001)
-        return all_in(slots, site["tariff"]) if compose else slots
+        slots = parse_prices(rows)
+        return slots

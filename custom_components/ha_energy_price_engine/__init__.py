@@ -8,11 +8,10 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.loader import async_get_integration
 
-from .configuration import validate_site
 from .const import DOMAIN
 from .coordinator import PriceCoordinator
 
-PLATFORMS = [Platform.SENSOR, Platform.UPDATE]
+PLATFORMS = [Platform.SENSOR]
 LOGGER = logging.getLogger(__name__)
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -25,18 +24,10 @@ async def async_setup(hass, config):
 
 
 async def async_migrate_entry(hass, entry):
-    """Upgrade durable site settings additively, without touching price history."""
-    if entry.version > 3:
-        LOGGER.error("Cannot load a newer Price Engine entry with this integration version")
+    """Beta.10 deliberately requires an explicit reset of old beta sites."""
+    if entry.version != 4:
+        LOGGER.error("Breaking beta.10: back up, remove/re-add this site; no data was deleted")
         return False
-    if entry.version in (1, 2):
-        try:
-            data = validate_site(dict(entry.data))
-            options = validate_site({**data, **entry.options}) if entry.options else {}
-        except ValueError, KeyError, TypeError:
-            LOGGER.error("Legacy Price Engine entry requires configuration repair")
-            return False
-        hass.config_entries.async_update_entry(entry, data=data, options=options, version=3)
     return True
 
 
@@ -123,9 +114,3 @@ async def async_unload_entry(hass, entry):
     hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
     ir.async_delete_issue(hass, DOMAIN, entry.entry_id)
     return True
-
-
-async def async_remove_entry(hass, entry):
-    from .site_lifecycle import removed
-
-    await removed(hass, entry)

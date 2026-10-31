@@ -7,10 +7,8 @@ from .models import utc
 from .money import decimal_amount
 
 
-def estimate_charging_cost(
-    api, site_id, allocations, *, energy_kind, now=None, producer_entry_id=None
-):
-    """Cost complete measured/planned allocations using verified API v1 prices only.
+def estimate_charging_cost(api, site_id, allocations, *, energy_kind, now=None):
+    """Cost complete measured/planned allocations using verified API v2 prices only.
 
     The caller (normally CM) owns energy measurement/allocation and session planning.
     Missing energy or prices are not zero. Nothing is written, scheduled or commanded.
@@ -36,7 +34,6 @@ def estimate_charging_cost(
         energy[0][0],
         energy[-1][0] + timedelta(minutes=15),
         now=now,
-        producer_entry_id=producer_entry_id,
     )
     report = {
         "price_status": str(result.status),
@@ -50,19 +47,19 @@ def estimate_charging_cost(
     }
     if str(result.status) != "READY":
         return report
-    if len(result.records) != len(energy):
+    if len(result.slots) != len(energy):
         raise ValueError("Verified prices do not cover the supplied energy allocations")
     total = Decimal(0)
-    for (start, kwh), record in zip(energy, result.records, strict=True):
+    for (start, kwh), record in zip(energy, result.slots, strict=True):
         if record.start != start or record.end != start + timedelta(minutes=15):
             raise ValueError("Verified quarter does not match its energy allocation")
-        cost = kwh * Decimal(str(record.final_price_incl_vat))
+        cost = kwh * Decimal(str(record.price))
         total += cost
         report["quarters"].append(
             {
                 "start": start.isoformat(),
                 "energy_kwh": str(kwh),
-                "price_dkk_per_kwh": record.final_price_incl_vat,
+                "price_dkk_per_kwh": record.price,
                 "revision": record.revision,
                 "estimated_cost_dkk": str(cost),
             }

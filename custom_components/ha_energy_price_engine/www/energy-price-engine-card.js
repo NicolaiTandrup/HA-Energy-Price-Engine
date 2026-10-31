@@ -10,7 +10,7 @@ const WORDS = {
     raw: "Nord Pool spot", final: "Final electricity price", ex: "Excluding VAT & charges",
     incl: "Including all variable charges & VAT", grid: "Today's network tariffs",
     schedule: "Every quarter-hour", inspect: "Inspect a quarter", current: "Current quarter",
-    next: "Next quarter", history: "Today's full-day history", publication: "Tomorrow's coverage",
+    next: "Next quarter", history: "Today’s full-day coverage", publication: "Tomorrow's coverage",
     missing: "Unavailable", ready: "Ready", incomplete: "Incomplete", stale: "Stale", error: "Error",
     loading: "Loading stored prices…", retry: "Refresh", source: "Source / verification",
     slot: "Local interval (UTC offset)", vat: "VAT", dso: "DSO / network", supplier: "Supplier markup",
@@ -24,7 +24,9 @@ const WORDS = {
     fix: "Corrective action", checked: "Source checked", update: "Next scheduled check", generated: "Dashboard read",
     noRecord: "No verified final record for this quarter. Missing components stay unavailable; no tariffs are reconstructed on this read.",
     retained: "Retained stored amount (not currently Ready)", applied: "Applied in the stored price", utc: "UTC identity",
-    config: "Set entity to an entity belonging to your Energy Price Engine site.",
+    config: "Use site_id only when selecting one of several sites. Entity-based card configuration was removed in beta.10.",
+    choose: "Select a price site", noSites: "No readable Energy Price Engine sites are loaded. Open Devices & services to finish setup.",
+    average: "Average", minimum: "Minimum", maximum: "Maximum", full_day: "Full-day statistics", remaining_day: "Remaining-day statistics", unavailable: "Statistics unavailable",
   },
   da: {
     activation: "Verificerede priser starter {time}. Det aktuelle kvarter begyndte før prisberegningen blev aktiveret. Næste kvarter er Klar.",
@@ -33,7 +35,7 @@ const WORDS = {
     raw: "Nord Pool spot", final: "Samlet elpris", ex: "Uden moms og tillæg",
     incl: "Med alle variable tillæg og moms", grid: "Dagens nettariffer",
     schedule: "Hvert kvarter", inspect: "Undersøg et kvarter", current: "Nuværende kvarter",
-    next: "Næste kvarter", history: "Hele dagens historik", publication: "Morgendagens dækning",
+    next: "Næste kvarter", history: "Hele dagens dækning", publication: "Morgendagens dækning",
     missing: "Ikke tilgængelig", ready: "Klar", incomplete: "Ufuldstændig", stale: "Forældet", error: "Fejl",
     loading: "Indlæser gemte priser…", retry: "Opdater", source: "Kilde / kontrol",
     slot: "Lokalt tidsrum (UTC-offset)", vat: "Moms", dso: "DSO / net", supplier: "Leverandørtillæg",
@@ -47,7 +49,9 @@ const WORDS = {
     fix: "Afhjælpning", checked: "Kilden kontrolleret", update: "Næste planlagte kontrol", generated: "Dashboard læst",
     noRecord: "Ingen verificeret slutpris for dette kvarter. Manglende komponenter er utilgængelige; tariffer genberegnes ikke ved læsning.",
     retained: "Beholdt gemt beløb (ikke Klar nu)", applied: "Anvendt i den gemte pris", utc: "UTC-identitet",
-    config: "Angiv entity som en entitet fra dit Energy Price Engine-sted.",
+    config: "Brug kun site_id til at vælge blandt flere steder. Entitetsbaseret kortopsætning er fjernet i beta.10.",
+    choose: "Vælg et prissted", noSites: "Ingen læsbare Energy Price Engine-steder er indlæst. Åbn Enheder og tjenester for at færdiggøre opsætningen.",
+    average: "Gennemsnit", minimum: "Minimum", maximum: "Maksimum", full_day: "Heldagsstatistik", remaining_day: "Statistik for resten af dagen", unavailable: "Statistik utilgængelig",
   },
 };
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[c]));
@@ -77,23 +81,25 @@ export class EnergyPriceEngineCard extends HTMLElement {
       }
     });
     this.shadowRoot.addEventListener("change", (event) => {
-      if (event.target.matches("select")) { this._selected = event.target.value; this._render(); }
+      if (event.target.id === "site") { this._site = event.target.value; this._data = undefined; this._load(); }
+      else if (event.target.matches("select")) { this._selected = event.target.value; this._render(); }
     });
   }
   setConfig(config) {
-    if (!config.entity || !config.entity.startsWith("sensor.")) throw new Error(WORDS.en.config);
-    const changed = this._config?.entity !== config.entity;
+    if (config.entity) throw new Error(WORDS.en.config);
+    const changed = this._config?.site_id !== config.site_id;
     this._config = {...config};
-    if (changed) { this._data = undefined; this._selected = undefined; this._stamp = undefined; }
+    if (changed) { this._site = config.site_id; this._data = undefined; this._selected = undefined; this._stamp = undefined; }
     this._render();
     if (this.isConnected) this._load();
   }
   set hass(hass) {
-    const state = hass.states[this._config?.entity];
-    const changed = this._stamp !== state?.last_updated || this._hass?.connection !== hass.connection;
+    const entity = this._sites?.find(s => s.site_id === this._site)?.entity_id;
+    const stamp = hass.states[entity]?.last_updated;
+    const changed = this._stamp !== stamp || this._hass?.connection !== hass.connection;
     const localeChanged = JSON.stringify(this._hass?.locale) !== JSON.stringify(hass.locale);
     this._hass = hass;
-    this._stamp = state?.last_updated;
+    this._stamp = stamp;
     if (this.isConnected && (!this._data || changed)) this._load();
     else if (localeChanged) this._render();
   }
@@ -108,20 +114,27 @@ export class EnergyPriceEngineCard extends HTMLElement {
   }
   disconnectedCallback() { clearInterval(this._timer); this._timer = undefined; this._observer?.disconnect(); }
   getCardSize() { return 22; }
-  static getStubConfig(hass) {
-    return {entity: Object.keys(hass.states).find((id) => hass.states[id].attributes?.api_version === 1 && hass.states[id].attributes?.site_id) || "sensor.your_site_final_now"};
-  }
+  static getStubConfig() { return {}; }
   async _load() {
     if (!this._hass || !this._config || this._pending || !this.isConnected) return;
     this._pending = true;
-    const entity = this._config.entity;
+    const configured = this._config.site_id;
     try {
-      const data = await this._hass.callWS({type: "ha_energy_price_engine/price_schedule", entity_id: entity});
-      if (entity !== this._config.entity || !this.isConnected) return;
-      if (data.schema_version !== 1) throw new Error("Unsupported Energy Price Engine dashboard schema");
+      this._sites = await this._hass.callWS({type: "ha_energy_price_engine/sites"});
+      if (!this._sites.length) throw new Error(this._words().noSites);
+      if (!this._site && this._sites.length === 1) this._site = this._sites[0].site_id;
+      if (!this._site) { this._error = undefined; return; }
+      const site = this._site;
+      const data = await this._hass.callWS({type: "ha_energy_price_engine/price_schedule", site_id: site});
+      if (configured !== this._config.site_id || site !== this._site || !this.isConnected) return;
+      if (data.schema_version !== 2) throw new Error("Unsupported Energy Price Engine dashboard schema; reload browser resources");
       this._data = data; this._error = undefined;
     } catch (err) { this._error = err.message || String(err); }
     finally { this._pending = false; this._render(); }
+  }
+  _sitePicker() {
+    if (!this._sites?.length || this._config.site_id || this._sites.length === 1) return "";
+    return `<label for="site">${this._words().choose}</label><select id="site"><option value="">—</option>${this._sites.map(s => `<option value="${esc(s.site_id)}" ${s.site_id === this._site ? "selected" : ""}>${esc(s.name)}</option>`).join("")}</select>`;
   }
   _words() { return this._hass?.locale?.language?.startsWith("da") ? WORDS.da : WORDS.en; }
   _format(value) {
@@ -144,7 +157,7 @@ export class EnergyPriceEngineCard extends HTMLElement {
   _source(row, key) {
     const p = this._data.provenance[row.provenance];
     const part = p?.components[key];
-    const source = part?.source || (key === "spot" ? (this._data.site.source_type === "nordpool" ? "Official Nord Pool" : p?.source.entity_id || "Configured spot source") : key === "dso" ? p?.source.dso?.provider : key === "vat" || key === "final" ? "Energy Price Engine · stored component snapshot" : undefined);
+    const source = part?.source || (key === "spot" ? "Official Nord Pool" : key === "dso" ? p?.source.dso?.provider : key === "vat" || key === "final" ? "Energy Price Engine · stored component snapshot" : undefined);
     const stamp = part?.verified_on || (key === "dso" ? p?.source.dso?.fetched_at : p?.source.verified_at) || (key === "spot" ? row.raw_verified_at : undefined);
     const period = part?.valid_from ? `${part.valid_from} → ${part.valid_to}` : "";
     return `${esc(source || this._words().missing)}${stamp ? `<small>${esc(this._words().checked)}: ${esc(stamp)}</small>` : ""}${period ? `<small>${esc(period)}</small>` : ""}`;
@@ -167,8 +180,7 @@ export class EnergyPriceEngineCard extends HTMLElement {
     const ticks = [low + (high - low) * .15, low + (high - low) * .55, low + (high - low) * .9];
     const bars = slots.filter(good).map(r => {
       const top = y(r[key]);
-      const evidence = data.provenance[r.provenance];
-      const source = key === "spot" ? (data.site.source_type === "nordpool" ? "Official Nord Pool" : evidence?.source.entity_id || "Configured spot source") : "Energy Price Engine";
+      const source = key === "spot" ? "Official Nord Pool" : "Energy Price Engine";
       const label = `${r.local_start} → ${r.local_end} · ${this._format(r[key])} øre/kWh · ${t.ready} · ${source} · ${t.checked}: ${r.raw_verified_at || "—"} · ${t.revision} ${r.revision ?? "—"}`;
       return `<rect class="bar ${key === "spot" ? "spot" : "final"}-bar" x="${x(r.start)}" y="${Math.min(top,zero)}" width="${Math.max(.6,x(r.end)-x(r.start)-.5)}" height="${Math.max(.8,Math.abs(top-zero))}" tabindex="0" role="button" data-start="${esc(r.start)}" aria-label="${esc(label)}"><title>${esc(label)}</title></rect>`;
     }).join("");
@@ -216,12 +228,12 @@ export class EnergyPriceEngineCard extends HTMLElement {
     const open = new Set([...this.shadowRoot.querySelectorAll("details[open]")].map(e => e.dataset.day));
     const scrolls = [...this.shadowRoot.querySelectorAll(".scroll")].map(e => [e.scrollLeft,e.scrollTop]);
     const t = this._words(), d = this._data;
-    const body = d ? `<header><div><div class="eyebrow">Energy Price Engine · ${esc(d.site.area)}</div><h1>${esc(d.site.name)}</h1><div class="muted">${esc(d.site.timezone)} · øre/kWh</div></div><button data-refresh aria-label="${t.retry}">${t.retry}</button></header><div class="body"><div class="health">${[[t.current,d.current],[t.next,d.next],[t.history,d.days[0]],[t.publication,d.days[1]]].map(([name,f]) => `<div><p>${name}</p>${this._status(f.status)}<p class="muted" style="margin-top:6px">${f.stored_slots}/${f.expected_slots}</p></div>`).join("")}</div>
-      ${d.availability?.current.code === "waiting_first_quarter" ? `<p class="notice activation">${esc(t.activation.replace("{time}", this._local(d.availability.current.prices_start_at)))}</p>` : ""}
-      ${d.availability?.history.code === "historical_gap" ? `<p class="notice historical-gap">${t.historyGap}</p>` : ""}
+    const body = d ? `<header><div><div class="eyebrow">Energy Price Engine · ${esc(d.site.area)}</div><h1>${esc(d.site.name)}</h1><div class="muted">${esc(d.site.timezone)} · øre/kWh</div></div><button data-refresh aria-label="${t.retry}">${t.retry}</button></header><div class="body">${this._sitePicker()}<div class="health">${[[t.current,d.current],[t.next,d.next],[t.history,d.days[0]],[t.publication,d.days[1]]].map(([name,f]) => `<div><p>${name}</p>${this._status(f.status)}<p class="muted" style="margin-top:6px">${f.stored_slots}/${f.expected_slots}</p></div>`).join("")}</div>
+      ${d.availability?.code === "waiting" ? `<p class="notice activation">${esc(t.activation.replace("{time}", this._local(d.availability.available_from)))}</p>` : ""}
+      <section class="statistics"><h2>${t[d.statistics.scope] || t.unavailable} · ${d.statistics.used_slots}/${d.statistics.day_slots}</h2><div class="chips">${["average","minimum","maximum"].map(k => `<span>${t[k]}: <strong>${this._format(present(d.statistics[k]) ? d.statistics[k] * 100 : null)}</strong> øre/kWh</span>`).join("")}</div>${d.statistics.reason ? `<p class="muted">${esc(d.statistics.reason)}</p>` : ""}</section>
       ${this._error ? `<p role="alert" class="notice error">${esc(this._error)}</p>` : ""}
-      ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || t.noRecord)}</p>${i === 1 && day.status === "INCOMPLETE" && day.failure_stage === "source" && day.raw_ready_slots === 0 ? `<p>${t.wait}</p>` : ""}<p>${t.update}: ${esc(this._local(d.next_scheduled_update))}</p>${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
-      <div class="charts">${this._chart("spot")}${this._chart("final")}</div><p class="muted">${t.gaps} ${t.rawOnly}</p>${this._inspector()}${this._tariffs()}${this._schedule()}<footer class="footer">${t.update}: ${esc(this._local(d.next_scheduled_update))}<br>${t.generated}: ${esc(this._local(d.generated_at))} · ${t.revision} ${d.revision}</footer></div>` : `<header><h1>${t.title}</h1></header><div class="body"><p role="status">${esc(this._error || t.loading)}</p><button data-refresh>${t.retry}</button></div>`;
+      ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || t.noRecord)}</p>${i === 1 && day.status === "INCOMPLETE" && ["source","publication"].includes(day.failure_stage) && day.raw_ready_slots === 0 ? `<p>${t.wait}</p>` : ""}<p>${t.update}: ${esc(this._local(d.next_scheduled_update))}</p>${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
+      <div class="charts">${this._chart("spot")}${this._chart("final")}</div><p class="muted">${t.gaps} ${t.rawOnly}</p>${this._inspector()}${this._tariffs()}${this._schedule()}<footer class="footer">${t.update}: ${esc(this._local(d.next_scheduled_update))}<br>${t.generated}: ${esc(this._local(d.generated_at))} · ${t.revision} ${d.revision}</footer></div>` : `<header><h1>${t.title}</h1></header><div class="body">${this._sitePicker()}<p role="status">${esc(this._error || (this._sites?.length > 1 ? t.choose : t.loading))}</p><button data-refresh>${t.retry}</button></div>`;
     this.shadowRoot.innerHTML = `<style>${STYLE}</style><ha-card>${body}</ha-card>`;
     if (hadDetails) for (const e of this.shadowRoot.querySelectorAll("details")) e.open = open.has(e.dataset.day);
     [...this.shadowRoot.querySelectorAll(".scroll")].forEach((e,i) => { if (scrolls[i]) [e.scrollLeft,e.scrollTop] = scrolls[i]; });
