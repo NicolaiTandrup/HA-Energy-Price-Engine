@@ -1,3 +1,36 @@
+# Beta.10 guarded publication checkpoint — in progress
+
+Release source **150c24fa08988b6ae308dec68bb21016ffcca0b9** on
+`feat/beta5-simple-onboarding`; all **12 exact-source push/PR CI jobs succeeded**.
+Immutable annotated tag **v0.1.0-beta.10**, object
+`3a0f9ae43212857e765cdc1fda05e0e25f2d4fda`, points exactly to that source.
+Tag CI is pending; publisher additionally requires all18 push/PR/tag checks green.
+
+Clean reproducible builds matched byte-for-byte twice. Both archive layouts passed
+native install/setup/reload on both locked cores outside the checkout. SHA256:
+- HACS:899ee061423092260258e22b248f0fecbe80322f9bfb3c4d4d3ac5ece3529df5
+- Manual:d8c298e38a2c9fea0e7972ce60c2291be492c59986f3eea854cb01b011c6f0e4
+
+This checkpoint subject is **Guard beta10 publication with exact source and public verification**.
+The new publisher is pinned to the source/tag/hashes, requires successful source CI,
+unchanged main56cdb3c and all beta1–9 tag/release/asset identities, rebuilds clean
+packages, then creates only the authorized beta10 prerelease with latest=false.
+It refuses to overwrite existing mismatched assets. Two fresh jobs independently
+verify public metadata/source/main/assets, original beta9 package, actual pinned
+HACS workflows and both native ZIP layouts on both cores. Audit records results
+and updates the existing draft PR. Publication/verification are pending until observed.
+
+Local validation:112tests/core,90%coverage,18browser cases,21native screenshots,
+selected-site reset/remaining-day statistics/multi-site/source-read/restart proofs,
+1valid/0invalidhassfest. Runtime22modules/3226lines/204343bytes/9entities; ledger.py
+byte-identical beta9. No CM changes/compatibility claim; exact API2 handoff supplied.
+No owner hardware acceptance or Pi performance claim. No main/stable/production or
+physical control actions. Next: monitor all guards and public verification; fetch
+only the resulting audit commit, verify release independently, then record final
+permanent STOP checkpoint. Stop after verified beta10 publication.
+
+---
+
 # Beta.10 final card safety correction — active release candidate
 
 Previous checkpoint `ea354d195141922bb833bd195e0fbfa5100c584a`.
