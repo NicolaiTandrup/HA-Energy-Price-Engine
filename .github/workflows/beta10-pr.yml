@@ -1,0 +1,39 @@
+name: Update beta10 development draft
+on:
+  push:
+    branches: [feat/beta5-simple-onboarding]
+    paths: [.github/workflows/beta10-pr.yml]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  update-draft:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Update existing unmerged draft only
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" > "$RUNNER_TEMP/pr14.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          data=json.loads((Path(os.environ['RUNNER_TEMP'])/'pr14.json').read_text())
+          assert data['state']=='open' and data['draft'] and data['head']['ref']=='feat/beta5-simple-onboarding'
+          PY
+          cat > "$RUNNER_TEMP/beta10-pr.md" <<'MD'
+          Breaking beta.10 MVP cleanup for #15 (related #8/#10). Nine sensors replace40+1 entities; one dated marginal-price calculation and immutable read-only APIv2 replace duplicated invoice/provisional/source/presentation paths. Saved source→grid→supplier setup, full/remaining-day schedule statistics and a single bundled auto-discovered price card.
+
+          APIv1 and config versions1–3 deliberately require development reset/recreation. Unreleased CM must update its adapter; CM source is not modified or claimed compatible. [Exact consumer handoff](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/INTEROPERABILITY.md).
+
+          Local validation:108 tests/core HA2026.10.3 and2026.10.4 (90% coverage),4 additional API2 consumer cases,17 locked Chromium regressions desktop/mobile EN/DA, official hassfest1valid/0invalid, real pinned HACS beta9→10 installation/update/reinstall, both ZIP layouts installed/configured/reloaded outside source. Native HA.4 screenshots confirm nine entities, saved steps, wrong input, component/DSO tables and full-day stats, with no read requests or browser errors/warnings. Native restart preserves exact ledger bytes. Selected-site reset and interrupted cleanup fail-closed tests pass. Cloud1/5year append96:0.043/0.136s; no Raspberry Pi claim.
+
+          Initial remote CI exposed missing beta9 Git history in the upgrade test; checkout now fetches history. New remote CI/native multi-site reset acceptance/publication gates remain pending until recorded. No prerelease is claimed published at this checkpoint.
+
+          [Setup/reset](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/HACS_DISTRIBUTION.md) · [Dashboard YAML](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/dashboard.yaml) · [Inventory](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/MVP_CLEANUP.md) · [Permanent handoff](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/DEVELOPMENT_STATUS.md).
+
+          Draft/unmerged. Main and published beta1–9 tags/assets remain unchanged. Beta10 prerelease only after mandatory exact-source checks/integrity gates. No production HA, Node-RED, Tesla/Easee, CM or charging controls. No stable release/main merge.
+          MD
+          gh api "repos/$GITHUB_REPOSITORY/pulls/14" --method PATCH --raw-field title='Beta.10: minimal electricity price engine and read-only API v2' -F body=@"$RUNNER_TEMP/beta10-pr.md" --jq '{number,html_url,draft}'

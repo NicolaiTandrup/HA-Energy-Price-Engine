@@ -37,8 +37,8 @@
         }
       },
       "review": {
-        "title": "Gemt · {name}",
-        "description": "Gennemførte trin er gemt. Kontroller priser gentager verificeringen. Ni sensorer og det medfølgende kort viser dækning, komponenter og afhjælpning ved manglende priser. Avanceret bruges kun til bekræftede daterede satser.",
+        "title": "Gemt opsætning",
+        "description": "Sted: **{name}**. Gennemførte trin er gemt. Kontroller priser gentager verificeringen. Ni sensorer og det medfølgende kort viser dækning, komponenter og afhjælpning ved manglende priser. Avanceret bruges kun til bekræftede daterede satser.",
         "menu_options": {
           "done": "Færdig — luk opsætning",
           "check": "Kontroller priser nu",
@@ -81,8 +81,8 @@
         }
       },
       "reset": {
-        "title": "Nulstil permanent · {name}",
-        "description": "Den inkompatible beta.10 kræver, at ældre beta-steder oprettes på ny. Tag først backup. Handlingen stopper og fjerner dette sted, dets PE SQLite-historik, revisioner og PE-filer. Andre steder, Recorder og uvedkommende HA-data slettes ikke. Skriv stedets præcise navn, og bekræft. Almindelig Slet i HA bevarer PE-historikfiler.",
+        "title": "Nulstil dette sted",
+        "description": "Sted: **{name}**. Den inkompatible beta.10 kræver, at ældre beta-steder oprettes på ny. Tag først backup. Handlingen stopper og fjerner dette sted, dets PE SQLite-historik, revisioner og PE-filer. Andre steder, Recorder og uvedkommende HA-data slettes ikke. Skriv stedets præcise navn, og bekræft. Almindelig Slet i HA bevarer PE-historikfiler.",
         "data": {
           "name": "Skriv stedets præcise navn",
           "confirm": "Slet kun dette sted og dets PE-historik permanent"
@@ -141,8 +141,8 @@
         }
       },
       "review": {
-        "title": "Gemt · {name}",
-        "description": "Gennemførte trin er gemt. Kontroller priser gentager verificeringen. Ni sensorer og det medfølgende kort viser dækning, komponenter og afhjælpning ved manglende priser. Avanceret bruges kun til bekræftede daterede satser.",
+        "title": "Gemt opsætning",
+        "description": "Sted: **{name}**. Gennemførte trin er gemt. Kontroller priser gentager verificeringen. Ni sensorer og det medfølgende kort viser dækning, komponenter og afhjælpning ved manglende priser. Avanceret bruges kun til bekræftede daterede satser.",
         "menu_options": {
           "done": "Færdig — luk opsætning",
           "check": "Kontroller priser nu",
@@ -185,8 +185,8 @@
         }
       },
       "reset": {
-        "title": "Nulstil permanent · {name}",
-        "description": "Den inkompatible beta.10 kræver, at ældre beta-steder oprettes på ny. Tag først backup. Handlingen stopper og fjerner dette sted, dets PE SQLite-historik, revisioner og PE-filer. Andre steder, Recorder og uvedkommende HA-data slettes ikke. Skriv stedets præcise navn, og bekræft. Almindelig Slet i HA bevarer PE-historikfiler.",
+        "title": "Nulstil dette sted",
+        "description": "Sted: **{name}**. Den inkompatible beta.10 kræver, at ældre beta-steder oprettes på ny. Tag først backup. Handlingen stopper og fjerner dette sted, dets PE SQLite-historik, revisioner og PE-filer. Andre steder, Recorder og uvedkommende HA-data slettes ikke. Skriv stedets præcise navn, og bekræft. Almindelig Slet i HA bevarer PE-historikfiler.",
         "data": {
           "name": "Skriv stedets præcise navn",
           "confirm": "Slet kun dette sted og dets PE-historik permanent"

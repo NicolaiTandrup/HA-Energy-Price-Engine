@@ -6,6 +6,5 @@ views:
     type: panel
     cards:
       - type: custom:energy-price-engine-card
-        # Replace this one ID with ANY sensor belonging to the desired PE site.
-        # Example: the site's "Final now (incl. VAT)" sensor. No other edits.
-        entity: sensor.your_site_final_now_incl_vat
+        # One site is automatic; several sites show a named selector.
+        # Optional: site_id: paste_the_chosen_site_id

@@ -37,8 +37,8 @@
         }
       },
       "review": {
-        "title": "Saved · {name}",
-        "description": "Completed steps are saved. Check prices retries verification. Nine sensors and the bundled card show coverage, components and the corrective action for missing prices. Advanced is only for confirmed dated rates.",
+        "title": "Saved setup",
+        "description": "Site: **{name}**. Completed steps are saved. Check prices retries verification. Nine sensors and the bundled card show coverage, components and the corrective action for missing prices. Advanced is only for confirmed dated rates.",
         "menu_options": {
           "done": "Done — close setup",
           "check": "Check prices now",
@@ -81,8 +81,8 @@
         }
       },
       "reset": {
-        "title": "Permanently reset · {name}",
-        "description": "Breaking beta.10 requires recreating older beta sites. Back up first. This action stops and removes this site, its PE SQLite history, revisions and PE files. It does not delete other sites, Recorder or unrelated HA data. Type the exact site name and confirm. Normal HA Delete retains PE history files.",
+        "title": "Reset this site",
+        "description": "Site: **{name}**. Breaking beta.10 requires recreating older beta sites. Back up first. This action stops and removes this site, its PE SQLite history, revisions and PE files. It does not delete other sites, Recorder or unrelated HA data. Type the exact site name and confirm. Normal HA Delete retains PE history files.",
         "data": {
           "name": "Type the exact site name",
           "confirm": "Permanently delete only this site and its PE history"
@@ -141,8 +141,8 @@
         }
       },
       "review": {
-        "title": "Saved · {name}",
-        "description": "Completed steps are saved. Check prices retries verification. Nine sensors and the bundled card show coverage, components and the corrective action for missing prices. Advanced is only for confirmed dated rates.",
+        "title": "Saved setup",
+        "description": "Site: **{name}**. Completed steps are saved. Check prices retries verification. Nine sensors and the bundled card show coverage, components and the corrective action for missing prices. Advanced is only for confirmed dated rates.",
         "menu_options": {
           "done": "Done — close setup",
           "check": "Check prices now",
@@ -185,8 +185,8 @@
         }
       },
       "reset": {
-        "title": "Permanently reset · {name}",
-        "description": "Breaking beta.10 requires recreating older beta sites. Back up first. This action stops and removes this site, its PE SQLite history, revisions and PE files. It does not delete other sites, Recorder or unrelated HA data. Type the exact site name and confirm. Normal HA Delete retains PE history files.",
+        "title": "Reset this site",
+        "description": "Site: **{name}**. Breaking beta.10 requires recreating older beta sites. Back up first. This action stops and removes this site, its PE SQLite history, revisions and PE files. It does not delete other sites, Recorder or unrelated HA data. Type the exact site name and confirm. Normal HA Delete retains PE history files.",
         "data": {
           "name": "Type the exact site name",
           "confirm": "Permanently delete only this site and its PE history"

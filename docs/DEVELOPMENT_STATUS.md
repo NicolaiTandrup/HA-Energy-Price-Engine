@@ -1,3 +1,44 @@
+# Beta.10 native setup and contract checkpoint — active
+
+Previous source `9abab5aae774d6f8036800a41ba43d5e95ac1e6f` on
+`feat/beta5-simple-onboarding`. Checkpoint subject: **Finish MVP setup, reset safety and consumer handoff**.
+PR14 stays draft/unmerged. Beta10 is not published at this checkpoint.
+
+Local full suites **108 passed/core**,90%coverage,zero skips,only2 pinned upstream
+HACS deprecation warnings;4 new API2 consumer cases pass separately.17 browser
+regressions pass. Final official Docker hassfest1valid/0invalid. Both newly rebuilt
+ZIP layouts install/configure/reload outside source. Native HA2026.10.4 frontend
+20260930.5 EN/DA desktop/mobile validates saved-step close/reopen/Done, wrong input,
+nine sensors/device manifest version, full-day96/96 statistics and the complete
+card;16 native screenshots,zero browser errors/warnings and unchanged provider
+counters on reads. One actual native restart retained SQLite byte-for-byte. Final
+native multi-site/from-now/reset screen acceptance remains running,not yet claimed.
+
+Fixed native title placeholders (HA does not format step titles with description
+placeholders), optional select translation-key validation, and durable manual-grid
+selection during editing. Explicit reset now stops the selected runtime and makes
+its API STALE before attempting unload; interrupted cleanup retains history plus
+an entry-ID deletion intent. Exact-path/symlink/other-site isolation tests pass.
+
+Initial remote12-job push/PR run: package/browser/hassfest/HACS passed; both test
+matrix jobs failed because shallow checkout lacked the immutable beta9 commit used
+for real HACS upgrade. Fetch-depth0 fixes the discovered dependency. An unclosed
+file warning in a test was also fixed. New source CI is pending; do not call it green.
+
+Removed outdated active guides/screenshots/demos/v1schemas. README and current
+setup/reset,card,API2,CMhandoff,acceptance/performance docs describe the MVP. Historical
+receipts/tags and source attribution remain. CM PR26 adapter inspected at immutable
+5ef7115a9599e1ff25019e91b3737500853b9a38;no CM source changes or compatibility claim.
+New1/5year synthetic ledger benchmarks:35,136/175,296 records,append96 0.043/0.136s;
+all-history memory/RAM limitations explicit. Cloud results are not Pi measurements.
+
+Next: finish native multi-site/reset screenshots and final inventory/receipt; run
+full112-case matrix and new remoteCI; clean reproducible builds; guarded beta10-only
+publication and independent public source/assets/HACS/native installs on both cores.
+Keep main56cdb3c and beta1–9 immutable. No owner hardware/contract acceptance claimed.
+
+---
+
 # Beta.10 core cleanup checkpoint — 31 October 2026 (active)
 
 Branch `feat/beta5-simple-onboarding`; previous committed inventory `dd4a855`.

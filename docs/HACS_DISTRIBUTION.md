@@ -1,92 +1,73 @@
-# Install and update with HACS
+# Install beta.10 on PAHA02-DEV
 
-Repository: **NicolaiTandrup/HA-Energy-Price-Engine**. Category: **Integration**.
-Target: **v0.1.0-beta.9** (manifest `0.1.0-beta.9`). The
-[public prerelease](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.9)
-is the installation source. The reproducible package and release receipt identify the exact immutable
-source and checksums; a moving branch is not a release.
+This procedure is for the owner's development HA. No live HA was accessed by this
+mission. Beta.10 deliberately breaks old beta configuration, entities and API v1.
+Back up first; an unreleased CM built for API v1 cannot consume this beta unchanged.
 
-1. Take a full backup of your development Home Assistant. Tested cores are
-   2026.10.3 and 2026.10.4. Cloud validation does not establish Raspberry Pi capacity.
-2. **HACS → Custom repositories**: add
+## Existing beta installations
+
+1. Take a complete development HA backup (code, config, `.storage` and Recorder).
+   Record supplier/grid values, effective periods, the official Nord Pool entry and
+   any manual overrides. Keep the beta.9 backup if you need its history or a downgrade.
+2. In HACS, open **Energy Price Engine**, use its three-dot menu and enable **Show
+   beta versions**. Keep this setting enabled: without it HACS may offer main's short
+   SHA because there is no stable PE release. Refresh information, select
+   **v0.1.0-beta.10**, download, then restart HA and reload the app/browser.
+3. Old PE entries intentionally fail migration with a breaking-beta message. Nothing
+   is deleted. Open the old entry's **Configure**: it opens **Reset this development
+   site**. After confirming your backup, type that site's exact name and tick the
+   permanent deletion confirmation. Only that entry and its PE files are removed.
+   Repeat only for sites you intentionally want to recreate. Other sites, Recorder,
+   automations, Nord Pool and unrelated files remain untouched.
+4. Add **Energy Price Engine** again for each site. New IDs/entities/history are
+   intentional. Update any development dashboards/automations and future CM site
+   mappings. Do not edit `.storage` by hand or bulk-delete PE-prefixed files.
+5. Check **Device info → 0.1.0-beta.10**, nine sensor entities, and the availability
+   sensor. Validate with the [acceptance checklist](BETA_ACCEPTANCE.md).
+
+Normal HA **Delete** retains the selected site's PE history files. Explicit PE reset
+is the destructive operation above. HACS uninstall removes integration code and
+retains HA data. Old files do not auto-attach to a newly generated site ID. A
+stopped-HA full backup restore is the supported way to return to a prior beta.
+
+## Clean installation
+
+1. HACS → three-dot menu → **Custom repositories**: add
    `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine`, category **Integration**.
-3. Open Energy Price Engine in HACS. Persist **Show beta versions**, refresh
-   repository information, select **v0.1.0-beta.9**, then Download.
-4. Restart HA. HACS must show the installed semantic beta version. Device info must
-   show manifest version **0.1.0-beta.9**. Reload the browser/app after restart so it loads the new fields and translations.
-5. Configure the official Home Assistant **Nord Pool** integration with your actual
-   area first. PE needs no additional credentials. A legacy custom component
-   shadowing the official domain is rejected. Recorded legacy comparisons are
-   offline; simultaneous live operation of both integrations is unnecessary.
-6. New site: **Settings → Devices & services → Add integration → Energy Price
-   Engine**. Upgrade: existing site's **Configure**; IDs, source mapping, dated
-   contracts, overrides, entities, SQLite rows and revisions are preserved.
-7. Follow the [three-stage guide](WIZARD_GUIDE.md). Confirm your supplier agreement
-   or enter a custom markup in øre/kWh and its VAT basis. No dates are needed.
-   Save and continue applies each page; Configure resumes after closing. Review
-   needs no final save. Inspect raw/final coverage and a stored breakdown, then
-   complete the [acceptance checklist](BETA_ACCEPTANCE.md), including restart and
-   comparison of the marginal components from your agreement/bill. Close cannot submit fields still being typed.
+   The existing approved main bootstrap contains HACS-compatible integration files.
+   Beta.10 does not require another main merge or a stable release.
+2. Enable **Show beta versions**, select **v0.1.0-beta.10**, download, restart HA.
+   Do not select main or an older beta when following this guide.
+3. Add official **Nord Pool** in Devices & services for DK1/DK2 (DKK). PE reads its
+   supported `get_prices_for_date` service in DKK/MWh ex VAT. Disable/remove any legacy
+   custom integration that shadows domain `nordpool` using your normal development
+   procedure; simultaneous legacy/official operation is not required. Recorded legacy
+   data can be compared offline with `tools/compare_recorded_prices.py`.
+4. Add PE: **Site/source → Grid → Supplier → Saved**. Radius C fetches verified
+   Datahub time bands after you confirm that product. Other grids need a confirmed
+   marginal rate. Enter supplier markup in øre/kWh and specify whether it includes VAT.
+   There is no assumed EWII or summer-house contract.
+5. A confirmed ordinary rate applies from the next complete quarter until you edit
+   it. Tick the separate earlier-today confirmation only when that is true. Use
+   **Advanced dated rates** for actual start/end dates or local hours. Manual rules
+   override public defaults; overlapping manual rules must be removed before adding
+   replacements. End dates are exclusive. Check expired public rates with verified
+   documentation; do not extend dates merely to obtain READY.
+6. Accepted steps are durable. Closing keeps them; fields not submitted are unsaved.
+   **Configure → Check prices now** retries. **Done — close setup** exits without a
+   second Save. Add independent PE entries for additional sites.
+7. Register and paste the [bundled dashboard](PRICE_DASHBOARD.md).
 
-8. Optional price dashboard: add the bundled local module to **Settings → Dashboards →
-   Resources**, then paste [dashboard.yaml](dashboard.yaml) and replace one entity ID.
-   Full [dashboard installation and tables/graphs guide](PRICE_DASHBOARD.md). No extra
-   HACS frontend repository is required.
+## Manual ZIP fallback
 
-HACS uses compliant main for registration and the exact selected release tag for
-installation. Beta distribution does not require merging development into main.
-Manual installation: extract the manual ZIP into your HA configuration directory,
-so `custom_components/ha_energy_price_engine/manifest.json` exists, then restart.
-The smaller HACS-layout ZIP contains the integration files at its root; extract it
-inside `custom_components/ha_energy_price_engine`, not over the configuration root.
-Verify downloaded assets against SHA256SUMS before manual installation.
+Download `ha_energy_price_engine-manual.zip` and `SHA256SUMS` from the exact beta.10
+prerelease, verify SHA256, and extract into the development HA configuration folder.
+The result must be `custom_components/ha_energy_price_engine/manifest.json` (one
+level). Restart HA. The HACS ZIP instead contains files at its root for HACS's
+installer; do not extract that ZIP directly into the HA config root. Do not overlay
+a manual package on a HACS-managed copy. Both layouts are tested outside this repo.
 
-## Existing sites and beta.9 diagnostics
-
-Keep your existing entries. Beta.8 source references, site IDs, dated rules/manual
-rates, SQLite revisions and existing entities are retained. **Configure → Done –
-return to integration** closes the saved review. On the device, inspect **Component
-period**, eight individual numerical components, availability and the exact first
-verified timestamp. New technical/unused estimate entities default off.
-
-Previously enabled canonical entities remain enabled to preserve your choices.
-For a cleaner existing device, open **Configure → Technical diagnostics**, keep
-anything used by your automations/Recorder, deselect unused technical duplicates
-and submit. This explicit selection does not stop the engine or CM API. Old IDs
-and recorded history remain available; disabled rows stop recording new samples.
-The ordinary status entities display localized Ready/Incomplete/Stale/Error;
-advanced canonical machine enums retain their original uppercase states.
-
-## Why a HACS card could show a commit hash
-
-In HACS 2.0.5/current pinned upstream, an installed beta does not itself enable
-Show beta versions. With no stable release and that setting off, HACS's available
-version falls back to main's short commit. Selecting a beta download alone is not
-the same as subscribing to beta updates. PE's `hide_default_branch` hides a branch
-choice but cannot override HACS's update property.
-
-PE provides **Configure → Final prices → Advanced settings → Storage / site management → HACS beta channel**, explicitly
-approved by an administrator. It uses supported HACS repository WebSocket commands
-against the same local HA socket, enables beta only for PE, refreshes and verifies
-the semantic available version, then persists HACS's own repository state. It does
-not patch HACS, disable an entity, download a package or alter another repository.
-If the local authenticated request is unavailable, use HACS's Show beta versions
-control and refresh information. Keep it enabled while testing betas.
-
-The separate PE Published release entity also reads published semantic release
-metadata, follows prereleases for installed betas, excludes them for stable users,
-and never offers commit hashes. It directs installation through HACS.
-
-## Branding
-
-HA 2026.10 supports the bundled `brand/icon.png` through its native
-`/api/brands/integration/ha_energy_price_engine/icon.png` route. Device/integration
-surfaces and PE's release entity use supported local branding. The README includes
-the same image.
-
-HACS 2.0.5's own UpdateEntity still requests the external HA brands CDN. A bundled
-icon cannot populate that separate catalog. Until the domain is accepted into
-`home-assistant/brands`, that HACS-owned image may show a fallback. No global HACS
-patch or fake CDN response is shipped. Catalog submission requires its maintainers'
-review; see [contributor guidance](../CONTRIBUTING.md). This image limitation does
-not change package installation or price verification.
+HACS workflow tests run actual pinned HACS 2.0.5 and upstream registration, supported
+admin beta-visibility command, beta.9→.10 file update, reinstall and uninstall with
+mocked GitHub I/O. Post-publication verification uses independently downloaded public
+source/assets. These software tests do not claim owner acceptance on PAHA02-DEV.

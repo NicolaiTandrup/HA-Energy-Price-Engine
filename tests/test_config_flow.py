@@ -110,3 +110,59 @@ async def test_reset_requires_exact_name_and_explicit_confirm(hass, freezer, pri
         fid, {"name": "Example site", "confirm": True}
     )
     assert result["reason"] == "site_reset"
+
+
+async def test_advanced_rates_and_saved_grid_choice_resume(hass, freezer, price_service):
+    from .helpers import model
+    from .test_integration import setup
+
+    freezer.move_to("2026-10-24T12:07:00Z")
+    entry = await setup(hass, model(dated_components=[]))
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    fid = result["flow_id"]
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "grid"})
+    result = await hass.config_entries.options.async_configure(fid, {"grid": "manual"})
+    assert result["step_id"] == "grid_rate" and settings(entry)["setup_step"] == "grid_rate"
+    hass.config_entries.options.async_abort(fid)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["step_id"] == "grid_rate"
+    fid = result["flow_id"]
+    await hass.config_entries.options.async_configure(
+        fid, {"amount": "20", "vat_included": False, "whole_day": True}
+    )
+    result = await hass.config_entries.options.async_configure(
+        fid, {"amount": "3", "vat_included": False, "whole_day": True}
+    )
+    # A resumed edit can complete supplier or return straight to the saved review.
+    if result["step_id"] == "supplier":
+        result = await hass.config_entries.options.async_configure(
+            fid, {"amount": "3", "vat_included": False, "whole_day": True}
+        )
+    assert result["step_id"] == "review"
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "advanced"})
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "add_rate"})
+    fields = {
+        "component": "energinet_net",
+        "amount": "8",
+        "vat_included": False,
+        "vat_rate": 0.25,
+        "valid_from": "2026-10-24",
+        "valid_to": "2027-01-01",
+        "hours": ["17", "18"],
+        "source": "Explicit fictional owner confirmation",
+        "confirm": False,
+    }
+    result = await hass.config_entries.options.async_configure(fid, fields)
+    assert result["errors"]["base"] == "invalid_rate"
+    result = await hass.config_entries.options.async_configure(fid, {**fields, "confirm": True})
+    assert result["step_id"] == "review"
+    assert settings(entry)["dated_components"][-1]["id"] == "energinet_net"
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "advanced"})
+    await hass.config_entries.options.async_configure(fid, {"next_step_id": "remove_rate"})
+    result = await hass.config_entries.options.async_configure(
+        fid, {"rate": str(len(settings(entry)["dated_components"]) - 1)}
+    )
+    assert result["step_id"] == "review"
+    assert all(r["id"] != "energinet_net" for r in settings(entry)["dated_components"])
+    hass.config_entries.options.async_abort(fid)
+    assert await hass.config_entries.async_unload(entry.entry_id)

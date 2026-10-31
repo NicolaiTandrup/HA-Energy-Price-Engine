@@ -3,6 +3,7 @@
 import json
 from dataclasses import FrozenInstanceError
 from datetime import UTC, date, datetime, timedelta
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -44,7 +45,7 @@ async def test_native_multisite_nine_entities_device_version_and_read_only_api(
     devices = dr.async_entries_for_config_entry(dr.async_get(hass), home.entry_id)
     assert (
         devices[0].sw_version
-        == json.loads(open("custom_components/ha_energy_price_engine/manifest.json").read())[
+        == json.loads(Path("custom_components/ha_energy_price_engine/manifest.json").read_text())[
             "version"
         ]
     )

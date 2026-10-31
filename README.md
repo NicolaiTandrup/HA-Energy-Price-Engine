@@ -1,92 +1,57 @@
-# Energy Price Engine for Home Assistant
+# Home Assistant Energy Price Engine
 
-![Energy Price Engine](custom_components/ha_energy_price_engine/brand/icon.png)
+Energy Price Engine (PE) calculates and stores verified 15-minute marginal
+electricity prices. It combines official Nord Pool spot prices with grid tariffs,
+Energinet charges, your supplier markup, electricity tax and VAT. Negative prices,
+DK1/DK2, Europe/Copenhagen and 92/96/100-quarter days are supported.
 
-Verified **15-minute marginal electricity prices** for EV charging optimization and
-estimated charging costs. Prices include spot, grid time-of-use tariffs, supplier
-markup, Energinet charges, electricity tax and VAT. Fixed subscriptions are excluded.
-Each pricing site has independent settings and persistent SQLite history.
+**v0.1.0-beta.10 is a breaking development beta.** Recreate older beta sites after
+backing up. API v2 replaces v1; unreleased EV Charge Manager requires an adapter
+update. No production cutover, charging control or stable release is implied.
 
-**v0.1.0-beta.9** · [Prereleases](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases)
+## Install and configure
 
-## Install or upgrade
+1. Follow [HACS installation and reset](docs/HACS_DISTRIBUTION.md). Enable **Show beta
+   versions**, explicitly select **v0.1.0-beta.10**, download and restart HA.
+2. Add the **official Home Assistant Nord Pool integration** for DK1 or DK2. A legacy
+   HACS Nordpool integration is not required and must not shadow the official domain.
+3. Under **Settings → Devices & services → Add integration**, select **Energy Price
+   Engine**. Name the site, select Nord Pool, confirm Radius C or enter your actual
+   grid rate, and enter your supplier markup in **øre/kWh**. No private rate is guessed.
+4. Accepted steps save immediately. Close and reopen **Configure** to resume.
+   **Done — close setup** finishes. Add another PE entry for each independent site.
+5. Register the bundled card resource and paste the [dashboard YAML](docs/PRICE_DASHBOARD.md).
 
-1. Add `https://github.com/NicolaiTandrup/HA-Energy-Price-Engine` to **HACS → Custom
-   repositories**, category **Integration**.
-2. Open Energy Price Engine, persist **Show beta versions**, refresh information,
-   choose **v0.1.0-beta.9**, download and restart Home Assistant. Reload the browser/app.
-3. Existing sites: choose **Configure** on the existing entry. New sites: install
-   Home Assistant's **official Nord Pool** integration first, then **Settings →
-   Devices & services → Add integration → Energy Price Engine**.
+## Nine sensors per site
 
-[Exact HACS procedure](docs/HACS_DISTRIBUTION.md) · [Setup, readiness and examples](docs/WIZARD_GUIDE.md)
+Current raw spot, current final, next-quarter raw, next-quarter final, today's
+average/minimum/maximum, current DSO tariff, and price availability. Ordinary prices
+use **øre/kWh, two decimals**; calculations and the API keep full precision.
+Availability attributes and the card expose the component breakdown, source,
+coverage, revision, reason and corrective action without dozens of extra entities.
 
-## Three setup stages
+Daily statistics use the calculated schedule immediately, including past and future
+quarters when all applicable rates are verified. A newly entered rate starts next
+complete quarter unless you explicitly confirm it also applied earlier today.
+Otherwise statistics say **Remaining-day** and show coverage; missing history is
+never fabricated. [Pricing and statistics](docs/PRICE_DASHBOARD.md).
 
-1. Name the site and select its installed Nord Pool source/area.
-2. Confirm the actual grid product: automatic **Radius C**, or a verified manual rate.
-3. Enter your actual supplier markup in **øre/kWh** and its VAT basis.
+## Boundaries
 
-Fractional amounts such as **0.25**, **0.50**, **0.75** and **3.125** work, including
-Danish decimal commas. Ordinary setup needs no dates, subscriptions, product choice
-or heating eligibility. Verified Danish national defaults apply within documented
-periods. Private agreements and grid classes are never inferred from DK1/DK2.
+PE owns price fetching, calculation, persistence and publishing. Consumers use the
+[read-only Python API v2](docs/API.md); [CM migration handoff](docs/INTEROPERABILITY.md).
+Reads do not fetch sources, recompose tariffs or touch SQLite. Full requested future
+coverage and recent source verification are required for READY. Missing prices are
+unavailable, never zero. Refresh times remain **13:05, 13:20, 13:40, 23:59 and 00:01**
+Copenhagen time, with conditional retries when the requested day remains incomplete.
 
-Each accepted page saves immediately. Close and reopen Configure to resume.
-Review needs no final save. Choose **Done – return to integration** to finish,
-tap a component to edit, or use **Check prices** to verify sources. New rates start at the next complete quarter without rewriting
-settled history or filling earlier unknown prices.
+PE estimates variable charging costs from caller-supplied quarter-hour energy.
+It does not reconstruct household bills, allocate subscriptions, infer heating
+eligibility or control vehicles/chargers. Public national rates have explicit expiry
+periods. The documented EWII household markup **0.030 DKK/kWh ex VAT applies only to
+June–September 2026**; it is not a current/default/future or summer-house rate.
 
-## See every quarter-hour
-
-The bundled [price dashboard](docs/PRICE_DASHBOARD.md) shows two today/tomorrow
-graphs (raw Nord Pool spot and verified final price), today's applied network tariff
-ranges, and every quarter's components, VAT, source and revision. Includes a Now
-marker, future inspection, negative prices, explicit missing-price gaps and DST.
-
-[Ready-to-paste dashboard YAML](docs/dashboard.yaml): register the bundled local
-JavaScript module once in HA Resources and change one site entity ID. No Python,
-SQL, external services or extra chart-card repository. Unused provisional entities
-are disabled by default; verified and provisional prices stay separate.
-
-## Understand and use prices
-
-**All preferred prices use øre/kWh with exactly two decimals**; optional DKK/kWh uses
-four. Raw spot, final/current/next, statistics and provisional prices share the site
-preference. Canonical technical sensors retain DKK/kWh, their IDs and statistics.
-
-Current/next readiness is separate from historical full-day coverage. **Check future
-window** tests an explicit requested range using API v1. An evening setup can have
-7/96 historical quarters and still have a fully verified future window READY.
-Earlier unknown prices remain absent.
-
-If Final now is Unknown while the next quarter is Ready, **Prices now — availability**
-explains activation and **Verified prices begin** shows when pricing starts. Today
-statistics need complete verified day coverage. Device Diagnostics shows eight
-component diagnostic amounts in øre/kWh with two decimals: spot, grid, Energinet
-network/system, supplier, tax, applied VAT and final. Check **Component period**: it explicitly says Next quarter when the current quarter is unavailable.
-Tap a component for its actual stored source, period and revision.
-
-Technical duplicates default off on new installs. Upgrades preserve enabled entity
-choices and Recorder identities. To tidy an existing device, use **Configure →
-Technical diagnostics**, retain any technical entities used by automations or
-Recorder, and submit your selection. Disabled entities remain available for opt-in;
-the CM API is independent of these switches.
-
-Final prices opens current/future quarter diagnostics: actual stored component
-amounts, sources, periods and verification, with VAT applied once. An optional
-charging-cost calculator uses **supplied quarter-hour kWh allocations**, labelled
-planned or measured. It does not create a charging plan, discover energy usage or
-reconstruct a household bill. CM owns vehicles, sessions, planning and control.
-
-Unknown rates never become zero. Raw spot prices remain visible independently.
-Explicitly approved visualization estimates stay **Provisional**, outside verified
-history and API READY; they cannot provide authoritative prices or session costs.
-
-The [read-only API v1](docs/API.md) and canonical entities remain **DKK/kWh including
-VAT**. Normal display is **øre/kWh**. Upgrades preserve site IDs, source mappings,
-entities, dated rules and SQLite rows/revisions. Advanced retains manual contracts,
-dated overrides, display settings and controlled site removal/reset.
-
-[Owner acceptance](docs/BETA_ACCEPTANCE.md) · [Storage/recovery](docs/ADR-002-ledger-storage.md) ·
-[Performance limits](docs/PERFORMANCE.md) · [Contributing/provenance](CONTRIBUTING.md) · [License](LICENSE)
+[Acceptance checklist](docs/BETA_ACCEPTANCE.md) · [Cleanup inventory](docs/MVP_CLEANUP.md)
+· [Performance and recovery](docs/PERFORMANCE.md) · [Source attribution](docs/PROVENANCE.md)
+· [Permanent development handoff](docs/DEVELOPMENT_STATUS.md). Cloud benchmarks do
+not establish Raspberry Pi performance. MIT licensed, © Nicolai Tandrup.

@@ -1,111 +1,35 @@
-# Beta.9 acceptance checklist
+# Beta.10 acceptance checklist
 
-Software checks and owner Home Assistant acceptance are separate. Automated native
-HA tests use recorded/synthetic provider boundaries and do not certify your private
-contract, real provider availability or hardware performance. Exact results, source,
-CI, package hashes and simulation screenshots are in the release receipt and
-[permanent development handoff](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/DEVELOPMENT_STATUS.md).
+Breaking development beta for PAHA02-DEV. Software evidence uses isolated HA and
+recorded/synthetic prices, not owner hardware or live contract acceptance.
 
-## Software release gates
+- [ ] Back up code/config/Recorder/.storage; record each actual contract/grid and dated override.
+- [ ] HACS Show beta versions persists; explicitly download v0.1.0-beta.10 and restart.
+- [ ] Device info shows0.1.0-beta.10; old beta sites fail safely until explicitly reset/recreated.
+- [ ] Reset only the intended named site after backup; another site's data and Recorder survive.
+- [ ] Official Nord Pool DK1/DK2 is selected; legacy domain shadowing is absent. No parallel broker required.
+- [ ] Site/source, grid and supplier steps save; close/reopen resumes. Unsubmitted fields are clearly unsaved.
+- [ ] Confirm actual Radius C or actual manual DSO. Enter real supplier markup in øre/kWh and correct VAT basis.
+- [ ] Nine enabled sensors per new site; full precision internally, ordinary øre/kWh2decimals.
+- [ ] Current/next raw and final match verified source/component arithmetic, including negative spot.
+- [ ] Full-day stats include all92/96/100 quarters immediately when genuinely covered.
+- [ ] New from-now private rate yields labeled remaining-day coverage, with no invented past prices.
+- [ ] Middle gaps/expired components/source errors never create READY ranges or zero-filled prices.
+- [ ] Bundled resource registered; minimal YAML discovers one site, named selector handles several.
+- [ ] Two graphs, DSO intervals, all quarter rows and selected component/VAT/source details work desktop/mobile EN/DA.
+- [ ] Native Options Done closes; restart/reload preserves the new site ID, stored quotes and revision references.
+- [ ] Unreleased CM upgraded to API2 and tested separately before coupling. Unchanged API1 CM is unsupported.
+- [ ] Public national effective dates and private contracts remain valid; no future EWII/heating inference.
+- [ ] Development hardware storage/RAM/latency acceptable; cloud measurements are not Pi evidence.
 
-Beta.9 evidence is recorded in the native simulation receipt and permanent handoff.
-Software evidence uses disposable HA with synthetic/recorded sources; owner
-acceptance remains separate. Publication verification is recorded after publishing.
+Automated release gates: complete unit/native-flow/source/Radius/math/DST/statistics/
+SQLite fault/revision/reset/read-only API/cost tests on HA2026.10.3 and2026.10.4;
+locked desktop/mobile Chromium tests; actual pinned HACS install/update/reinstall;
+official hassfest/HACS CI; both independently installed ZIP layouts; reproducible
+clean archive hashes; native HA screenshots and restart; immutable prior releases/
+main; exact-source CI before beta10-only guarded publication; fresh public source/
+asset/download verification on both cores. Current results and remaining work are
+recorded in [the permanent handoff](DEVELOPMENT_STATUS.md), not inferred from this list.
 
-- [x] Native Done action, saved settings on close/reopen, no second Save/check.
-- [x] Real native desktop/mobile activation wait, first-quarter transition, and
-  today-incomplete/tomorrow-Ready without backfill.
-- [x] Eight stored component diagnostic amounts, mixed VAT correctness, explicit
-  next-quarter period, source/revision details and ordinary localized statuses.
-- [x] Beta.8 upgrade/restart preserves config, all old IDs, user choices and ledgers.
-- [x] New technical/unused provisional defaults off; explicit native opt-in/out.
-
-- [x] Full producer suites on HA 2026.10.3 and current 2026.10.4, zero skips.
-- [x] Unchanged consumer API suites and both actual runtime startup orders.
-- [x] Official Nord Pool action/config discovery, automatic Radius C, bounded
-  national rates, component expiry, negative prices and 92/96/100-quarter DST days.
-- [x] Missing/incorrect supplier verification, explicit provisional approval,
-  fail-closed API/ledger and raw source independence.
-- [x] Step-confirmed persistence, interrupted native setup, unsubmitted changes, close/resume,
-  actual persisted current-day readiness, storage failure and restart.
-- [x] Native EN/DA desktop/mobile flows and local branding without PE image mocks.
-- [x] Beta.1–.8 config, ledger rows, revisions, entity IDs and source references.
-- [x] Confirmed permanent deletion, interrupted cleanup/retry, archive retention,
-  clean reinstall and second-site/global recorder isolation.
-- [x] Actual pinned HACS registration/tag install/update/uninstall/reinstall,
-  authenticated channel repair, persisted beta state and semantic version reporting.
-- [x] Hassfest, translations, HACS validation, clean deterministic packages and
-  both ZIP layouts installed/imported outside the repository.
-- [x] Exact-source green CI, immutable prerelease tag, public assets/source hashes
-  and independent post-publication installation verification.
-
-Publication software receipt: [beta.9 verification](https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/blob/feat/beta5-simple-onboarding/docs/receipts/v0.1.0-beta.9.json).
-All19 exact-source checks and all16 publication/orchestration checks passed.
-Both fresh public verifier jobs passed on HA2026.10.3/.4: actual public beta8→9
-HACS update, preserved real SQLite, both native package layouts and semantic
-channels. Independent local downloads match all4 source-built assets; all8 prior
-public HACS ZIP hashes and main/prior tag identities match. No tag/asset overwrite.
-All owner acceptance items below remain unchecked.
-
-- [x] Native HA and17 browser regression journeys: desktop/mobile graphs, complete
-  tables, source/components/VAT parity, exact DSO merges, negative/zero prices,
-  missing gaps, DST92/96/100, future revision updates and locale/XSS safety.
-- [x] Authenticated site read permissions, bounded two-day responses, no provider/
-  SQL/recomposition on dashboard reads, unchanged CM APIv1.
-- [x] One-time unused optional estimate default disable, stable IDs/history, explicit
-  user opt-in and configured provisional behavior; supported status localization.
-
-## Your development HA acceptance
-
-- [ ] Back up HA; record core/HACS/PE versions and storage/hardware.
-- [ ] Update through HACS with **Show beta versions enabled**, restart and confirm
-  manifest version **0.1.0-beta.9**. Existing site IDs/entities/history remain.
-- [ ] Register the bundled local module in HA Resources; paste the complete
-  [dashboard YAML](dashboard.yaml) changing one actual site entity ID. View both
-  graphs, all quarter rows, today's DSO ranges and selected future components.
-  Check local offsets/negative prices/gaps, source/VAT and current/history readiness.
-- [ ] Confirm unused optional estimates no longer clutter the default device page.
-  Canonical technical data remains in its original machine unit/state for compatibility.
-- [ ] Verify official Nord Pool's actual area and daily quarter coverage without
-  simultaneously running a legacy broker. Compare recorded legacy data offline.
-- [ ] Confirm your real grid class, VAT and current supplier contract from a bill.
-  Do not reuse historical household EWII terms for current or other sites.
-- [ ] Use **Done – return to integration** to finish. Reopen without losing submitted
-  settings. Confirm the eight component amounts, source details and **Component
-  period** on your device. During activation, Final now remains Unknown, availability
-  explains why, and **Verified prices begin** shows the exact timestamp. Verify
-  current becomes Ready at that timestamp while earlier history stays Incomplete.
-- [ ] On existing sites, use **Technical diagnostics** only to disable canonical
-  duplicates you do not use in automations or Recorder. Retain intentional opt-ins.
-- [ ] Complete the three-stage setup unaided in your chosen EN/DA interface language.
-  Confirm each accepted step is Saved, close/reopen resumes, and numerical Review
-  needs no final commit. Enter a fractional markup such as 0.25/0.50/0.75/3.125 øre with a point/comma,
-  confirm VAT and verify there are no ordinary dates, fees, product/heating decisions.
-- [ ] Confirm preferred raw/final/current/next/statistic prices use exactly 2 ore
-  decimals or 4 DKK decimals, including your locale and negative prices. Canonical
-  technical IDs/units/statistics remain. Check explicit entity/card precision overrides.
-- [ ] Check a requested future window crossing midnight. Current/next/window can
-  be READY while pre-activation full-day history remains honestly INCOMPLETE.
-- [ ] Confirm raw READY coverage separately from final READY, one stored full
-  breakdown and an offline bill comparison. Missing/expired dates have useful actions.
-- [ ] If testing a provisional amount, confirm ESTIMATED/UNVERIFIED labels and
-  consumer API INCOMPLETE; do not connect estimate sensors to charging controls.
-- [ ] Confirm source publication, 13:05/13:20/13:40/23:59/00:01 refreshes and restart.
-- [ ] Measure Pi resources/recovery on your hardware. Cloud timings are not Pi results.
-- [ ] On disposable sites only, exercise retain-archive and confirmed permanent
-  delete, restart/recreate, and preservation of another site's history.
-- [ ] Confirm HACS installed/latest values are semantic beta versions after
-  beta-channel repair/refresh. A missing external catalog icon is cosmetic.
-
-No owner boxes are prechecked by software tests. No stable publication, main merge,
-production cutover, vehicle command or charging-control acceptance is implied.
-
-## Rollback and recovery
-
-Keep full backups before upgrading. HACS uninstall preserves data. Restore the
-matching program version and a known-good configuration/storage backup together
-when necessary. Older software cannot read arbitrary future schemas; do not force
-schema downgrades. Recover ledgers only offline using the documented
-[storage procedure](ADR-002-ledger-storage.md); preserve referenced revisions and
-compare records before resuming any separately managed consumers. PE never deletes
-HA's global recorder database or external/full backups.
+Owner boxes above are intentionally unchecked. No production HA, Node-RED or physical
+charging controls may be changed by this acceptance run. No stable release/main merge.

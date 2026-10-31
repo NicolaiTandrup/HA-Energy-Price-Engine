@@ -20,7 +20,7 @@ def select(values, key=None, multiple=False):
     return selector.SelectSelector(
         selector.SelectSelectorConfig(
             options=list(values),
-            translation_key=key,
+            **({"translation_key": key} if key else {}),
             multiple=multiple,
             mode="list" if multiple else "dropdown",
         )
@@ -73,10 +73,10 @@ class Setup:
             description_placeholders={"detail": "", **placeholders},
         )
 
-    async def _save(self, site, next_step):
+    async def _save(self, site, next_step, *, follow_step=False):
         from . import apply_settings
 
-        next_step = "review" if self._editing else next_step
+        next_step = "review" if self._editing and not follow_step else next_step
         self.draft = validate_site({**site, "setup_step": next_step})
         loaded = await apply_settings(self.hass, self._entry, self.draft, reuse_sources=True)
         if not loaded:
@@ -147,11 +147,7 @@ class Setup:
                 return await self._save({**self.draft, "dso_mode": "radius_c"}, "supplier")
             self.draft["dso_mode"] = "manual"
             # The completed grid choice is durable even before its rate is entered.
-            return (
-                await self._save(self.draft, "grid_rate")
-                if not self._editing
-                else await self.async_step_grid_rate()
-            )
+            return await self._save(self.draft, "grid_rate", follow_step=True)
         return self._form(
             "grid",
             {

@@ -27,11 +27,12 @@ def owned_files(hass, entry):
         return []
     files = []
     for path in root.iterdir():
-        if not path.name.startswith(prefix):
+        if not path.name.startswith(prefix) and path.name != f"{DOMAIN}.wizard.{entry.entry_id}":
             continue
         suffix = path.name.removeprefix(prefix)
         known = (
-            suffix
+            path.name == f"{DOMAIN}.wizard.{entry.entry_id}"
+            or suffix
             in {
                 "configuration",
                 "setup",
@@ -62,6 +63,9 @@ async def permanently_remove(hass, entry):
         data = await intents.async_load() or {}
         data[entry.entry_id] = {"permanent": True}
         await intents.async_save(data)
+    if runtime := hass.data.get(DOMAIN, {}).get(entry.entry_id):
+        runtime.settings_current = False
+        runtime.stop()
     if entry.state == ConfigEntryState.LOADED:
         if not await hass.config_entries.async_unload(entry.entry_id):
             raise OSError("Site could not be stopped; no history deleted")

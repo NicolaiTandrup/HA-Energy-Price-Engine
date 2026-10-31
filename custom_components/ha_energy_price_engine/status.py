@@ -150,6 +150,7 @@ def availability(c, now=None):
         else None,
         "reason": current.reason or r.get("reason"),
         "action": r.get("required_action"),
+        "affected_period": r.get("affected_period"),
         "missing_components": r.get("missing_components", []),
         "statistics": statistics(c, now),
         "breakdown": breakdown(c, now),

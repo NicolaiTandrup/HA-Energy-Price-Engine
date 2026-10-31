@@ -136,6 +136,7 @@ def price_schedule(c, now=None):
                 "missing_components": report.get("missing_components", []),
                 "required_action": report.get("required_action"),
                 "failure_stage": report.get("failure_stage"),
+                "affected_period": report.get("affected_period"),
             }
         )
     tariffs = []

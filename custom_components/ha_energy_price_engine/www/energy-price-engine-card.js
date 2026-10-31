@@ -21,7 +21,7 @@ const WORDS = {
     gaps: "Gaps are unavailable prices, never zero. Select a bar or interval to inspect its stored components.",
     verified: "Verified", rawOnly: "Raw spot is verified independently of final pricing.",
     wait: "Waiting for Nord Pool publication or complete source coverage. See the reason and next scheduled check below.",
-    fix: "Corrective action", checked: "Source checked", update: "Next scheduled check", generated: "Dashboard read",
+    affected: "Affected period", fix: "Corrective action", checked: "Source checked", update: "Next scheduled check", generated: "Dashboard read",
     noRecord: "No verified final record for this quarter. Missing components stay unavailable; no tariffs are reconstructed on this read.",
     retained: "Retained stored amount (not currently Ready)", applied: "Applied in the stored price", utc: "UTC identity",
     config: "Use site_id only when selecting one of several sites. Entity-based card configuration was removed in beta.10.",
@@ -46,7 +46,7 @@ const WORDS = {
     gaps: "Huller er manglende priser, aldrig nul. Vælg en søjle eller et tidsrum for at se de gemte komponenter.",
     verified: "Verificeret", rawOnly: "Rå spot kontrolleres uafhængigt af slutprisen.",
     wait: "Afventer Nord Pool-offentliggørelse eller komplet kildedækning. Se årsag og næste planlagte kontrol nedenfor.",
-    fix: "Afhjælpning", checked: "Kilden kontrolleret", update: "Næste planlagte kontrol", generated: "Dashboard læst",
+    affected: "Berørt periode", fix: "Afhjælpning", checked: "Kilden kontrolleret", update: "Næste planlagte kontrol", generated: "Dashboard læst",
     noRecord: "Ingen verificeret slutpris for dette kvarter. Manglende komponenter er utilgængelige; tariffer genberegnes ikke ved læsning.",
     retained: "Beholdt gemt beløb (ikke Klar nu)", applied: "Anvendt i den gemte pris", utc: "UTC-identitet",
     config: "Brug kun site_id til at vælge blandt flere steder. Entitetsbaseret kortopsætning er fjernet i beta.10.",
@@ -232,7 +232,7 @@ export class EnergyPriceEngineCard extends HTMLElement {
       ${d.availability?.code === "waiting" ? `<p class="notice activation">${esc(t.activation.replace("{time}", this._local(d.availability.available_from)))}</p>` : ""}
       <section class="statistics"><h2>${t[d.statistics.scope] || t.unavailable} · ${d.statistics.used_slots}/${d.statistics.day_slots}</h2><div class="chips">${["average","minimum","maximum"].map(k => `<span>${t[k]}: <strong>${this._format(present(d.statistics[k]) ? d.statistics[k] * 100 : null)}</strong> øre/kWh</span>`).join("")}</div>${d.statistics.reason ? `<p class="muted">${esc(d.statistics.reason)}</p>` : ""}</section>
       ${this._error ? `<p role="alert" class="notice error">${esc(this._error)}</p>` : ""}
-      ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || t.noRecord)}</p>${i === 1 && day.status === "INCOMPLETE" && ["source","publication"].includes(day.failure_stage) && day.raw_ready_slots === 0 ? `<p>${t.wait}</p>` : ""}<p>${t.update}: ${esc(this._local(d.next_scheduled_update))}</p>${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
+      ${d.days.map((day,i) => day.status !== "READY" ? `<div class="notice"><strong>${i === 0 ? t.today : t.tomorrow} · ${this._words()[day.status.toLowerCase()] || t.incomplete}</strong><p>${esc(day.reason || t.noRecord)}</p>${i === 1 && day.status === "INCOMPLETE" && ["source","publication"].includes(day.failure_stage) && day.raw_ready_slots === 0 ? `<p>${t.wait}</p>` : ""}<p>${t.update}: ${esc(this._local(d.next_scheduled_update))}</p>${day.affected_period ? `<p>${t.affected}: ${esc(day.affected_period)}</p>` : ""}${day.required_action ? `<p>${t.fix}: ${esc(day.required_action)}</p>` : ""}${day.missing_components.length ? `<p>${esc(day.missing_components.map(k => t[k] || k).join(", "))}</p>` : ""}</div>` : "").join("")}
       <div class="charts">${this._chart("spot")}${this._chart("final")}</div><p class="muted">${t.gaps} ${t.rawOnly}</p>${this._inspector()}${this._tariffs()}${this._schedule()}<footer class="footer">${t.update}: ${esc(this._local(d.next_scheduled_update))}<br>${t.generated}: ${esc(this._local(d.generated_at))} · ${t.revision} ${d.revision}</footer></div>` : `<header><h1>${t.title}</h1></header><div class="body">${this._sitePicker()}<p role="status">${esc(this._error || (this._sites?.length > 1 ? t.choose : t.loading))}</p><button data-refresh>${t.retry}</button></div>`;
     this.shadowRoot.innerHTML = `<style>${STYLE}</style><ha-card>${body}</ha-card>`;
     if (hadDetails) for (const e of this.shadowRoot.querySelectorAll("details")) e.open = open.has(e.dataset.day);
