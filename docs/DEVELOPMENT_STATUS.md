@@ -1,5 +1,36 @@
 # Development handoff
 
+Updated31October2026 (Europe/Copenhagen). **Beta.10 MVP cleanup ACTIVE**, authorized
+by the latest owner mission and issue15, superseding the historical beta9 STOP below.
+Resume existing `feat/beta5-simple-onboarding` / draftPR14 at
+**420eeb36d6f7a517b52e4462971d8ef19f68648f**; main unchanged. No source restart.
+
+Inventory-before-implementation checkpoint **Inventory beta.9 surface before MVP cleanup**
+records all37 Python modules,40sensor identities plus1update/site,7214 Python lines,
+876821runtime bytes /546588translation bytes. Actual beta9 sensor constructor was
+executed offline to collect identities/defaults, with AST import/reference audit.
+`docs/MVP_CLEANUP.md` and `docs/contracts/beta9-inventory.json` are the inventory.
+Runtime not edited yet; no new runtime tests claimed. PR14 stilldraft/head420; newest
+issue15 owner section explicitly allows breaking IDs/config/API and site reset.
+
+Plan:9 primary sensors, one compact component/status view, one official source/dated
+calculation path, minimal APIv2 + CM handoff; remove provisional/catalogue/monthly/
+legacy entity/all-in/canonical-display duplicates and test-only preview. Preserve
+compressed transactional SQLite/Radius/quarter precision/revisions/DST/source safety
+and13:05/13:20/13:40/23:59/00:01 refreshes. Full-day stats when actually verified;
+otherwise explicitly labelled remaining-day coverage. Native source/grid/markup
+saved-step setup, explicit scoped reset, auto-discovered standalone card.
+
+Next: implement core/config/API simplification with focused tests, then native flows/
+sensors/card and full validation/release. CM source is not yet modified; do not claim
+cross-repository compatibility. Network configured/enforced; no secret bindings;
+API domain not allowed locally, use standard guarded repository CI/release workflows.
+Browser plugin absent; apply runtime/frontend-testing skill using locked Playwright.
+Only breaking beta10 prerelease is authorized after mandatory gates; no stable/main/
+production HA/Node-RED/physical controls.
+
+## Historical completed beta.9 checkpoint
+
 Updated 2026-10-30 (Europe/Copenhagen). **Beta.9 published and independently verified.
 STOP: owner mission complete.** No beta10, stable release, main merge, production HA,
 Node-RED, CM source/control, Tesla/Easee or charging actions authorized.
