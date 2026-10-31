@@ -1,3 +1,87 @@
+# STOP — beta.10 published and independently verified
+
+Latest authorized mission is complete. Do not start another beta, merge main,
+publish stable or change production/charging controls without a new owner request.
+Branch `feat/beta5-simple-onboarding`; PR14 remains draft/unmerged.
+Final checkpoint subject: **Record verified beta10 publication and permanent handoff**.
+Previous audit commit `35d88e6`; a document cannot include its own final commit hash.
+
+## Immutable release and evidence
+
+- Release: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/releases/tag/v0.1.0-beta.10
+- Exact source: **150c24fa08988b6ae308dec68bb21016ffcca0b9**.
+- Annotated tag object: **3a0f9ae43212857e765cdc1fda05e0e25f2d4fda**.
+- Publisher: https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41187700473
+  — publish, both public verification jobs and audit **all succeeded**. All16 checks
+  on publisher checkpoint282b97e succeeded. All18 exact-source push/PR/tag checks
+  succeeded before upload. Existing release assets were not overwritten.
+- Main remains **56cdb3c10993179371483812cbc36f651ba3ad8e**. All beta1–9 tag objects,
+  release IDs, asset IDs/sizes/digests were checked unchanged before and after publication.
+- HACS ZIP SHA256: `899ee061423092260258e22b248f0fecbe80322f9bfb3c4d4d3ac5ece3529df5`.
+- Manual ZIP SHA256: `d8c298e38a2c9fea0e7972ce60c2291be492c59986f3eea854cb01b011c6f0e4`.
+- Clean archives rebuilt twice byte-identically. Independently downloaded public
+  BUILD_MANIFEST/SHA256SUMS/bothZIPs match source, hashes,version and retired-file absence.
+  Full public receipt: `docs/receipts/v0.1.0-beta.10.json`.
+
+## Completed product and validation
+
+Nine native sensors/site replace40+1;22runtime modules/3226Python lines/204343runtime
+bytes/44807translation bytes replace37/7214/876821/546588. Fifteen obsolete modules,
+invoice/subscription/provisional/entity-source/display aliases and old consumer-v1
+scaffolding removed. Ledger.py is byte-identical beta9. Proven dated math, Radius,
+negative prices, national effective periods, SQLite revisions and mandatory civil
+refresh times remain. Saved source→grid→supplier setup, immediate verified full-day
+or explicitly labeled remaining-day statistics, component inspection in one compact
+snapshot/card, named multi-site card selection and fail-closed API2 are complete.
+
+**112 tests/core**,HA2026.10.3 and2026.10.4,**90%coverage**,zero skips,only2 deprecation
+warnings in unchanged pinned upstream HACS. **18 locked browser regressions** passed;
+official hassfest **1valid/0invalid**,HACS/Ruff/translations/package CI green. Real
+pinned HACS2.0.5/upstream registration,beta visibility,beta9 file upgrade,reinstall/
+uninstall and native ZIP configuration/reload were exercised. Two fresh GitHub jobs
+independently downloaded public metadata/tag source/main/assets/original beta9 ZIP,
+verified checksums and ran actual HACS plus both installed ZIP layouts on both cores.
+
+**21 actual native HA2026.10.4/frontend20260930.5 screenshots**,desktop1440x1000 and
+mobile390x844 EN/DA,cover saved-step interruption/reopen/Done,bad input,nine entities,
+full-day96/96 and independent remaining-day56/96 statistics,graphs,all quarter rows,
+DSO/component provenance,multiple sites and explicit selected-site reset. Wrong reset
+name preserves typing. Reset leaves the other ledger byte-identical. Both ledgers
+survived native restart with identical bytes. Provider counts unchanged on reads;
+zero browser errors/warnings. The exact shipped JavaScript was re-served/verified
+byte-identically in native HA. Source failure clears previously Ready graphs.
+Native proof: `docs/receipts/v0.1.0-beta.10-simulation.json`;screenshots under
+`docs/images/beta10`. Recorded/synthetic software evidence,not owner real-HA acceptance.
+
+Practical real-disk rollback/corruption/backup/restore/concurrent writer and1/5year
+scale cases passed. Append96:0.043s/0.136s on this cloud host;all-history memory/RAM
+limits documented. These are **not Raspberry Pi measurements**.
+
+## Owner installation and remaining limits
+
+No prerelease publication blockers remain. HACS main bootstrap is already compliant;
+no main change is required. On PAHA02-DEV,back up,enable **Show beta versions**,select
+**v0.1.0-beta.10**,download/restart/reload. Old beta entries intentionally fail migration
+without deleting data;Configure opens typed selected-site reset. Recreate each intended
+site with new IDs,select official Nord Pool,confirm actual grid and supplier/VAT.
+No parallel legacy broker required. Register resource queryv10 and paste the minimal
+card YAML. Exact instructions: `docs/HACS_DISTRIBUTION.md`,`docs/PRICE_DASHBOARD.md`,
+`docs/dashboard.yaml`;owner checklist remains intentionally unchecked.
+
+API1/old entity/config/storage-beta contracts are deliberately incompatible. **CM source
+was not modified or declared compatible**. `docs/INTEROPERABILITY.md` gives exact
+unreleased CM adapter/setup/event/history/test changes against inspected immutable
+PR26 source;`docs/API.md` defines API2. A future CM update/CI is separate authorized work.
+Private contract/grid/VAT,provider availability and physical hardware/mobile acceptance
+remain owner checks. Historical EWII0.030DKKexVAT is June–September2026 only;no future
+or summer-house terms/heating eligibility inferred. Public rates expire explicitly.
+All history remains in memory;card covers today/tomorrow and needs one resource.
+
+No production HA,Node-RED,Tesla,Easee,CM source or physical charging commands touched.
+Disposable native QA HA is stopped. No stable/main merge. Stop here.
+
+---
+
 # Beta.10 guarded publication checkpoint — in progress
 
 Release source **150c24fa08988b6ae308dec68bb21016ffcca0b9** on

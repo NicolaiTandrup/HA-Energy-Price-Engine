@@ -98,7 +98,8 @@
     "html_url": "https://github.com/NicolaiTandrup/HA-Energy-Price-Engine/actions/runs/41187700473",
     "head_sha": "282b97edff252cbe350da1c754517b85fba99d81",
     "publication_and_both_verification_jobs": "success",
-    "workflow_final_conclusion": "pending audit completion"
+    "workflow_final_conclusion": "success",
+    "completion_independently_observed_at": "2026-10-31T09:16:51.205655+00:00"
   },
   "exact_source_checks": [
     {
@@ -922,5 +923,15 @@
     "All history remains indexed in memory; cloud benchmarks do not establish Raspberry Pi performance.",
     "Bundled card requires one resource registration and covers today/tomorrow."
   ],
-  "production_controls_touched": false
+  "production_controls_touched": false,
+  "independent_public_asset_download": {
+    "public_assets_downloaded": true,
+    "source": "150c24fa08988b6ae308dec68bb21016ffcca0b9",
+    "archive_hashes": {
+      "ha_energy_price_engine.zip": "899ee061423092260258e22b248f0fecbe80322f9bfb3c4d4d3ac5ece3529df5",
+      "ha_energy_price_engine-manual.zip": "d8c298e38a2c9fea0e7972ce60c2291be492c59986f3eea854cb01b011c6f0e4"
+    },
+    "retired_modules_absent": true
+  },
+  "publication_blockers": []
 }
