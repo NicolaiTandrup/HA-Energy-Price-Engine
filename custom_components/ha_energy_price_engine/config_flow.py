@@ -316,7 +316,10 @@ class Setup:
                 errors["base"] = "confirm_reset"
         return self._form(
             "reset",
-            {vol.Required("name", default=""): str, vol.Required("confirm", default=False): bool},
+            {
+                vol.Required("name", default=(user_input or {}).get("name", "")): str,
+                vol.Required("confirm", default=(user_input or {}).get("confirm", False)): bool,
+            },
             errors,
             name=name,
         )

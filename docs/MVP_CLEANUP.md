@@ -176,3 +176,44 @@ add/beta visibility/upgrade from beta.9/reinstall/uninstall, and HACS-layout nat
 installation outside the checkout. Additional cost/statistics cases pass separately.
 Current-core full run, manual package check, native UI screenshots, documentation,
 consumer handoff, remote CI and publication remain pending at this checkpoint.
+
+## Final beta.10 surface
+
+| Measure | Published beta.9 | Beta.10 candidate | Reduction |
+|---|---:|---:|---:|
+|Registered entities/site|40 sensors +1 update|9 sensors|78%|
+|Runtime Python modules|37|22|41%|
+|Runtime Python lines|7,214|3,226|55%|
+|Runtime bytes|876,821|204,206|77%|
+|Strings/translations bytes|546,588|44,807|92%|
+
+[Exact after inventory](contracts/beta10-inventory.json) records all nine IDs, units,
+defaults and Recorder measurement classes. Current spot/final/DSO are measurements;
+next-quarter/statistic values are schedule views without measurement state classes.
+There are no hidden/deactivated compatibility entities created by new sites.
+Older HA registry entries disappear only when their selected site is explicitly
+reset/deleted; installing code alone does not silently delete registry history.
+
+| Behavior | Before | After |
+|---|---|---|
+|Ordinary setup|Source, several saved menus, offers/estimates/technical controls|Saved source → confirmed grid → actual supplier markup → review|
+|Prices|Duplicate flat/all-in/dated/provisional paths|One dated marginal formula, verified final records|
+|Statistics|Full-day history gap left ordinary statistics unknown|Immediate verified full-day, or labeled contiguous remaining-day with coverage|
+|Inspection|Separate canonical/display/component diagnostics|One availability attribute snapshot and card component inspector|
+|Dashboard|Entity ID configuration|Automatic single site or named site selector; optional exact site ID|
+|Consumers|API1 records/normalization/entry aliases|API2 immutable complete ranges, units/verification/revisions; no quotes when nonREADY|
+|Storage|Compressed atomic SQLite + legacy import/planning objects|Same SQLite implementation; retired importer/planning aliases; bounded operational masks|
+|Development reset|Archive/menu compatibility paths|Explicit typed selected-site reset, durable intent, fail-closed before unload|
+
+Validation:112 producer/consumer-contract tests per supported/current HA core,
+90%coverage;17 locked browser cases;actual HACS2.0.5/upstream beta9 file upgrade and
+reinstall;both clean ZIP layouts outside source;official hassfest/HACS gates.
+21 native HA screenshots cover EN/DA desktop/mobile, nine entities, completed and
+interrupted setup, wrong input, full-day/remaining-day statistics, multiple sites,
+component/tariff/quarter tables, wrong reset name and selected-site deletion.
+Two actual native ledgers survived restart byte-for-byte; the reset of the second
+site left the first ledger bytes unchanged. Provider counters did not change on
+reads. [Recorded/synthetic evidence](receipts/v0.1.0-beta.10-simulation.json) explicitly
+excludes owner HA/hardware acceptance. CM source remains unchanged and requires the
+[precise API2 handoff](INTEROPERABILITY.md). Final remote source/publication evidence
+is recorded in the permanent handoff and publication receipt.

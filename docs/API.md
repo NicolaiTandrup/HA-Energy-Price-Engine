@@ -17,7 +17,7 @@ if window.status == Status.READY:
 ```
 
 `start`/`end` must be aware, UTC-quarter aligned, positive and half-open `[start,end)`.
-Offsets are normalized to UTC; local days may have 92,96,100 quarters. Unknown or
+Offsets are normalized to UTC; local days may have 92, 96, 100 quarters. Unknown or
 unloaded sites raise EngineNotReady; malformed ranges raise ValueError.
 
 | PriceWindow field | Meaning |
@@ -38,7 +38,7 @@ It can predate a later successful unchanged source recheck, represented by windo
 `verified_at`. Units belong to the window. Quote exposes no private contract JSON.
 
 Future/current coverage requires: exact contiguous rows; current loaded settings;
-latest per-interval verification masks; actual provider success no older than24h
+latest per-interval verification masks; actual provider success no older than 24 hours
 and not future-dated; no source/grid/storage error or stale provider state. A missing
 contract affects the actual intervals where it is absent. Complete future windows
 can be READY even when earlier today is unknown. Missing tomorrow does not invalidate

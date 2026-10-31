@@ -46,3 +46,18 @@ The card is read-only and uses authenticated HA WebSocket commands filtered by
 entity read permissions. It reads precomputed prices/cached source snapshots,
 without provider requests, tariff recomposition or SQLite writes. Its two-day
 schema is internal v2; Python consumer API v2 is documented separately.
+
+## Native software screenshots
+
+[Desktop dashboard](images/beta10/dashboard-desktop.png) ·
+[Mobile dashboard](images/beta10/dashboard-mobile.png) ·
+[Remaining-day/multiple sites](images/beta10/dashboard-remaining-mobile.png) ·
+[DSO intervals](images/beta10/dashboard-grid-mobile.png) ·
+[Component inspector](images/beta10/dashboard-inspector-mobile.png) ·
+[Quarter table](images/beta10/dashboard-quarters-desktop.png) ·
+[Nine-entity device](images/beta10/device-desktop.png) ·
+[Danish saved setup](images/beta10/setup-saved-da-mobile.png).
+
+These are actual disposable Home Assistant screens using recorded public tariffs and
+fictional private rates, not owner installation screenshots. The
+[simulation receipt](receipts/v0.1.0-beta.10-simulation.json) records hashes and results.

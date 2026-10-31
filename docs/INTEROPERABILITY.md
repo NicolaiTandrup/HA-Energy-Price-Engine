@@ -6,7 +6,7 @@ allows this break; do not retain a v1 producer shim merely to pass earlier consu
 suites. Immutable historical CM references were inspected, not edited. No CM controls
 or live HA were accessed. These are concrete required source changes for CM review.
 
-Inspected reference: CM PR26 `5ef7115a9599e1ff25019e91b3737500853b9a38`,
+Inspected reference: CM PR #26 `5ef7115a9599e1ff25019e91b3737500853b9a38`,
 `custom_components/ev_charge_manager/price_consumer.py` and associated tests. PE's
 original tariff implementation attribution remains [here](PROVENANCE.md).
 
@@ -23,13 +23,13 @@ original tariff implementation attribution remains [here](PROVENANCE.md).
    count == quote count, aware aligned contiguous slots matching `[start,end)`, finite
    nonboolean prices, positive per-quote revisions and nonfuture verification. On
    EngineNotReady, ValueError, unsupported version, STALE/ERROR/INCOMPLETE, withhold that
-   planning range and show the reason. Do not use retained rows or replace gaps with0.
+   planning range and show the reason. Do not use retained rows or replace gaps with 0.
 4. Separate the future optimizer window (next complete quarter onwards) from historical
    energy/cost queries. The old `(now-3minutes)` start can include unavailable first-
    activation current quarters. Split today/tomorrow at actual local midnight; accept
    only each complete READY requested subrange. Missing tomorrow must not invalidate
    independently complete today's future planning. Do not reconstruct tariffs in CM.
-5. Subscribe to `ha_energy_price_engine_price_revision_v2`, filter exactsite and invalidate
+5. Subscribe to `ha_energy_price_engine_price_revision_v2`, filter exact site and invalidate
    affected future ranges. Validate site presence with `api.sites()` after unload or
    reset. Remove direct PE entry/runtime introspection. New site IDs require reselection.
 6. Keep measured-energy allocation/history/journal/control safeguards in CM. Save

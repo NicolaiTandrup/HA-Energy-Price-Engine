@@ -105,6 +105,8 @@ async def test_reset_requires_exact_name_and_explicit_confirm(hass, freezer, pri
         fid, {"name": "wrong", "confirm": True}
     )
     assert result["errors"]["base"] == "confirm_reset"
+    defaults = {str(k): k.default() for k in result["data_schema"].schema}
+    assert defaults == {"name": "wrong", "confirm": True}
     assert hass.config_entries.async_get_entry(entry.entry_id)
     result = await hass.config_entries.options.async_configure(
         fid, {"name": "Example site", "confirm": True}

@@ -25,10 +25,10 @@ The strict official normalization from adapters.py now lives in prices.py. SQLit
 compression/recovery remains intact. Historical release receipts and tags preserve
 earlier tested implementations; removal does not erase their attribution.
 
-National2026 charges: Energinet net4.3øre/kWh, system7.2øre/kWh exVAT through
-2026-12-31; electricity tax0.8øre/kWh exVAT for2026–2027. These bounded owner-verified
-policy rates came from issue8, verified2026-10-23; they are not a legislation scraper.
-VAT25% is applied once. Unknown later rates fail closed until explicitly verified.
-The documented EWII household3øre/kWh exVAT is June–September2026 only. Beta.10
+National 2026 charges: Energinet net 4.3 øre/kWh, system 7.2øre/kWh exVAT through
+2026-12-31; electricity tax0.8 øre/kWh exVAT for 2026–2027. These bounded owner-verified
+policy rates came from issue #8, verified2026-10-23; they are not a legislation scraper.
+VAT 25% is applied once. Unknown later rates fail closed until explicitly verified.
+The documented EWII household3 øre/kWh exVAT is June–September 2026 only. Beta.10
 does not extrapolate it, use it as an onboarding default or scrape a different
 public product as the owner's contract. Supplier amounts come from explicit input.

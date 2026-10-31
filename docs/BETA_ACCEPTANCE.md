@@ -10,9 +10,9 @@ recorded/synthetic prices, not owner hardware or live contract acceptance.
 - [ ] Official Nord Pool DK1/DK2 is selected; legacy domain shadowing is absent. No parallel broker required.
 - [ ] Site/source, grid and supplier steps save; close/reopen resumes. Unsubmitted fields are clearly unsaved.
 - [ ] Confirm actual Radius C or actual manual DSO. Enter real supplier markup in øre/kWh and correct VAT basis.
-- [ ] Nine enabled sensors per new site; full precision internally, ordinary øre/kWh2decimals.
+- [ ] Nine enabled sensors per new site; full precision internally, ordinary øre/kWh, two decimals.
 - [ ] Current/next raw and final match verified source/component arithmetic, including negative spot.
-- [ ] Full-day stats include all92/96/100 quarters immediately when genuinely covered.
+- [ ] Full-day stats include all 92/96/100 quarters immediately when genuinely covered.
 - [ ] New from-now private rate yields labeled remaining-day coverage, with no invented past prices.
 - [ ] Middle gaps/expired components/source errors never create READY ranges or zero-filled prices.
 - [ ] Bundled resource registered; minimal YAML discovers one site, named selector handles several.
@@ -23,7 +23,7 @@ recorded/synthetic prices, not owner hardware or live contract acceptance.
 - [ ] Development hardware storage/RAM/latency acceptable; cloud measurements are not Pi evidence.
 
 Automated release gates: complete unit/native-flow/source/Radius/math/DST/statistics/
-SQLite fault/revision/reset/read-only API/cost tests on HA2026.10.3 and2026.10.4;
+SQLite fault/revision/reset/read-only API/cost tests on HA 2026.10.3 and2026.10.4;
 locked desktop/mobile Chromium tests; actual pinned HACS install/update/reinstall;
 official hassfest/HACS CI; both independently installed ZIP layouts; reproducible
 clean archive hashes; native HA screenshots and restart; immutable prior releases/

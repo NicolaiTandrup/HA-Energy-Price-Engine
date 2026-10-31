@@ -1,3 +1,41 @@
+# Beta.10 acceptance candidate — 31 October 2026 (active)
+
+Previous source `0b1a0d4af5aa47ab5c92bd89bf89d9f9cc0c4016`, branch
+`feat/beta5-simple-onboarding`. Checkpoint subject: **Record native MVP acceptance and final beta10 inventory**.
+PR14 is draft/unmerged with the beta10 title and new API2/reset scope.
+
+All **13 remote checks on 0b1a0d4 succeeded** (push/PR matrix, browser, package,
+hassfest/HACS and draft update). Local full **112 passed/core**,90%coverage,zero skips,
+only2 unchanged upstream HACS deprecations.17 locked browser cases passed. Both
+independent rebuilt ZIP layouts passed native install/setup/reload outside source.
+Official Docker hassfest1valid/0invalid. Latest tiny reset-form input-retention fix
+and its assertion passed targeted7flow/reset tests; final candidate CI will rerun all.
+
+Native HA2026.10.4/frontend20260930.5:21 committed EN/DA desktop/mobile screenshots,
+9 registered sensors, full-day96/96 and separately labeled remaining-day56/96,
+complete graphs/DSO/quarter/component tables, named multiple-site selection,
+wrong decimal/name validation, saved-step interruption/reopen/Done and explicit
+selected-site reset. Reset deleted only the second site's files, leaving first-site
+ledger bytes unchanged. Two stored site ledgers reloaded after a real HA restart
+byte-identically. Zero browser errors/warnings; provider counters unchanged on reads.
+QA fixture initially installed its read mocks too late for stored entries; corrected
+bootstrap order, then re-tested both sites. No producer workaround was added.
+`docs/receipts/v0.1.0-beta.10-simulation.json` records actual synthetic proof and hashes.
+
+Final runtime:22modules/3226Python lines/204206bytes/44807translation bytes;9entities,
+versus37/7214/876821/546588/41 in beta9.15 retired modules;core SQLite file unchanged.
+Inventory, source attribution, HACS/reset guide, exact dashboard YAML and API2/CM
+migration handoff are complete. CM itself is intentionally unchanged/incompatible;
+no cross-repository or owner hardware acceptance claim. Cloud benchmarks are not Pi.
+
+Next: commit/push this candidate, verify final exact-source CI, build twice from clean
+Git source and verify hashes; create immutable annotated beta10 tag; use guarded
+beta10-only publication; independent public source/assets/main/prior1–9 integrity,
+actual HACS and both ZIP native installs on both cores; record receipt and final
+permanent STOP handoff. No stable/main merge or production/physical controls.
+
+---
+
 # Beta.10 native setup and contract checkpoint — active
 
 Previous source `9abab5aae774d6f8036800a41ba43d5e95ac1e6f` on
