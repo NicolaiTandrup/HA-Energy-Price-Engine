@@ -184,7 +184,7 @@ consumer handoff, remote CI and publication remain pending at this checkpoint.
 |Registered entities/site|40 sensors +1 update|9 sensors|78%|
 |Runtime Python modules|37|22|41%|
 |Runtime Python lines|7,214|3,226|55%|
-|Runtime bytes|876,821|204,206|77%|
+|Runtime bytes|876,821|204,343|77%|
 |Strings/translations bytes|546,588|44,807|92%|
 
 [Exact after inventory](contracts/beta10-inventory.json) records all nine IDs, units,
@@ -206,7 +206,7 @@ reset/deleted; installing code alone does not silently delete registry history.
 |Development reset|Archive/menu compatibility paths|Explicit typed selected-site reset, durable intent, fail-closed before unload|
 
 Validation:112 producer/consumer-contract tests per supported/current HA core,
-90%coverage;17 locked browser cases;actual HACS2.0.5/upstream beta9 file upgrade and
+90%coverage;18 locked browser cases;actual HACS2.0.5/upstream beta9 file upgrade and
 reinstall;both clean ZIP layouts outside source;official hassfest/HACS gates.
 21 native HA screenshots cover EN/DA desktop/mobile, nine entities, completed and
 interrupted setup, wrong input, full-day/remaining-day statistics, multiple sites,

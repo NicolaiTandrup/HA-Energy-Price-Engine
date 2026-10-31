@@ -1,3 +1,32 @@
+# Beta.10 final card safety correction — active release candidate
+
+Previous checkpoint `ea354d195141922bb833bd195e0fbfa5100c584a`.
+Checkpoint subject: **Clear stale card snapshots on producer loss and finalize beta10 evidence**.
+
+Final review found that a failed WebSocket refresh could leave an old Ready graph
+visible beside an error. The card now clears that snapshot and queues changes made
+during an in-flight read. A meaningful producer-unload browser regression passes;
+**18 browser cases** pass. The shipped JavaScript was then served byte-identically
+by native HA and rechecked desktop/mobile:192rows,4DSO ranges,full-day96/96,
+zero browser errors/warnings and unchanged source counters.21 final screenshots
+are committed; redundant raw snapshots in the receipt are replaced with hashes,
+coverage and exact component/first/last-quarter samples.
+
+Native multi-site/reset acceptance passed completely: named selector, independent
+remaining-day statistics and all3 native friendly names; bad reset name preserves
+input; explicit selected-site deletion leaves the other ledger byte-identical.
+Both ledgers loaded and retained exact bytes across native restart after correcting
+QA-only mock bootstrap order. Source/core code was not changed to accommodate mocks.
+
+Full producer/API2 consumer suites last passed112/core on both locked HA cores,
+90%coverage,zero skips,2 pinned HACS deprecations. The only subsequent runtime change
+is the tested card error handling. Final exact-source CI and clean reproducible
+builds must pass before the guarded beta10 publisher. Publication is still pending.
+PR14/main/prior1–9 constraints remain. CM API1 is deliberately incompatible; handoff
+complete,CM unchanged. See current setup/reset,release notes,API2,inventory and receipt.
+
+---
+
 # Beta.10 acceptance candidate — 31 October 2026 (active)
 
 Previous source `0b1a0d4af5aa47ab5c92bd89bf89d9f9cc0c4016`, branch

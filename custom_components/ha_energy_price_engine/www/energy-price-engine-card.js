@@ -116,7 +116,8 @@ export class EnergyPriceEngineCard extends HTMLElement {
   getCardSize() { return 22; }
   static getStubConfig() { return {}; }
   async _load() {
-    if (!this._hass || !this._config || this._pending || !this.isConnected) return;
+    if (!this._hass || !this._config || !this.isConnected) return;
+    if (this._pending) { this._queued = true; return; }
     this._pending = true;
     const configured = this._config.site_id;
     try {
@@ -129,8 +130,11 @@ export class EnergyPriceEngineCard extends HTMLElement {
       if (configured !== this._config.site_id || site !== this._site || !this.isConnected) return;
       if (data.schema_version !== 2) throw new Error("Unsupported Energy Price Engine dashboard schema; reload browser resources");
       this._data = data; this._error = undefined;
-    } catch (err) { this._error = err.message || String(err); }
-    finally { this._pending = false; this._render(); }
+    } catch (err) { this._data = undefined; this._error = err.message || String(err); }
+    finally {
+      this._pending = false; this._render();
+      if (this._queued) { this._queued = false; this._load(); }
+    }
   }
   _sitePicker() {
     if (!this._sites?.length || this._config.site_id || this._sites.length === 1) return "";

@@ -10,7 +10,7 @@
   "after": {
     "python_modules": 22,
     "python_lines": 3226,
-    "runtime_bytes": 204206,
+    "runtime_bytes": 204343,
     "translation_bytes": 44807,
     "registered_entities_per_site": 9
   },

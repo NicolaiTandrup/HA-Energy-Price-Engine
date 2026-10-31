@@ -9,7 +9,7 @@ const {chromium} = await import(process.env.PE_PLAYWRIGHT_MODULE || 'playwright'
 const dataRoot = process.env.PE_FRONTEND_FIXTURES;
 assert.ok(dataRoot, 'Set PE_FRONTEND_FIXTURES using real producer fixture exports');
 let server, browser, url;
-const HTML = `<!doctype html><html><head><meta charset="utf-8"><title>PE card regression</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#f7f8fa;font-family:Arial}energy-price-engine-card{display:block;max-width:1440px;margin:auto}ha-card{display:block;background:#fff}</style><script type="module" src="/card.js"></script></head><body><energy-price-engine-card></energy-price-engine-card><script>window.PE_XSS=false;window.wsCalls=0;window.load=async(name,language='en',number_format='language')=>{window.fixture=await (await fetch('/data/'+name+'.json')).json();const c=document.querySelector('energy-price-engine-card');await customElements.whenDefined('energy-price-engine-card');c.setConfig({});c.hass={locale:{language,number_format},states:{'sensor.qa_current':{last_updated:String(Date.now())}},connection:{},callWS:async msg=>{window.wsCalls++;if(msg.type==='ha_energy_price_engine/sites')return [{site_id:window.fixture.site.id,name:window.fixture.site.name,entity_id:'sensor.qa_current'}];if(msg.type!=='ha_energy_price_engine/price_schedule'||msg.site_id!==window.fixture.site.id)throw Error('Unexpected command');return structuredClone(window.fixture)}};};</script></body></html>`;
+const HTML = `<!doctype html><html><head><meta charset="utf-8"><title>PE card regression</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#f7f8fa;font-family:Arial}energy-price-engine-card{display:block;max-width:1440px;margin:auto}ha-card{display:block;background:#fff}</style><script type="module" src="/card.js"></script></head><body><energy-price-engine-card></energy-price-engine-card><script>window.PE_XSS=false;window.wsCalls=0;window.load=async(name,language='en',number_format='language')=>{window.fixture=await (await fetch('/data/'+name+'.json')).json();const c=document.querySelector('energy-price-engine-card');await customElements.whenDefined('energy-price-engine-card');c.setConfig({});c.hass={locale:{language,number_format},states:{'sensor.qa_current':{last_updated:String(Date.now())}},connection:{},callWS:async msg=>{window.wsCalls++;if(msg.type==='ha_energy_price_engine/sites')return window.noSites?[]:[{site_id:window.fixture.site.id,name:window.fixture.site.name,entity_id:'sensor.qa_current'}];if(msg.type!=='ha_energy_price_engine/price_schedule'||msg.site_id!==window.fixture.site.id)throw Error('Unexpected command');return structuredClone(window.fixture)}};};</script></body></html>`;
 before(async()=>{
  server=createServer(async(req,res)=>{
   try {
@@ -108,3 +108,14 @@ for (const language of ['en', 'da']) {
   assert.deepEqual(errors,[]);await page.close();
  });
 }
+
+test('producer unload clears previously Ready graphs instead of retaining stale presentation',async()=>{
+ const {page,card,errors}=await open('normal',390);
+ assert.ok(await card.locator('[data-chart="final"] rect.bar').count());
+ await page.evaluate(()=>{window.noSites=true;});
+ await card.locator('[data-refresh]').click();
+ await card.getByRole('status').filter({hasText:'No readable Energy Price Engine sites are loaded'}).waitFor();
+ assert.equal(await card.locator('[data-chart]').count(),0);
+ assert.equal(await card.locator('.ready').count(),0);
+ assert.deepEqual(errors,[]);await page.close();
+});
